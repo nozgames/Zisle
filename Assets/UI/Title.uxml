@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="UnityEngine.UIElements"
+    xmlns:engine="UnityEngine.UIElements"
+    xmlns:editor="UnityEditor.UIElements"
+    xmlns:zisle="NoZ.Zisle"
+    xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
+>
+    <zisle:TitleController name="title" class="screen">
+        <VisualElement name="buttons-container" class="main-buttons">
+            <Label name="solo-button" text="Solo" class="main-button"/>
+            <Label name="coop-button" text="Cooperative" class="main-button"/>
+            <Label name="options-button" text="Options" class="main-button"/>
+            <Label name="quit-button" text="Quit" class="main-button"/>
+        </VisualElement>
+    </zisle:TitleController>
+</engine:UXML>

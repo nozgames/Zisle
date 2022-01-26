@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="UnityEngine.UIElements"
+    xmlns:engine="UnityEngine.UIElements"
+    xmlns:editor="UnityEditor.UIElements"
+    xmlns:zisle="NoZ.Zisle"
+    xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
+>
+    <Style src="ConfirmPopup.uss"/>
+    <zisle:ConfirmPopupController class="screen popup">
+        <VisualElement class="border">
+            <VisualElement class="background">
+                <VisualElement class="content">
+                    <Label name="message" text="Message" class="message"/>
+                    <VisualElement name="buttons">
+                        <Label name="yes" text="Yes" class="button"/>
+                        <Label name="no" text="No" class="button"/>
+                    </VisualElement>
+                </VisualElement>
+            </VisualElement>
+            <VisualElement class="title">
+                <Label name="title" text="Confirm"/>
+            </VisualElement>
+        </VisualElement>
+    </zisle:ConfirmPopupController>
+</engine:UXML>

@@ -3,6 +3,7 @@
     "com.noz.animation": "file:E:/Noz/com.noz.animation",
     "com.noz.common": "file:E:/Noz/com.noz.common",
     "com.noz.tweening": "file:E:/Noz/com.noz.tweening",
+    "com.unity.2d.sprite": "1.0.0",
     "com.unity.collab-proxy": "1.15.7",
     "com.unity.ide.rider": "3.0.9",
     "com.unity.ide.visualstudio": "2.0.12",

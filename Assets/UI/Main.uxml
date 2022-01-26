@@ -1,0 +1,26 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" 
+    xmlns:uie="UnityEditor.UIElements"
+    xsi="http://www.w3.org/2001/XMLSchema-instance"
+    engine="UnityEngine.UIElements" 
+    editor="UnityEditor.UIElements"
+    xmlns="UnityEngine.UIElements"
+    xmlns:zisle="NoZ.Zisle"
+    noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd"
+    editor-extension-mode="False">
+
+    <ui:Template name="Title" src="Title.uxml" />
+    <ui:Template name="Options" src="Options.uxml" />
+    <ui:Template name="ConfirmPopup" src="ConfirmPopup.uxml" />
+
+    <VisualElement class="root">
+        <Style src="Main.uss"/>
+
+        <VisualElement class="main-background"/>
+
+        <ui:Instance template="Title" class="screen"/>
+        <ui:Instance template="Options" class="screen hidden"/>
+        <ui:Instance template="ConfirmPopup" class="screen hidden"/>
+
+    </VisualElement>
+
+</ui:UXML>
