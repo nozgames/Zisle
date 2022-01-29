@@ -1,3 +1,18 @@
+:root {
+    --color-text: #494846;
+    --color-background: #a99581;
+    --color-background-highlight: #c4b3a3;
+    --color-background-dark: #7a6b5d;
+    --color-background-darker: #695e54;
+    --color-title: #ffc72d;
+    --width-border: 3px;
+    --font-size-tiny: 20px;
+    --font-size-small: 40px;
+    --font-size-normal: 50px;
+    --font-size-large: 65px;
+    --font-definition-normal: url("project://database/Assets/Fonts/Bidan-Pll7.ttf")
+}
+
 .hidden {
     display: none;
 }
@@ -5,47 +20,20 @@
 .root {
     flex-direction: column;
     flex-grow: 1;
-    -unity-font-definition: url("../Fonts/Lato-italic.ttf");
-    -unity-font: url("../Fonts/Lato-Italic.ttf");
-    font-size: 400%;
+    -unity-font-definition: var(--font-definition-normal);
+    font-size: var(--font-size-normal);
 }
 
 .main-background 
 {
-    opacity: 0.7;
-    background-color: rgba(0,0,0,1);
+    opacity: 0.8;
+    background-color: rgba(80,80,80,1);
     position: absolute;
     width: 100%;
     height: 100%;
-}
-
-.main-buttons {
-    margin-top: auto;
-    margin-bottom: auto;
-    font-size: 100%;
-    -unity-font-style: normal;
-    margin-left: 20%;
-}
-
-.main-button {
-    color: rgba(255, 199, 45, 255);
-}
-
-.main-button:hover {
-    color: rgba(255, 255, 255, 255);
-}
-
-.main-button:active {
-    -unity-font-style: bold;
 }
 
 .screen {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
-
-.panel {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -57,15 +45,61 @@
     background-color: rgba(0,0,0,.8);
 }
 
+
 .popup .border {
     background-image: url("../RoundedBorder.png");
     -unity-background-image-tint-color: #272324;
     padding: 4px;
 }
 
-
 .popup .background {
     background-image: url("../RoundedBorder.png");
     -unity-background-image-tint-color: #f4dec9;
     padding: 16px;
+}
+
+.panel .border {
+    background-image: url("../RoundedBorder.png");
+    -unity-background-image-tint-color: #272324;
+    padding: 4px;
+}
+
+.screen-title {
+    color: var(--color-title);
+    font-size: var(--font-size-large);
+}
+
+.centered {
+    align-items: center;
+    justify-content: center;
+}
+
+.centered-vertical {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.left-align {
+    align-items: flex-start;
+}
+
+.menu-row
+{
+    -unity-background-image-tint-color: var(--color-background);
+    background-image: url("../RoundedBorder.png");
+    padding: 4px 20px;
+    width: 1000px;
+    margin-bottom: 4px;
+    height: 70px;
+}
+
+.menu-row:focus
+{
+    -unity-background-image-tint-color: var(--color-background-highlight);
+}
+
+.menu-row-gap
+{
+    margin-top: 15px;
 }

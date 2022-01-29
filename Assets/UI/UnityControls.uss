@@ -1,0 +1,221 @@
+/* Button */
+
+.unity-button, .unity-button:hover, .unity-button:focus
+{
+    color: var(--color-text);
+    background-color: rgba(0,0,0,0);
+    border-width: 0;
+}
+
+/* DropDown */
+
+.unity-base-popup-field__arrow
+{
+    width: 17px;
+    height: 15px;
+    -unity-background-image-tint-color: var(--color-text);
+}
+
+.unity-base-dropdown__container-inner
+{
+    background-color: var(--color-background-dark) !important;
+}
+
+.unity-base-dropdown__container-outer
+{
+    border-width: 3px;
+    border-color: var(--color-text)
+}
+
+.unity-base-dropdown__item:hover {
+    background-color: var(--color-background-highlight);
+}
+
+.unity-base-dropdown__label
+{
+    margin-left: 40px;
+    padding: 0;
+}
+
+.unity-base-dropdown__item:hover > .unity-base-dropdown__label
+{
+    color: var(--color-text);
+}
+
+.unity-base-dropdown__item
+{
+    padding-left: 0;
+    padding-bottom: 0;
+    padding-top: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.unity-base-dropdown__checkmark 
+{
+    background-image: url("project://database/Assets/Sprites/Checkbox.psd");
+    -unity-background-image-tint-color: var(--color-text);
+    position: absolute;
+    left: 0;
+    width: 30px;
+    height: 30px;
+}
+
+DropdownField .unity-label {
+    color: var(--color-text);
+}
+
+DropdownField .unity-text-element {
+    color: var(--color-text);
+}
+
+.unity-base-dropdown__label {
+   -unity-font-definition: var(--font-definition-normal);
+   font-size: var(--font-size-small);
+   color: var(--color-text) !important;
+}
+
+DropdownField .unity-text-element,
+.unity-base-field__label
+{
+   -unity-font-definition: var(--font-definition-normal);
+   font-size: var(--font-size-normal);
+   color: var(--color-text) !important;
+   margin-top: -4px;
+   margin-bottom: 0px;
+   width: 400px;
+}
+
+DropdownField .unity-base-popup-field__text
+{
+    font-size: var(--font-size-small);
+}
+
+.unity-base-popup-field__input
+{
+    margin-left: -1px;
+    margin-top:4px;
+    margin-bottom:4px;
+    background-color: var(--color-background-dark);
+    border-width: var(--width-border);
+    border-color: var(--color-text);
+}
+
+.unity-base-popup-field:active > .unity-base-popup-field__input,
+.unity-base-popup-field:hover > .unity-base-popup-field__input
+{
+    background-color: #7a6b5d;
+    border-width: var(--width-border);
+    border-color: var(--color-text);
+}
+
+.unity-base-field:focus > .unity-base-field__label
+{
+   -unity-font-definition: var(--font-definition-normal);
+   font-size: var(--font-size-normal);
+   color: var(--color-text) !important;
+}
+
+
+/* Slider */
+
+.unity-base-slider__drag-container {
+    margin-top: 6px;
+    margin-bottom: 6px;
+    background-color: #7a6b5d;
+    border-width: var(--width-border);
+    border-color: var(--color-text);
+}
+
+.unity-base-slider--horizontal .unity-base-slider__dragger
+{
+    top: 5%;
+    bottom: 0;
+    margin: 0;
+    height: 90%;
+    width: 16px;
+    margin-left: 2px;
+    margin-right: 8px;
+    background-color: var(--color-text);
+    border-width: 0;
+}
+
+.unity-base-slider .unity-base-slider__tracker
+{
+    background-color: rgba(0,0,0,0);
+    border-width: 0;
+}
+
+.unity-base-slider:hover .unity-base-slider__tracker
+{
+    background-color: rgba(0,0,0,0);
+    border-width: 0;
+}
+
+/* Toggle */
+
+
+.unity-toggle__checkmark {
+    margin-left: 0px;
+    margin-top: 10px;
+    width: 40px;
+    height: 40px;
+    background-color: var(--color-background);
+    border-width: var(--width-border);
+    border-color: var(--color-text);
+    -unity-background-image-tint-color: var(--color-text);
+}
+
+.unity-toggle:focus > .unity-toggle__input:checked > .unity-toggle__checkmark,
+.unity-toggle:focus > .unity-toggle__input > .unity-toggle__checkmark {
+    border-color: var(--color-text);
+}
+
+.unity-toggle > .unity-toggle__input:checked > .unity-toggle__checkmark,
+.unity-toggle > .unity-toggle__input:checked:hover > .unity-toggle__checkmark,
+.unity-toggle > .unity-toggle__input:checked:focus > .unity-toggle__checkmark
+{
+    background-image: url("project://database/Assets/Sprites/Checkbox.psd");
+    border-color: var(--color-text);
+}
+
+/* Scroller */
+
+.unity-scroller--vertical
+{
+    margin-right: 4px;
+}
+
+.unity-scroller--vertical > .unity-scroller__slider
+{
+    margin: 0;
+}
+
+.unity-scroller--vertical .unity-base-slider__input
+{
+    padding: -2px 2px;
+    background-color: var(--color-background-darker);
+}
+
+.unity-scroller--vertical .unity-base-slider__dragger
+{
+    background-color: var(--color-background);
+    left: 2px;
+    right: 0;
+}
+
+.unity-scroller--vertical .unity-base-slider__dragger:hover
+{
+    background-color: var(--color-background-highlight);
+}
+
+.unity-scroller--vertical .unity-base-slider__drag-container
+{
+    border-width: 0;
+    background-color: rgba(0,0,0,0);
+}
+
+.unity-scroller--vertical RepeatButton
+{
+    display: none;
+}

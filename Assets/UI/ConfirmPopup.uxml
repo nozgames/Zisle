@@ -1,27 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
-<engine:UXML
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="UnityEngine.UIElements"
-    xmlns:engine="UnityEngine.UIElements"
-    xmlns:editor="UnityEditor.UIElements"
+<ui:UXML 
+    xmlns:ui="UnityEngine.UIElements"
+    xmlns:uie="UnityEditor.UIElements"
+    xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="UnityEngine.UIElements" 
+    engine="UnityEngine.UIElements"
+    editor="UnityEditor.UIElements"
     xmlns:zisle="NoZ.Zisle"
-    xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
->
-    <Style src="ConfirmPopup.uss"/>
-    <zisle:ConfirmPopupController class="screen popup">
-        <VisualElement class="border">
-            <VisualElement class="background">
-                <VisualElement class="content">
-                    <Label name="message" text="Message" class="message"/>
-                    <VisualElement name="buttons">
-                        <Label name="yes" text="Yes" class="button"/>
-                        <Label name="no" text="No" class="button"/>
-                    </VisualElement>
-                </VisualElement>
-            </VisualElement>
-            <VisualElement class="title">
-                <Label name="title" text="Confirm"/>
-            </VisualElement>
-        </VisualElement>
+    noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
+    editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/ConfirmPopup.uss" />
+    <zisle:ConfirmPopupController class="screen centered-vertical">
+        <ui:VisualElement class="centered-vertical">
+            <ui:Label name="message" text="Message" class="screen-title"/>
+            <ui:Button name="yes" text="Yes" class="menu-row menu-row-gap"/>
+            <ui:Button name="no" text="No" class="menu-row menu-row-gap"/>
+        </ui:VisualElement>
     </zisle:ConfirmPopupController>
-</engine:UXML>
+</ui:UXML>

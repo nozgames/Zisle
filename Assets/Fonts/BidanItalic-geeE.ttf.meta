@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9b8a07994b401264f8d83e5876a2592f
+guid: a50537d37e2fc584980c818a117bb8a8
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,9 +9,10 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Lato
+  - Bidan
   fallbackFontReferences:
-  - {fileID: 12800000, guid: 612e3c78198924b4ab602a7a77197d17, type: 3}
+  - {fileID: 12800000, guid: 60aa7f0b9ded8b740ba2740838384ec5, type: 3}
+  - {fileID: 12800000, guid: f80ea1c0bf9ab1b4a8a657efeda76204, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

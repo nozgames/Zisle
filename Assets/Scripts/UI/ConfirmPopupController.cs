@@ -9,43 +9,31 @@ namespace NoZ.Zisle
 
         private Action _onYes;
         private Action _onNo;
-        private TextElement _title;
         private TextElement _message;
-        private TextElement _yes;
-        private TextElement _no;
+        private Button _yes;
+        private Button _no;
+
+        public string Message { set => _message.text = value; }
+        public string Yes { set => _yes.text = value ?? "Yes"; }
+        public string No { set => _no.text = value ?? "No"; }
+        public Action OnYes { set => _onYes = value; }
+        public Action OnNo { set => _onNo = value; }
 
         public override void Initialize ()
-        { 
-            _title = this.Q<Label>("title");
-            _message = this.Q<Label>("message");
-            _yes = this.Q<Label>("yes");
-            _no = this.Q<Label>("no");
-
-            _yes.AddManipulator(new Clickable(OnYes));
-            _no.AddManipulator(new Clickable(OnNo));
-        }
-
-        public void Show (string title, string message, string yes=null, string no=null, Action onYes=null, Action onNo = null)
         {
-            Show();
+            base.Initialize();
 
-            _title = this.Q<Label>("title");
             _message = this.Q<Label>("message");
-            _yes = this.Q<Label>("yes");
-            _no = this.Q<Label>("no");
+            _yes = this.Q<Button>("yes");
+            _no = this.Q<Button>("no");
 
-
-            _title.text = title;
-            _message.text = message;
-            _yes.text = yes ?? "Yes";
-            _no.text = no ?? "No";
-            _onYes = onYes;
-            _onNo = onNo;
+            _yes.clicked += OnYesButton;
+            _no.clicked += OnNoButton;
         }
 
-        private void OnYes(EventBase e) => PerformAction(_onYes);
+        private void OnYesButton() => PerformAction(_onYes);
 
-        private void OnNo(EventBase e) => PerformAction(_onNo);
+        private void OnNoButton() => PerformAction(_onNo);
 
         private void PerformAction (Action action)
         {
@@ -53,6 +41,13 @@ namespace NoZ.Zisle
             _onNo = null;
             Hide();
             action?.Invoke();
+        }
+
+        public override void Show()
+        {
+            base.Show();
+
+            _yes.Focus();
         }
     }
 }

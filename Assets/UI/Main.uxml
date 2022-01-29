@@ -13,12 +13,10 @@
     <ui:Template name="ConfirmPopup" src="ConfirmPopup.uxml" />
 
     <VisualElement class="root">
-        <Style src="Main.uss"/>
-
         <VisualElement class="main-background"/>
 
-        <ui:Instance template="Title" class="screen"/>
-        <ui:Instance template="Options" class="screen hidden"/>
+        <ui:Instance template="Title" class="screen hidden"/>
+        <ui:Instance template="Options" class="screen"/>
         <ui:Instance template="ConfirmPopup" class="screen hidden"/>
 
     </VisualElement>

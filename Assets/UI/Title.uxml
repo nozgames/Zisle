@@ -7,12 +7,14 @@
     xmlns:zisle="NoZ.Zisle"
     xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
 >
-    <zisle:TitleController name="title" class="screen">
-        <VisualElement name="buttons-container" class="main-buttons">
-            <Label name="solo-button" text="Solo" class="main-button"/>
-            <Label name="coop-button" text="Cooperative" class="main-button"/>
-            <Label name="options-button" text="Options" class="main-button"/>
-            <Label name="quit-button" text="Quit" class="main-button"/>
+    <Style src="project://database/Assets/UI/Title.uss" />
+    <zisle:TitleController name="title" class="screen centered-vertical">
+        <VisualElement class="centered-vertical">
+            <VisualElement class="logo"/>
+            <Button name="solo-button" text="Solo" class="menu-row"/>
+            <Button name="coop-button" text="Cooperative" class="menu-row"/>
+            <Button name="options-button" text="Options" class="menu-row"/>
+            <Button name="quit-button" text="Quit" class="menu-row"/>
         </VisualElement>
     </zisle:TitleController>
 </engine:UXML>

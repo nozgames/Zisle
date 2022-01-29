@@ -6,8 +6,6 @@ namespace NoZ.Zisle
 {
     public class TitleController : UIController
     {
-        public event Action onOptions;
-
         public new class UxmlFactory : UxmlFactory<TitleController, UxmlTraits> { }
 
         public new class UxmlTraits : VisualElement.UxmlTraits
@@ -25,33 +23,36 @@ namespace NoZ.Zisle
 
         public override void Initialize()
         {
-            this.Q("host").AddManipulator(new Clickable(OnHost));
-            this.Q("join").AddManipulator(new Clickable(OnJoin));
-            this.Q("options-button").AddManipulator(new Clickable(() => onOptions?.Invoke()));
-            this.Q("quit-button").AddManipulator(new Clickable(OnQuit));
-
-            Debug.Log("Geometry change");
+            this.Q<Button>("solo-button").clicked += OnHost;
+            this.Q<Button>("solo-button").Focus();
+            this.Q<Button>("coop-button").clicked += OnJoin;
+            this.Q<Button>("options-button").clicked += OnOptions;
+            this.Q<Button>("quit-button").clicked += OnQuit;
         }
 
-        private void OnHost(EventBase e)
+        private void OnHost()
         {
         }
 
-        private void OnJoin(EventBase e)
+        private void OnJoin()
         {
 
         }
 
-        private void OnQuit(EventBase e)
+        private void OnOptions() => UIManager.Instance.ShowOptions();
+
+        private void OnQuit()
         {
-            UIManager.Instance.ShowConfirmationPopup("Quit", "Are you sure you want to quit?", onYes: () =>
+            UIManager.Instance.ShowConfirmationPopup("Quit to desktop?", onYes: () =>
             {
 #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
 #else
                 Application.Quit();
 #endif
-            });
+            },
+            onNo:() => UIManager.Instance.ShowTitle()
+            );
         }
     }
 }

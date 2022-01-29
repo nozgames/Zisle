@@ -1,0 +1,13 @@
+.menu-row {
+    width: 400px;
+    margin-bottom: 15px;
+}
+
+.logo {
+    background-image : url("project://database/Assets/Sprites/Logo.psd");
+    width: 768px;
+    height: 384px;
+    margin-top: -128px;
+    margin-bottom: 60px;
+    -unity-background-image-tint-color: var(--color-title);
+}

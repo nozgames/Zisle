@@ -12,12 +12,12 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
+  companyName: NoZ Games, LLC
   productName: Zisle
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
-  m_ShowUnitySplashScreen: 1
+  m_ShowUnitySplashScreen: 0
   m_ShowUnitySplashLogo: 1
   m_SplashScreenOverlayOpacity: 1
   m_SplashScreenAnimation: 1
@@ -859,11 +859,11 @@ PlayerSettings:
     m_VersionName: 
   apiCompatibilityLevel: 6
   activeInputHandler: 0
-  cloudProjectId: 20961ed2-b054-443c-ae55-5c33ea349023
+  cloudProjectId: 6eed7ab1-48d6-4771-9d62-2cdc6121093b
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: Zisle
-  organizationId: unity_gf_rkz1be5bj6w
+  organizationId: noz-games-llc
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   playerDataPath: 

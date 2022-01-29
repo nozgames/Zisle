@@ -1,24 +1,12 @@
-using System;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace NoZ.Zisle
 {
     public class UIController : VisualElement
     {
-        public void Show()
-        {
-            parent.RemoveFromClassList("hidden");
-        }
+        public virtual void Show() => parent.RemoveFromClassList("hidden");
+        public virtual void Hide() => parent.AddToClassList("hidden");
 
-        public void Hide()
-        {
-            parent.AddToClassList("hidden");
-        }
-
-        public virtual void Initialize ()
-        {
-
-        }
+        public virtual void Initialize () { }
     }
 }

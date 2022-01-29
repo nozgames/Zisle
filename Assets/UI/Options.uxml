@@ -7,9 +7,17 @@
     xmlns:zisle="NoZ.Zisle"
     xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
 >
-    <zisle:OptionsController class="screen">
-        <VisualElement name="buttons-container" class="main-buttons">
-            <Label name="back" text="Back" class="main-button"/>
+    <Style src="project://database/Assets/UI/Options.uss" />
+    <zisle:OptionsController class="screen centered-vertical">
+        <VisualElement class="centered-vertical left-align">
+            <Label text="Options" class="screen-title"/>
+            <Slider name="sound-volume" label="Sound Volume" class="menu-row"/>
+            <Slider name="music-volume" label="Music Volume" class="menu-row"/>
+            <DropdownField name="resolutions" label="Resolution" class="menu-row"/>
+            <Toggle name="fullscreen" label="Fullscreen" class="menu-row"/>
+            <Toggle name="screen-shake" label="Screen Shake" class="menu-row"/>
+            <Button text="Controls" class="menu-row menu-row-gap"/>
+            <Button name="back" text="Back" class="menu-row"/>
         </VisualElement>
     </zisle:OptionsController>
 </engine:UXML>
