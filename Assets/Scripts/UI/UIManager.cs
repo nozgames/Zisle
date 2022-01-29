@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using UnityEngine.UIElements;
 using NoZ.Tweening;
 
@@ -6,6 +7,9 @@ namespace NoZ.Zisle
 {
     public class UIManager : Singleton<UIManager>
     {
+        [Header("Sounds")]
+        [SerializeField] private AudioClip _clickSound;
+
         private VisualElement _root;
         private UIController _activeController;
         private bool _transitioning;
@@ -79,6 +83,11 @@ namespace NoZ.Zisle
                     _transitioning = false;
                 })
                 .Play();
+        }
+
+        public void PlayClickSound ()
+        {
+            AudioManager.Instance.Play(_clickSound);
         }
     }
 }

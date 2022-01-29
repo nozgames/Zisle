@@ -27,8 +27,8 @@ namespace NoZ.Zisle
             _yes = this.Q<Button>("yes");
             _no = this.Q<Button>("no");
 
-            _yes.clicked += OnYesButton;
-            _no.clicked += OnNoButton;
+            _yes = (Button)BindClick("yes", OnYesButton);
+            _no = (Button)BindClick("no", OnNoButton);
         }
 
         private void OnYesButton() => PerformAction(_onYes);

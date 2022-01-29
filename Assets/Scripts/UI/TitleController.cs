@@ -23,11 +23,10 @@ namespace NoZ.Zisle
 
         public override void Initialize()
         {
-            this.Q<Button>("solo-button").clicked += OnHost;
-            this.Q<Button>("solo-button").Focus();
-            this.Q<Button>("coop-button").clicked += OnJoin;
-            this.Q<Button>("options-button").clicked += OnOptions;
-            this.Q<Button>("quit-button").clicked += OnQuit;
+            BindClick("solo-button", OnHost).Focus();
+            BindClick("coop-button", OnJoin);
+            BindClick("options-button", OnOptions);
+            BindClick("quit-button", OnQuit);
         }
 
         private void OnHost()

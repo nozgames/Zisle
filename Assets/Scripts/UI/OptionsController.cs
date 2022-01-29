@@ -13,12 +13,15 @@ namespace NoZ.Zisle
 
         public OptionsController()
         {
-            RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+            //RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
         }
 
-        private void OnGeometryChanged(GeometryChangedEvent evt)
+        public override void Initialize()
         {
-            this.Q<Button>("back").clicked += OnBack;
+            base.Initialize();
+
+            BindClick("back", OnBack).Focus();
+            BindClick("controls");
 
             var resolutions = this.Q<DropdownField>("resolutions");
             resolutions.choices = Screen.resolutions.Select(r => ResolutionToString(r)).ToList();
