@@ -29,13 +29,13 @@ namespace NoZ.Zisle
             // Initialzie and bind all UIControllers
             _root.Query<UIController>().ForEach(c => c.Initialize());
 
+            UIController<OptionsController>.Bind(_root).Hide();
+            UIController<ConfirmPopupController>.Bind(_root).Hide();
+            UIController<CooperativeController>.Bind(_root).Hide();
+            UIController<CooperativeJoinController>.Bind(_root).Hide();
+            UIController<ConnectingController>.Bind(_root).Hide();
+
             var title = UIController<TitleController>.Bind(_root);
-            var options = UIController<OptionsController>.Bind(_root);
-            var confirmPopup = UIController<ConfirmPopupController>.Bind(_root);
-
-            options.Hide();
-            confirmPopup.Hide();
-
             title.Show();
             _activeController = title;
         }
@@ -61,9 +61,14 @@ namespace NoZ.Zisle
             TransitionTo(UIController<TitleController>.instance);
         }
 
-        private void HidePopup ()
-        {
-        }
+        public void ShowCooperative () =>
+            TransitionTo(UIController<CooperativeController>.instance);
+
+        public void ShowCooperativeJoin () =>
+            TransitionTo(UIController<CooperativeJoinController>.instance);        
+
+        public void ShowConnecting () =>
+            TransitionTo(UIController<ConnectingController>.instance);
 
         private void TransitionTo(UIController controller)
         {

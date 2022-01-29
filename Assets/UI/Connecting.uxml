@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="UnityEngine.UIElements"
+    xmlns:engine="UnityEngine.UIElements"
+    xmlns:editor="UnityEditor.UIElements"
+    xmlns:zisle="NoZ.Zisle"
+    xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
+>
+    <Style src="project://database/Assets/UI/Connecting.uss" />
+    <zisle:ConnectingController class="screen centered-vertical">
+        <Label text="Connecting" class="screen-title"/>
+        <VisualElement class="centered-vertical">
+            <Button name="back" text="Cancel" class="menu-row menu-row-gap"/>
+        </VisualElement>
+    </zisle:ConnectingController>
+</engine:UXML>

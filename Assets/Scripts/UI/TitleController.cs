@@ -23,19 +23,31 @@ namespace NoZ.Zisle
 
         public override void Initialize()
         {
-            BindClick("solo-button", OnHost).Focus();
-            BindClick("coop-button", OnJoin);
+            BindClick("solo-button", OnSolo).Focus();
+            BindClick("coop-button", OnCooperative);
             BindClick("options-button", OnOptions);
             BindClick("quit-button", OnQuit);
         }
 
-        private void OnHost()
+        private void OnSolo()
         {
+            // TODO: check if there was a game in progress
+            UIManager.Instance.ShowConfirmationPopup(
+                "Resume previous solo game?", 
+                yes: "Resume",
+                no: "New Game",
+                onYes: () =>
+                {
+                // TODO: load old solo game
+                }, 
+                onNo: () => {
+                // TODO: start new solo game
+                });
         }
 
-        private void OnJoin()
+        private void OnCooperative()
         {
-
+            UIManager.Instance.ShowCooperative();
         }
 
         private void OnOptions() => UIManager.Instance.ShowOptions();

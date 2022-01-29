@@ -10,13 +10,19 @@
 
     <ui:Template name="Title" src="Title.uxml" />
     <ui:Template name="Options" src="Options.uxml" />
+    <ui:Template name="Cooperative" src="Cooperative.uxml" />
+    <ui:Template name="CooperativeJoin" src="CooperativeJoin.uxml" />
+    <ui:Template name="Connecting" src="Connecting.uxml" />
     <ui:Template name="ConfirmPopup" src="ConfirmPopup.uxml" />
 
     <VisualElement class="root">
         <VisualElement class="main-background"/>
 
         <ui:Instance template="Title" class="screen hidden"/>
-        <ui:Instance template="Options" class="screen"/>
+        <ui:Instance template="Options" class="screen hidden"/>
+        <ui:Instance template="Cooperative" class="screen hidden"/>
+        <ui:Instance template="CooperativeJoin" class="screen hidden"/>
+        <ui:Instance template="Connecting" class="screen "/>
         <ui:Instance template="ConfirmPopup" class="screen hidden"/>
 
     </VisualElement>

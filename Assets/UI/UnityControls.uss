@@ -1,6 +1,6 @@
 /* Button */
 
-.unity-button, .unity-button:hover, .unity-button:focus
+.unity-button, .unity-button:hover, .unity-button:focus, .unity-button:disabled
 {
     color: var(--color-text);
     background-color: rgba(0,0,0,0);
@@ -218,4 +218,28 @@ DropdownField .unity-base-popup-field__text
 .unity-scroller--vertical RepeatButton
 {
     display: none;
+}
+
+/* Text Field */
+
+.unity-base-text-field__input
+{
+    background-color: var(--color-background-dark);
+	border-width: var(--width-border);
+    border-color: var(--color-text);
+	font-size: var(--font-size-small);
+	color: var(--color-text-dark);
+	--unity-selection-color: var(--color-title);
+    --unity-cursor-color: var(--color-title);
+}
+
+.unity-text-field__placeholder > .unity-base-text-field__input {    
+    color: var(--color-text-ghosted);
+}
+
+.unity-base-text-field:focus > .unity-base-text-field__input,
+.unity-base-text-field:hover > .unity-base-text-field__input
+{
+	border-color: var(--color-text);
+	font-size: var(--font-size-small);
 }

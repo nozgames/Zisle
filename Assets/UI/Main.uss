@@ -1,5 +1,7 @@
 :root {
     --color-text: #494846;
+    --color-text-ghosted: #615951;
+    --color-text-dark: #363533;
     --color-background: #a99581;
     --color-background-highlight: #c4b3a3;
     --color-background-dark: #7a6b5d;
