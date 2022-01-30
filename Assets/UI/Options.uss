@@ -3,3 +3,32 @@
 	-unity-text-align: middle-center;
 	width: 100%;
 }
+
+.zisle-control-binding
+{
+	flex-direction: row;	
+	color: var(--color-text);
+}
+
+.zisle-control-binding__binding
+{
+	background-color: var(--color-background-dark);
+	border-color: var(--color-text);
+	border-width: var(--width-border);
+	width: 250px;
+	margin-left: 16px;
+	font-size: var(--font-size-small);
+}
+
+.zisle-control-binding__wait
+{
+	color: var(--color-title);
+	font-size: 80%;
+	-unity-text-align: middle-center;
+}
+
+.zisle-control-binding__bindings
+{
+	flex-direction: row;
+	margin-left: auto;
+}

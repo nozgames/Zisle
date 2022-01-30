@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="UnityEngine.UIElements"
+    xmlns:engine="UnityEngine.UIElements"
+    xmlns:editor="UnityEditor.UIElements"
+    xmlns:zisle="NoZ.Zisle"
+    xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
+>
+    <Style src="project://database/Assets/UI/Options.uss" />
+    <zisle:UIControlBinding class="screen centered-vertical">
+        <VisualElement>
+            <Label name="action-name" text="Action"/>
+        </VisualElement>
+    </zisle:UIControlBinding>
+</engine:UXML>

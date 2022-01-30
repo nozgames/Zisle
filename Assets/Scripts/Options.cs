@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace NoZ.Zisle
 {
@@ -8,6 +9,7 @@ namespace NoZ.Zisle
         private const string PlayerPrefsScreenShake = "Options.ScreenShake";
         private const string PlayerPrefsSoundVolume = "Options.SoundVolume";
         private const string PlayerPrefsMusicVolume = "Options.MusicVolume";
+        private const string PlayerPrefsRebinds = "Options.Rebinds";
 
         private static bool _screenShake;
         private static float _soundVolume;
@@ -50,6 +52,18 @@ namespace NoZ.Zisle
                 PlayerPrefs.SetFloat(PlayerPrefsMusicVolume, _musicVolume);
                 OnMusicVolumeChange?.Invoke(_musicVolume);
             }
+        }
+
+        public static void SaveBindings(InputActionAsset actions)
+        {
+            var rebinds = actions.SaveBindingOverridesAsJson();
+            PlayerPrefs.SetString(PlayerPrefsRebinds, rebinds);
+        }
+
+        public static void LoadBindings (InputActionAsset actions)
+        {
+            var rebinds = PlayerPrefs.GetString(PlayerPrefsRebinds);
+            actions.LoadBindingOverridesFromJson(rebinds);
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]

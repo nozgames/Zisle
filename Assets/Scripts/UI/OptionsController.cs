@@ -29,7 +29,10 @@ namespace NoZ.Zisle
                 else
                     OnBack?.Invoke();
             }).Focus();
-            BindClick("controls");
+            BindClick("controls", () =>
+            {
+                UIManager.Instance.ShowControls();
+            });
 
             var resolutions = this.Q<DropdownField>("resolutions");
             resolutions.choices = Screen.resolutions.Select(r => ResolutionToString(r)).ToList();

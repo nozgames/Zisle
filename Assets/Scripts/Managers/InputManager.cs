@@ -8,6 +8,7 @@ namespace NoZ.Zisle
     public class InputManager : Singleton<InputManager>
     {
         [Header("Global")]
+        [SerializeField] private InputActionAsset _inputActions = null;
         [SerializeField] private InputActionReference _debugMenu = null;
 
         [Header("UI")]
@@ -16,7 +17,10 @@ namespace NoZ.Zisle
 
         [Header("Player")]
         [SerializeField] private InputActionReference _playerMenu = null;
-        [SerializeField] private InputActionReference _playerMove = null;
+        [SerializeField] private InputActionReference _playerMoveLeft = null;
+        [SerializeField] private InputActionReference _playerMoveRight = null;
+        [SerializeField] private InputActionReference _playerMoveUp = null;
+        [SerializeField] private InputActionReference _playerMoveDown = null;
         [SerializeField] private InputActionReference _playerLook = null;
 
         /// <summary>
@@ -43,36 +47,42 @@ namespace NoZ.Zisle
             //_uiClose.action.started += (ctx) => onUIClose?.Invoke();
 
             //_debugMenu.action.Enable();
+
+            Options.LoadBindings(_inputActions);
         }
 
-        public void EnableMenuActions (bool enable=true)
+        public void EnableMenuActions(bool enable = true)
         {
-            if(enable)
+            if (enable)
             {
                 //_uiClose.action.Enable();
             }
             else
             {
                 //_uiClose.action.Disable();
-            }            
+            }
         }
 
         /// <summary>
         /// Enable or disable the player actions
         /// </summary>
         /// <param name="enable"></param>
-        public void EnablePlayerActions (bool enable=true)
+        public void EnablePlayerActions(bool enable = true)
         {
             if (enable)
             {
-                _playerMove.action.Enable();
-                //_playerLook.action.Enable();
+                _playerMoveLeft.action.Enable();
+                _playerMoveRight.action.Enable();
+                _playerMoveUp.action.Enable();
+                _playerMoveDown.action.Enable();
                 _playerMenu.action.Enable();
             }
             else
             {
-                _playerMove.action.Disable();
-                //_playerLook.action.Disable();
+                _playerMoveLeft.action.Disable();
+                _playerMoveRight.action.Disable();
+                _playerMoveUp.action.Disable();
+                _playerMoveDown.action.Disable();
                 _playerMenu.action.Disable();
             }
         }
@@ -80,12 +90,51 @@ namespace NoZ.Zisle
         /// <summary>
         /// Read the current value of player move
         /// </summary>
-        public Vector2 playerMove => Instance?._playerMove.action.ReadValue<Vector2>() ?? Vector2.zero;
+        public Vector2 playerMove => new Vector2(
+            -1.0f * _playerMoveLeft.action.ReadValue<float>() + _playerMoveRight.action.ReadValue<float>(),
+            _playerMoveUp.action.ReadValue<float>() + -1.0f * _playerMoveDown.action.ReadValue<float>()).normalized;
 
         /// <summary>
         /// Read the current value of player look
         /// </summary>
         public Vector2 playerLook => Instance?._playerLook.action.ReadValue<Vector2>() ?? Vector2.zero;
 
+        public void PerformInteractiveRebinding(string actionMap, string actionName, int bindingIndex, Action onComplete = null)
+        {
+            var map = _inputActions.FindActionMap(actionMap);
+            if (map == null)
+                throw new ArgumentException("actionMap");
+
+            var action = map.FindAction(actionName);
+            if (action == null)
+                throw new ArgumentException("actionName");
+
+            var operation = action.PerformInteractiveRebinding(bindingIndex);
+            operation.OnComplete((r) =>
+            {
+                onComplete?.Invoke();
+                operation.Dispose();
+                Options.SaveBindings(_inputActions);
+            });
+            operation.OnCancel((r) =>
+            {
+                onComplete?.Invoke();
+                operation.Dispose();
+            });
+            operation.Start();
+        }
+
+        public string GetBinding(string actionMap, string actionName, int bindingIndex)
+        {
+            var map = _inputActions.FindActionMap(actionMap);
+            if (map == null)
+                throw new ArgumentException("actionMap");
+
+            var action = map.FindAction(actionName);
+            if (action == null)
+                throw new ArgumentException("actionName");
+
+            return action.bindings[bindingIndex].ToDisplayString();
+        }
     }
 }

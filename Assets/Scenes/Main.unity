@@ -790,12 +790,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adfa8c01f55804e489bb70af95e9d8a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _inputActions: {fileID: -944628639613478452, guid: 92783038ce5d74148b556e04433c7c93,
+    type: 3}
   _debugMenu: {fileID: 0}
   _uiMenu: {fileID: 0}
   _uiClose: {fileID: 0}
   _playerMenu: {fileID: 1755185687716959511, guid: 92783038ce5d74148b556e04433c7c93,
     type: 3}
-  _playerMove: {fileID: 2897836634890159841, guid: 92783038ce5d74148b556e04433c7c93,
+  _playerMoveLeft: {fileID: 2897836634890159841, guid: 92783038ce5d74148b556e04433c7c93,
+    type: 3}
+  _playerMoveRight: {fileID: -4217136976175001261, guid: 92783038ce5d74148b556e04433c7c93,
+    type: 3}
+  _playerMoveUp: {fileID: 174026541480027986, guid: 92783038ce5d74148b556e04433c7c93,
+    type: 3}
+  _playerMoveDown: {fileID: -4790304392232712304, guid: 92783038ce5d74148b556e04433c7c93,
     type: 3}
   _playerLook: {fileID: 0}
 --- !u!4 &374313205
@@ -1138,10 +1146,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   singletons:
+  - {fileID: 374313204}
   - {fileID: 612517314}
   - {fileID: 515661219}
-  - {fileID: 374313204}
   - {fileID: 1170935351}
+  - {fileID: 675673003}
   onBeforeInitialize:
     m_PersistentCalls:
       m_Calls: []

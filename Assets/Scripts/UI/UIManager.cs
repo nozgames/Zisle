@@ -22,21 +22,24 @@ namespace NoZ.Zisle
 
         protected override void OnInitialize()
         {
-            base.OnInitialize();            
+            base.OnInitialize();
 
-            _root = GetComponent<UIDocument>().rootVisualElement;
-            
+            var doc = GetComponent<UIDocument>();
+            _root = doc.rootVisualElement;
+            doc.enabled = true;
+
             // Initialzie and bind all UIControllers
             _root.Query<UIController>().ForEach(c => c.Initialize());
 
             UIController<OptionsController>.Bind(_root).Hide();
+            UIController<UIControls>.Bind(_root).Hide();
             UIController<ConfirmPopupController>.Bind(_root).Hide();
             UIController<CooperativeController>.Bind(_root).Hide();
             UIController<CooperativeJoinController>.Bind(_root).Hide();
             UIController<ConnectingController>.Bind(_root).Hide();
             UIController<UIGame>.Bind(_root).Hide();
             UIController<UIGameMenu>.Bind(_root).Hide();
-
+            
             var title = UIController<TitleController>.Bind(_root);
             title.Show();
             _activeController = title;
@@ -61,6 +64,9 @@ namespace NoZ.Zisle
             options.OnBack = onBack;
             TransitionTo(options);
         }
+
+        public void ShowControls() =>
+            TransitionTo(UIController<UIControls>.Instance);
 
         public void ShowTitle () =>
             TransitionTo(UIController<TitleController>.Instance);

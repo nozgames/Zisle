@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="UnityEngine.UIElements"
+    xmlns:engine="UnityEngine.UIElements"
+    xmlns:editor="UnityEditor.UIElements"
+    xmlns:zisle="NoZ.Zisle"
+    xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
+>
+    <Style src="project://database/Assets/UI/Options.uss" />
+
+    <zisle:UIControls class="screen centered-vertical">
+        <VisualElement class="centered-vertical left-align">
+            <Label text="Controls" class="screen-title"/>
+            <zisle:UIControlBinding action-map="Player" action-name="Move Up" class="menu-row"/>
+            <zisle:UIControlBinding action-map="Player" action-name="Move Left" class="menu-row"/>
+            <zisle:UIControlBinding action-map="Player" action-name="Move Down" class="menu-row"/>
+            <zisle:UIControlBinding action-map="Player" action-name="Move Right" class="menu-row"/>
+            <Button name="back" text="Back" class="menu-row"/>
+        </VisualElement>
+    </zisle:UIControls>
+</engine:UXML>
