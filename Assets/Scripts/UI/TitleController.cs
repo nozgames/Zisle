@@ -38,9 +38,11 @@ namespace NoZ.Zisle
                 no: "New Game",
                 onYes: () =>
                 {
-                // TODO: load old solo game
+                    // TODO: load old solo game
+                    InputManager.Instance.EnablePlayerActions();
                 }, 
                 onNo: () => {
+                    InputManager.Instance.EnablePlayerActions();
                 // TODO: start new solo game
                 });
         }

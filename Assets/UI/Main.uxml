@@ -18,11 +18,11 @@
     <VisualElement class="root">
         <VisualElement class="main-background"/>
 
-        <ui:Instance template="Title" class="screen hidden"/>
+        <ui:Instance template="Title" class="screen"/>
         <ui:Instance template="Options" class="screen hidden"/>
         <ui:Instance template="Cooperative" class="screen hidden"/>
         <ui:Instance template="CooperativeJoin" class="screen hidden"/>
-        <ui:Instance template="Connecting" class="screen "/>
+        <ui:Instance template="Connecting" class="screen hidden"/>
         <ui:Instance template="ConfirmPopup" class="screen hidden"/>
 
     </VisualElement>
