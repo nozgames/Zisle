@@ -16,8 +16,8 @@ namespace NoZ.Zisle
 
         private class UIController<T> where T : UIController
         {
-            public static T instance { get; set; }
-            public static T Bind(VisualElement element) => instance = element.Q<T>();
+            public static T Instance { get; set; }
+            public static T Bind(VisualElement element) => Instance = element.Q<T>();
         }
 
         protected override void OnInitialize()
@@ -34,46 +34,60 @@ namespace NoZ.Zisle
             UIController<CooperativeController>.Bind(_root).Hide();
             UIController<CooperativeJoinController>.Bind(_root).Hide();
             UIController<ConnectingController>.Bind(_root).Hide();
+            UIController<UIGame>.Bind(_root).Hide();
+            UIController<UIGameMenu>.Bind(_root).Hide();
 
             var title = UIController<TitleController>.Bind(_root);
             title.Show();
             _activeController = title;
         }
 
-        public void ShowConfirmationPopup (string message, string yes=null, string no=null, Action onYes=null, Action onNo=null)
+        public void ShowConfirmationPopup (string message, string yes=null, string no=null, string cancel=null, Action onYes=null, Action onNo=null, Action onCancel=null)
         {
-            var popup = UIController<ConfirmPopupController>.instance;
+            var popup = UIController<ConfirmPopupController>.Instance;
             popup.Message = message;
             popup.Yes = yes;
             popup.No = no;
             popup.OnYes = onYes;
             popup.OnNo = onNo;
-            TransitionTo(UIController<ConfirmPopupController>.instance);
+            popup.OnCancel = onCancel;
+            popup.Cancel = cancel;
+            TransitionTo(UIController<ConfirmPopupController>.Instance);
         }
 
-        public void ShowOptions ()
+        public void ShowOptions (Action onBack=null)
         {
-            TransitionTo(UIController<OptionsController>.instance);
+            var options = UIController<OptionsController>.Instance;
+            options.OnBack = onBack;
+            TransitionTo(options);
         }
 
-        public void ShowTitle ()
-        {
-            TransitionTo(UIController<TitleController>.instance);
-        }
+        public void ShowTitle () =>
+            TransitionTo(UIController<TitleController>.Instance);
 
         public void ShowCooperative () =>
-            TransitionTo(UIController<CooperativeController>.instance);
+            TransitionTo(UIController<CooperativeController>.Instance);
 
         public void ShowCooperativeJoin () =>
-            TransitionTo(UIController<CooperativeJoinController>.instance);        
+            TransitionTo(UIController<CooperativeJoinController>.Instance);        
 
         public void ShowConnecting () =>
-            TransitionTo(UIController<ConnectingController>.instance);
+            TransitionTo(UIController<ConnectingController>.Instance);
 
-        private void TransitionTo(UIController controller)
+        public void ShowGame() =>
+            TransitionTo(UIController<UIGame>.Instance);
+
+        public void ShowGameMenu() =>
+            TransitionTo(UIController<UIGameMenu>.Instance);
+
+        private void TransitionTo(UIController controller, Action onDone=null)
         {
             if (_activeController == controller || _transitioning)
                 return;
+
+
+            _activeController.OnBeforeTransitionOut();
+            controller.OnBeforeTransitionIn();
 
             _transitioning = true;
             controller.style.opacity = 0;
@@ -83,9 +97,12 @@ namespace NoZ.Zisle
                 .Element(controller.style.TweenFloat("opacity", new StyleFloat(1.0f)).Duration(0.2f).EaseInOutQuadratic())
                 .OnStop(() =>
                 {
+                    _activeController.OnAfterTransitionOut();
                     _activeController.Hide();
                     _activeController = controller;
+                    controller.OnAfterTransitionIn();
                     _transitioning = false;
+                    onDone?.Invoke();
                 })
                 .Play();
         }

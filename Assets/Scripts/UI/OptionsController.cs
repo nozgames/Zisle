@@ -11,6 +11,8 @@ namespace NoZ.Zisle
 
         private string ResolutionToString(Resolution r) => $"{r.width} x {r.height} @ {r.refreshRate}Hz";
 
+        public Action OnBack = null;
+
         public OptionsController()
         {
             //RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
@@ -20,7 +22,13 @@ namespace NoZ.Zisle
         {
             base.Initialize();
 
-            BindClick("back", OnBack).Focus();
+            BindClick("back", () =>
+            {
+                if (OnBack == null)
+                    UIManager.Instance.ShowTitle();
+                else
+                    OnBack?.Invoke();
+            }).Focus();
             BindClick("controls");
 
             var resolutions = this.Q<DropdownField>("resolutions");
@@ -51,11 +59,6 @@ namespace NoZ.Zisle
             musicVolume.highValue = 1.0f;
             musicVolume.value = Options.MusicVolume;
             musicVolume.RegisterValueChangedCallback(e => Options.MusicVolume = e.newValue);
-        }
-
-        private void OnBack()
-        {
-            UIManager.Instance.ShowTitle();
         }
     }
 }

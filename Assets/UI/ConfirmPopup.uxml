@@ -14,6 +14,7 @@
             <ui:Label name="message" text="Message" class="screen-title"/>
             <ui:Button name="yes" text="Yes" class="menu-row menu-row-gap"/>
             <ui:Button name="no" text="No" class="menu-row menu-row-gap"/>
+            <ui:Button name="cancel" text="Cancel" class="menu-row menu-row-gap"/>
         </ui:VisualElement>
     </zisle:ConfirmPopupController>
 </ui:UXML>

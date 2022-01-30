@@ -31,20 +31,33 @@ namespace NoZ.Zisle
 
         private void OnSolo()
         {
+#if false
             // TODO: check if there was a game in progress
             UIManager.Instance.ShowConfirmationPopup(
                 "Resume previous solo game?", 
                 yes: "Resume",
                 no: "New Game",
+                cancel: "Cancel",
                 onYes: () =>
                 {
                     // TODO: load old solo game
-                    InputManager.Instance.EnablePlayerActions();
+                    MultiplayerManager.Instance.HostLocal();
+                    UIManager.Instance.ShowGame();
                 }, 
                 onNo: () => {
-                    InputManager.Instance.EnablePlayerActions();
-                // TODO: start new solo game
-                });
+                    MultiplayerManager.Instance.HostLocal();
+                    UIManager.Instance.ShowGame();
+                    // TODO: start new solo game
+                },
+                onCancel: () =>
+                {
+                    UIManager.Instance.ShowTitle();
+                }
+                );
+#else
+            MultiplayerManager.Instance.HostLocal();
+            UIManager.Instance.ShowGame();
+#endif
         }
 
         private void OnCooperative()

@@ -1,5 +1,6 @@
 using UnityEngine;
 using NoZ.Tweening;
+using Unity.Netcode;
 
 namespace NoZ.Zisle
 {
@@ -11,6 +12,13 @@ namespace NoZ.Zisle
         [SerializeField] private Transform _test = null;
 
         Tween _moveTween;
+
+        private NetworkObject _networkObject;
+
+        private void Awake()
+        {
+            _networkObject = GetComponent<NetworkObject>();
+        }
 
         private void OnEnable()
         {
@@ -34,6 +42,9 @@ namespace NoZ.Zisle
 
         private void Update()
         {
+            if (!_networkObject.IsLocalPlayer)
+                return;
+
             var move = InputManager.Instance.playerMove * Time.deltaTime * _speed;
 
             move = Camera.main.transform.right.ToVector2XZ() * move.x +

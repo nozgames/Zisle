@@ -38,7 +38,7 @@ namespace NoZ.Zisle
         {
             base.OnInitialize();
 
-            //_playerMenu.action.started += (ctx) => onPlayerMenu?.Invoke();
+            _playerMenu.action.started += (ctx) => onPlayerMenu?.Invoke();
             //_debugMenu.action.started += (ctx) => onDebugMenu?.Invoke();
             //_uiClose.action.started += (ctx) => onUIClose?.Invoke();
 
@@ -49,11 +49,11 @@ namespace NoZ.Zisle
         {
             if(enable)
             {
-                _uiClose.action.Enable();
+                //_uiClose.action.Enable();
             }
             else
             {
-                _uiClose.action.Disable();
+                //_uiClose.action.Disable();
             }            
         }
 
@@ -67,13 +67,13 @@ namespace NoZ.Zisle
             {
                 _playerMove.action.Enable();
                 //_playerLook.action.Enable();
-                //_playerMenu.action.Enable();
+                _playerMenu.action.Enable();
             }
             else
             {
                 _playerMove.action.Disable();
                 //_playerLook.action.Disable();
-                //_playerMenu.action.Disable();
+                _playerMenu.action.Disable();
             }
         }
 

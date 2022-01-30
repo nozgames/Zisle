@@ -15,6 +15,9 @@ namespace NoZ.Zisle
             BindClick("join", OnJoin);
             BindClick("host", OnHost);
             BindClick("continue", OnContinue);
+
+            BindClick("host-local", OnHostLocal);
+            BindClick("join-local", OnJoinLocal);
         }
 
         private void OnBack() => UIManager.Instance.ShowTitle();
@@ -23,8 +26,32 @@ namespace NoZ.Zisle
         {
             // TODO: game creation options at some point if there are any
             UIManager.Instance.ShowConnecting();
+
+            MultiplayerManager.Instance.OnConnected -= OnConnected;
+            MultiplayerManager.Instance.OnConnected += OnConnected;
+            MultiplayerManager.Instance.Host();
+        }
+
+        private void OnJoinLocal()
+        {
+            UIManager.Instance.ShowConnecting();
+
+            MultiplayerManager.Instance.OnConnected -= OnConnected;
+            MultiplayerManager.Instance.OnConnected += OnConnected;
+            MultiplayerManager.Instance.JoinLocal();
+        }
+
+        private void OnHostLocal()
+        {
+            // TODO: game creation options at some point if there are any
+            UIManager.Instance.ShowConnecting();
+
+            MultiplayerManager.Instance.OnConnected -= OnConnected;
+            MultiplayerManager.Instance.OnConnected += OnConnected;
+            MultiplayerManager.Instance.HostLocal();
         }
 
         private void OnContinue() => UIManager.Instance.ShowTitle();
+        private void OnConnected() => UIManager.Instance.ShowGame();
     }
 }

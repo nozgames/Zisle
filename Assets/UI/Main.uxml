@@ -13,16 +13,20 @@
     <ui:Template name="Cooperative" src="Cooperative.uxml" />
     <ui:Template name="CooperativeJoin" src="CooperativeJoin.uxml" />
     <ui:Template name="Connecting" src="Connecting.uxml" />
+    <ui:Template name="Game" src="Game.uxml" />
+    <ui:Template name="GameMenu" src="GameMenu.uxml" />
     <ui:Template name="ConfirmPopup" src="ConfirmPopup.uxml" />
 
     <VisualElement class="root">
         <VisualElement class="main-background"/>
 
-        <ui:Instance template="Title" class="screen"/>
+        <ui:Instance template="Title" class="screen hidden"/>
         <ui:Instance template="Options" class="screen hidden"/>
         <ui:Instance template="Cooperative" class="screen hidden"/>
         <ui:Instance template="CooperativeJoin" class="screen hidden"/>
         <ui:Instance template="Connecting" class="screen hidden"/>
+        <ui:Instance template="Game" class="screen hidden"/>
+        <ui:Instance template="GameMenu" class="screen"/>
         <ui:Instance template="ConfirmPopup" class="screen hidden"/>
 
     </VisualElement>

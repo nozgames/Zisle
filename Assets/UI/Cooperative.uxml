@@ -14,6 +14,8 @@
             <Button name="continue" text="Continue" class="menu-row menu-row-gap hidden"/>
             <Button name="host" text="Create Game" class="menu-row menu-row-gap"/>
             <Button name="join" text="Join Game" class="menu-row"/>
+            <Button name="host-local" text="Create Local" class="menu-row menu-row-gap"/>
+            <Button name="join-local" text="Join Local" class="menu-row"/>
             <Button name="back" text="Back" class="menu-row menu-row-gap"/>
         </VisualElement>
     </zisle:CooperativeController>

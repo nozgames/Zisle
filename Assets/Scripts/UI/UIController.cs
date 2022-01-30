@@ -27,5 +27,10 @@ namespace NoZ.Zisle
 
             return element;
         }
+
+        public virtual void OnBeforeTransitionOut() { }
+        public virtual void OnBeforeTransitionIn() { }
+        public virtual void OnAfterTransitionOut() { }
+        public virtual void OnAfterTransitionIn() { }
     }
 }
