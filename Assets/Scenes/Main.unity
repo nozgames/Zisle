@@ -797,6 +797,8 @@ MonoBehaviour:
   _uiClose: {fileID: 0}
   _playerMenu: {fileID: 1755185687716959511, guid: 92783038ce5d74148b556e04433c7c93,
     type: 3}
+  _playerMove: {fileID: -7095444715687423244, guid: 92783038ce5d74148b556e04433c7c93,
+    type: 3}
   _playerMoveLeft: {fileID: 2897836634890159841, guid: 92783038ce5d74148b556e04433c7c93,
     type: 3}
   _playerMoveRight: {fileID: -4217136976175001261, guid: 92783038ce5d74148b556e04433c7c93,
@@ -805,7 +807,8 @@ MonoBehaviour:
     type: 3}
   _playerMoveDown: {fileID: -4790304392232712304, guid: 92783038ce5d74148b556e04433c7c93,
     type: 3}
-  _playerLook: {fileID: 0}
+  _playerAction: {fileID: 904065791343046597, guid: 92783038ce5d74148b556e04433c7c93,
+    type: 3}
 --- !u!4 &374313205
 Transform:
   m_ObjectHideFlags: 0

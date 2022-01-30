@@ -8,15 +8,13 @@
     xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
 >
     <Style src="project://database/Assets/UI/Options.uss" />
+    <Style src="project://database/Assets/UI/GamepadControls.uss" />
 
-    <zisle:UIControls class="screen centered-vertical">
+    <zisle:UIGamepadControls class="screen centered-vertical">
         <VisualElement class="centered-vertical left-align">
-            <Label text="Controls" class="screen-title"/>
-            <zisle:UIControlBinding action-map="Player" action-name="Move Up" class="menu-row"/>
-            <zisle:UIControlBinding action-map="Player" action-name="Move Left" class="menu-row"/>
-            <zisle:UIControlBinding action-map="Player" action-name="Move Down" class="menu-row"/>
-            <zisle:UIControlBinding action-map="Player" action-name="Move Right" class="menu-row"/>
+            <Label text="Gamepad Controls" class="screen-title"/>
+            <zisle:UIControlBinding action-map="Player" action-name="Action" class="menu-row" binding-count="1" binding-offset="2" gamepad="true"/>
             <Button name="back" text="Back" class="menu-row"/>
         </VisualElement>
-    </zisle:UIControls>
+    </zisle:UIGamepadControls>
 </engine:UXML>

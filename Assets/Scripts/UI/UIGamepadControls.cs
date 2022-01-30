@@ -3,9 +3,9 @@ using UnityEngine.UIElements;
 
 namespace NoZ.Zisle
 {
-    public class UIControls : UIController
+    public class UIGamepadControls : UIController
     {
-        public new class UxmlFactory : UxmlFactory<UIControls, UxmlTraits> { }
+        public new class UxmlFactory : UxmlFactory<UIGamepadControls, UxmlTraits> { }
 
         public override void Initialize()
         {

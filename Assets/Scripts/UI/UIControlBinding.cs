@@ -14,6 +14,9 @@ namespace NoZ.Zisle
         {
             UxmlStringAttributeDescription _ActionMap = new UxmlStringAttributeDescription { name = "action-map", defaultValue = "" };
             UxmlStringAttributeDescription _ActionName = new UxmlStringAttributeDescription { name = "action-name", defaultValue = "" };
+            UxmlIntAttributeDescription _BindingCount = new UxmlIntAttributeDescription { name = "binding-count", defaultValue = 2 };
+            UxmlIntAttributeDescription _BindingOffset = new UxmlIntAttributeDescription { name = "binding-offset", defaultValue = 0 };
+            UxmlBoolAttributeDescription _Gamepad = new UxmlBoolAttributeDescription { name = "gamepad", defaultValue = false };
 
             public override IEnumerable<UxmlChildElementDescription> uxmlChildElementsDescription
             {
@@ -38,24 +41,29 @@ namespace NoZ.Zisle
                 var multipleBindings = new VisualElement();
                 multipleBindings.AddToClassList("zisle-control-binding__bindings");
 
-                for(int i=0; i<2; i++)
+                var bindingCount = _BindingCount.GetValueFromBag(bag, cc);
+                var bindingOffset = _BindingOffset.GetValueFromBag(bag, cc);
+                var actionMap = _ActionMap.GetValueFromBag(bag, cc);
+                var actionName = _ActionName.GetValueFromBag(bag, cc);
+                var gamepad = _Gamepad.GetValueFromBag(bag, cc);
+                for (int i=0; i<bindingCount; i++)
                 {
-                    var bindingIndex = i;
+                    var bindingIndex = bindingOffset + i;
                     var bindingGroup = new VisualElement();
                     bindingGroup.AddToClassList("zisle-control-binding__binding");
 
                     var bindingButton = new Button();
+                    var bindingLabel = new Label();
+                    bindingButton.Add(bindingLabel);
+
                     bindingButton.RegisterCallback<GeometryChangedEvent>((evt) =>
                     {
                         if (InputManager.Instance == null)
                         {
-                            bindingButton.text = "A";
+                            bindingLabel.text = "A";
                             return;
                         }
-                        bindingButton.text = InputManager.Instance.GetBinding(
-                            _ActionMap.GetValueFromBag(bag, cc),
-                            _ActionName.GetValueFromBag(bag, cc),
-                            bindingIndex);
+                        UpdateBinding(bindingLabel, actionMap, actionName, bindingIndex);
                     });
                     bindingButton.AddToClassList("zisle-control-binding__button");
                     bindingGroup.Add(bindingButton);
@@ -68,31 +76,32 @@ namespace NoZ.Zisle
 
                     multipleBindings.Add(bindingGroup);
 
-
                     bindingButton.clicked += () =>
                     {
                         bindingButton.AddToClassList("hidden");
                         waitForButton.RemoveFromClassList("hidden");
 
-                        InputManager.Instance.PerformInteractiveRebinding(
-                            _ActionMap.GetValueFromBag(bag, cc),
-                            _ActionName.GetValueFromBag(bag, cc),
-                            bindingIndex,
-                            onComplete: () =>
-                            {
-                                bindingButton.RemoveFromClassList("hidden");
-                                waitForButton.AddToClassList("hidden");
-                                bindingButton.text = InputManager.Instance.GetBinding(
-                                    _ActionMap.GetValueFromBag(bag, cc),
-                                    _ActionName.GetValueFromBag(bag, cc),
-                                    bindingIndex);
-                            }
-                            );
+                        InputManager.Instance.PerformInteractiveRebinding(actionMap, actionName, bindingIndex, gamepad: gamepad, onComplete: () =>
+                        {
+                            bindingButton.RemoveFromClassList("hidden");
+                            waitForButton.AddToClassList("hidden");
+                            UpdateBinding(bindingLabel, actionMap, actionName, bindingIndex);
+                        });
                     };
                 }
 
                 group.Add(multipleBindings);
                 binding.Add(group);
+            }
+
+            private void UpdateBinding (Label label, string actionMap, string actionName, int bindingIndex)
+            {
+                // Remove the old binding text class
+                label.RemoveFromClassList($"zisle-control-binding__binding__{label.text.Replace(' ', '_').Replace('/', '_').ToLower()}");
+
+                label.text = InputManager.Instance.GetBinding(actionMap, actionName, bindingIndex);
+
+                label.AddToClassList($"zisle-control-binding__binding__{label.text.Replace(' ', '_').Replace('/', '_').ToLower()}");
             }
         }
     }

@@ -32,7 +32,8 @@ namespace NoZ.Zisle
             _root.Query<UIController>().ForEach(c => c.Initialize());
 
             UIController<OptionsController>.Bind(_root).Hide();
-            UIController<UIControls>.Bind(_root).Hide();
+            UIController<UIKeyboardControls>.Bind(_root).Hide();
+            UIController<UIGamepadControls>.Bind(_root).Hide();
             UIController<ConfirmPopupController>.Bind(_root).Hide();
             UIController<CooperativeController>.Bind(_root).Hide();
             UIController<CooperativeJoinController>.Bind(_root).Hide();
@@ -65,8 +66,11 @@ namespace NoZ.Zisle
             TransitionTo(options);
         }
 
-        public void ShowControls() =>
-            TransitionTo(UIController<UIControls>.Instance);
+        public void ShowKeyboardControls() =>
+            TransitionTo(UIController<UIKeyboardControls>.Instance);
+
+        public void ShowGamepadControls() =>
+            TransitionTo(UIController<UIGamepadControls>.Instance);
 
         public void ShowTitle () =>
             TransitionTo(UIController<TitleController>.Instance);

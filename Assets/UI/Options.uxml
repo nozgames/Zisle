@@ -16,8 +16,9 @@
             <DropdownField name="resolutions" label="Resolution" class="menu-row"/>
             <Toggle name="fullscreen" label="Fullscreen" class="menu-row"/>
             <Toggle name="screen-shake" label="Screen Shake" class="menu-row"/>
-            <Button name="controls" text="Controls" class="menu-row menu-row-gap"/>
-            <Button name="back" text="Back" class="menu-row"/>
+            <Button name="keyboard-controls" text="Keyboard Controls" class="menu-row menu-row-gap"/>
+            <Button name="gamepad-controls" text="Gamepad Controls" class="menu-row"/>
+            <Button name="back" text="Back" class="menu-row menu-row-gap"/>
         </VisualElement>
     </zisle:OptionsController>
 </engine:UXML>

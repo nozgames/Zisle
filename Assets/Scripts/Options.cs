@@ -63,7 +63,14 @@ namespace NoZ.Zisle
         public static void LoadBindings (InputActionAsset actions)
         {
             var rebinds = PlayerPrefs.GetString(PlayerPrefsRebinds);
-            actions.LoadBindingOverridesFromJson(rebinds);
+
+            try
+            {
+                actions.LoadBindingOverridesFromJson(rebinds);
+            }
+            catch (Exception ex)
+            {
+            }            
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]

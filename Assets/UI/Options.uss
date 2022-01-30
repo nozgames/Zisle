@@ -32,3 +32,11 @@
 	flex-direction: row;
 	margin-left: auto;
 }
+
+.zisle-control-binding__button
+{
+	margin: 0;
+	padding: 2px;
+	color: var(--color-text-dark);
+}
+

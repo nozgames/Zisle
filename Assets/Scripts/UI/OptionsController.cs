@@ -29,10 +29,8 @@ namespace NoZ.Zisle
                 else
                     OnBack?.Invoke();
             }).Focus();
-            BindClick("controls", () =>
-            {
-                UIManager.Instance.ShowControls();
-            });
+            BindClick("keyboard-controls", () => UIManager.Instance.ShowKeyboardControls());
+            BindClick("gamepad-controls", () => UIManager.Instance.ShowGamepadControls());
 
             var resolutions = this.Q<DropdownField>("resolutions");
             resolutions.choices = Screen.resolutions.Select(r => ResolutionToString(r)).ToList();

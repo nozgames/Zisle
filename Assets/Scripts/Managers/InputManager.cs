@@ -1,7 +1,9 @@
 using NoZ;
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 namespace NoZ.Zisle
 {
@@ -17,11 +19,15 @@ namespace NoZ.Zisle
 
         [Header("Player")]
         [SerializeField] private InputActionReference _playerMenu = null;
+        [SerializeField] private InputActionReference _playerMove = null;
         [SerializeField] private InputActionReference _playerMoveLeft = null;
         [SerializeField] private InputActionReference _playerMoveRight = null;
         [SerializeField] private InputActionReference _playerMoveUp = null;
         [SerializeField] private InputActionReference _playerMoveDown = null;
-        [SerializeField] private InputActionReference _playerLook = null;
+        [SerializeField] private InputActionReference _playerAction = null;
+
+
+        private bool _gamepad = false;
 
         /// <summary>
         /// Event fired when the menu button is pressed by the player
@@ -38,6 +44,27 @@ namespace NoZ.Zisle
         /// </summary>
         public event Action onUIClose;
 
+        public event Action<bool> OnGamepadChanged;
+
+        public event Action OnPlayerAction;
+
+        /// <summary>
+        /// True if there is an active gamepad
+        /// </summary>
+        public bool HasGamepad
+        {
+            get => _gamepad;
+            set
+            {
+                if (_gamepad == value)
+                    return;
+
+                _gamepad = value;
+                OnGamepadChanged?.Invoke(_gamepad);
+            }
+        }
+            
+
         protected override void OnInitialize()
         {
             base.OnInitialize();
@@ -46,7 +73,12 @@ namespace NoZ.Zisle
             //_debugMenu.action.started += (ctx) => onDebugMenu?.Invoke();
             //_uiClose.action.started += (ctx) => onUIClose?.Invoke();
 
+            _playerAction.action.performed += (ctx) => OnPlayerAction?.Invoke();
+
             //_debugMenu.action.Enable();
+
+            UpdateGamepad();
+            InputSystem.onDeviceChange += (d, c) => UpdateGamepad();
 
             Options.LoadBindings(_inputActions);
         }
@@ -71,35 +103,44 @@ namespace NoZ.Zisle
         {
             if (enable)
             {
+                _playerMove.action.Enable();
                 _playerMoveLeft.action.Enable();
                 _playerMoveRight.action.Enable();
                 _playerMoveUp.action.Enable();
                 _playerMoveDown.action.Enable();
                 _playerMenu.action.Enable();
+                _playerAction.action.Enable();
             }
             else
             {
+                _playerMove.action.Disable();
                 _playerMoveLeft.action.Disable();
                 _playerMoveRight.action.Disable();
                 _playerMoveUp.action.Disable();
                 _playerMoveDown.action.Disable();
                 _playerMenu.action.Disable();
+                _playerAction.action.Disable();
             }
         }
 
         /// <summary>
         /// Read the current value of player move
         /// </summary>
-        public Vector2 playerMove => new Vector2(
-            -1.0f * _playerMoveLeft.action.ReadValue<float>() + _playerMoveRight.action.ReadValue<float>(),
-            _playerMoveUp.action.ReadValue<float>() + -1.0f * _playerMoveDown.action.ReadValue<float>()).normalized;
+        public Vector2 playerMove 
+        {
+            get 
+            {
+                var keyboardMove = new Vector2 (
+                    -1.0f * _playerMoveLeft.action.ReadValue<float>() + _playerMoveRight.action.ReadValue<float>(),
+                    _playerMoveUp.action.ReadValue<float>() + -1.0f * _playerMoveDown.action.ReadValue<float>()).normalized;
 
-        /// <summary>
-        /// Read the current value of player look
-        /// </summary>
-        public Vector2 playerLook => Instance?._playerLook.action.ReadValue<Vector2>() ?? Vector2.zero;
+                var gamepadMove = _playerMove.action.ReadValue<Vector2>();
 
-        public void PerformInteractiveRebinding(string actionMap, string actionName, int bindingIndex, Action onComplete = null)
+                return gamepadMove.sqrMagnitude > keyboardMove.sqrMagnitude ? gamepadMove : keyboardMove;
+            }
+        }
+
+        public void PerformInteractiveRebinding(string actionMap, string actionName, int bindingIndex, bool gamepad = false, Action onComplete = null)
         {
             var map = _inputActions.FindActionMap(actionMap);
             if (map == null)
@@ -110,6 +151,17 @@ namespace NoZ.Zisle
                 throw new ArgumentException("actionName");
 
             var operation = action.PerformInteractiveRebinding(bindingIndex);
+            operation.WithExpectedControlType<AxisControl>();
+            operation.WithExpectedControlType<ButtonControl>();
+            if (gamepad)
+                operation.WithControlsHavingToMatchPath("<Gamepad>")
+                    .WithControlsExcluding("<Gamepad>/leftstick")
+                    .WithControlsExcluding("<Gamepad>/rightstick")
+                    .WithControlsExcluding("<Gamepad>/select")
+                    .WithControlsExcluding("<Gamepad>/start");
+            else
+                operation.WithControlsHavingToMatchPath("<Keyboard>")
+                    .WithControlsHavingToMatchPath("<Mouse>");
             operation.OnComplete((r) =>
             {
                 onComplete?.Invoke();
@@ -133,8 +185,11 @@ namespace NoZ.Zisle
             var action = map.FindAction(actionName);
             if (action == null)
                 throw new ArgumentException("actionName");
-
+            
             return action.bindings[bindingIndex].ToDisplayString();
         }
+
+        private void UpdateGamepad() =>
+            HasGamepad = InputSystem.devices.Where(d => d.enabled && d is Gamepad).Any();
     }
 }
