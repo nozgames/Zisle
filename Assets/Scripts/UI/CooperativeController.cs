@@ -1,3 +1,5 @@
+using NoZ.Modules;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -52,6 +54,15 @@ namespace NoZ.Zisle
         }
 
         private void OnContinue() => UIManager.Instance.ShowTitle();
-        private void OnConnected() => UIManager.Instance.ShowGame();
+        private void OnConnected()
+        {
+            IEnumerator Delay ()
+            {
+                yield return new WaitForSeconds(2.0f);
+                UIManager.Instance.ShowGame();
+            }
+
+            GameManager.Instance.StartCoroutine(Delay());
+        } 
     }
 }
