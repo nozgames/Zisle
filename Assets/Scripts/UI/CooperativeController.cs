@@ -22,6 +22,12 @@ namespace NoZ.Zisle
             BindClick("join-local", OnJoinLocal);
         }
 
+        public override void OnNavigationBack()
+        {
+            UIManager.Instance.PlayClickSound();
+            OnBack();
+        }
+
         private void OnBack() => UIManager.Instance.ShowTitle();
         private void OnJoin() => UIManager.Instance.ShowCooperativeJoin();
         private void OnHost()

@@ -11,7 +11,18 @@ namespace NoZ.Zisle
         {
             base.Initialize();
 
-            BindClick("back", () => UIManager.Instance.ShowOptions());
+            BindClick("back", OnBackInternal).Focus();
+        }
+
+        private void OnBackInternal()
+        {
+            UIManager.Instance.ShowOptions();
+        }
+
+        public override void OnNavigationBack()
+        {
+            UIManager.Instance.PlayClickSound();
+            OnBackInternal();
         }
     }
 }

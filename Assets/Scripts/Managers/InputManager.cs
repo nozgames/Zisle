@@ -14,7 +14,6 @@ namespace NoZ.Zisle
         [SerializeField] private InputActionReference _debugMenu = null;
 
         [Header("UI")]
-        [SerializeField] private InputActionReference _uiMenu = null;
         [SerializeField] private InputActionReference _uiClose = null;
 
         [Header("Player")]
@@ -46,7 +45,7 @@ namespace NoZ.Zisle
         /// <summary>
         /// Event fired when the close button is pressed in a user interface
         /// </summary>
-        public event Action onUIClose;
+        public event Action OnUIClose;
 
         public event Action<bool> OnGamepadChanged;
 
@@ -77,7 +76,7 @@ namespace NoZ.Zisle
 
             _playerMenu.action.started += (ctx) => onPlayerMenu?.Invoke();
             //_debugMenu.action.started += (ctx) => onDebugMenu?.Invoke();
-            //_uiClose.action.started += (ctx) => onUIClose?.Invoke();
+            _uiClose.action.started += (ctx) => OnUIClose?.Invoke();
 
             //_playerZoom.action.performed += (ctx) => OnPlayerZoom?.Invoke(ctx.ReadValue<float>());
 
@@ -93,11 +92,11 @@ namespace NoZ.Zisle
         {
             if (enable)
             {
-                //_uiClose.action.Enable();
+                _uiClose.action.Enable();
             }
             else
             {
-                //_uiClose.action.Disable();
+                _uiClose.action.Disable();
             }
         }
 

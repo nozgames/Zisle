@@ -24,11 +24,13 @@ namespace NoZ.Zisle
 
         public override void OnAfterTransitionIn()
         {
+            InputManager.Instance.EnableMenuActions(false);
             InputManager.Instance.EnablePlayerActions(true);
         }
 
         public override void OnBeforeTransitionOut()
         {
+            InputManager.Instance.EnableMenuActions(true);
             InputManager.Instance.EnablePlayerActions(false);
         }
     }

@@ -38,6 +38,12 @@ namespace NoZ.Zisle
                 _join.SetEnabled(upper.Length == 6);
         }
 
+        public override void OnNavigationBack()
+        {
+            UIManager.Instance.PlayClickSound();
+            OnBack();
+        }
+
         private void OnBack() => UIManager.Instance.ShowCooperative();
 
         private void OnJoin()

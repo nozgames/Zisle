@@ -38,5 +38,11 @@ namespace NoZ.Zisle
 
             this.Q("resume").Focus();
         }
+
+        public override void OnNavigationBack()
+        {
+            UIManager.Instance.PlayClickSound();
+            OnResume();
+        }
     }
 }

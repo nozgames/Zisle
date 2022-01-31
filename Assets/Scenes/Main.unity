@@ -238,8 +238,8 @@ MonoBehaviour:
   _inputActions: {fileID: -944628639613478452, guid: 92783038ce5d74148b556e04433c7c93,
     type: 3}
   _debugMenu: {fileID: 0}
-  _uiMenu: {fileID: 0}
-  _uiClose: {fileID: 0}
+  _uiClose: {fileID: -1518867730989686174, guid: 92783038ce5d74148b556e04433c7c93,
+    type: 3}
   _playerMenu: {fileID: 1755185687716959511, guid: 92783038ce5d74148b556e04433c7c93,
     type: 3}
   _playerMove: {fileID: -7095444715687423244, guid: 92783038ce5d74148b556e04433c7c93,
@@ -256,6 +256,8 @@ MonoBehaviour:
     type: 3}
   _playerZoom: {fileID: 2078750413710439317, guid: 92783038ce5d74148b556e04433c7c93,
     type: 3}
+  _gamepadZoomSpeedMin: 0.1
+  _gamepadZoomSpeedMax: 1
 --- !u!4 &374313205
 Transform:
   m_ObjectHideFlags: 0

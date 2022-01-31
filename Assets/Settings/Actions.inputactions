@@ -262,7 +262,7 @@
             "id": "6e5d09af-b26e-426d-9d67-83690fe85fbb",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "Close",
                     "type": "Button",
                     "id": "634cc89d-ac0a-4d96-a0ba-747aadc18960",
                     "expectedControlType": "Button",
@@ -274,12 +274,23 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "80c2f776-1958-41e9-88d5-7c72e8e8ed6d",
-                    "path": "",
+                    "id": "9343d8d4-6218-4b7d-9b56-f88f4bb49b64",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Close",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "80c2f776-1958-41e9-88d5-7c72e8e8ed6d",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Close",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

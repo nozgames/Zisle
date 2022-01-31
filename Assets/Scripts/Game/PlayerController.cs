@@ -16,6 +16,7 @@ namespace NoZ.Zisle
         [SerializeField] private float _cameraZoom = 10.0f;
         [SerializeField] private float _cameraZoomMin = 10.0f;
         [SerializeField] private float _cameraZoomMax = 40.0f;
+        [SerializeField] private LayerMask _groundLayer = 0;
 
         Tween _moveTween;
 
@@ -58,9 +59,20 @@ namespace NoZ.Zisle
             if (!_networkObject.IsLocalPlayer)
                 return;
 
-            var move = InputManager.Instance.playerMove * Time.deltaTime * _speed;
+            MoveTo(InputManager.Instance.playerMove * Time.deltaTime * _speed);
+
+            GameManager.Instance.Camera.transform.position = transform.position + Quaternion.Euler(_cameraPitch, _cameraYaw, 0) * new Vector3(0, 0, 1) * _cameraZoom;
+            GameManager.Instance.Camera.transform.LookAt(transform.position, Vector3.up);
+        }
+
+        private void MoveTo (Vector2 move)
+        {
             var look = Quaternion.Euler(0.0f, _cameraYaw + _moveYaw, 0.0f);
             var move3d = look * move.ToVector3XZ();
+
+            if (!Physics.Raycast(transform.position + move3d + Vector3.up, -Vector3.up, out var hit, 5.0f, _groundLayer))
+                return;
+
             transform.position += move3d;
 
             if (move3d.sqrMagnitude > 0)
@@ -68,9 +80,6 @@ namespace NoZ.Zisle
                 transform.TweenRotation(Quaternion.LookRotation(move3d)).Duration(_rotateDuration).Play();
                 _moveTween.Update(Time.deltaTime);
             }
-
-            GameManager.Instance.Camera.transform.position = transform.position + Quaternion.Euler(_cameraPitch, _cameraYaw, 0) * new Vector3(0,0,1) * _cameraZoom;
-            GameManager.Instance.Camera.transform.LookAt(transform.position, Vector3.up);
         }
     }
 }

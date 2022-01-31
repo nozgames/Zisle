@@ -40,7 +40,12 @@ namespace NoZ.Zisle
             UIController<ConnectingController>.Bind(_root).Hide();
             UIController<UIGame>.Bind(_root).Hide();
             UIController<UIGameMenu>.Bind(_root).Hide();
-            
+
+            InputManager.Instance.OnUIClose += () => _activeController.OnNavigationBack();
+
+            InputManager.Instance.EnableMenuActions();
+
+
             var title = UIController<TitleController>.Bind(_root);
             title.Show();
             _activeController = title;

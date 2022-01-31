@@ -32,5 +32,7 @@ namespace NoZ.Zisle
         public virtual void OnBeforeTransitionIn() { }
         public virtual void OnAfterTransitionOut() { }
         public virtual void OnAfterTransitionIn() { }
+
+        public virtual void OnNavigationBack() { }
     }
 }

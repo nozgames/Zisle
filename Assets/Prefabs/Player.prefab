@@ -57,6 +57,9 @@ MonoBehaviour:
   _cameraZoom: 25
   _cameraZoomMin: 10
   _cameraZoomMax: 40
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &1180236763474540185
 MonoBehaviour:
   m_ObjectHideFlags: 0

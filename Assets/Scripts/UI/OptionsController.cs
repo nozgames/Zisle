@@ -22,13 +22,7 @@ namespace NoZ.Zisle
         {
             base.Initialize();
 
-            BindClick("back", () =>
-            {
-                if (OnBack == null)
-                    UIManager.Instance.ShowTitle();
-                else
-                    OnBack?.Invoke();
-            }).Focus();
+            BindClick("back", OnBackInternal).Focus();
             BindClick("keyboard-controls", () => UIManager.Instance.ShowKeyboardControls());
             BindClick("gamepad-controls", () => UIManager.Instance.ShowGamepadControls());
 
@@ -60,6 +54,20 @@ namespace NoZ.Zisle
             musicVolume.highValue = 1.0f;
             musicVolume.value = Options.MusicVolume;
             musicVolume.RegisterValueChangedCallback(e => Options.MusicVolume = e.newValue);
+        }
+
+        private void OnBackInternal()
+        {
+            if (OnBack == null)
+                UIManager.Instance.ShowTitle();
+            else
+                OnBack?.Invoke();
+        }
+
+        public override void OnNavigationBack()
+        {
+            UIManager.Instance.PlayClickSound();
+            OnBackInternal();
         }
     }
 }
