@@ -12,6 +12,12 @@ namespace NoZ.Zisle
             base.Initialize();
 
             BindClick("back", () => UIManager.Instance.ShowOptions());
+
+            var zoomSpeed = this.Q<Slider>("zoom-speed");
+            zoomSpeed.lowValue = 0.0f;
+            zoomSpeed.highValue = 1.0f;
+            zoomSpeed.value = Options.GamepadZoomSpeed;
+            zoomSpeed.RegisterValueChangedCallback((v) => Options.GamepadZoomSpeed = v.newValue);
         }
     }
 }

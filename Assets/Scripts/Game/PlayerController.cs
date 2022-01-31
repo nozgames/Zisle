@@ -4,12 +4,18 @@ using Unity.Netcode;
 
 namespace NoZ.Zisle
 {
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : NetworkBehaviour
     {
         [SerializeField] private float _speed = 1.0f;
         [SerializeField] private float _rotateDuration = 0.05f;
         [SerializeField] private float _moveBounceHeight = 0.5f;
         [SerializeField] private Transform _test = null;
+        [SerializeField] private float _moveYaw = 180.0f;
+        [SerializeField] private float _cameraYaw = 45.0f;
+        [SerializeField] private float _cameraPitch = 45.0f;
+        [SerializeField] private float _cameraZoom = 10.0f;
+        [SerializeField] private float _cameraZoomMin = 10.0f;
+        [SerializeField] private float _cameraZoomMax = 40.0f;
 
         Tween _moveTween;
 
@@ -20,8 +26,10 @@ namespace NoZ.Zisle
             _networkObject = GetComponent<NetworkObject>();
         }
 
-        private void OnEnable()
+        public override void OnNetworkSpawn()
         {
+            base.OnNetworkSpawn();
+
             _moveTween = this.TweenGroup()
                 .Element(Tween.FromTo(
                     QuaternionMemberProvider<Transform>.Get("localRotation"),
@@ -38,6 +46,11 @@ namespace NoZ.Zisle
                 .UpdateMode(UpdateMode.Manual)
                 .Loop()
                 .Play();
+
+            if (IsLocalPlayer)
+            {
+                InputManager.Instance.OnPlayerZoom += (f) => _cameraZoom = Mathf.Clamp(_cameraZoom - 5.0f * f, _cameraZoomMin, _cameraZoomMax);
+            }
         }
 
         private void Update()
@@ -46,18 +59,18 @@ namespace NoZ.Zisle
                 return;
 
             var move = InputManager.Instance.playerMove * Time.deltaTime * _speed;
+            var look = Quaternion.Euler(0.0f, _cameraYaw + _moveYaw, 0.0f);
+            var move3d = look * move.ToVector3XZ();
+            transform.position += move3d;
 
-            move = Camera.main.transform.right.ToVector2XZ() * move.x +
-                Camera.main.transform.forward.ToVector2XZ() * move.y;
-
-            transform.position += move.ToVector3XZ();
-
-            var t = move.ToVector3XZ();
-            if (t.sqrMagnitude > 0)
+            if (move3d.sqrMagnitude > 0)
             {
-                transform.TweenRotation(Quaternion.LookRotation(t)).Duration(_rotateDuration).Play();
+                transform.TweenRotation(Quaternion.LookRotation(move3d)).Duration(_rotateDuration).Play();
                 _moveTween.Update(Time.deltaTime);
             }
+
+            GameManager.Instance.Camera.transform.position = transform.position + Quaternion.Euler(_cameraPitch, _cameraYaw, 0) * new Vector3(0,0,1) * _cameraZoom;
+            GameManager.Instance.Camera.transform.LookAt(transform.position, Vector3.up);
         }
     }
 }

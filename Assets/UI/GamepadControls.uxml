@@ -14,6 +14,7 @@
         <VisualElement class="centered-vertical left-align">
             <Label text="Gamepad Controls" class="screen-title"/>
             <zisle:UIControlBinding action-map="Player" action-name="Action" class="menu-row" binding-count="1" binding-offset="2" gamepad="true"/>
+            <Slider name="zoom-speed" label="Zoom Speed" class="menu-row"/>
             <Button name="back" text="Back" class="menu-row"/>
         </VisualElement>
     </zisle:UIGamepadControls>

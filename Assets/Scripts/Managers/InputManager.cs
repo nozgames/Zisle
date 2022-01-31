@@ -25,7 +25,11 @@ namespace NoZ.Zisle
         [SerializeField] private InputActionReference _playerMoveUp = null;
         [SerializeField] private InputActionReference _playerMoveDown = null;
         [SerializeField] private InputActionReference _playerAction = null;
+        [SerializeField] private InputActionReference _playerZoom = null;
 
+        [Header("Gamepad")]
+        [SerializeField] private float _gamepadZoomSpeedMin = 0.1f;
+        [SerializeField] private float _gamepadZoomSpeedMax = 1.0f;
 
         private bool _gamepad = false;
 
@@ -47,6 +51,8 @@ namespace NoZ.Zisle
         public event Action<bool> OnGamepadChanged;
 
         public event Action OnPlayerAction;
+
+        public event Action<float> OnPlayerZoom;
 
         /// <summary>
         /// True if there is an active gamepad
@@ -73,7 +79,7 @@ namespace NoZ.Zisle
             //_debugMenu.action.started += (ctx) => onDebugMenu?.Invoke();
             //_uiClose.action.started += (ctx) => onUIClose?.Invoke();
 
-            _playerAction.action.performed += (ctx) => OnPlayerAction?.Invoke();
+            //_playerZoom.action.performed += (ctx) => OnPlayerZoom?.Invoke(ctx.ReadValue<float>());
 
             //_debugMenu.action.Enable();
 
@@ -95,6 +101,21 @@ namespace NoZ.Zisle
             }
         }
 
+        private void Update()
+        {
+            if(_playerZoom.action.enabled && _playerZoom.action.activeControl != null)
+            {
+                var zoom = _playerZoom.action.ReadValue<float>();
+                if (zoom < -float.Epsilon || zoom >= float.Epsilon)
+                {
+                    if (_playerZoom.action.activeControl.device is Gamepad)
+                        zoom *= Mathf.Lerp(_gamepadZoomSpeedMin, _gamepadZoomSpeedMax, Options.GamepadZoomSpeed);
+
+                    OnPlayerZoom?.Invoke(zoom);
+                }
+            }
+        }
+
         /// <summary>
         /// Enable or disable the player actions
         /// </summary>
@@ -103,6 +124,7 @@ namespace NoZ.Zisle
         {
             if (enable)
             {
+                _playerZoom.action.Enable();
                 _playerMove.action.Enable();
                 _playerMoveLeft.action.Enable();
                 _playerMoveRight.action.Enable();
@@ -113,6 +135,7 @@ namespace NoZ.Zisle
             }
             else
             {
+                _playerZoom.action.Disable();
                 _playerMove.action.Disable();
                 _playerMoveLeft.action.Disable();
                 _playerMoveRight.action.Disable();

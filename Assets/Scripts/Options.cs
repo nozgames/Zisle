@@ -10,14 +10,17 @@ namespace NoZ.Zisle
         private const string PlayerPrefsSoundVolume = "Options.SoundVolume";
         private const string PlayerPrefsMusicVolume = "Options.MusicVolume";
         private const string PlayerPrefsRebinds = "Options.Rebinds";
+        private const string PlayerPrefsGamepadZoomSpeed = "Options.Gamepad.ZoomSpeed";
 
         private static bool _screenShake;
         private static float _soundVolume;
         private static float _musicVolume;
+        private static float _gamepadZoomSpeed;
 
         public static event Action<bool> OnScreenShakeChange;
         public static event Action<float> OnSoundVolumeChange;
         public static event Action<float> OnMusicVolumeChange;
+        public static event Action<float> OnGamepadZoomSpeedChange;
 
         public static bool ScreenShake
         {
@@ -54,6 +57,17 @@ namespace NoZ.Zisle
             }
         }
 
+        public static float GamepadZoomSpeed
+        {
+            get => _gamepadZoomSpeed;
+            set
+            {
+                _gamepadZoomSpeed = Mathf.Clamp01(value);
+                PlayerPrefs.SetFloat(PlayerPrefsGamepadZoomSpeed, _gamepadZoomSpeed);
+                OnGamepadZoomSpeedChange?.Invoke(_gamepadZoomSpeed);
+            }
+        }
+
         public static void SaveBindings(InputActionAsset actions)
         {
             var rebinds = actions.SaveBindingOverridesAsJson();
@@ -79,6 +93,7 @@ namespace NoZ.Zisle
             _screenShake = PlayerPrefs.GetInt(PlayerPrefsScreenShake, 1) > 0;
             _soundVolume = PlayerPrefs.GetFloat(PlayerPrefsSoundVolume, 1.0f);
             _musicVolume = PlayerPrefs.GetFloat(PlayerPrefsMusicVolume, 1.0f);
+            _gamepadZoomSpeed = PlayerPrefs.GetFloat(PlayerPrefsGamepadZoomSpeed, 0.5f);
         }
     }
 }

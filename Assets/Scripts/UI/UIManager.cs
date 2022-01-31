@@ -62,7 +62,8 @@ namespace NoZ.Zisle
         public void ShowOptions (Action onBack=null)
         {
             var options = UIController<OptionsController>.Instance;
-            options.OnBack = onBack;
+            if(onBack != null)
+                options.OnBack = onBack;
             TransitionTo(options);
         }
 

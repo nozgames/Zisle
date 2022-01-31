@@ -7,6 +7,10 @@ namespace NoZ.Zisle
 {
     public class GameManager : Singleton<GameManager>
     {
+        [SerializeField] private Camera _camera;
+
+        public Camera Camera => _camera;
+
         public override void Initialize()
         {
             base.Initialize();

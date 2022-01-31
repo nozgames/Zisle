@@ -1,14 +1,9 @@
 fileFormatVersion: 2
-guid: 5352cd6af285d0046826be681185de3f
+guid: a67fc824052838e4782ed351068efa80
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Palette
-    second: {fileID: 2100000, guid: cc61a7230ef1f2a4ebae0c2506d7d5ae, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -57,7 +52,7 @@ ModelImporter:
     keepQuads: 0
     weldVertices: 1
     bakeAxisConversion: 0
-    preserveHierarchy: 1
+    preserveHierarchy: 0
     skinWeightsMode: 0
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
