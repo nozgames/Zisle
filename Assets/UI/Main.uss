@@ -1,18 +1,21 @@
 :root {
-    --color-text: #494846;
+    --color-text: #424248;
+    --color-text-light: #828288;
     --color-text-ghosted: #615951;
-    --color-text-dark: #363533;
-    --color-background: #a99581;
-    --color-background-highlight: #c4b3a3;
-    --color-background-dark: #7a6b5d;
-    --color-background-darker: #695e54;
-    --color-title: #ffc72d;
+    --color-text-dark: #424248;
+    --color-background: #bcbcbf;
+    --color-background-highlight: #fcfcff;
+    --color-background-dark: #7c7c7f;
+    --color-background-darker: #5c5c5f;
+    --color-title: #ffffff;
     --width-border: 3px;
     --font-size-tiny: 20px;
-    --font-size-small: 40px;
-    --font-size-normal: 50px;
-    --font-size-large: 65px;
-    --font-definition-normal: url("project://database/Assets/Fonts/Bidan-Pll7.ttf")
+    --font-size-small: 30px;
+    --font-size-normal: 40px;
+    --font-size-large: 50px;
+    --font-size-title: 70px;
+    --font-definition-normal: url("project://database/Assets/Fonts/Bidan-Pll7.ttf");
+    --image-rounded-border: url("project://database/Assets/RoundedBorder.png");
 }
 
 .hidden {
@@ -28,8 +31,14 @@
 
 .main-background 
 {
+/*
     opacity: 0.8;
     background-color: rgba(20,20,20,0.4);
+*/
+    opacity: 0;
+    background-color: #212b31;
+    background-image: url("project://database/Assets/Sprites/BackgroundLight.psd");
+    -unity-background-image-tint-color: #212b31;
     position: absolute;
     width: 100%;
     height: 100%;
@@ -68,7 +77,7 @@
 
 .screen-title {
     color: var(--color-title);
-    font-size: var(--font-size-large);
+    font-size: var(--font-size-title);
 }
 
 .centered {
@@ -92,7 +101,7 @@
     background-image: url("../RoundedBorder.png");
     padding: 4px 20px;
     width: 1000px;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
     height: 70px;
 }
 

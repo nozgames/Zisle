@@ -12,11 +12,12 @@
 
 .zisle-control-binding__binding
 {
-	background-color: var(--color-background-dark);
-	border-color: var(--color-text);
-	border-width: var(--width-border);
+	background-image: var(--image-rounded-border);
+	-unity-background-image-tint-color: var(--color-background-dark);
 	width: 250px;
 	margin-left: 16px;
+	margin-top: 6px;
+	margin-bottom: 6px;
 	font-size: var(--font-size-small);
 }
 
@@ -38,5 +39,12 @@
 	margin: 0;
 	padding: 2px;
 	color: var(--color-text-dark);
+}
+
+.menu-row-button
+{
+	width: 70%;
+	margin-left: auto;
+	margin-right: auto;
 }
 
