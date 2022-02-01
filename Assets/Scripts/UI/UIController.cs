@@ -4,6 +4,8 @@ namespace NoZ.Zisle
 {
     public class UIController : VisualElement
     {
+        public virtual bool BlurBackground => true;
+
         public virtual void Show() => parent.RemoveFromClassList("hidden");
         public virtual void Hide() => parent.AddToClassList("hidden");
 

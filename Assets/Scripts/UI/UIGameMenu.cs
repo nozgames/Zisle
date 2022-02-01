@@ -24,7 +24,10 @@ namespace NoZ.Zisle
 
         private void OnQuit()
         {
-            GameManager.Instance.StopGame();
+            UIManager.Instance.ShowConfirmationPopup(
+                message: "Are you sure you want to Quit?\nYou can resume your game later.", 
+                onNo: () => UIManager.Instance.ShowGame(), 
+                onYes: () => GameManager.Instance.StopGame());
         }
 
         private void OnResume()

@@ -7,6 +7,10 @@ namespace NoZ.Zisle
 {
     public class UIManager : Singleton<UIManager>
     {
+        [Header("General")]
+        [SerializeField] private GameObject _postProcsUI;
+        [SerializeField] private GameObject _postProcsGame;
+
         [Header("Sounds")]
         [SerializeField] private AudioClip _clickSound;
 
@@ -49,6 +53,10 @@ namespace NoZ.Zisle
             var title = UIController<TitleController>.Bind(_root);
             title.Show();
             _activeController = title;
+
+            var blur = title.BlurBackground;
+            _postProcsUI.SetActive(blur);
+            _postProcsGame.SetActive(!blur);
         }
 
         public void ShowConfirmationPopup (string message, string yes=null, string no=null, string cancel=null, Action onYes=null, Action onNo=null, Action onCancel=null)
@@ -104,6 +112,10 @@ namespace NoZ.Zisle
 
             _activeController.OnBeforeTransitionOut();
             controller.OnBeforeTransitionIn();
+
+            var blur = controller.BlurBackground;
+            _postProcsUI.SetActive(blur);
+            _postProcsGame.SetActive(!blur);
 
             _transitioning = true;
             controller.style.opacity = 0;

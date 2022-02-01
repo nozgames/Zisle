@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NoZ;
+using System;
 
 namespace NoZ.Zisle
 {
@@ -28,6 +29,18 @@ namespace NoZ.Zisle
             // TODO: stop multiplayer game
             
             UIManager.Instance.ShowTitle();
+        }
+
+        public void Resume ()
+        {
+            InputManager.Instance.EnableMenuActions(false);
+            InputManager.Instance.EnablePlayerActions(true);
+        }
+
+        public void Pause ()
+        {
+            InputManager.Instance.EnableMenuActions(true);
+            InputManager.Instance.EnablePlayerActions(false);
         }
     }
 }

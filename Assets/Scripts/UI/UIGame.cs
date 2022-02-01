@@ -6,6 +6,8 @@ namespace NoZ.Zisle
     {
         public new class UxmlFactory : UxmlFactory<UIGame, UxmlTraits> { }
 
+        public override bool BlurBackground => false;
+
         private Label _joinCode;
 
         public override void Initialize()
@@ -24,14 +26,12 @@ namespace NoZ.Zisle
 
         public override void OnAfterTransitionIn()
         {
-            InputManager.Instance.EnableMenuActions(false);
-            InputManager.Instance.EnablePlayerActions(true);
+            GameManager.Instance.Resume();
         }
 
         public override void OnBeforeTransitionOut()
         {
-            InputManager.Instance.EnableMenuActions(true);
-            InputManager.Instance.EnablePlayerActions(false);
+            GameManager.Instance.Pause();
         }
     }
 }

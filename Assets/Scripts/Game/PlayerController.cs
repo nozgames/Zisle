@@ -1,11 +1,19 @@
 using UnityEngine;
 using NoZ.Tweening;
 using Unity.Netcode;
+using NoZ.Animations;
+using Unity.Netcode.Components;
 
 namespace NoZ.Zisle
 {
     public class PlayerController : NetworkBehaviour
     {
+        private enum State
+        {
+            Idle,
+            Run
+        }
+
         [SerializeField] private float _speed = 1.0f;
         [SerializeField] private float _rotationSpeed = 1.0f;
         [SerializeField] private float _rotateDuration = 0.05f;
@@ -22,35 +30,63 @@ namespace NoZ.Zisle
 
         [SerializeField] private SphereCollider _clipCollider = null;
 
-        Tween _moveTween;
+        [Header("Animations")]
+        [SerializeField] private AnimationShader _idleAnimation = null;
+        [SerializeField] private AnimationShader _runAnimation = null;
+
+        private NetworkVariable<State> _networkState = new NetworkVariable<State>(State.Idle);
 
         private NetworkObject _networkObject;
+        private BlendedAnimationController _animator;
+        private State _state;
 
         private void Awake()
         {
             _networkObject = GetComponent<NetworkObject>();
+            _animator = GetComponent<BlendedAnimationController>();
+        }
+
+        [ServerRpc]
+        private void SetStateServerRpc (State state)
+        {
+            _networkState.Value = state;
         }
 
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
 
-            _moveTween = this.TweenGroup()
-                .Element(Tween.FromTo(
-                    QuaternionMemberProvider<Transform>.Get("localRotation"),
-                    _test,
-                    Quaternion.Euler(-5, 90, 0),
-                    Quaternion.Euler(5, 90, 0))
-                    .Duration(0.2f)
-                    .PingPong()
-                ).Element(Tween.FromTo(
-                    Vector3MemberProvider<Transform>.Get("localPosition"),
-                    _test,
-                    new Vector3(0,0, 0),
-                    new Vector3(0,0,0)).Duration(0.2f).PingPong())
-                .UpdateMode(UpdateMode.Manual)
-                .Loop()
-                .Play();
+            if(!IsLocalPlayer)
+            {
+                _networkState.OnValueChanged += (p, n) =>
+                {
+                    _state = n;
+
+                    System.Collections.IEnumerator Test (Vector3 start)
+                    {
+                        while (true)
+                        {
+                            yield return null;
+
+                            if ((transform.position - start).magnitude < 0.001f)
+                            {
+                                _animator.Play(_idleAnimation);
+                                break;
+                            }
+
+                            start = transform.position;
+                        }
+                    }
+
+                    if (n == State.Idle)
+                        StartCoroutine(Test(transform.position));
+                    else
+                        _animator.Play(_runAnimation);
+                };
+            }
+
+            _state = State.Idle;
+            _animator.Play(_idleAnimation);
 
             if (IsLocalPlayer)
             {
@@ -113,9 +149,22 @@ namespace NoZ.Zisle
             // Set the new position
             transform.position = moveTarget;
 
-            // Keep the animation going if we are actually moving
-            if(moveDelta.sqrMagnitude > 0.0f)
-                _moveTween.Update(Time.deltaTime);
+            var newState = State.Idle;
+            if (moveDelta.magnitude > float.Epsilon)
+                newState = State.Run;
+
+            if(newState != _state)
+            {
+                if (newState == State.Idle)
+                    _animator.Play(_idleAnimation);
+                else if (newState == State.Run)
+                    _animator.Play(_runAnimation);
+
+                SetStateServerRpc(newState);
+
+                _state = newState;
+            }
+
 
             // If the player is moving then use the original look delta to rotate using the rotation speed
             if(lookDelta.sqrMagnitude > 0.0f)
