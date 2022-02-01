@@ -28,8 +28,15 @@ namespace NoZ.Zisle
         [SerializeField] private float _cameraZoomMax = 40.0f;
         [SerializeField] private LayerMask _groundLayer = 0;
         [SerializeField] private LayerMask _clipLayer = 0;
+        [SerializeField] private LayerMask _attackMask = 0;
+        [SerializeField] private float _attackRange = 1.0f;
+        [SerializeField] private float _attackRadius= 0.5f;
+        [SerializeField] private float _attackCooldown = 0.1f;
+        [SerializeField] private AudioClip _attackHitSound = null;
+        [SerializeField] private AudioClip _attackSwingSound = null;
 
         [SerializeField] private SphereCollider _clipCollider = null;
+        [SerializeField] private Collider _hitCollider = null;
 
         [Header("Animations")]
         [SerializeField] private AnimationShader _idleAnimation = null;
@@ -41,6 +48,7 @@ namespace NoZ.Zisle
         private NetworkObject _networkObject;
         private BlendedAnimationController _animator;
         private State _state;
+        private float _cooldown;
 
         private void Awake()
         {
@@ -64,7 +72,7 @@ namespace NoZ.Zisle
                 {
                     _state = n;
 
-                    System.Collections.IEnumerator Test (Vector3 start)
+                    System.Collections.IEnumerator Test(Vector3 start)
                     {
                         while (true)
                         {
@@ -83,7 +91,10 @@ namespace NoZ.Zisle
                     if (n == State.Idle)
                         StartCoroutine(Test(transform.position));
                     else if (n == State.Attack)
+                    {
+                        AudioManager.Instance.Play(_attackSwingSound);
                         _animator.Play(_attackAnimation);
+                    }
                     else
                         _animator.Play(_runAnimation);
                 };
@@ -97,8 +108,25 @@ namespace NoZ.Zisle
                 InputManager.Instance.OnPlayerZoom += (f) => _cameraZoom = Mathf.Clamp(_cameraZoom - 5.0f * f, _cameraZoomMin, _cameraZoomMax);
                 InputManager.Instance.OnPlayerAction += () =>
                 {
+                    if (_state != State.Idle && _state != State.Run)
+                        return;
+
+                    if (_cooldown > Time.time)
+                        return;
+
+                    AudioManager.Instance.Play(_attackSwingSound);
                     _animator.Play(_attackAnimation, onComplete: () =>
                     {
+                        _hitCollider.enabled = false;
+                        if (Physics.SphereCast(transform.position + Vector3.up * 0.2f - transform.forward * _attackRadius, _attackRadius, transform.forward, out var hit, _attackRange + _attackRadius, _attackMask))
+                        {
+                            var fx = hit.collider.GetComponentInParent<HitEffect>();
+                            if (fx != null)
+                                AttackHitServerRpc(hit.collider.GetComponentInParent<NetworkObject>().NetworkObjectId);
+                        }
+                        _hitCollider.enabled = true;
+
+                        _cooldown = Time.time + _attackCooldown;
                         _state = State.Idle;
                         _animator.Play(_idleAnimation);
                         SetStateServerRpc(State.Idle);
@@ -107,6 +135,19 @@ namespace NoZ.Zisle
                     SetStateServerRpc(State.Attack);
                 };
             }
+        }
+
+        [ServerRpc]
+        private void AttackHitServerRpc(ulong id)
+        {
+            if (!NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(id, out var netobj))
+                return;
+
+            var fx = netobj.GetComponent<HitEffect>();
+            if(fx != null)
+                fx.Play();
+
+            AudioManager.Instance.Play(_attackHitSound);
         }
 
         private void Update()
