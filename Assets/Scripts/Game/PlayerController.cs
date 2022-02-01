@@ -11,7 +11,8 @@ namespace NoZ.Zisle
         private enum State
         {
             Idle,
-            Run
+            Run,
+            Attack
         }
 
         [SerializeField] private float _speed = 1.0f;
@@ -33,6 +34,7 @@ namespace NoZ.Zisle
         [Header("Animations")]
         [SerializeField] private AnimationShader _idleAnimation = null;
         [SerializeField] private AnimationShader _runAnimation = null;
+        [SerializeField] private AnimationShader _attackAnimation = null;
 
         private NetworkVariable<State> _networkState = new NetworkVariable<State>(State.Idle);
 
@@ -80,6 +82,8 @@ namespace NoZ.Zisle
 
                     if (n == State.Idle)
                         StartCoroutine(Test(transform.position));
+                    else if (n == State.Attack)
+                        _animator.Play(_attackAnimation);
                     else
                         _animator.Play(_runAnimation);
                 };
@@ -91,6 +95,17 @@ namespace NoZ.Zisle
             if (IsLocalPlayer)
             {
                 InputManager.Instance.OnPlayerZoom += (f) => _cameraZoom = Mathf.Clamp(_cameraZoom - 5.0f * f, _cameraZoomMin, _cameraZoomMax);
+                InputManager.Instance.OnPlayerAction += () =>
+                {
+                    _animator.Play(_attackAnimation, onComplete: () =>
+                    {
+                        _state = State.Idle;
+                        _animator.Play(_idleAnimation);
+                        SetStateServerRpc(State.Idle);
+                    });
+                    _state = State.Attack;
+                    SetStateServerRpc(State.Attack);
+                };
             }
         }
 
@@ -99,7 +114,9 @@ namespace NoZ.Zisle
             if (!_networkObject.IsLocalPlayer)
                 return;
 
-            MoveTo(InputManager.Instance.playerMove * Time.deltaTime * _speed);
+
+            if(_state == State.Idle || _state == State.Run)
+                MoveTo(InputManager.Instance.playerMove * Time.deltaTime * _speed);
 
             GameManager.Instance.Camera.transform.position = transform.position + Quaternion.Euler(_cameraPitch, _cameraYaw, 0) * new Vector3(0, 0, 1) * _cameraZoom;
             GameManager.Instance.Camera.transform.LookAt(transform.position, Vector3.up);

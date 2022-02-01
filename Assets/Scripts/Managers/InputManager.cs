@@ -74,6 +74,7 @@ namespace NoZ.Zisle
         {
             base.OnInitialize();
 
+            _playerAction.action.started += (ctx) => OnPlayerAction?.Invoke();
             _playerMenu.action.started += (ctx) => onPlayerMenu?.Invoke();
             //_debugMenu.action.started += (ctx) => onDebugMenu?.Invoke();
             _uiClose.action.started += (ctx) => OnUIClose?.Invoke();

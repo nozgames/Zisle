@@ -69,6 +69,7 @@ MonoBehaviour:
   _clipCollider: {fileID: 1335572211998061480}
   _idleAnimation: {fileID: 11400000, guid: f9cdcf35f4561b84082829acf74c2026, type: 2}
   _runAnimation: {fileID: 11400000, guid: 749689bbabc06d54fa8d3db56eb84a7e, type: 2}
+  _attackAnimation: {fileID: 11400000, guid: 2103f1563fdbe364a9362221058bd79d, type: 2}
 --- !u!114 &1180236763474540185
 MonoBehaviour:
   m_ObjectHideFlags: 0
