@@ -57,6 +57,7 @@ GameObject:
   - component: {fileID: 3148011134532053871}
   - component: {fileID: 905230251130539080}
   - component: {fileID: 7914011242152520707}
+  - component: {fileID: 1661639041916406598}
   m_Layer: 0
   m_Name: TrainingDummy
   m_TagString: Untagged
@@ -93,10 +94,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09da4e928d62cc84493e2e035bab6cce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _renderer: {fileID: 1839343818518709117}
   _duration: 0.2
+  _renderer: {fileID: 1839343818518709117}
   _color: {r: 1, g: 1, b: 1, a: 1}
+  _scaleTransform: {fileID: 706367679719651346}
   _scale: {x: 0.8, y: 1.2, z: 0.8}
+  _rotateTransform: {fileID: 706367679719651346}
   _rotate: {x: 0, y: 45, z: 0}
 --- !u!114 &7914011242152520707
 MonoBehaviour:
@@ -114,6 +117,33 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &1661639041916406598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9124806088355504971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  InLocalSpace: 0
+  Interpolate: 1
+  CanCommitToTransform: 0
 --- !u!1001 &1028857925272920057
 PrefabInstance:
   m_ObjectHideFlags: 0

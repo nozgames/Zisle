@@ -6,10 +6,19 @@ namespace NoZ.Zisle
 {
     public class HitEffect : NetworkBehaviour
     {
-        [SerializeField] private Renderer _renderer = null;
+        [Header("General")]
         [SerializeField] private float _duration = 0.5f;
+
+        [Header("Color")]
+        [SerializeField] private Renderer _renderer = null;
         [SerializeField] private Color _color = Color.white;
+
+        [Header("Scale")]
+        [SerializeField] private Transform _scaleTransform = null;
         [SerializeField] private Vector3 _scale = Vector3.one;
+
+        [Header("Rotate")]
+        [SerializeField] private Transform _rotateTransform = null;
         [SerializeField] private Vector3 _rotate = Vector3.zero;
 
         private Tween _tween;
@@ -34,16 +43,16 @@ namespace NoZ.Zisle
                 _tween.Element(_renderer.material.TweenColor(ShaderPropertyID.HitColor, _color).Duration(_duration).EaseOutCubic().PingPong());
             }
 
-            if (_scale != Vector3.one)
+            if (_scaleTransform != null)
             {
-                _renderer.transform.localScale = Vector3.one;
-                _tween.Element(_renderer.transform.TweenLocalScale(_scale).Duration(_duration).EaseOutCubic().PingPong());
+                _scaleTransform.localScale = Vector3.one;
+                _tween.Element(_scaleTransform.TweenLocalScale(_scale).Duration(_duration).EaseOutCubic().PingPong());
             }
 
-            if(_rotate != Vector3.one)
+            if(_rotateTransform)
             {
-                _renderer.transform.localRotation = Quaternion.identity;
-                _tween.Element(_renderer.transform.TweenLocalRotation(Quaternion.Euler(_rotate)).Duration(_duration).EaseOutCubic().PingPong());
+                _rotateTransform.localRotation = Quaternion.identity;
+                _tween.Element(_rotateTransform.TweenLocalRotation(Quaternion.Euler(_rotate)).Duration(_duration).EaseOutCubic().PingPong());
             }
 
             _tween.Play();

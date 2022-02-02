@@ -53,9 +53,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 5
   _rotationSpeed: 15
-  _rotateDuration: 0.05
-  _moveBounceHeight: 0.1
-  _test: {fileID: 2353017049935349417}
   _moveYaw: 180
   _cameraYaw: 45
   _cameraPitch: -45
@@ -74,8 +71,6 @@ MonoBehaviour:
   _attackRange: 0.5
   _attackRadius: 0.5
   _attackCooldown: 0.1
-  _attackHitSound: {fileID: 8300000, guid: daddf6b8707e9ba429bd858a85fd4f34, type: 3}
-  _attackSwingSound: {fileID: 8300000, guid: e740ff675b9241345a8190aadd445017, type: 3}
   _clipCollider: {fileID: 1335572211998061480}
   _hitCollider: {fileID: 3120966962548477947}
   _idleAnimation: {fileID: 11400000, guid: f9cdcf35f4561b84082829acf74c2026, type: 2}
@@ -149,10 +144,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09da4e928d62cc84493e2e035bab6cce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _renderer: {fileID: 8099236850109282993}
   _duration: 0.2
+  _renderer: {fileID: 8099236850109282993}
   _color: {r: 1, g: 1, b: 1, a: 1}
+  _scaleTransform: {fileID: 2353017049935349417}
   _scale: {x: 0.9, y: 1.1, z: 0.9}
+  _rotateTransform: {fileID: 0}
   _rotate: {x: 0, y: 0, z: 0}
 --- !u!1 &2921698841149798488
 GameObject:
