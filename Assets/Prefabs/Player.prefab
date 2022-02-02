@@ -60,7 +60,7 @@ MonoBehaviour:
   _cameraYaw: 45
   _cameraPitch: -45
   _cameraZoom: 15
-  _cameraZoomMin: 10
+  _cameraZoomMin: 5
   _cameraZoomMax: 40
   _groundLayer:
     serializedVersion: 2
