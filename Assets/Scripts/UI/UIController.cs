@@ -17,13 +17,13 @@ namespace NoZ.Zisle
             if (element is Button button)
                 button.clicked += () =>
                 {
-                    UIManager.Instance.PlayClickSound();
+                    AudioManager.Instance.PlayButtonClick();
                     action?.Invoke();
                 };
             else
                 element.AddManipulator(new Clickable((e) =>
                 {
-                    UIManager.Instance.PlayClickSound();
+                    AudioManager.Instance.PlayButtonClick();
                     action?.Invoke();
                 }));
 

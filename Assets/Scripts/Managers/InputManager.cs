@@ -11,7 +11,6 @@ namespace NoZ.Zisle
     {
         [Header("Global")]
         [SerializeField] private InputActionAsset _inputActions = null;
-        [SerializeField] private InputActionReference _debugMenu = null;
 
         [Header("UI")]
         [SerializeField] private InputActionReference _uiClose = null;
@@ -36,11 +35,6 @@ namespace NoZ.Zisle
         /// Event fired when the menu button is pressed by the player
         /// </summary>
         public event Action onPlayerMenu;
-
-        /// <summary>
-        /// Event fired when the debug menu button is pressed 
-        /// </summary>
-        public event Action onDebugMenu;
 
         /// <summary>
         /// Event fired when the close button is pressed in a user interface

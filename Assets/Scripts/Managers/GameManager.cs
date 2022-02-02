@@ -26,8 +26,8 @@ namespace NoZ.Zisle
 
         public void StopGame()
         {
-            // TODO: stop multiplayer game
-            
+            MultiplayerManager.Instance.LeaveGame();
+
             UIManager.Instance.ShowTitle();
         }
 

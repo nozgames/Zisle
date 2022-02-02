@@ -11,9 +11,6 @@ namespace NoZ.Zisle
         [SerializeField] private GameObject _postProcsUI;
         [SerializeField] private GameObject _postProcsGame;
 
-        [Header("Sounds")]
-        [SerializeField] private AudioClip _clickSound;
-
         private VisualElement _root;
         private UIController _activeController;
         private bool _transitioning;
@@ -133,11 +130,6 @@ namespace NoZ.Zisle
                     onDone?.Invoke();
                 })
                 .Play();
-        }
-
-        public void PlayClickSound ()
-        {
-            AudioManager.Instance.Play(_clickSound);
         }
     }
 }

@@ -17,9 +17,6 @@ namespace NoZ.Zisle
 
         [SerializeField] private float _speed = 1.0f;
         [SerializeField] private float _rotationSpeed = 1.0f;
-        [SerializeField] private float _rotateDuration = 0.05f;
-        [SerializeField] private float _moveBounceHeight = 0.5f;
-        [SerializeField] private Transform _test = null;
         [SerializeField] private float _moveYaw = 180.0f;
         [SerializeField] private float _cameraYaw = 45.0f;
         [SerializeField] private float _cameraPitch = 45.0f;
@@ -32,8 +29,6 @@ namespace NoZ.Zisle
         [SerializeField] private float _attackRange = 1.0f;
         [SerializeField] private float _attackRadius= 0.5f;
         [SerializeField] private float _attackCooldown = 0.1f;
-        [SerializeField] private AudioClip _attackHitSound = null;
-        [SerializeField] private AudioClip _attackSwingSound = null;
 
         [SerializeField] private SphereCollider _clipCollider = null;
         [SerializeField] private Collider _hitCollider = null;
@@ -92,7 +87,7 @@ namespace NoZ.Zisle
                         StartCoroutine(Test(transform.position));
                     else if (n == State.Attack)
                     {
-                        AudioManager.Instance.Play(_attackSwingSound);
+                        //AudioManager.Instance.Play(_attackSwingSound);
                         _animator.Play(_attackAnimation);
                     }
                     else
@@ -114,7 +109,7 @@ namespace NoZ.Zisle
                     if (_cooldown > Time.time)
                         return;
 
-                    AudioManager.Instance.Play(_attackSwingSound);
+                    //AudioManager.Instance.Play(_attackSwingSound);
                     _animator.Play(_attackAnimation, onComplete: () =>
                     {
                         _hitCollider.enabled = false;
@@ -147,7 +142,7 @@ namespace NoZ.Zisle
             if(fx != null)
                 fx.Play();
 
-            AudioManager.Instance.Play(_attackHitSound);
+            //AudioManager.Instance.Play(_attackHitSound);
         }
 
         private void Update()

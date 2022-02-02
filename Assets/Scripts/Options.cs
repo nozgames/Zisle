@@ -82,9 +82,9 @@ namespace NoZ.Zisle
             {
                 actions.LoadBindingOverridesFromJson(rebinds);
             }
-            catch (Exception ex)
+            catch
             {
-            }            
+            }
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]

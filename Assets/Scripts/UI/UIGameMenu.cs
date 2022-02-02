@@ -44,7 +44,7 @@ namespace NoZ.Zisle
 
         public override void OnNavigationBack()
         {
-            UIManager.Instance.PlayClickSound();
+            AudioManager.Instance.PlayButtonClick();
             OnResume();
         }
     }

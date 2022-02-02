@@ -15,7 +15,7 @@ namespace NoZ.Zisle
         [SerializeField] private int _maxPlayers = 2;
 
         public event Action OnConnected;
-        public event Action OnDisconnected;
+        //public event Action OnDisconnected;
 
         /// <summary>
         /// Join code that was used to create or join the current game
@@ -84,6 +84,11 @@ namespace NoZ.Zisle
         public void JoinLocal()
         {
             StartCoroutine(JoinLocalGameAsync());
+        }
+
+        public void LeaveGame ()
+        {
+            StartCoroutine(LeaveGameAsync());
         }
 
         private IEnumerator CreateGameAsync ()
@@ -164,6 +169,13 @@ namespace NoZ.Zisle
             NetworkManager.Singleton.StartClient();
             yield return new WaitForSeconds(1.0f);
             OnConnected?.Invoke();
+        }
+
+        private IEnumerator LeaveGameAsync ()
+        {
+            NetworkManager.Singleton.Shutdown();
+            JoinCode = null;
+            yield return null;
         }
     }
 }

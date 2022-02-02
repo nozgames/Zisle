@@ -1,4 +1,3 @@
-using NoZ.Modules;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -24,7 +23,7 @@ namespace NoZ.Zisle
 
         public override void OnNavigationBack()
         {
-            UIManager.Instance.PlayClickSound();
+            AudioManager.Instance.PlayButtonClick();
             OnBack();
         }
 
