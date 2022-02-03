@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bafc8cfa5cc5a244f87ca9b37c91295c, type: 3}
+  m_Name: Plains
+  m_EditorClassIdentifier: 
+  _minLevel: 2
+  _maxLevel: 100000
+  _weight: 1
+  _islands:
+  - {fileID: 8273873446664352057, guid: 9b7d363be7ce7414d8b75580d4d977b7, type: 3}
+  - {fileID: 4838592508693768679, guid: 22384932d89fb854a992e776b9bf3f85, type: 3}
+  - {fileID: 8273873446664352057, guid: b14129349283e854ba6bb40fc0e3a44a, type: 3}
+  - {fileID: 8273873446664352057, guid: d59f8d08e582a2d43939966bc6177cbe, type: 3}
+  - {fileID: 8273873446664352057, guid: 4ddbda8bbe0479749940dec739e94310, type: 3}

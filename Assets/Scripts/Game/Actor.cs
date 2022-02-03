@@ -41,7 +41,6 @@ namespace NoZ.Zisle
         private float _health = 100.0f;
         private BlendedAnimationController _animator;
         private ActorState _state;
-        private bool _playingOneShot = false;
 
         public float Health => _health;
         public ActorState State
@@ -91,11 +90,9 @@ namespace NoZ.Zisle
             if (shader == null)
                 return;
 
-            _playingOneShot = true;
             _animator.Play(shader, onComplete: () => 
             { 
                 State = ActorState.Idle;
-                _playingOneShot = false;
 
                 if(OwnerClientId != NetworkManager.LocalClientId && _running.Value)
                     PlayAnimation(_runAnimation);
