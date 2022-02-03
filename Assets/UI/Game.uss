@@ -7,3 +7,14 @@
 .menu-row {
     width: 400px;
 }
+
+.joincode {
+	-unity-text-align: middle-center;
+	margin-top: auto;
+	margin-bottom: 10px;
+	height: 60px;
+	width: 200px;
+	background-image: var(--image-rounded-border);
+	-unity-background-image-tint-color: var(--color-background);
+	color: var(--text-color);
+}

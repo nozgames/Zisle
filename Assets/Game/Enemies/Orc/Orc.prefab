@@ -50,6 +50,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 931ea6f4a14b5b1499aa4b2a3361723e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _baseHealthMax: 100
+  _baseHealthRegen: 5
+  _baseSpeed: 10
+  _baseAttack: 60
+  _baseAttackSpeed: 1
+  _baseDefense: 50
+  _baseHarvest: 1
+  _baseBuild: 1
+  _abilities:
+  - {fileID: 11400000, guid: 470c93773ec233141bdcb640088f8f11, type: 2}
   _animator: {fileID: 5429814614147593989}
   _idleAnimation: {fileID: 11400000, guid: f9cdcf35f4561b84082829acf74c2026, type: 2}
 --- !u!114 &5645462275788983784

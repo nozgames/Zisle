@@ -7,9 +7,12 @@ namespace NoZ.Zisle
     {
         [Header("General")]
         [SerializeField] private AudioMixer _mixer = null;
+        [SerializeField] private AudioMixerGroup _soundMixerGroup = null;
 
         [Header("2D Sounds")]
         [SerializeField] private AudioSource _buttonClick = null;
+
+        public AudioMixerGroup SoundMixerGroup => _soundMixerGroup;
 
         public override void Initialize()
         {

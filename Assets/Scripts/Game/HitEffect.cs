@@ -23,13 +23,7 @@ namespace NoZ.Zisle
 
         private Tween _tween;
 
-        public void Play()
-        {
-            PlayClientRpc();
-        }
-
-        [ClientRpc]
-        private void PlayClientRpc()
+        public void Play(Color color, float strength)
         {
             if (_renderer == null)
                 return;
@@ -37,22 +31,22 @@ namespace NoZ.Zisle
             _tween.Stop();
             _tween = this.TweenGroup();
 
-            if (_color != Color.clear)
+            if (color != Color.clear)
             {
                 _renderer.material.SetColor(ShaderPropertyID.HitColor, Color.clear);
-                _tween.Element(_renderer.material.TweenColor(ShaderPropertyID.HitColor, _color).Duration(_duration).EaseOutCubic().PingPong());
+                _tween.Element(_renderer.material.TweenColor(ShaderPropertyID.HitColor, color).Duration(_duration).EaseOutCubic().PingPong());
             }
 
             if (_scaleTransform != null)
             {
                 _scaleTransform.localScale = Vector3.one;
-                _tween.Element(_scaleTransform.TweenLocalScale(_scale).Duration(_duration).EaseOutCubic().PingPong());
+                _tween.Element(_scaleTransform.TweenLocalScale(_scale * strength).Duration(_duration).EaseOutCubic().PingPong());
             }
 
             if(_rotateTransform)
             {
                 _rotateTransform.localRotation = Quaternion.identity;
-                _tween.Element(_rotateTransform.TweenLocalRotation(Quaternion.Euler(_rotate)).Duration(_duration).EaseOutCubic().PingPong());
+                _tween.Element(_rotateTransform.TweenLocalRotation(Quaternion.Euler(_rotate * strength)).Duration(_duration).EaseOutCubic().PingPong());
             }
 
             _tween.Play();

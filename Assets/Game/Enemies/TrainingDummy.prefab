@@ -58,6 +58,7 @@ GameObject:
   - component: {fileID: 905230251130539080}
   - component: {fileID: 7914011242152520707}
   - component: {fileID: 1661639041916406598}
+  - component: {fileID: 4546317243526616697}
   m_Layer: 0
   m_Name: TrainingDummy
   m_TagString: Untagged
@@ -144,6 +145,27 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   CanCommitToTransform: 0
+--- !u!114 &4546317243526616697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9124806088355504971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb4d46d050f8c75468bad053a140f997, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _baseHealthMax: 10000
+  _baseHealthRegen: 1000
+  _baseSpeed: 10
+  _baseAttack: 60
+  _baseAttackSpeed: 1
+  _baseDefense: 0
+  _baseHarvest: 1
+  _baseBuild: 1
+  _abilities: []
 --- !u!1001 &1028857925272920057
 PrefabInstance:
   m_ObjectHideFlags: 0
