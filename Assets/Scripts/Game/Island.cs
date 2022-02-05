@@ -1,78 +1,104 @@
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
 namespace NoZ.Zisle
 {
-    [System.Flags]
-    public enum IslandConnection
+    public enum IslandTile
     {
-        North = 1<<0,
-        East = 1 << 1,
-        South = 1<<2,
-        West = 1<<3
+        Water,
+        Grass,
+        Path
     }
 
     /// <summary>
     /// Manages all island related spawning
     /// </summary>
-    public class Island : NetworkBehaviour
+    //[ExecuteInEditMode]
+    [RequireComponent(typeof(MeshFilter))]
+    [RequireComponent(typeof(MeshRenderer))]
+    public class Island : NetworkBehaviour, ISerializationCallbackReceiver
     {
-        [SerializeField] private IslandConnection _connections = 0;
+        [SerializeField] private IslandTile[] _tiles = null;
 
         /// <summary>
-        /// Grid cell the island is in
+        /// Position of the island within the island grid
         /// </summary>
-        public Vector2Int Cell { get; set; }
+        public Vector2Int Position { get; set; }
 
         /// <summary>
         /// Biome the island is from
         /// </summary>
         public Biome Biome { get; set; }
 
-        public IslandConnection Connections
-        {
-            get => _connections;
-            set => _connections = value;
-        }
+        /// <summary>
+        /// Island tiles
+        /// </summary>
+        public IslandTile[] Tiles { get => _tiles; set => _tiles = value; }
 
         /// <summary>
-        /// Connection directions that have been used to connect to another island
+        /// Returns the mask that represents the available connections using cardinal directions 
         /// </summary>
-        public IslandConnection OpenConnections { get; set; }
-
-        public IslandConnection AvailableConnections { get; set; }
+        public uint ConnectionMask { get; private set; }
 
         /// <summary>
-        /// Paths that are closed because they have not been connected to another island
+        /// Return the index of the tile at the given position within the tile array
         /// </summary>
-        //public IslandConnection ClosedConnections { get; private set; }
+        private int GetTileIndex(Vector2Int position) => position.x + position.y * 13;
 
         /// <summary>
-        /// Check to see if the island meets the requirements for being placed in a cell
+        /// Return the tile at the given position
         /// </summary>
-        /// <param name="require">Required connections</param>
-        /// <returns>True if the island meets requirements</returns>
-        public bool CheckRequirements(IslandConnection require, IslandConnection dissallow) =>
-            CheckRequirements(require, dissallow, 0) ||
-            CheckRequirements(require, dissallow, 1) ||
-            CheckRequirements(require, dissallow, 2) ||
-            CheckRequirements(require, dissallow, 3);
+        public IslandTile GetTile(Vector2Int position) => _tiles[GetTileIndex(position)];
 
-        public bool CheckRequirements(IslandConnection require, IslandConnection dissallow, int rotate)
+        /// <summary>
+        /// Returns true if the given tile matches the actual tile at the given position
+        /// </summary>
+        public bool IsTile(Vector2Int position, IslandTile tile) => GetTile(position) == tile;
+
+        /// <summary>
+        /// Set the tile at the given position
+        /// </summary>
+        public void SetTile(Vector2Int position, IslandTile tile) => _tiles[GetTileIndex(position)] = tile;
+
+
+        public static uint RotateMask (uint mask, int count)
         {
-            var rotated = Rotate(Connections, rotate);
-            return (rotated & require) == require && (rotated & dissallow) == 0;
+            mask = mask << (count % 4);
+            return (mask & 0x0000000F) | ((mask & 0xFFFFFFF0) >> 4);
         }
 
-        public static IslandConnection Rotate (IslandConnection connection, int count)
+        public void OnBeforeSerialize()
         {
-            count = count % 4;
-            var c = (uint)connection;
-            c = c << count;
-            return (IslandConnection)((c & 0x0000000F) | ((c & 0xFFFFFFF0) >> 4));
         }
 
+        public void OnAfterDeserialize()
+        {
+            ConnectionMask =
+                (IsTile(new Vector2Int(1, 6), IslandTile.Path) ? CardinalDirection.West.ToMask() : 0) |
+                (IsTile(new Vector2Int(11, 6), IslandTile.Path) ? CardinalDirection.East.ToMask() : 0) |
+                (IsTile(new Vector2Int(6, 1), IslandTile.Path) ? CardinalDirection.North.ToMask() : 0) |
+                (IsTile(new Vector2Int(6, 11), IslandTile.Path) ? CardinalDirection.South.ToMask() : 0);
+        }
+
+        public struct IslandRotation
+        {
+            public Island Island;
+            public uint Mask;
+            public int Rotation;
+        }
+
+        public IEnumerable<IslandRotation> GetRotations ()
+        {
+            for(int i=0; i<4; i++)
+            {
+                yield return new IslandRotation
+                {
+                    Island = this,
+                    Mask = RotateMask(ConnectionMask, i),
+                    Rotation = i
+                };
+            }
+        }
     }
 }

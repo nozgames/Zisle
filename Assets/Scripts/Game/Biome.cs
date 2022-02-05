@@ -5,6 +5,8 @@ namespace NoZ.Zisle
     [CreateAssetMenu(menuName = "Zisle/Biome")]
     public class Biome : NetworkScriptableObject, ISerializationCallbackReceiver
     {
+        [SerializeField] private Material _material = null;
+
         [Header("Spawning")]
         [SerializeField] private int _minLevel = 2;
         [SerializeField] private int _maxLevel = 100000;
@@ -13,6 +15,8 @@ namespace NoZ.Zisle
         [Space]
         [SerializeField] private Island[] _islands = null;
 
+
+        public Material Material => _material;
 
         public int MinLevel => _minLevel;
         public int MaxLevel => _maxLevel;

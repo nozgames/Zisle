@@ -1,0 +1,69 @@
+
+.root {
+	width: 225px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.grid {
+	flex-direction: column;
+	margin-top: 10px;
+}
+
+.grid-row {
+	flex-direction: row;
+	width: 220px;
+}
+
+.grid-col {
+	background-color: #6698bf;
+	width: 16px;
+	height: 16px;
+	margin: .5px;
+}
+
+.connection {
+	border-width: 1px;
+	border-color: #FFFFFF;
+	position: absolute;
+	left: -1px;
+	right: -1px;
+	bottom: -1px;
+	top: -1px;
+}
+
+.grass {
+	background-color: #74ba49;
+}
+
+.water {
+	background-color: #6698bf;
+}
+
+.path {
+	background-color: #b0a077;
+}
+
+.palette {
+	height: 32px;
+	flex-direction: row;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.palette-color {
+	width: 32px;
+	height: 32px;
+	margin-left: 4px;
+}
+
+.selected {
+	border-width: 1px;
+	border-color: #FFFFFF;
+}
+
+.disabled Label { 
+	margin: 20px;
+	-unity-text-align: middle-center;
+	color: #ff6666; 
+}
