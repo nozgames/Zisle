@@ -69,6 +69,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5352cd6af285d0046826be681185de3f, type: 3}
+--- !u!4 &540559392403685471 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 5352cd6af285d0046826be681185de3f,
+    type: 3}
+  m_PrefabInstance: {fileID: 3037513522636724}
+  m_PrefabAsset: {fileID: 0}
 --- !u!95 &5863791390726871589 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 5352cd6af285d0046826be681185de3f,
@@ -112,6 +118,11 @@ PrefabInstance:
       propertyPath: _baseHealthRegen
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4347410703468825447, guid: 5772fed2575e7b04880554dbd73328e1,
+        type: 3}
+      propertyPath: _runPitchTransform
+      value: 
+      objectReference: {fileID: 540559392403685471}
     - target: {fileID: 4347410703468825447, guid: 5772fed2575e7b04880554dbd73328e1,
         type: 3}
       propertyPath: _abilities.Array.size

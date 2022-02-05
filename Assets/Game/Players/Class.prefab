@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1328862059496653531}
   - component: {fileID: 3153600343203584028}
   - component: {fileID: 6076891573885415442}
+  - component: {fileID: 7911140803394438029}
   m_Layer: 0
   m_Name: Class
   m_TagString: Untagged
@@ -57,6 +58,8 @@ MonoBehaviour:
   _baseDefense: 50
   _baseHarvest: 1
   _baseBuild: 1
+  _runPitchTransform: {fileID: 0}
+  _runPitch: 20
   _idleAnimation: {fileID: 11400000, guid: f9cdcf35f4561b84082829acf74c2026, type: 2}
   _runAnimation: {fileID: 11400000, guid: 749689bbabc06d54fa8d3db56eb84a7e, type: 2}
   _abilities: []
@@ -73,6 +76,8 @@ MonoBehaviour:
   _clipLayer:
     serializedVersion: 2
     m_Bits: 128
+  _buildThing: {fileID: 9124806088355504971, guid: 04731ff460f738a40845782e1e53007f,
+    type: 3}
   _clipCollider: {fileID: 7731002852316335577}
 --- !u!114 &1328862059496653531
 MonoBehaviour:
@@ -130,6 +135,28 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   CanCommitToTransform: 0
+--- !u!195 &7911140803394438029
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4008948028134112274}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.01
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 99
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 0
+  m_AutoBraking: 1
+  m_AutoRepath: 0
+  m_Height: 0.5
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &8109981646894662743
 GameObject:
   m_ObjectHideFlags: 0

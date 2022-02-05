@@ -230,6 +230,14 @@ namespace NoZ.Zisle
                     AssetDatabase.RemoveObjectFromAsset(mesh);
 
             filter.sharedMesh = GenerateMesh(island);
+            
+            var collider = island.GetComponent<MeshCollider>();
+            if(null == collider)
+                collider = island.gameObject.AddComponent<MeshCollider>();
+
+            collider.sharedMesh = filter.sharedMesh;
+            island.gameObject.layer = LayerMask.NameToLayer("Ground");
+
             AssetDatabase.AddObjectToAsset(filter.sharedMesh, path);
             EditorUtility.SetDirty(island.gameObject);
         }
@@ -302,6 +310,7 @@ namespace NoZ.Zisle
             mesh.normals = normals.ToArray();
             mesh.uv = uvs.ToArray();
             mesh.name = "IslandMesh";
+            mesh.UploadMeshData(false);
             return mesh;
         }
 

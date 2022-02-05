@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Unity.AI.Navigation;
 
 namespace NoZ.Zisle
 {
@@ -41,12 +42,37 @@ namespace NoZ.Zisle
         {
             public int Size = MaxCells;
             public int StartingPaths = 1;
-            public float[] ForkWeights;
+
+            [Header("Path Weights")]
+            public float PathWeight0 = 0.1f;
+            public float PathWeight1 = 1.0f;
+            public float PathWeight2 = 1.0f;
+            public float PathWeight3 = 0.25f;
+
+            public IEnumerable<float> GetForkWeights()
+            {
+                yield return PathWeight0;
+                yield return PathWeight1;
+                yield return PathWeight2;
+                yield return PathWeight3;
+            }
+        }
+
+        private NavMeshSurface _navmesh;
+
+        public void UpdateNavMesh()
+        {
+            _navmesh.BuildNavMesh();
         }
 
         public override void Initialize()
         {
             base.Initialize();
+
+            Debug.Log("Bake Start");
+            _navmesh = transform.GetComponentInChildren<NavMeshSurface>();
+            _navmesh.BuildNavMesh();
+            Debug.Log("Bake End");
         }
 
         public void ClearIslands()
@@ -55,21 +81,13 @@ namespace NoZ.Zisle
             if (!UnityEditor.EditorApplication.isPlaying)
             {
                 for(int i=transform.childCount-1; i>=0; i--)
-                {
-                    var island = transform.GetChild(i).GetComponent<Island>();
-                    if (island != null)
-                        DestroyImmediate(island.gameObject);
-                }
+                    DestroyImmediate(transform.GetChild(i).gameObject);
             }
             else
 #endif
             {
                 for (int i = transform.childCount - 1; i >= 0; i--)
-                {
-                    var island = transform.GetChild(i).GetComponent<Island>();
-                    if (island != null)
-                        Destroy(island.gameObject);
-                }
+                    Destroy(transform.GetChild(i).gameObject);
             }
 
             _cells.Clear();
@@ -96,6 +114,14 @@ namespace NoZ.Zisle
                 cell.Island = Instantiate(rotation.Island, new Vector3(cell.Position.x * 12.0f, 0, cell.Position.y * -12.0f), Quaternion.Euler(0, 90 * rotation.Rotation, 0), transform).GetComponent<Island>();
                 cell.Island.GetComponent<MeshRenderer>().material = cell.Biome.Material;
                 //cell.Island.gameObject.hideFlags = HideFlags.HideAndDontSave;
+
+                if(cell.From != null)
+                {
+                    if(cell.Biome.Bridge != null)
+                    {
+                        Instantiate(cell.Biome.Bridge, (cell.From.Island.transform.position + cell.Island.transform.position) * 0.5f, Quaternion.identity, transform);
+                    }
+                }
             }
         }
 
@@ -125,6 +151,11 @@ namespace NoZ.Zisle
             /// Island that was spawned for this cell, will be null until the island is opened
             /// </summary>
             public Island Island;
+
+            /// <summary>
+            /// Cell the path came from
+            /// </summary>
+            public Cell From;
         }
 
         /// <summary>
@@ -162,6 +193,8 @@ namespace NoZ.Zisle
                 cell.ConnectionMask |= (from.Position - position).ToDirection().ToMask();
                 from.ConnectionMask |= (position - from.Position).ToDirection().ToMask();
             }
+
+            cell.From = from;
 
             return cell;
         }
@@ -205,10 +238,8 @@ namespace NoZ.Zisle
                     var forkCount = 0;
                     if (cell.Position == Vector2Int.zero)
                         forkCount = options.StartingPaths;
-                    else if (options.ForkWeights != null && options.ForkWeights.Length > 0)
-                        forkCount = RandomWeightedIndex(options.ForkWeights, 0, forks.Count, (f) => f);
                     else
-                        forkCount = Random.Range(0, forks.Count);
+                        forkCount = RandomWeightedIndex(options.GetForkWeights(), 0, forks.Count + 1, (f) => f);
 
                     // Do not allow all paths to close by making sure there is at least one 
                     // other cell to expand from

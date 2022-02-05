@@ -59,6 +59,7 @@ GameObject:
   - component: {fileID: 7914011242152520707}
   - component: {fileID: 1661639041916406598}
   - component: {fileID: 4546317243526616697}
+  - component: {fileID: -245913136665533455}
   m_Layer: 0
   m_Name: TrainingDummy
   m_TagString: Untagged
@@ -165,7 +166,27 @@ MonoBehaviour:
   _baseDefense: 0
   _baseHarvest: 1
   _baseBuild: 1
+  _runPitchTransform: {fileID: 0}
+  _runPitch: 20
+  _idleAnimation: {fileID: 0}
+  _runAnimation: {fileID: 0}
   _abilities: []
+--- !u!208 &-245913136665533455
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9124806088355504971}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.4, y: 0.2, z: 0.4}
+  m_MoveThreshold: 0
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0
 --- !u!1001 &1028857925272920057
 PrefabInstance:
   m_ObjectHideFlags: 0

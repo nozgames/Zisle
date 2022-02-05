@@ -27,6 +27,10 @@ namespace NoZ.Zisle
         [SerializeField] private float _baseHarvest = 1.0f;
         [SerializeField] private float _baseBuild = 1.0f;
 
+        [Header("Visuals")]
+        [SerializeField] protected Transform _runPitchTransform = null;
+        [SerializeField] protected float _runPitch = 20.0f;
+
         [Header("Animations")]
         [SerializeField] private AnimationShader _idleAnimation = null;
         [SerializeField] private AnimationShader _runAnimation = null;
@@ -139,7 +143,7 @@ namespace NoZ.Zisle
             }
         }
 
-        public void UpdateAttributes ()
+        public virtual void UpdateAttributes ()
         {
             var oldMaxHealth = GetAttributeValue(ActorAttribute.HealthMax);
 
@@ -156,11 +160,15 @@ namespace NoZ.Zisle
                 _health += (newMaxHealth - oldMaxHealth);
             else
                 _health = Mathf.Min(_health, newMaxHealth);
+
+            
         }
 
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
+
+            UpdateAttributes();
 
             // Local function that waits to play the idle animation until the player stops moving
             System.Collections.IEnumerator WaitForStop(Vector3 start)

@@ -23,7 +23,9 @@ namespace NoZ.Zisle
         [SerializeField] private InputActionReference _playerMoveUp = null;
         [SerializeField] private InputActionReference _playerMoveDown = null;
         [SerializeField] private InputActionReference _playerAction = null;
+        [SerializeField] private InputActionReference _playerBuild = null;
         [SerializeField] private InputActionReference _playerZoom = null;
+        [SerializeField] private InputActionReference _playerLook = null;
 
         [Header("Gamepad")]
         [SerializeField] private float _gamepadZoomSpeedMin = 0.1f;
@@ -43,7 +45,9 @@ namespace NoZ.Zisle
 
         public event Action<bool> OnGamepadChanged;
 
-        public event Action OnPlayerAction;
+        public event Action<bool> OnPlayerAction;
+
+        public event Action<bool> OnPlayerBuild;
 
         public event Action<float> OnPlayerZoom;
 
@@ -62,13 +66,26 @@ namespace NoZ.Zisle
                 OnGamepadChanged?.Invoke(_gamepad);
             }
         }
-            
+
+        public Vector3 PlayerLook 
+        {
+            get
+            {
+                var plane = new Plane(Vector3.up, Vector3.zero);
+                var ray = PlayerLookRay;
+                plane.Raycast(ray, out var hit);
+                return ray.origin + ray.direction * hit;
+            }
+        }
+
+        public Ray PlayerLookRay => Camera.main.ScreenPointToRay(_playerLook.action.ReadValue<Vector2>());
 
         protected override void OnInitialize()
         {
             base.OnInitialize();
 
-            _playerAction.action.started += (ctx) => OnPlayerAction?.Invoke();
+            _playerAction.action.started += (ctx) => OnPlayerAction?.Invoke(ctx.action.activeControl.device is Gamepad);
+            _playerBuild.action.started += (ctx) => OnPlayerBuild?.Invoke(ctx.action.activeControl.device is Gamepad);
             _playerMenu.action.started += (ctx) => onPlayerMenu?.Invoke();
             //_debugMenu.action.started += (ctx) => onDebugMenu?.Invoke();
             _uiClose.action.started += (ctx) => OnUIClose?.Invoke();
@@ -126,6 +143,8 @@ namespace NoZ.Zisle
                 _playerMoveDown.action.Enable();
                 _playerMenu.action.Enable();
                 _playerAction.action.Enable();
+                _playerLook.action.Enable();
+                _playerBuild.action.Enable();
             }
             else
             {
@@ -137,6 +156,8 @@ namespace NoZ.Zisle
                 _playerMoveDown.action.Disable();
                 _playerMenu.action.Disable();
                 _playerAction.action.Disable();
+                _playerLook.action.Disable();
+                _playerBuild.action.Disable();
             }
         }
 

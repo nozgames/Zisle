@@ -14,8 +14,9 @@ GameObject:
   - component: {fileID: 435549470166300269}
   - component: {fileID: 1245122302073704610}
   - component: {fileID: 5429814614147593989}
+  - component: {fileID: 3857350800885879390}
   m_Layer: 0
-  m_Name: Orc
+  m_Name: HumanoidEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52,16 +53,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _baseHealthMax: 100
   _baseHealthRegen: 5
-  _baseSpeed: 10
+  _baseSpeed: 3
   _baseAttack: 60
   _baseAttackSpeed: 1
   _baseDefense: 50
   _baseHarvest: 1
   _baseBuild: 1
+  _runPitchTransform: {fileID: 3767794557118830940}
+  _runPitch: 20
+  _idleAnimation: {fileID: 11400000, guid: f9cdcf35f4561b84082829acf74c2026, type: 2}
+  _runAnimation: {fileID: 11400000, guid: 749689bbabc06d54fa8d3db56eb84a7e, type: 2}
   _abilities:
   - {fileID: 11400000, guid: 470c93773ec233141bdcb640088f8f11, type: 2}
-  _animator: {fileID: 5429814614147593989}
-  _idleAnimation: {fileID: 11400000, guid: f9cdcf35f4561b84082829acf74c2026, type: 2}
+  _updateRate: 0.1
+  _attackRange: 1
+  _runPitchSmooth: 0.05
 --- !u!114 &5645462275788983784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -137,6 +143,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 8771115430178530430}
+--- !u!195 &3857350800885879390
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261973430235558940}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.3
+  m_Speed: 3.5
+  m_Acceleration: 10000
+  avoidancePriority: 1
+  m_AngularSpeed: 720
+  m_StoppingDistance: 0.8
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 0.5
+  m_BaseOffset: 0
+  m_WalkableMask: 1
+  m_ObstacleAvoidanceType: 2
 --- !u!1 &6085324528788541688
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,6 +221,21 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 9c3057231dcd9d74f878b4b6e61fb80c,
         type: 3}
       propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9c3057231dcd9d74f878b4b6e61fb80c,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9c3057231dcd9d74f878b4b6e61fb80c,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 9c3057231dcd9d74f878b4b6e61fb80c,
+        type: 3}
+      propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9c3057231dcd9d74f878b4b6e61fb80c,

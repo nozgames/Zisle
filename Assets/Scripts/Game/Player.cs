@@ -1,6 +1,8 @@
 using UnityEngine;
 using Unity.Netcode;
 using NoZ.Animations;
+using System.Collections.Generic;
+using UnityEngine.AI;
 
 namespace NoZ.Zisle
 {
@@ -17,18 +19,41 @@ namespace NoZ.Zisle
         [SerializeField] private LayerMask _groundLayer = 0;
         [SerializeField] private LayerMask _clipLayer = 0;
 
+        [SerializeField] private GameObject _buildThing = null;
+
         [SerializeField] private SphereCollider _clipCollider = null;
 
         private float _cooldown;
+
+        public static List<Player> All { get; private set; } = new List<Player> ();
 
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
 
+            All.Add(this);
+
             if (IsLocalPlayer)
             {
                 InputManager.Instance.OnPlayerZoom += (f) => _cameraZoom = Mathf.Clamp(_cameraZoom - 5.0f * f, _cameraZoomMin, _cameraZoomMax);
-                InputManager.Instance.OnPlayerAction += () =>
+                InputManager.Instance.OnPlayerBuild += (gamepad) =>
+                {
+                    if (!gamepad)
+                    {
+                        var look = Vector3.zero;
+                        if (Physics.Raycast(InputManager.Instance.PlayerLookRay, out var hit, 100.0f))
+                            look = (hit.point - transform.position).ZeroY();
+                        else
+                            look = (InputManager.Instance.PlayerLook - transform.position).ZeroY();
+
+                        if (look.magnitude >= 0.001f)
+                            transform.rotation = Quaternion.LookRotation(look.normalized, Vector3.up);
+                    }
+
+                    Instantiate(_buildThing, (transform.position + transform.forward).ZeroY(), transform.rotation * Quaternion.Euler(0,180,0));
+                    //IslandManager.Instance.UpdateNavMesh();
+                };
+                InputManager.Instance.OnPlayerAction += (gamepad) =>
                 {
                     if (State != ActorState.Idle && State != ActorState.Run)
                         return;
@@ -36,9 +61,28 @@ namespace NoZ.Zisle
                     if (_cooldown > Time.time)
                         return;
 
+                    if(!gamepad)
+                    {
+                        var look = Vector3.zero;
+                        if (Physics.Raycast(InputManager.Instance.PlayerLookRay, out var hit, 100.0f))
+                            look = (hit.collider.transform.position - transform.position).ZeroY();
+                        else
+                            look = (InputManager.Instance.PlayerLook - transform.position).ZeroY();
+
+                        if (look.magnitude >= 0.001f)
+                            transform.rotation = Quaternion.LookRotation(look.normalized, Vector3.up);
+                    }
+
                     ExecuteAbility(Abilities[0]);
                 };
             }
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+
+            All.Remove(this);
         }
 
         private void Update()
@@ -99,7 +143,12 @@ namespace NoZ.Zisle
             }
 
             // Set the new position
-            transform.position = moveTarget;
+            //GetComponent<NavMeshAgent>().updatePosition = false;
+            //GetComponent<NavMeshAgent>().updateRotation = false;
+            GetComponent<NavMeshAgent>().Move(moveTarget - transform.position);
+
+            //GetComponent<NavMeshAgent>().SetDestination(moveTarget);
+            //transform.position = moveTarget;
 
             var newState = ActorState.Idle;
             if (moveDelta.magnitude > float.Epsilon)

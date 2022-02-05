@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 8273873446664352057}
   - component: {fileID: 9011390553368184170}
   - component: {fileID: 593126720898226325}
-  m_Layer: 0
+  - component: {fileID: -2336342671182844859}
+  m_Layer: 6
   m_Name: Plains_P2_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54,7 +55,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4678010474844694571}
-  m_Mesh: {fileID: -6831886834018231711}
+  m_Mesh: {fileID: -7760786793261315072}
 --- !u!23 &593126720898226325
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -97,7 +98,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!43 &-6831886834018231711
+--- !u!64 &-2336342671182844859
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4678010474844694571}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -7760786793261315072}
+--- !u!43 &-7760786793261315072
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -6,6 +6,7 @@ namespace NoZ.Zisle
     public class Biome : NetworkScriptableObject, ISerializationCallbackReceiver
     {
         [SerializeField] private Material _material = null;
+        [SerializeField] private GameObject _bridge = null;
 
         [Header("Spawning")]
         [SerializeField] private int _minLevel = 2;
@@ -17,6 +18,7 @@ namespace NoZ.Zisle
 
 
         public Material Material => _material;
+        public GameObject Bridge => _bridge;
 
         public int MinLevel => _minLevel;
         public int MaxLevel => _maxLevel;
