@@ -99,10 +99,10 @@ namespace NoZ.Zisle
             // TODO: pitch the character forward when moving
 
 
-            var speed = (transform.position - _lastPosition).magnitude / Time.fixedDeltaTime;
+            var speed = _agent.desiredVelocity.magnitude; //  (transform.position - _lastPosition).magnitude / Time.fixedDeltaTime;
             _speed = Mathf.SmoothDamp(_speed, speed, ref _runPitchSmoothVelocity, _runPitchSmooth);
 
-            if(speed > float.Epsilon)
+            if(speed > 0.0001f)
                 State = ActorState.Run;
             else
                 State = ActorState.Idle;
