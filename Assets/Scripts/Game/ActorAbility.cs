@@ -22,6 +22,15 @@ namespace NoZ.Zisle
         private static Collider[] _colliders = new Collider[128];
         private static List<Actor> _targets = new List<Actor>(128);
 
+        private float _targetArcScore;
+        private float _targetArcCos;
+
+        private void OnEnable()
+        {
+            _targetArcCos = Mathf.Cos(_targetArc * Mathf.Deg2Rad);
+            _targetArcScore = 1.0f / (1.0f - _targetArcCos);
+        }
+
         public void Execute (Actor source)
         {
             FindTargets(source);
@@ -59,11 +68,10 @@ namespace NoZ.Zisle
             _targets.Clear();
 
             var count = Physics.OverlapSphereNonAlloc(source.transform.position, _targetRange, _colliders, _targetMask);
-            var forward = source.transform.forward;
-            forward.y = 0.0f;
+            var forward = source.transform.forward.ZeroY();
             for(int i = 0; i <_targetCount; i++)
             {
-                var bestAngle = float.MaxValue;
+                var bestScore = float.MaxValue;
                 var bestTarget = (Actor)null;
                 var bestIndex = 0;
 
@@ -73,12 +81,15 @@ namespace NoZ.Zisle
                     if (target == null || target == source)
                         continue;
 
-                    var delta = (target.transform.position - source.transform.position);
-                    delta.y = 0.0f;
-                    var angle = Mathf.Rad2Deg * Mathf.Acos(Vector3.Dot(forward, delta.normalized));
-                    if (angle <= _targetArc && angle < bestAngle)
+                    var delta = (target.transform.position - source.transform.position).ZeroY();
+                    var dot = Vector3.Dot(forward, delta.normalized);
+                    if (dot < _targetArcCos)
+                        continue;
+
+                    var score = ((1.0f - dot) + 0.1f) * _targetArcScore * (delta.magnitude / _targetRange);
+                    if (score < bestScore)
                     {
-                        bestAngle = angle;
+                        bestScore = score;
                         bestTarget = target;
                         bestIndex = j;
                     }

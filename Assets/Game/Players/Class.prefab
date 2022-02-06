@@ -60,6 +60,7 @@ MonoBehaviour:
   _baseBuild: 1
   _runPitchTransform: {fileID: 0}
   _runPitch: 20
+  _height: 0.5
   _idleAnimation: {fileID: 11400000, guid: f9cdcf35f4561b84082829acf74c2026, type: 2}
   _runAnimation: {fileID: 11400000, guid: 749689bbabc06d54fa8d3db56eb84a7e, type: 2}
   _abilities: []

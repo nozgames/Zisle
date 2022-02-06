@@ -18,3 +18,25 @@
 	-unity-background-image-tint-color: var(--color-background);
 	color: var(--text-color);
 }
+
+#floating-text-container {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+}
+
+#floating-text-container Label
+{
+	position: absolute;
+	color: var(--color-text);
+	-unity-text-outline: 1px var(--color-background);
+	-unity-text-align: middle-center;
+	width: 200px;
+	height: 40px;
+	margin-left: -100px;
+	margin-top: -20px;
+}

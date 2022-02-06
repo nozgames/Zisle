@@ -105,6 +105,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4347410703468825447, guid: 5772fed2575e7b04880554dbd73328e1,
         type: 3}
+      propertyPath: _baseAttack
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4347410703468825447, guid: 5772fed2575e7b04880554dbd73328e1,
+        type: 3}
       propertyPath: _baseDefense
       value: 50
       objectReference: {fileID: 0}

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: KnightSwordAttack
   m_EditorClassIdentifier: 
   _targetCount: 1
-  _targetRange: 0.5
+  _targetRange: 0.8
   _targetArc: 45
   _targetMask:
     serializedVersion: 2

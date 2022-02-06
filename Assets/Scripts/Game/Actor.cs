@@ -2,6 +2,7 @@ using NoZ.Animations;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using NoZ.Tweening;
 
 namespace NoZ.Zisle
 {
@@ -28,12 +29,17 @@ namespace NoZ.Zisle
         [SerializeField] private float _baseBuild = 1.0f;
 
         [Header("Visuals")]
+        [SerializeField] protected Material _ghostMaterial = null;
         [SerializeField] protected Transform _runPitchTransform = null;
         [SerializeField] protected float _runPitch = 20.0f;
+        [SerializeField] protected float _height = 0.5f;
 
         [Header("Animations")]
         [SerializeField] private AnimationShader _idleAnimation = null;
         [SerializeField] private AnimationShader _runAnimation = null;
+        [SerializeField] private AnimationShader _deathAnimation = null;
+
+        [SerializeField] private Collider _hitCollider = null;
 
         [Space]
         [SerializeField] private ActorAbility[] _abilities = null;
@@ -45,6 +51,8 @@ namespace NoZ.Zisle
         private float _health = 100.0f;
         private BlendedAnimationController _animator;
         private ActorState _state;
+
+        public bool IsDead => _health <= 0.0f;
 
         public float Health => _health;
         public ActorState State
@@ -107,10 +115,46 @@ namespace NoZ.Zisle
             });
         }
 
-        public void Damage (float damage)
+        public virtual void Damage (float damage)
         {
-            Debug.Log($"Actor took damage of {damage}!");
             _health = Mathf.Clamp(_health - damage, 0.0f, GetAttributeValue(ActorAttribute.HealthMax));
+
+            UIManager.Instance.AddFloatingText(((int)Mathf.Ceil(damage)).ToString(), null, transform.position + Vector3.up * (1.0f + _height));
+
+            if(_health <= 0.0f)
+                Die();
+        }
+
+        public virtual void Die ()
+        {
+            if(null != _hitCollider)
+                _hitCollider.enabled = false;
+
+            if (_deathAnimation != null)
+            {
+                if (_ghostMaterial != null)
+                {
+                    foreach (var renderer in GetComponentsInChildren<Renderer>())
+                    {
+                        if(renderer.materials.Length == 1)
+                        {
+                            renderer.material = _ghostMaterial;
+                            renderer.material.TweenFloat(ShaderPropertyID.Opacity, 0.0f).EaseOutSine().Duration(_deathAnimation.length / _deathAnimation.speed).Play();
+                        }
+                        else
+                        {
+                            var materials = new Material[renderer.materials.Length];
+                            for (int i = 0; i < renderer.materials.Length; i++)
+                                materials[i] = _ghostMaterial;
+
+                            renderer.materials = materials;
+                        }
+                    }
+                }
+                PlayAnimation(_deathAnimation, () => NetworkObject.Despawn(true));
+            }
+            else
+                NetworkObject.Despawn(true);
         }
 
         /// <summary>
@@ -141,6 +185,8 @@ namespace NoZ.Zisle
                 attribute.Multiply = 1.0f;
                 attribute.CurrentValue = attribute.BaseValue;
             }
+
+            _health = GetAttributeValue(ActorAttribute.HealthMax);
         }
 
         public virtual void UpdateAttributes ()
@@ -160,8 +206,6 @@ namespace NoZ.Zisle
                 _health += (newMaxHealth - oldMaxHealth);
             else
                 _health = Mathf.Min(_health, newMaxHealth);
-
-            
         }
 
         public override void OnNetworkSpawn()

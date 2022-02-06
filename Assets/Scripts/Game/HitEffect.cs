@@ -51,5 +51,10 @@ namespace NoZ.Zisle
 
             _tween.Play();
         }
+
+        private void OnDisable()
+        {
+            _tween.Stop(false);
+        }
     }
 }

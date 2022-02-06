@@ -10,5 +10,8 @@
     <Style src="project://database/Assets/UI/Game.uss" />
     <zisle:UIGame class="screen centered-vertical">
         <Label name="joincode" class="joincode" text="XBX6B7"/>
+
+        <VisualElement name="floating-text-container">
+        </VisualElement>
     </zisle:UIGame>
 </engine:UXML>

@@ -64,7 +64,7 @@ namespace NoZ.Zisle
                     if(!gamepad)
                     {
                         var look = Vector3.zero;
-                        if (Physics.Raycast(InputManager.Instance.PlayerLookRay, out var hit, 100.0f))
+                        if (Physics.Raycast(InputManager.Instance.PlayerLookRay, out var hit, 100.0f) && hit.collider.GetComponentInParent<Actor>() != null)
                             look = (hit.collider.transform.position - transform.position).ZeroY();
                         else
                             look = (InputManager.Instance.PlayerLook - transform.position).ZeroY();

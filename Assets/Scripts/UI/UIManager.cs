@@ -131,5 +131,11 @@ namespace NoZ.Zisle
                 })
                 .Play();
         }
+
+        public void AddFloatingText(string text, string className, Vector3 position, float duration = 1.0f)
+        {
+            UIController<UIGame>.Instance.AddFloatingText(text, className, position, duration);
+        }
+
     }
 }

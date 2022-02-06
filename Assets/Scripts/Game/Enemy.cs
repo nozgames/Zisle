@@ -29,6 +29,13 @@ namespace NoZ.Zisle
             _agent.speed = GetAttributeValue(ActorAttribute.Speed);
         }
 
+        public override void Die()
+        {
+            _agent.enabled = false;            
+
+            base.Die();
+        }
+
         private IEnumerator UpdateTarget ()
         {
             var wait = new WaitForSeconds(_updateRate);
@@ -36,7 +43,7 @@ namespace NoZ.Zisle
             while (NetworkManager.Singleton == null)
                 yield return null;
 
-            while(gameObject.activeSelf)
+            while(gameObject.activeSelf && !IsDead)
             {
                 var player = FindNearestPlayer();
                 if (null != player)

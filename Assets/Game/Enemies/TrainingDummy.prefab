@@ -168,6 +168,7 @@ MonoBehaviour:
   _baseBuild: 1
   _runPitchTransform: {fileID: 0}
   _runPitch: 20
+  _height: 0.5
   _idleAnimation: {fileID: 0}
   _runAnimation: {fileID: 0}
   _abilities: []

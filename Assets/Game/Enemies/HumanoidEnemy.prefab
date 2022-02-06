@@ -59,10 +59,14 @@ MonoBehaviour:
   _baseDefense: 50
   _baseHarvest: 1
   _baseBuild: 1
+  _ghostMaterial: {fileID: 2100000, guid: 58569cdaf9efd4745a5edd42d3e95b81, type: 2}
   _runPitchTransform: {fileID: 3767794557118830940}
   _runPitch: 20
+  _height: 0.5
   _idleAnimation: {fileID: 11400000, guid: f9cdcf35f4561b84082829acf74c2026, type: 2}
   _runAnimation: {fileID: 11400000, guid: 749689bbabc06d54fa8d3db56eb84a7e, type: 2}
+  _deathAnimation: {fileID: 11400000, guid: 3632060de9552e3498aef82567fdb40d, type: 2}
+  _hitCollider: {fileID: 5285709882748307645}
   _abilities:
   - {fileID: 11400000, guid: 470c93773ec233141bdcb640088f8f11, type: 2}
   _updateRate: 0.1
