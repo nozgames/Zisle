@@ -14,10 +14,11 @@
     <ui:Template name="GamepadControls" src="GamepadControls.uxml" />
     <ui:Template name="Cooperative" src="Cooperative.uxml" />
     <ui:Template name="CooperativeJoin" src="CooperativeJoin.uxml" />
-    <ui:Template name="Connecting" src="Connecting.uxml" />
+    <ui:Template name="Loading" src="Loading.uxml" />
     <ui:Template name="Game" src="Game.uxml" />
     <ui:Template name="GameMenu" src="GameMenu.uxml" />
     <ui:Template name="ConfirmPopup" src="ConfirmPopup.uxml" />
+    <ui:Template name="Lobby" src="Lobby.uxml" />
 
     <VisualElement class="root">
         <VisualElement class="main-background"/>
@@ -28,8 +29,9 @@
         <ui:Instance template="GamepadControls" class="screen hidden"/>
         <ui:Instance template="Cooperative" class="screen hidden"/>
         <ui:Instance template="CooperativeJoin" class="screen hidden"/>
-        <ui:Instance template="Connecting" class="screen hidden"/>
-        <ui:Instance template="Game" class="screen "/>
+        <ui:Instance template="Loading" class="screen hidden"/>
+        <ui:Instance template="Lobby" class="screen"/>
+        <ui:Instance template="Game" class="screen hidden"/>
         <ui:Instance template="GameMenu" class="screen hidden"/>
         <ui:Instance template="ConfirmPopup" class="screen hidden"/>
 

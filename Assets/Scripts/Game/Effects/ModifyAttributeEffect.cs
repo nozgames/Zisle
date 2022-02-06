@@ -16,12 +16,14 @@ namespace NoZ.Zisle
 
         public override void Apply(Context context)
         {
+#if false
             var attribute = context.Target.GetAttribute(_attribute);
             if (attribute == null)
                 return;
 
             attribute.Add += _add;
             attribute.Multiply += _multiply;
+#endif
         }
 
         public override void Remove(Context context)
@@ -31,6 +33,7 @@ namespace NoZ.Zisle
 
         public void UpdateActorAttributes (Actor actor)
         {
+#if false
             foreach(var effect in actor.Effects)
             {
                 if(effect.Effect is ModifyAttributeEffect modify)
@@ -45,6 +48,7 @@ namespace NoZ.Zisle
             }
 
             actor.UpdateAttributes();
+#endif
         }
     }
 }

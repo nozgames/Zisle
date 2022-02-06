@@ -50,27 +50,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8a1e30b68843764e94da5a3342a1e6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _baseHealthMax: 100
-  _baseHealthRegen: 5
-  _baseSpeed: 5
-  _baseAttack: 60
-  _baseAttackSpeed: 1
-  _baseDefense: 50
-  _baseHarvest: 1
-  _baseBuild: 1
+  _actorDefinition: {fileID: 0}
+  _ghostMaterial: {fileID: 2100000, guid: 58569cdaf9efd4745a5edd42d3e95b81, type: 2}
   _runPitchTransform: {fileID: 0}
   _runPitch: 20
   _height: 0.5
   _idleAnimation: {fileID: 11400000, guid: f9cdcf35f4561b84082829acf74c2026, type: 2}
   _runAnimation: {fileID: 11400000, guid: 749689bbabc06d54fa8d3db56eb84a7e, type: 2}
-  _abilities: []
+  _deathAnimation: {fileID: 11400000, guid: 3632060de9552e3498aef82567fdb40d, type: 2}
+  _hitCollider: {fileID: 2916313137891568418}
   _rotationSpeed: 15
   _moveYaw: 180
-  _cameraYaw: 45
-  _cameraPitch: -45
-  _cameraZoom: 10
-  _cameraZoomMin: 5
-  _cameraZoomMax: 40
   _groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -245,7 +235,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 1
+  m_Radius: 0.3
+  m_Height: 0.6
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.3, z: 0}

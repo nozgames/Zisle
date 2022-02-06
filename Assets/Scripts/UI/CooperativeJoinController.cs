@@ -48,7 +48,7 @@ namespace NoZ.Zisle
 
         private void OnJoin()
         {
-            UIManager.Instance.ShowConnecting();
+            UIManager.Instance.ShowLoading();
 
             MultiplayerManager.Instance.OnConnected -= OnConnected;
             MultiplayerManager.Instance.OnConnected += OnConnected;

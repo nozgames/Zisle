@@ -1,3 +1,8 @@
+.screen
+{
+	background-color: #697382;
+}
+
 .screen-title
 {
 	-unity-text-align: middle-center;

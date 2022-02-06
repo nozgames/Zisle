@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -27,7 +28,7 @@ namespace NoZ.Zisle
             UIManager.Instance.ShowConfirmationPopup(
                 message: "Are you sure you want to Quit?\nYou can resume your game later.", 
                 onNo: () => UIManager.Instance.ShowGame(), 
-                onYes: () => GameManager.Instance.StopGame());
+                onYes: () => UIManager.Instance.ShowMainMenu());
         }
 
         private void OnResume()

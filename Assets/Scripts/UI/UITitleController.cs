@@ -4,9 +4,9 @@ using UnityEngine.UIElements;
 
 namespace NoZ.Zisle
 {
-    public class TitleController : UIController
+    public class UITitleController : UIController
     {
-        public new class UxmlFactory : UxmlFactory<TitleController, UxmlTraits> { }
+        public new class UxmlFactory : UxmlFactory<UITitleController, UxmlTraits> { }
 
         public new class UxmlTraits : VisualElement.UxmlTraits
         {
@@ -31,33 +31,7 @@ namespace NoZ.Zisle
 
         private void OnSolo()
         {
-#if false
-            // TODO: check if there was a game in progress
-            UIManager.Instance.ShowConfirmationPopup(
-                "Resume previous solo game?", 
-                yes: "Resume",
-                no: "New Game",
-                cancel: "Cancel",
-                onYes: () =>
-                {
-                    // TODO: load old solo game
-                    MultiplayerManager.Instance.HostLocal();
-                    UIManager.Instance.ShowGame();
-                }, 
-                onNo: () => {
-                    MultiplayerManager.Instance.HostLocal();
-                    UIManager.Instance.ShowGame();
-                    // TODO: start new solo game
-                },
-                onCancel: () =>
-                {
-                    UIManager.Instance.ShowTitle();
-                }
-                );
-#else
-            MultiplayerManager.Instance.HostLocal();
-            UIManager.Instance.ShowGame();
-#endif
+            UIManager.Instance.JoinLobby("127.0.0.1", true);
         }
 
         private void OnCooperative()

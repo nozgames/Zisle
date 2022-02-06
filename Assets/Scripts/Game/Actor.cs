@@ -14,19 +14,20 @@ namespace NoZ.Zisle
         Ability
     }
 
-    public class Actor : NetworkBehaviour, ISerializationCallbackReceiver
+    public enum ActorType
     {
-        private static readonly int ActorAbilityCount = System.Enum.GetNames(typeof(ActorAttribute)).Length;
+        Player,
+        Enemy,
+        StaticEnemy,
+        Building
+    }
 
-        [Header("Attributes")]
-        [SerializeField] private float _baseHealthMax = 100.0f;
-        [SerializeField] private float _baseHealthRegen = 5.0f;
-        [SerializeField] private float _baseSpeed = 10.0f;
-        [SerializeField] private float _baseAttack = 60.0f;
-        [SerializeField] private float _baseAttackSpeed = 1.0f;
-        [SerializeField] private float _baseDefense = 50.0f;
-        [SerializeField] private float _baseHarvest = 1.0f;
-        [SerializeField] private float _baseBuild = 1.0f;
+    public class Actor : NetworkBehaviour
+    {
+        private static readonly int ActorAttributeCount = System.Enum.GetNames(typeof(ActorAttribute)).Length;
+
+        [Header("General")]
+        [SerializeField] private ActorDefinition _actorDefinition = null;
 
         [Header("Visuals")]
         [SerializeField] protected Material _ghostMaterial = null;
@@ -40,9 +41,6 @@ namespace NoZ.Zisle
         [SerializeField] private AnimationShader _deathAnimation = null;
 
         [SerializeField] private Collider _hitCollider = null;
-
-        [Space]
-        [SerializeField] private ActorAbility[] _abilities = null;
 
         private NetworkVariable<bool> _running = new NetworkVariable<bool>();
 
@@ -84,9 +82,6 @@ namespace NoZ.Zisle
         protected virtual void Awake()
         {
             _animator = GetComponent<BlendedAnimationController>();
-
-            foreach (var ability in _abilities)
-                ability.RegisterNetworkId();
         }
 
         public void PlayAnimation(AnimationShader shader, BlendedAnimationController.AnimationCompleteDelegate onComplete=null)
@@ -172,20 +167,24 @@ namespace NoZ.Zisle
         }
 
         public List<ActorEffect.Context> Effects => _effects;
-        public ActorAbility[] Abilities => _abilities;
-        public ActorAttributeValue GetAttribute(ActorAttribute attribute) => _attributeTable[(int)attribute];
-        public float GetAttributeValue(ActorAttribute attribute) => _attributeTable[(int)attribute]?.CurrentValue ?? 0.0f;
+        public ActorAbility[] Abilities => _actorDefinition.Abilities;
+
+
+        //public ActorAttributeValue GetAttribute(ActorAttribute attribute) => _attributeTable[(int)attribute];
+
+        /// <summary>
+        /// Return the current modified value for the given attribute
+        /// </summary>
+        public float GetAttributeValue(ActorAttribute attribute) => _attributeTable[(int)attribute].Value;
 
         public void ResetAttributes()
         {
+            // Allocate a new attribute data and set it to base values
+            _attributeTable = new ActorAttributeValue[ActorAttributeCount];
             for (int i = 0; i < _attributeTable.Length; i++)
-            {
-                var attribute = _attributeTable[i];
-                attribute.Add = 0.0f;
-                attribute.Multiply = 1.0f;
-                attribute.CurrentValue = attribute.BaseValue;
-            }
+                _attributeTable[i] = new ActorAttributeValue { Value = _actorDefinition.GetBaseAttribute((ActorAttribute)i), Add = 0.0f, Multiply = 1.0f }; 
 
+            // Reset health back to max health
             _health = GetAttributeValue(ActorAttribute.HealthMax);
         }
 
@@ -193,10 +192,10 @@ namespace NoZ.Zisle
         {
             var oldMaxHealth = GetAttributeValue(ActorAttribute.HealthMax);
 
-            for (int i = 0; i < _attributeTable.Length; i++)
+            for (int i = 0; i < ActorAttributeCount; i++)
             {
-                var attribute = _attributeTable[i];
-                attribute.CurrentValue = (attribute.BaseValue + attribute.Add) * attribute.Multiply;
+                ref var attribute = ref _attributeTable[i];
+                attribute.Value = (_actorDefinition.GetBaseAttribute((ActorAttribute)i) + attribute.Add) * attribute.Multiply;
                 attribute.Add = 0.0f;
                 attribute.Multiply = 1.0f;
             }
@@ -211,6 +210,8 @@ namespace NoZ.Zisle
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
+
+            ResetAttributes();
 
             UpdateAttributes();
 
@@ -276,29 +277,6 @@ namespace NoZ.Zisle
                     PlayAnimation(_runAnimation);
                     break;
             }
-        }
-
-        public void OnBeforeSerialize()
-        {            
-        }
-
-        public void OnAfterDeserialize()
-        {
-            _attributeTable = new ActorAttributeValue[ActorAbilityCount];
-            _attributeTable[(int)ActorAttribute.HealthMax] = new ActorAttributeValue { BaseValue = _baseHealthMax };
-            _attributeTable[(int)ActorAttribute.HealthRegen] = new ActorAttributeValue { BaseValue = _baseHealthRegen };
-            _attributeTable[(int)ActorAttribute.Speed] = new ActorAttributeValue { BaseValue = _baseSpeed };
-            _attributeTable[(int)ActorAttribute.AttackSpeed] = new ActorAttributeValue { BaseValue = _baseAttackSpeed };
-            _attributeTable[(int)ActorAttribute.Attack] = new ActorAttributeValue { BaseValue = _baseAttack };
-            _attributeTable[(int)ActorAttribute.Defense] = new ActorAttributeValue { BaseValue = _baseDefense };
-            _attributeTable[(int)ActorAttribute.Harvest] = new ActorAttributeValue { BaseValue = _baseHarvest };
-            _attributeTable[(int)ActorAttribute.Build] = new ActorAttributeValue { BaseValue = _baseBuild };
-
-            foreach (var attribute in _attributeTable)
-                if (attribute == null)
-                    throw new System.InvalidOperationException("All attributes must be filled in");
-
-            ResetAttributes();
         }
 
         protected void ExecuteAbility(ActorAbility ability)

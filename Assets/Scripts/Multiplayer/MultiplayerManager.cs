@@ -25,8 +25,6 @@ namespace NoZ.Zisle
         public override void Initialize()
         {
             base.Initialize();
-
-            StartCoroutine(InitializeAsync());
         }
 
         private IEnumerator InitializeAsync ()

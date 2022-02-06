@@ -2,24 +2,37 @@ using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using NoZ.Tweening;
+using NoZ.Events;
+using System.Collections;
 
 namespace NoZ.Zisle
 {
     public class UIManager : Singleton<UIManager>
     {
+#if UNITY_EDITOR
+        private const float MinLoadingTime = 0.0f;
+#else
+        private const float MinLoadingTime = 2.0f;
+#endif
+
         [Header("General")]
-        [SerializeField] private GameObject _postProcsUI;
-        [SerializeField] private GameObject _postProcsGame;
+        [SerializeField] private GameObject _postProcsUI = null;
+        [SerializeField] private GameObject _postProcsGame = null;
+        [SerializeField] private GameObject _lobbyPrefab = null;
+
+        [Header("Preview")]
+        [SerializeField] private RenderTexture _previewLeftTexture = null;
+        [SerializeField] private RenderTexture _previewRightTexture = null;
+        [SerializeField] private GameObject _previewLeft = null;
+        [SerializeField] private GameObject _previewRight = null;
 
         private VisualElement _root;
         private UIController _activeController;
         private bool _transitioning;
+        private GameObject _lobbyIsland;
 
-        private class UIController<T> where T : UIController
-        {
-            public static T Instance { get; set; }
-            public static T Bind(VisualElement element) => Instance = element.Q<T>();
-        }
+        public Texture PreviewLeftTexture => _previewLeftTexture;
+        public Texture PreviewRightTexture => _previewRightTexture;
 
         protected override void OnInitialize()
         {
@@ -38,23 +51,36 @@ namespace NoZ.Zisle
             UIController<ConfirmPopupController>.Bind(_root).Hide();
             UIController<CooperativeController>.Bind(_root).Hide();
             UIController<CooperativeJoinController>.Bind(_root).Hide();
-            UIController<ConnectingController>.Bind(_root).Hide();
+            UIController<UILoadingController>.Bind(_root).Hide();
             UIController<UIGame>.Bind(_root).Hide();
             UIController<UIGameMenu>.Bind(_root).Hide();
+            UIController<UITitleController>.Bind(_root).Hide();
+            UIController<UILobbyController>.Bind(_root).Hide();
 
             InputManager.Instance.OnUIClose += () => _activeController.OnNavigationBack();
 
             InputManager.Instance.EnableMenuActions();
 
+            var loading = UIController<UILoadingController>.Bind(_root);
+            loading.Show();
+            loading.OnBeforeTransitionIn();
+            loading.OnAfterTransitionIn();
+            _activeController = loading;
 
-            var title = UIController<TitleController>.Bind(_root);
-            title.Show();
-            _activeController = title;
-
-            var blur = title.BlurBackground;
+            var blur = loading.BlurBackground;
             _postProcsUI.SetActive(blur);
             _postProcsGame.SetActive(!blur);
+
+            GameEvent<GameStateChanged>.OnRaised += OnGameStateChanged;
         }
+
+        protected override void OnShutdown()
+        {
+            base.OnShutdown();
+
+            GameEvent<GameStateChanged>.OnRaised -= OnGameStateChanged;
+        }
+
 
         public void ShowConfirmationPopup (string message, string yes=null, string no=null, string cancel=null, Action onYes=null, Action onNo=null, Action onCancel=null)
         {
@@ -84,16 +110,16 @@ namespace NoZ.Zisle
             TransitionTo(UIController<UIGamepadControls>.Instance);
 
         public void ShowTitle () =>
-            TransitionTo(UIController<TitleController>.Instance);
+            TransitionTo(UIController<UITitleController>.Instance);
 
         public void ShowCooperative () =>
             TransitionTo(UIController<CooperativeController>.Instance);
 
         public void ShowCooperativeJoin () =>
-            TransitionTo(UIController<CooperativeJoinController>.Instance);        
+            TransitionTo(UIController<CooperativeJoinController>.Instance);
 
-        public void ShowConnecting () =>
-            TransitionTo(UIController<ConnectingController>.Instance);
+        public void ShowLoading (WaitForDone wait = null) =>
+            TransitionTo(UIController<UILoadingController>.Instance, wait);
 
         public void ShowGame() =>
             TransitionTo(UIController<UIGame>.Instance);
@@ -101,11 +127,14 @@ namespace NoZ.Zisle
         public void ShowGameMenu() =>
             TransitionTo(UIController<UIGameMenu>.Instance);
 
-        private void TransitionTo(UIController controller, Action onDone=null)
+        private void TransitionTo(UIController controller, WaitForDone wait = null)
         {
             if (_activeController == controller || _transitioning)
+            {
+                if (wait != null)
+                    wait.IsDone = true;
                 return;
-
+            }
 
             _activeController.OnBeforeTransitionOut();
             controller.OnBeforeTransitionIn();
@@ -127,7 +156,9 @@ namespace NoZ.Zisle
                     _activeController = controller;
                     controller.OnAfterTransitionIn();
                     _transitioning = false;
-                    onDone?.Invoke();
+
+                    if(wait != null)
+                        wait.IsDone = true;
                 })
                 .Play();
         }
@@ -137,5 +168,122 @@ namespace NoZ.Zisle
             UIController<UIGame>.Instance.AddFloatingText(text, className, position, duration);
         }
 
+        private void OnGameStateChanged (object sender, GameStateChanged evt)
+        {
+        }
+
+        public void OnAfterSubsystemInitialize() => ShowMainMenu();
+
+        public void JoinLobby (string connection, bool create=false)
+        {
+            IEnumerator JoinLobbyCoroutine(string connection, bool create)
+            {
+                var startTime = Time.time;
+
+                // Show loading screen and wait for it to be opaque
+                var waitForLoading = new WaitForDone();
+                ShowLoading(waitForLoading);
+                yield return waitForLoading;
+
+                yield return GameManager.Instance.LeaveLobbyAsync();
+
+                if(create)
+                    yield return GameManager.Instance.CreateLobbyAsync(connection);
+                else
+                    yield return GameManager.Instance.JoinLobbyAsync(connection);
+
+                _lobbyIsland = Instantiate(_lobbyPrefab);
+                GameManager.Instance.CameraOffset = new Vector3(0, 0, 0);
+                GameManager.Instance.CameraZoom = 35.0f;
+                GameManager.Instance.FrameCamera(_lobbyIsland.transform.position);
+
+                while (Time.time - startTime < MinLoadingTime)
+                    yield return null;
+
+                UIController<UILobbyController>.Instance.IsSolo = true;
+                TransitionTo(UIController<UILobbyController>.Instance);
+            }
+
+            StartCoroutine(JoinLobbyCoroutine(connection, create));
+        }
+
+        public void StartGame (GameOptions gameOptions)
+        {
+            IEnumerator StartGameCoroutine(GameOptions options)
+            {
+                var startTime = Time.time;
+
+                // Show loading screen and wait for it to be opaque
+                var waitForLoading = new WaitForDone();
+                ShowLoading(waitForLoading);
+                yield return waitForLoading;
+
+                Destroy(_lobbyIsland.gameObject);
+                _lobbyIsland = null;
+
+                yield return GameManager.Instance.StartGameAsync(options);
+
+                while (Time.time - startTime < MinLoadingTime)
+                    yield return null;
+
+                TransitionTo(UIController<UIGame>.Instance);
+            }
+
+            StartCoroutine(StartGameCoroutine(gameOptions));
+        }
+
+        /// <summary>
+        /// Show the main menu
+        /// </summary>
+        public void ShowMainMenu (WaitForDone wait = null)
+        {
+            IEnumerator ShowMainMenuCoroutine (WaitForDone wait)
+            {
+                var startTime = Time.time;
+
+                // Show loading screen and wait for it to be opaque
+                var waitForLoading = new WaitForDone();
+                ShowLoading(waitForLoading);
+                yield return waitForLoading;
+
+                // Leave whatever get is started
+                if (GameManager.Instance.State != GameState.None)
+                    yield return GameManager.Instance.LeaveLobbyAsync();
+
+                // Make sure we have a background game
+                yield return GameManager.Instance.CreateLobbyAsync("127.0.0.1:7722");
+                yield return GameManager.Instance.StartGameAsync(new GameOptions { MaxIslands = 24, StartingPaths = 4, SpawnEnemies = false });
+
+                while (Time.time - startTime < MinLoadingTime)
+                    yield return null;
+
+                GameManager.Instance.CameraOffset = new Vector3(6f, 0, 0);
+
+                ShowTitle();
+
+                if (wait != null)
+                    wait.IsDone = true;
+            }
+
+            StartCoroutine(ShowMainMenuCoroutine(wait));
+        }
+
+        public void ShowLeftPreview (ActorDefinition def) => ShowPreview(_previewLeft, def);
+        public void ShowRightPreview(ActorDefinition def) => ShowPreview(_previewRight, def);
+
+        private void ShowPreview (GameObject preview, ActorDefinition def)
+        {
+            if (preview.transform.childCount > 0)
+                Destroy(preview.transform.GetChild(0).gameObject);
+
+            if (null == def || def.Preview == null)
+            {
+                preview.transform.parent.gameObject.SetActive(false);
+                return;
+            }
+
+            Instantiate(def.Preview, preview.transform).GetComponentInChildren<SkinnedMeshRenderer>().gameObject.layer = LayerMask.NameToLayer("Preview");
+            preview.transform.parent.gameObject.SetActive(true);
+        }
     }
 }

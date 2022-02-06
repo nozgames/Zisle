@@ -91,6 +91,12 @@
     justify-content: center;
 }
 
+.centered-horizontal {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
 .left-align {
     align-items: flex-start;
 }

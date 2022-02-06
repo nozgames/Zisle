@@ -37,4 +37,10 @@ namespace NoZ.Zisle
 
         public virtual void OnNavigationBack() { }
     }
+
+    public class UIController<T> where T : UIController
+    {
+        public static T Instance { get; set; }
+        public static T Bind(VisualElement element) => Instance = element.Q<T>();
+    }
 }

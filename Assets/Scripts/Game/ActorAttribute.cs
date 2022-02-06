@@ -17,14 +17,10 @@ namespace NoZ.Zisle
         Build
     }
 
-    [System.Serializable]
-    public class ActorAttributeValue
+    public struct ActorAttributeValue
     {
-        public float BaseValue;
-
-        [System.NonSerialized] public float CurrentValue;
-        [System.NonSerialized] public float Add;
-        [System.NonSerialized] public float Multiply;
+        public float Value;
+        public float Add;
+        public float Multiply;
     }
-
 }

@@ -1,0 +1,96 @@
+.screen-title
+{
+	-unity-text-align: middle-center;
+	width: 100%;
+}
+
+.menu-row {
+    width: 400px;
+}
+
+.menu-row-gap {
+	margin-top: 30px;
+}
+
+.unity-base-text-field__input 
+{
+	margin: 2px;
+}
+
+.unity-text-field__placeholder > .unity-base-text-field__input {    
+    color: var(--color-text-ghosted);
+}
+
+.preview-border
+{
+	background-image: var(--image-rounded-border);
+	-unity-background-image-tint-color: var(--color-background);
+	width: 308px;
+	height: 348px;
+	padding: 4px;
+}
+
+.preview-border Label
+{
+	height: 40px;
+	width: 300px;
+	-unity-text-align: middle-center;
+	color: var(--color-text);
+	font-size: 70%;
+}
+
+.preview
+{
+	background-image: var(--image-rounded-border);
+	-unity-background-image-tint-color: var(--color-background-dark);
+	width: 100%;
+	height: 100%;
+}
+
+.left-align
+{
+	position: absolute;
+	left: 15%;
+}
+
+.right-align
+{
+	position: absolute;
+	right: 15%;
+}
+
+.player-class-button
+{
+	position: absolute;
+	width: 40px;
+	height: 40px;
+	margin-top: 0px;
+	bottom: 5px;
+	-unity-background-image-tint-color: var(--color-text);
+}
+
+#player-class-prev
+{
+	left: 0px;
+	background-image: url("project://database/Assets/Sprites/Icons/ArrowLeft.png");
+}
+
+#player-class-next
+{
+	right: 0px;
+	background-image: url("project://database/Assets/Sprites/Icons/ArrowRight.png");
+}
+
+#ready 
+{
+	position: absolute;
+	bottom: 5%;
+	left: 50%;
+	margin-left: -100px;
+	margin-top: -40px;
+	width: 200px;
+	height: 80px;
+	color: var(--color-background);
+	background-image: var(--image-rounded-border);
+	-unity-background-image-tint-color: var(--color-background-dark);
+}

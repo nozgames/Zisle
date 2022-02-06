@@ -7,9 +7,9 @@
     xmlns:zisle="NoZ.Zisle"
     xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
 >
-    <Style src="project://database/Assets/UI/Connecting.uss" />
-    <zisle:ConnectingController class="screen centered-vertical">
-        <Label text="Connecting" class="screen-title"/>
+    <Style src="project://database/Assets/UI/Loading.uss" />
+    <zisle:UILoadingController class="screen centered-vertical">
+        <Label text="Loading" class="screen-title hidden"/>
         <VisualElement class="centered-vertical">
             <VisualElement class="squares menu-row-gap">
                 <VisualElement class="square">
@@ -33,7 +33,7 @@
                     <VisualElement name="square5" class="square-outer"/>
                 </VisualElement>
             </VisualElement>
-            <Button name="back" text="Cancel" class="menu-row menu-row-gap"/>
+            <Button name="back" text="Cancel" class="menu-row menu-row-gap hidden"/>
         </VisualElement>
-    </zisle:ConnectingController>
+    </zisle:UILoadingController>
 </engine:UXML>

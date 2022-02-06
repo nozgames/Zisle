@@ -45,6 +45,8 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 0efa4990b7508e34c81da2475d226d01, type: 3}
     - {fileID: 2800000, guid: 19a802580e019c245b2a077561524b34, type: 3}
     - {fileID: 2800000, guid: eedc30182d48029468953989287943c5, type: 3}
+    - {fileID: 2800000, guid: 9a13e4ebe50dc1547a7ba7cf8e787688, type: 3}
+    - {fileID: 2800000, guid: 93fd112ca29f22b4490f3d044b023928, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -60,6 +62,8 @@ SpriteAtlas:
   - {fileID: 21300000, guid: eedc30182d48029468953989287943c5, type: 3}
   - {fileID: 21300000, guid: 19a802580e019c245b2a077561524b34, type: 3}
   - {fileID: 21300000, guid: c620844aedfebda4ca806979777bba5c, type: 3}
+  - {fileID: 21300000, guid: 9a13e4ebe50dc1547a7ba7cf8e787688, type: 3}
+  - {fileID: 21300000, guid: 93fd112ca29f22b4490f3d044b023928, type: 3}
   - {fileID: 21300000, guid: 9dcf5d6d0e2aff34582c9ed5b98b9a24, type: 3}
   - {fileID: 21300000, guid: 3a0b3fddc4673f5408dcb84ba3b4f64d, type: 3}
   - {fileID: 21300000, guid: aadb1d5e8ed596f4c87c5ac9f99fbdae, type: 3}
@@ -74,6 +78,8 @@ SpriteAtlas:
   - GamepadThumbRightPress
   - GamepadThumbLeftPress
   - GamepadBumperRight
+  - ArrowLeft
+  - ArrowRight
   - IconMouseLeft
   - GamepadTriggerLeft
   - GamepadTriggerRight

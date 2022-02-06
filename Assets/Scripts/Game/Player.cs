@@ -1,6 +1,4 @@
 using UnityEngine;
-using Unity.Netcode;
-using NoZ.Animations;
 using System.Collections.Generic;
 using UnityEngine.AI;
 
@@ -11,11 +9,6 @@ namespace NoZ.Zisle
         [Header("Player")]
         [SerializeField] private float _rotationSpeed = 1.0f;
         [SerializeField] private float _moveYaw = 180.0f;
-        [SerializeField] private float _cameraYaw = 45.0f;
-        [SerializeField] private float _cameraPitch = 45.0f;
-        [SerializeField] private float _cameraZoom = 10.0f;
-        [SerializeField] private float _cameraZoomMin = 10.0f;
-        [SerializeField] private float _cameraZoomMax = 40.0f;
         [SerializeField] private LayerMask _groundLayer = 0;
         [SerializeField] private LayerMask _clipLayer = 0;
 
@@ -27,15 +20,48 @@ namespace NoZ.Zisle
 
         public static List<Player> All { get; private set; } = new List<Player> ();
 
+        public PlayerController Controller { get; set; }
+
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
 
             All.Add(this);
 
-            if (IsLocalPlayer)
+            if (IsOwner)
             {
-                InputManager.Instance.OnPlayerZoom += (f) => _cameraZoom = Mathf.Clamp(_cameraZoom - 5.0f * f, _cameraZoomMin, _cameraZoomMax);
+                InputManager.Instance.OnPlayerZoom += OnPlayerZoom;
+                InputManager.Instance.OnPlayerAction += OnPlayerAction;
+            }
+        }
+
+        private void OnPlayerZoom (float f) => GameManager.Instance.CameraZoom -= 5.0f * f;
+        
+        private void OnPlayerAction (bool gamepad)
+        {
+            if (State != ActorState.Idle && State != ActorState.Run)
+                return;
+
+            if (_cooldown > Time.time)
+                return;
+            if (!gamepad)
+            {
+                var look = Vector3.zero;
+                if (Physics.Raycast(InputManager.Instance.PlayerLookRay, out var hit, 100.0f) && hit.collider.GetComponentInParent<Actor>() != null)
+                    look = (hit.collider.transform.position - transform.position).ZeroY();
+                else
+                    look = (InputManager.Instance.PlayerLook - transform.position).ZeroY();
+
+                if (look.magnitude >= 0.001f)
+                    transform.rotation = Quaternion.LookRotation(look.normalized, Vector3.up);
+            }
+
+            ExecuteAbility(Abilities[0]);
+        }
+
+        private void OnPlayerBuild(bool gamepad)
+        {
+#if false
                 InputManager.Instance.OnPlayerBuild += (gamepad) =>
                 {
                     if (!gamepad)
@@ -53,53 +79,33 @@ namespace NoZ.Zisle
                     Instantiate(_buildThing, (transform.position + transform.forward).ZeroY(), transform.rotation * Quaternion.Euler(0,180,0));
                     //IslandManager.Instance.UpdateNavMesh();
                 };
-                InputManager.Instance.OnPlayerAction += (gamepad) =>
-                {
-                    if (State != ActorState.Idle && State != ActorState.Run)
-                        return;
-
-                    if (_cooldown > Time.time)
-                        return;
-
-                    if(!gamepad)
-                    {
-                        var look = Vector3.zero;
-                        if (Physics.Raycast(InputManager.Instance.PlayerLookRay, out var hit, 100.0f) && hit.collider.GetComponentInParent<Actor>() != null)
-                            look = (hit.collider.transform.position - transform.position).ZeroY();
-                        else
-                            look = (InputManager.Instance.PlayerLook - transform.position).ZeroY();
-
-                        if (look.magnitude >= 0.001f)
-                            transform.rotation = Quaternion.LookRotation(look.normalized, Vector3.up);
-                    }
-
-                    ExecuteAbility(Abilities[0]);
-                };
-            }
+#endif
         }
 
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
 
+            InputManager.Instance.OnPlayerZoom -= OnPlayerZoom;
+            InputManager.Instance.OnPlayerAction -= OnPlayerAction;
+
             All.Remove(this);
         }
 
         private void Update()
         {
-            if (!IsLocalPlayer)
+            if (!IsOwner)
                 return;
 
             if(State == ActorState.Idle || State == ActorState.Run)
                 MoveTo(InputManager.Instance.playerMove * Time.deltaTime * GetAttributeValue(ActorAttribute.Speed));
 
-            GameManager.Instance.Camera.transform.position = transform.position + Quaternion.Euler(_cameraPitch, _cameraYaw, 0) * new Vector3(0, 0, 1) * _cameraZoom;
-            GameManager.Instance.Camera.transform.LookAt(transform.position, Vector3.up);
+            GameManager.Instance.FrameCamera(transform.position);
         }
 
         private void MoveTo (Vector2 move)
         {
-            var look = Quaternion.Euler(0.0f, _cameraYaw + _moveYaw, 0.0f);
+            var look = Quaternion.Euler(0.0f, GameManager.Instance.CameraYaw + _moveYaw, 0.0f);
             var lookDelta = look * move.ToVector3XZ();
             var moveDelta = lookDelta;
             var radius = _clipCollider.radius;

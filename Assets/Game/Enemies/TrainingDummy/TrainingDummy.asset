@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1a8441a7fe5c024fb553e4089f38878, type: 3}
+  m_Name: TrainingDummy
+  m_EditorClassIdentifier: 
+  _type: 2
+  _displayName: Training Dummy
+  _prefab: {fileID: 9124806088355504971, guid: 04731ff460f738a40845782e1e53007f, type: 3}
+  _preview: {fileID: 0}
+  _baseHealthMax: 10000
+  _baseHealthRegen: 1000
+  _baseSpeed: 10
+  _baseAttack: 60
+  _baseAttackSpeed: 1
+  _baseDefense: 50
+  _baseHarvest: 1
+  _baseBuild: 1
+  _abilities: []

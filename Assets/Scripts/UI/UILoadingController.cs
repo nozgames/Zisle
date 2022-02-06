@@ -1,13 +1,11 @@
-using System;
-using UnityEngine;
 using UnityEngine.UIElements;
 using NoZ.Tweening;
 
 namespace NoZ.Zisle
 {
-    public class ConnectingController : UIController
+    public class UILoadingController : UIController
     {
-        public new class UxmlFactory : UxmlFactory<ConnectingController, UxmlTraits> { }
+        public new class UxmlFactory : UxmlFactory<UILoadingController, UxmlTraits> { }
 
         private VisualElement[] _squares;
 
@@ -16,16 +14,10 @@ namespace NoZ.Zisle
             base.Initialize();
 
             BindClick("back", OnBack).Focus();
-            //BindClick("join", OnJoin);
-            //BindClick("host", OnHost);
-            //BindClick("continue", OnContinue);
         }
 
         private void OnBack()
         {
-            // TODO: cancel the connection
-
-            // TODO: if we were on the join menu then show the join menu instead?
             UIManager.Instance.ShowCooperative();
         }
 

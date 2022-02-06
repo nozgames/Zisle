@@ -32,7 +32,7 @@ namespace NoZ.Zisle
         private void OnHost()
         {
             // TODO: game creation options at some point if there are any
-            UIManager.Instance.ShowConnecting();
+            UIManager.Instance.ShowLoading();
 
             MultiplayerManager.Instance.OnConnected -= OnConnected;
             MultiplayerManager.Instance.OnConnected += OnConnected;
@@ -41,7 +41,7 @@ namespace NoZ.Zisle
 
         private void OnJoinLocal()
         {
-            UIManager.Instance.ShowConnecting();
+            UIManager.Instance.ShowLoading();
 
             MultiplayerManager.Instance.OnConnected -= OnConnected;
             MultiplayerManager.Instance.OnConnected += OnConnected;
@@ -51,7 +51,7 @@ namespace NoZ.Zisle
         private void OnHostLocal()
         {
             // TODO: game creation options at some point if there are any
-            UIManager.Instance.ShowConnecting();
+            UIManager.Instance.ShowLoading();
 
             MultiplayerManager.Instance.OnConnected -= OnConnected;
             MultiplayerManager.Instance.OnConnected += OnConnected;

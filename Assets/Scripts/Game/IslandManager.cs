@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Unity.AI.Navigation;
+using Unity.Netcode;
 
 namespace NoZ.Zisle
 {
@@ -32,31 +33,9 @@ namespace NoZ.Zisle
         private const int MaxCells = 32 * 32;
 
         [SerializeField] private Biome[] _biomes = null;
-        [SerializeField] private IslandGenerationOptions _defaultOptions = null;
 
         private List<Cell> _cells = new List<Cell>();
         private Cell[] _cellGrid = new Cell[IslandGridSize * IslandGridSize];
-
-        [System.Serializable]
-        public class IslandGenerationOptions
-        {
-            public int Size = MaxCells;
-            public int StartingPaths = 1;
-
-            [Header("Path Weights")]
-            public float PathWeight0 = 0.1f;
-            public float PathWeight1 = 1.0f;
-            public float PathWeight2 = 1.0f;
-            public float PathWeight3 = 0.25f;
-
-            public IEnumerable<float> GetForkWeights()
-            {
-                yield return PathWeight0;
-                yield return PathWeight1;
-                yield return PathWeight2;
-                yield return PathWeight3;
-            }
-        }
 
         private NavMeshSurface _navmesh;
 
@@ -69,9 +48,12 @@ namespace NoZ.Zisle
         {
             base.Initialize();
 
+            foreach (var biome in _biomes)
+                biome.RegisterNetworkId();
+
             Debug.Log("Bake Start");
-            _navmesh = transform.GetComponentInChildren<NavMeshSurface>();
-            _navmesh.BuildNavMesh();
+            //_navmesh = transform.GetComponentInChildren<NavMeshSurface>();
+            //_navmesh.BuildNavMesh();
             Debug.Log("Bake End");
         }
 
@@ -94,8 +76,51 @@ namespace NoZ.Zisle
             _cellGrid = new Cell[IslandGridSize * IslandGridSize];
         }
 
+        public void SpawnIslands (GameOptions options)
+        {
+            ClearIslands();
+
+            GenerateCells(options);
+
+            for (int i = 0; i < _cells.Count; i++)
+            {
+                var cell = _cells[i];
+                if (cell.ConnectionMask == 0)
+                    continue;
+
+                var rotations = cell.Biome.Islands.SelectMany(i => i.GetRotations()).Where(r => r.Mask == cell.ConnectionMask).ToArray();
+                if (rotations.Length == 0)
+                    continue;
+
+                var rotation = rotations[Random.Range(0, rotations.Length)];
+                cell.Island = Instantiate(rotation.Island, new Vector3(cell.Position.x * 12.0f, 0, cell.Position.y * -12.0f), Quaternion.Euler(0, 90 * rotation.Rotation, 0), transform).GetComponent<Island>();
+                cell.Island.GetComponent<MeshRenderer>().material = cell.Biome.Material;
+
+                foreach (var netobj in cell.Island.GetComponentsInChildren<NetworkObject>())
+                    netobj.Spawn();
+
+                //cell.Island.gameObject.hideFlags = HideFlags.HideAndDontSave;
+
+                if (cell.From != null)
+                {
+                    if (cell.Biome.Bridge != null)
+                    {
+                        var go = Instantiate(cell.Biome.Bridge, (cell.From.Island.transform.position + cell.Island.transform.position) * 0.5f, Quaternion.identity, transform);
+
+                        if(options.SpawnEnemies)
+                            go.AddComponent<EnemySpawner>();
+                    }
+                }
+            }
+
+            _navmesh = transform.GetComponentInChildren<NavMeshSurface>();
+            _navmesh.BuildNavMesh();
+        }
+
+
         public void GenerateIslands()
         {
+#if false
             ClearIslands();
     
             GenerateCells(_defaultOptions);
@@ -123,6 +148,7 @@ namespace NoZ.Zisle
                     }
                 }
             }
+#endif
         }
 
         public class Cell
@@ -202,7 +228,7 @@ namespace NoZ.Zisle
         /// <summary>
         /// Generate all of the cells for the game and return the home cell
         /// </summary>
-        private Cell GenerateCells (IslandGenerationOptions options)
+        private Cell GenerateCells (GameOptions options)
         {
 #if UNITY_EDITOR
             Random.InitState((int)(UnityEditor.EditorApplication.timeSinceStartup * 1000.0));
@@ -221,9 +247,9 @@ namespace NoZ.Zisle
             queue.Enqueue(home);
 
             // Fill all cells until we are done
-            while (_cells.Count < options.Size)
+            while (_cells.Count < options.MaxIslands)
             {
-                while (queue.Count > 0 && _cells.Count < options.Size)
+                while (queue.Count > 0 && _cells.Count < options.MaxIslands)
                 {
                     // Add the island to the list of islands
                     var cell = queue.Dequeue();
@@ -263,7 +289,7 @@ namespace NoZ.Zisle
                 }
 
                 // Hit a dead end, need to force a fork somewhere
-                if (_cells.Count < options.Size)
+                if (_cells.Count < options.MaxIslands)
                 {
                     // Walk backwards from the end and pick the first cell we can find to branch from
                     var stop = true;

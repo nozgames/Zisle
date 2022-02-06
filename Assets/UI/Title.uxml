@@ -8,7 +8,7 @@
     xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
 >
     <Style src="project://database/Assets/UI/Title.uss" />
-    <zisle:TitleController name="title" class="screen centered-vertical">
+    <zisle:UITitleController name="title" class="screen centered-vertical">
         <VisualElement class="centered-vertical">
             <VisualElement class="logo"/>
             <Button name="solo-button" text="Solo" class="menu-row"/>
@@ -16,5 +16,5 @@
             <Button name="options-button" text="Options" class="menu-row"/>
             <Button name="quit-button" text="Quit" class="menu-row"/>
         </VisualElement>
-    </zisle:TitleController>
+    </zisle:UITitleController>
 </engine:UXML>

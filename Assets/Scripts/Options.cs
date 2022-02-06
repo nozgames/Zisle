@@ -6,6 +6,9 @@ namespace NoZ.Zisle
 {
     public static class Options 
     {
+        private const string PlayerPrefsPlayerName = "Options.Player.Name";
+        private const string PlayerPrefsPlayerSkinColor = "Options.Player.SkinColor";
+        private const string PlayerPrefsPlayerClass = "Options.Player.Class";
         private const string PlayerPrefsScreenShake = "Options.ScreenShake";
         private const string PlayerPrefsSoundVolume = "Options.SoundVolume";
         private const string PlayerPrefsMusicVolume = "Options.MusicVolume";
@@ -17,10 +20,27 @@ namespace NoZ.Zisle
         private static float _musicVolume;
         private static float _gamepadZoomSpeed;
 
+        private static string _playerName;
+        private static string _playerClass;
+        private static Color _playerSkinColor;
+
         public static event Action<bool> OnScreenShakeChange;
         public static event Action<float> OnSoundVolumeChange;
         public static event Action<float> OnMusicVolumeChange;
         public static event Action<float> OnGamepadZoomSpeedChange;
+
+        public static string PlayerName
+        {
+            get => _playerName;
+            set
+            {
+                if (_playerName == value)
+                    return;
+
+                _playerName = value;
+                PlayerPrefs.SetString(PlayerPrefsPlayerName, _playerName);
+            }
+        }
 
         public static bool ScreenShake
         {
@@ -94,6 +114,8 @@ namespace NoZ.Zisle
             _soundVolume = PlayerPrefs.GetFloat(PlayerPrefsSoundVolume, 1.0f);
             _musicVolume = PlayerPrefs.GetFloat(PlayerPrefsMusicVolume, 1.0f);
             _gamepadZoomSpeed = PlayerPrefs.GetFloat(PlayerPrefsGamepadZoomSpeed, 0.5f);
+
+            _playerName = PlayerPrefs.GetString(PlayerPrefsPlayerName, "Player");
         }
     }
 }

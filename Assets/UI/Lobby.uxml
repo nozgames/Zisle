@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="UnityEngine.UIElements"
+    xmlns:engine="UnityEngine.UIElements"
+    xmlns:editor="UnityEditor.UIElements"
+    xmlns:zisle="NoZ.Zisle"
+    xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
+>
+    <Style src="project://database/Assets/UI/Lobby.uss" />
+    <zisle:UILobbyController class="screen centered-vertical">
+        <VisualElement class="centered-horizontal screen">            
+            <VisualElement name="player-left" class="preview-border left-align">
+                <Image name="player-left-preview" class="preview"/>
+                <Label name="player-left-name" text="Name"/>
+                <Button name="player-class-prev" class="player-class-button"/>
+                <Button name="player-class-next" class="player-class-button"/>
+            </VisualElement>
+            <VisualElement name="player-right" class="preview-border right-align">
+                <Image name="player-right-preview" class="preview"/>
+                <Label name="player-right-name" text="Name"/>
+            </VisualElement>
+        </VisualElement>
+
+        <Button name="ready" text="Play"/>
+    </zisle:UILobbyController>
+</engine:UXML>
