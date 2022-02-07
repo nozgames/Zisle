@@ -9,19 +9,57 @@
 >
     <Style src="project://database/Assets/UI/Lobby.uss" />
     <zisle:UILobbyController class="screen centered-vertical">
-        <VisualElement class="centered-horizontal screen">            
-            <VisualElement name="player-left" class="preview-border left-align">
-                <Image name="player-left-preview" class="preview"/>
-                <Label name="player-left-name" text="Name"/>
-                <Button name="player-class-prev" class="player-class-button"/>
-                <Button name="player-class-next" class="player-class-button"/>
-            </VisualElement>
-            <VisualElement name="player-right" class="preview-border right-align">
-                <Image name="player-right-preview" class="preview"/>
-                <Label name="player-right-name" text="Name"/>
-            </VisualElement>
+        <VisualElement name="join-code-container" class="join-code menu-row">   
+            <Label name="join-code-label" text="Join Code"/>
+            <Label name="join-code" text="MWMWMW" class="join-code-text"/>
         </VisualElement>
+        <VisualElement class="centered-vertical">            
+            <VisualElement class="players"> 
+                <VisualElement name="player-left" class="player">
+                    <Label text="Local" class="header"/>
+                    <VisualElement class="preview">
+                        <VisualElement class="preview-box">
+                        <Image name="player-left-preview">
+                        </Image>
+                        <VisualElement class="footer">
+                            <Button name="player-class-prev" class="player-class-button"/>
+                            <Label name="player-left-name" text="Name"/>
+                            <Button name="player-class-next" class="player-class-button"/>
+                        </VisualElement>
+                        <VisualElement name="player-left-ready" class="ready-indicator"/>
+                        </VisualElement>
+                    </VisualElement>
+                </VisualElement>
 
-        <Button name="ready" text="Play"/>
+                <VisualElement class="lanes gap-left">
+                    <Label text="Lanes" class="header"/>
+                    <GroupBox>
+                    <RadioButton name="lane1" class="lane"><Label text="1"/></RadioButton>
+                    <RadioButton name="lane2" class="lane"><Label text="2"/></RadioButton>
+                    <RadioButton name="lane3" class="lane"><Label text="3"/></RadioButton>
+                    <RadioButton name="lane4" class="lane"><Label text="4"/></RadioButton>
+                    </GroupBox>
+                </VisualElement>
+
+                <VisualElement name="player-right" class="player gap-left">
+                    <Label text="Remote" class="header"/>
+                    <VisualElement class="preview">
+                        <VisualElement class="preview-box">
+                        <Image name="player-right-preview"/>
+                            <Image name="not"/>
+                            <Image name="ghost" class="hidden"/>
+                            <VisualElement name="player-right-ready" class="ready-indicator"/>
+                            <VisualElement class="footer">
+                                <Label name="player-right-name" text="Name"/>
+                            </VisualElement>
+                    </VisualElement>
+                    </VisualElement>
+                </VisualElement>
+            </VisualElement>
+
+        </VisualElement>
+        <Button name="ready" text="Play" class="menu-row menu-row-gap"/>
+        <Button name="options" text="Options" class="menu-row" enabled="false"/>
+        <Button name="quit" text="Quit" class="menu-row menu-row-gap"/>
     </zisle:UILobbyController>
 </engine:UXML>

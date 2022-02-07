@@ -12,25 +12,39 @@ namespace NoZ.Zisle
     /// </summary>
     public class PlayerController : NetworkBehaviour
     {
-        private NetworkVariable<FixedString64Bytes> _playerName = new NetworkVariable<FixedString64Bytes>();
-        private NetworkVariable<Color> _playerSkinColor = new NetworkVariable<Color>();
         private NetworkVariable<ulong> _playerClassId = new NetworkVariable<ulong>();
         private NetworkVariable<bool> _ready = new NetworkVariable<bool>();
 
         private Player _player = null;
+
+        public bool IsDisconnecting { get; private set; }
 
         /// <summary>
         /// True if the player is ready to start the game
         /// </summary>
         public bool IsReady
         {
-            get => _ready.Value;
+            get => _ready.Value && !IsDisconnecting;
             set
             {
                 if (!IsLocalPlayer || _ready.Value == value)
                     return;
 
                 SetReadyServerRpc(value);
+            }
+        }
+
+        public ActorDefinition PlayerClass => NetworkScriptableObject.Get<ActorDefinition>(PlayerClassId);
+
+        public ulong PlayerClassId
+        {
+            get => _playerClassId.Value;
+            set
+            {
+                if (!IsLocalPlayer || _playerClassId.Value == value)
+                    return;
+
+                SetPlayerClassIdServerRpc(value);
             }
         }
 
@@ -44,17 +58,19 @@ namespace NoZ.Zisle
             GameEvent.Raise(this, new PlayerConnected { PlayerController = this});
 
             // Tell anyone who cares that our name changed
-            _playerName.OnValueChanged += (p, n) => GameEvent.Raise(this, new PlayerNameChanged { PlayerController = this });
             _ready.OnValueChanged += (p, n) => GameEvent.Raise(this, new PlayerReadyChanged { PlayerController = this });
+            _playerClassId.OnValueChanged += (p,n) => GameEvent.Raise(this, new PlayerClassChanged { PlayerController = this });
 
             // Send the player options
             if (IsLocalPlayer)
-                SetOptionsServerRpc(Options.PlayerName, GameManager.Instance.ActorDefinitions.Where(d => d.ActorType == ActorType.Player).FirstOrDefault().NetworkId, Color.white);
+                SetPlayerClassIdServerRpc(GameManager.Instance.ActorDefinitions.Where(d => d.ActorType == ActorType.Player).FirstOrDefault().NetworkId);
         }
 
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
+
+            IsDisconnecting = true;
 
             GameEvent<PlayerSpawned>.OnRaised -= OnPlayerSpawned;
             GameEvent<PlayerDespawned>.OnRaised -= OnPlayerDespawned;
@@ -96,17 +112,10 @@ namespace NoZ.Zisle
         }
 
         #region Server RPC
-        
-        [ServerRpc]
-        private void SetOptionsServerRpc (string name, ulong playerClassId, Color skinColor)
-        {
-            _playerName.Value = name;
-            _playerClassId.Value = playerClassId;
-            _playerSkinColor.Value = skinColor;
-        }
 
         [ServerRpc] private void SetReadyServerRpc(bool value) => _ready.Value = value;
-        
+        [ServerRpc] private void SetPlayerClassIdServerRpc(ulong playerClassId) => _playerClassId.Value = playerClassId;
+
         #endregion
     }
 }

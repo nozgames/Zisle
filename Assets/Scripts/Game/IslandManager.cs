@@ -33,15 +33,14 @@ namespace NoZ.Zisle
         private const int MaxCells = 32 * 32;
 
         [SerializeField] private Biome[] _biomes = null;
+        [SerializeField] private NavMeshSurface _navMesh = null;
 
         private List<Cell> _cells = new List<Cell>();
         private Cell[] _cellGrid = new Cell[IslandGridSize * IslandGridSize];
 
-        private NavMeshSurface _navmesh;
-
         public void UpdateNavMesh()
         {
-            _navmesh.BuildNavMesh();
+            _navMesh.BuildNavMesh();
         }
 
         public override void Initialize()
@@ -52,8 +51,8 @@ namespace NoZ.Zisle
                 biome.RegisterNetworkId();
 
             Debug.Log("Bake Start");
-            //_navmesh = transform.GetComponentInChildren<NavMeshSurface>();
-            //_navmesh.BuildNavMesh();
+            //_navMesh = transform.GetComponentInChildren<NavMeshSurface>();
+            //_navMesh.BuildNavMesh();
             Debug.Log("Bake End");
         }
 
@@ -74,13 +73,16 @@ namespace NoZ.Zisle
 
             _cells.Clear();
             _cellGrid = new Cell[IslandGridSize * IslandGridSize];
+
+            GetComponent<BoxCollider>().enabled = true;
+            _navMesh.BuildNavMesh();
         }
 
-        public void SpawnIslands (GameOptions options)
+        public void SpawnIslands ()
         {
             ClearIslands();
 
-            GenerateCells(options);
+            GenerateCells();
 
             for (int i = 0; i < _cells.Count; i++)
             {
@@ -107,14 +109,14 @@ namespace NoZ.Zisle
                     {
                         var go = Instantiate(cell.Biome.Bridge, (cell.From.Island.transform.position + cell.Island.transform.position) * 0.5f, Quaternion.identity, transform);
 
-                        if(options.SpawnEnemies)
-                            go.AddComponent<EnemySpawner>();
+                        //if(GameManager.Instance.Options.SpawnEnemies)
+                            //go.AddComponent<EnemySpawner>();
                     }
                 }
             }
 
-            _navmesh = transform.GetComponentInChildren<NavMeshSurface>();
-            _navmesh.BuildNavMesh();
+            GetComponent<BoxCollider>().enabled = false;
+            _navMesh.BuildNavMesh();
         }
 
 
@@ -228,8 +230,10 @@ namespace NoZ.Zisle
         /// <summary>
         /// Generate all of the cells for the game and return the home cell
         /// </summary>
-        private Cell GenerateCells (GameOptions options)
+        private Cell GenerateCells ()
         {
+            var options = GameManager.Instance.Options;
+
 #if UNITY_EDITOR
             Random.InitState((int)(UnityEditor.EditorApplication.timeSinceStartup * 1000.0));
 #else
@@ -263,7 +267,7 @@ namespace NoZ.Zisle
                     // Choose a random number of forks
                     var forkCount = 0;
                     if (cell.Position == Vector2Int.zero)
-                        forkCount = options.StartingPaths;
+                        forkCount = GameManager.Instance.Options.StartingLanes;
                     else
                         forkCount = RandomWeightedIndex(options.GetForkWeights(), 0, forks.Count + 1, (f) => f);
 

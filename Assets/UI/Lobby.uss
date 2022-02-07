@@ -12,76 +12,52 @@
 	margin-top: 30px;
 }
 
-.unity-base-text-field__input 
-{
-	margin: 2px;
-}
-
-.unity-text-field__placeholder > .unity-base-text-field__input {    
-    color: var(--color-text-ghosted);
-}
-
-.preview-border
-{
-	background-image: var(--image-rounded-border);
-	-unity-background-image-tint-color: var(--color-background);
-	width: 308px;
-	height: 348px;
-	padding: 4px;
-}
-
-.preview-border Label
-{
-	height: 40px;
-	width: 300px;
-	-unity-text-align: middle-center;
-	color: var(--color-text);
-	font-size: 70%;
-}
 
 .preview
 {
 	background-image: var(--image-rounded-border);
 	-unity-background-image-tint-color: var(--color-background-dark);
-	width: 100%;
-	height: 100%;
+	padding: 60px 20px;
 }
 
-.left-align
+.preview Image
 {
+	width: 400px;
+	height: 400px;
+	top: 50%;
+	left: 50%;
+	margin-left: -200px;
+	margin-top: -220px;
 	position: absolute;
-	left: 15%;
 }
 
-.right-align
+.preview-box
 {
-	position: absolute;
-	right: 15%;
+	width: 300px;
+	height: 300px;
 }
 
 .player-class-button
 {
-	position: absolute;
-	width: 40px;
-	height: 40px;
-	margin-top: 0px;
-	bottom: 5px;
-	-unity-background-image-tint-color: var(--color-text);
+	width: 60px;
+	height: 60px;
+	padding: 8px;
+	opacity: .2;
+	-unity-background-image-tint-color: var(--color-background);
 }
+
 
 #player-class-prev
 {
-	left: 0px;
 	background-image: url("project://database/Assets/Sprites/Icons/ArrowLeft.png");
 }
 
 #player-class-next
 {
-	right: 0px;
 	background-image: url("project://database/Assets/Sprites/Icons/ArrowRight.png");
 }
 
-#ready 
+#ready2	 
 {
 	position: absolute;
 	bottom: 5%;
@@ -90,7 +66,207 @@
 	margin-top: -40px;
 	width: 200px;
 	height: 80px;
-	color: var(--color-background);
-	background-image: var(--image-rounded-border);
-	-unity-background-image-tint-color: var(--color-background-dark);
+}
+
+.gap-left
+{
+	margin-left: 80px;
+}
+
+.player
+{
+}
+
+.players
+{
+    -unity-background-image-tint-color: var(--color-background);
+    background-image: url("../RoundedBorder.png");
+    padding: 10px 20px 20px 20px;
+    margin-bottom: 2px;
+	flex-direction: row;
+}
+
+.menu-row Label
+{
+	color : var(--color-text);
+	-unity-text-align: middle-left;
+}
+
+.lanes
+{
+	width: 100px;
+	flex-direction: column;
+	margin-top: 0px;
+}
+
+.lanes .lane
+{
+	margin-left: auto;
+	margin-right: auto;
+	width: 50px;
+	height: 50px;
+	margin-bottom: 0px;
+	padding: 0px;
+	color: var(--color-text);
+	background-color: var(--color-background-dark);
+	margin-top: 40px;
+	rotate: 45deg;
+}
+
+.lane Label
+{
+	width: 100%;
+	height: 100%;
+	padding: 0px;
+	margin: 0;
+	rotate: -45deg;
+	-unity-text-align: middle-center;
+	font-size: 80%;
+}
+
+#quit
+{
+	position: absolute;
+	left: 30px;
+	bottom: 30px;
+	width: 200px;
+	height: 50px;
+	font-size: 80%;
+}
+
+#options
+{
+	position: absolute;
+	right: 30px;
+	bottom: 30px;
+	width: 200px;
+	height: 50px;
+	font-size: 80%;
+}
+
+#ready
+{
+	position: absolute;
+	left: 50%;
+	bottom: 30px;
+	width: 360px;
+	height: 80px;
+	margin-left: -180px;
+	font-size: 100%;
+}
+
+.header
+{
+	color: var(--color-text);
+	font-size: var(--font-size-small);
+	-unity-text-align: middle-center;
+	opacity: .5;
+}
+
+#not
+{
+	background-image: url("project://database/Assets/Sprites/Icons/Not.png");
+	width: 250px;
+	height: 250px;
+	opacity: .05;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -125px;
+	margin-top: -125px;
+}
+
+#ghost
+{
+	background-image: url("project://database/Assets/Sprites/Icons/Player.png");
+	width: 300px;
+	height: 300px;
+	opacity: .05;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -150px;
+	margin-top: -150px;
+}
+
+
+.unity-radio-button__input
+{
+	display: none;
+}
+
+.unity-radio-button:checked 
+{
+	border-width: 6px;
+	border-color: var(--color-background-highlight);
+	width: 60px;
+	height: 60px;
+	margin-top: 35px;
+	margin-bottom: -5px;
+}
+
+.ready-indicator
+{
+	background-image: url("project://database/Assets/Sprites/Icons/NotReady.png");
+	width: 60px;
+	height: 60px;
+	position: absolute;
+	top: -50px;
+	right: -10px;
+	-unity-background-image-tint-color: var(--color-background);
+}
+
+.ready
+{
+	background-image: url("project://database/Assets/Sprites/Icons/Ready.png");
+	-unity-background-image-tint-color: var(--color-background-highlight);
+}
+
+.footer
+{
+	flex-direction: row;
+	position: absolute;
+	left: -20px;
+	right: -20px;
+	bottom: -50px;
+	height: 60px;
+}
+
+.footer Label
+{
+	-unity-text-align: middle-center;
+	color: var(--color-text);
+	font-size: 70%;
+	margin-left: auto;
+	margin-right: auto;
+	height: 100%;
+}
+
+.join-code
+{
+	flex-direction: row;
+	position: absolute;
+	top: 80px;
+	left: 50%;
+	width: 460px;
+	height: 60px;
+	margin-left: -230px;
+	-unity-text-align: middle-left;
+}
+
+#join-code
+{
+	margin-left: auto;
+	color: var(--color-text-dark) !important; 
+}
+
+#join-code-label
+{
+	color: var(--color-text-light) !important; 
+}
+
+
+.ghosted > Label
+{
+	color: var(--color-text-ghosted) !important;
 }

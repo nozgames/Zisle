@@ -8,24 +8,16 @@ using System.Collections.Generic;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
 using System;
+using static Unity.Netcode.NetworkManager;
 
 namespace NoZ.Zisle
 {
-    public enum GameState
-    {
-        None,
-        LobbyJoining,
-        LobbyLeaving,
-        LobbyWait,
-        GameStarting,
-        GamePlaying,
-        GameStopping,
-    }
-
     public class GameManager : Singleton<GameManager>
     {
         private const float UnityServicesRetryDelay = 2.0f;
-        private const int MaxPlayers = 2;
+
+        [Header("General")]
+        [SerializeField] private GameOptions _optionsPrefab = null;
 
         [Header("Camera")]
         [SerializeField] private Camera _camera = null;
@@ -38,10 +30,11 @@ namespace NoZ.Zisle
         [Space]
         [SerializeField] private ActorDefinition[] _actorDefinitions = null;
 
-        private GameState _state;
         private UnityTransport _transport;
         private Vector3 _cameraTarget;
         private Vector3 _cameraOffset;
+        private List<PlayerController> _players = new List<PlayerController>();
+        private GameOptions _options = null;
 
         /// <summary>
         /// Optional join code if the connection was to a relay server
@@ -64,9 +57,24 @@ namespace NoZ.Zisle
         public Camera Camera => _camera;
 
         /// <summary>
+        /// Maximum number of players allowed on the server
+        /// </summary>
+        public int MaxPlayers { get; set; }
+
+        /// <summary>
+        /// True if max playes is set to 1
+        /// </summary>
+        public bool IsSolo => MaxPlayers == 1;
+
+        /// <summary>
         /// Yaw value of camera rotation
         /// </summary>
         public float CameraYaw => _cameraYaw;
+
+        /// <summary>
+        /// Get the current options object.  Will be null until joining a lobby
+        /// </summary>
+        public GameOptions Options => _options;
 
         public Vector2 CameraOffset
         {
@@ -97,23 +105,14 @@ namespace NoZ.Zisle
         public IEnumerable<ActorDefinition> ActorDefinitions => _actorDefinitions;
 
         /// <summary>
-        /// Get the current game state
+        /// Return the current list of players
         /// </summary>
-        public GameState State 
-        {
-            get => _state;
-            private set
-            {
-                if (_state == value)
-                    return;
+        public IEnumerable<PlayerController> Players => _players;
 
-                var old = _state;
-                _state = value;
-                GameEvent.Raise(this, new GameStateChanged {  OldState = old, NewState = _state});
-            }
-        }
-
-        private List<PlayerController> _players = new List<PlayerController>();
+        /// <summary>
+        /// Get the number of connected players
+        /// </summary>
+        public int PlayerCount => _players.Count;
 
         public override void Initialize()
         {
@@ -128,6 +127,7 @@ namespace NoZ.Zisle
 
             GameEvent<PlayerConnected>.OnRaised += OnPlayerConnected;
             GameEvent<PlayerDisconnected>.OnRaised += OnPlayerDisconnected;
+            GameEvent<GameOptionsSpawned>.OnRaised += OnGameOptionsSpawned;
         }
 
         public override void Shutdown()
@@ -136,6 +136,12 @@ namespace NoZ.Zisle
 
             GameEvent<PlayerConnected>.OnRaised -= OnPlayerConnected;
             GameEvent<PlayerDisconnected>.OnRaised -= OnPlayerDisconnected;
+            GameEvent<GameOptionsSpawned>.OnRaised -= OnGameOptionsSpawned;
+        }
+
+        private void OnGameOptionsSpawned(object sender, GameOptionsSpawned evt)
+        {
+            _options = evt.Options;
         }
 
         private void OnPlayerConnected(object sender, PlayerConnected evt)
@@ -169,61 +175,53 @@ namespace NoZ.Zisle
                 // Stop the game first
                 yield return StopGame();
 
-                State = GameState.LobbyLeaving;
+                if(IsInLobby)
+                {
+                    NetworkManager.Singleton.ConnectionApprovalCallback -= ApprovalCheck;
+                    NetworkManager.Singleton.Shutdown();
+                }
 
-                NetworkManager.Singleton.Shutdown();
                 while (NetworkManager.Singleton.ShutdownInProgress)
                     yield return null;
-
-                State = GameState.None;
             }
-
-            if (State == GameState.None)
-                return null;
 
             return StartCoroutine(LeaveLobby());
         }
 
-        public Coroutine StartGameAsync (GameOptions options)
+        public Coroutine StartGameAsync ()
         {
-            if (State != GameState.LobbyWait)
-                return null;
-
-            IEnumerator StartGame (GameOptions options)
+            IEnumerator StartGame ()
             {
                 yield return null;
 
-                IslandManager.Instance.SpawnIslands(options);
+                //IslandManager.Instance.SpawnIslands();
 
                 // Spawn all of the players
-                foreach (var player in _players)
-                    player.SpawnPlayer();
-
-                State = GameState.GamePlaying;
+                if(NetworkManager.Singleton.IsHost)
+                {
+                    foreach (var player in _players)
+                        player.SpawnPlayer();
+                }
 
                 Debug.Log("Game Started");
             }
 
-            State = GameState.GameStarting;
-
-            return StartCoroutine(StartGame(options));
+            return StartCoroutine(StartGame());
         }
 
-        private IEnumerator StopGame(bool changeState=true, Action onComplete = null)
+        public bool IsInLobby => !NetworkManager.Singleton.ShutdownInProgress && (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient);
+
+
+        private IEnumerator StopGame()
         {
-            // Nothing to do if a game isnt starting or already started
-            if (State != GameState.GameStarting && State != GameState.GamePlaying)
+            if (!IsInLobby)
                 yield break;
 
             // TODO: different if host            
 
             IslandManager.Instance.ClearIslands();
 
-            // Return to the waiting for ready screen
-            if (changeState)
-                State = GameState.LobbyWait;
-
-            onComplete?.Invoke();
+            yield break;
         }
 
         /// <summary>
@@ -231,7 +229,7 @@ namespace NoZ.Zisle
         /// </summary>
         public void StopGameAsync ()
         {
-            StartCoroutine(StopGame(true));
+            StartCoroutine(StopGame());
         }
 
         /// <summary>
@@ -245,21 +243,31 @@ namespace NoZ.Zisle
 
                 Debug.Log($"Creating Lobby: {connection}");
 
+                NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
                 NetworkManager.Singleton.StartHost();
 
                 // Wait for the local player to connect
                 while (LocalPlayer == null)
                     yield return null;
 
-                Debug.Log("Local Player Connected");
+                // Spawn the game options and wait for it 
+                Instantiate(_optionsPrefab).GetComponent<NetworkObject>().Spawn();
+                while (_options == null)
+                    yield return null;
 
-                State = GameState.LobbyWait;
+                Debug.Log("Local Player Connected");
 
                 if (wait != null)
                     wait.IsDone = true;
             }
 
             return StartCoroutine(CreateLobby(connection));
+        }
+
+        private void ApprovalCheck(byte[] connectionData, ulong clientId, ConnectionApprovedDelegate callback)
+        {
+            if (_players.Count >= MaxPlayers)
+                callback(false, null, false, null, null);
         }
 
         /// <summary>
@@ -277,8 +285,8 @@ namespace NoZ.Zisle
                 // Connect
                 NetworkManager.Singleton.StartClient();
 
-                // Wait until we see ourself join
-                while (NetworkManager.Singleton.IsClient && LocalPlayer == null)
+                // Wait until we see ourself join and the options spawns
+                while (NetworkManager.Singleton.IsClient && (LocalPlayer == null || _options == null))
                     yield return null;
 
                 Debug.Log("Local Player Connected");

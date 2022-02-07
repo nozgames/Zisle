@@ -8,19 +8,6 @@ namespace NoZ.Zisle
     {
         public new class UxmlFactory : UxmlFactory<UITitleController, UxmlTraits> { }
 
-        public new class UxmlTraits : VisualElement.UxmlTraits
-        {
-//            UxmlStringAttributeDescription m_StartScene = new UxmlStringAttributeDescription { name = "start-scene", defaultValue = "Main" };
-
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-                //var sceneName = m_StartScene.GetValueFromBag(bag, cc);
-
-                //((TitleController)ve).Init(sceneName);
-            }
-        }
-
         public override void Initialize()
         {
             BindClick("solo-button", OnSolo).Focus();
@@ -31,6 +18,7 @@ namespace NoZ.Zisle
 
         private void OnSolo()
         {
+            GameManager.Instance.MaxPlayers = 1;
             UIManager.Instance.JoinLobby("127.0.0.1", true);
         }
 

@@ -10,7 +10,6 @@ namespace NoZ.Zisle
     {
         private NavMeshAgent _agent;
         [SerializeField] private float _updateRate = 1.0f;
-        [SerializeField] private float _attackRange = 0.6f;
 
         protected override void Awake()
         {
@@ -18,8 +17,18 @@ namespace NoZ.Zisle
 
             _agent = GetComponent<NavMeshAgent>();
             _agent.updateRotation = false;
+            _agent.enabled = false;
+        }
 
-            StartCoroutine(UpdateTarget());
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+
+            if (IsHost)
+            {
+                StartCoroutine(UpdateTarget());
+                _agent.enabled = true;
+            }
         }
 
         public override void UpdateAttributes()

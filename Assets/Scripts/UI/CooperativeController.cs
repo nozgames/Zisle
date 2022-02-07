@@ -1,5 +1,3 @@
-using System.Collections;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace NoZ.Zisle
@@ -28,46 +26,30 @@ namespace NoZ.Zisle
         }
 
         private void OnBack() => UIManager.Instance.ShowTitle();
-        private void OnJoin() => UIManager.Instance.ShowCooperativeJoin();
+        private void OnJoin()
+        {
+            GameManager.Instance.MaxPlayers = 2;
+            UIManager.Instance.ShowCooperativeJoin();
+        }
+
         private void OnHost()
         {
-            // TODO: game creation options at some point if there are any
-            UIManager.Instance.ShowLoading();
-
-            MultiplayerManager.Instance.OnConnected -= OnConnected;
-            MultiplayerManager.Instance.OnConnected += OnConnected;
-            MultiplayerManager.Instance.Host();
+            GameManager.Instance.MaxPlayers = 2;
+            UIManager.Instance.JoinLobby(null,true);
         }
 
         private void OnJoinLocal()
         {
-            UIManager.Instance.ShowLoading();
-
-            MultiplayerManager.Instance.OnConnected -= OnConnected;
-            MultiplayerManager.Instance.OnConnected += OnConnected;
-            MultiplayerManager.Instance.JoinLocal();
+            GameManager.Instance.MaxPlayers = 2;
+            UIManager.Instance.JoinLobby("127.0.0.1");
         }
 
         private void OnHostLocal()
         {
-            // TODO: game creation options at some point if there are any
-            UIManager.Instance.ShowLoading();
-
-            MultiplayerManager.Instance.OnConnected -= OnConnected;
-            MultiplayerManager.Instance.OnConnected += OnConnected;
-            MultiplayerManager.Instance.HostLocal();
+            GameManager.Instance.MaxPlayers = 2;
+            UIManager.Instance.JoinLobby("127.0.0.1",true);
         }
 
         private void OnContinue() => UIManager.Instance.ShowTitle();
-        private void OnConnected()
-        {
-            IEnumerator Delay ()
-            {
-                yield return new WaitForSeconds(2.0f);
-                UIManager.Instance.ShowGame();
-            }
-
-            GameManager.Instance.StartCoroutine(Delay());
-        } 
     }
 }

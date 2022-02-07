@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using NoZ.Tweening;
+using UnityEngine.AI;
 
 namespace NoZ.Zisle
 {
@@ -52,6 +53,11 @@ namespace NoZ.Zisle
 
         public bool IsDead => _health <= 0.0f;
 
+        public AnimationShader IdleAnimation => _idleAnimation;
+
+        public NavMeshAgent NavAgent { get; private set; }
+        public NavMeshObstacle NavObstacle { get; private set; }
+
         public float Health => _health;
         public ActorState State
         {
@@ -82,11 +88,18 @@ namespace NoZ.Zisle
         protected virtual void Awake()
         {
             _animator = GetComponent<BlendedAnimationController>();
+
+            NavAgent = GetComponent<NavMeshAgent>();
+            NavObstacle = GetComponent<NavMeshObstacle>();
+
+            // We only want these enabled on the host
+            if (NavAgent != null) NavAgent.enabled = false;
+            if (NavObstacle != null) NavObstacle.enabled = false;
         }
 
         public void PlayAnimation(AnimationShader shader, BlendedAnimationController.AnimationCompleteDelegate onComplete=null)
         {
-            if (shader == null)
+            if (shader == null || _animator == null)
                 return;
 
             _animator.Play(shader, onComplete: onComplete);
@@ -114,7 +127,7 @@ namespace NoZ.Zisle
         {
             _health = Mathf.Clamp(_health - damage, 0.0f, GetAttributeValue(ActorAttribute.HealthMax));
 
-            UIManager.Instance.AddFloatingText(((int)Mathf.Ceil(damage)).ToString(), null, transform.position + Vector3.up * (1.0f + _height));
+            UIManager.Instance.AddFloatingText(((int)Mathf.Ceil(damage)).ToString(), null, transform.position + Vector3.up * (_height * 2.0f));
 
             if(_health <= 0.0f)
                 Die();

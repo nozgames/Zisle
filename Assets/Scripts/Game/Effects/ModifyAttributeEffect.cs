@@ -5,6 +5,7 @@ namespace NoZ.Zisle
     [CreateAssetMenu(menuName = "Zisle/Actor Effects/Modify Attribute")]
     public class ModifyAttributeEffect : ActorEffect
     {
+#if false
         [Tooltip("Attribute to effect")]
         [SerializeField] private ActorAttribute _attribute = ActorAttribute.HealthMax;
 
@@ -49,6 +50,16 @@ namespace NoZ.Zisle
 
             actor.UpdateAttributes();
 #endif
+        }
+#endif
+        public override void Apply(Context context)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void Remove(Context context)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

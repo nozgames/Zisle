@@ -4,6 +4,8 @@ using UnityEngine.UIElements;
 using NoZ.Tweening;
 using NoZ.Events;
 using System.Collections;
+using NoZ.Animations;
+using Unity.Netcode;
 
 namespace NoZ.Zisle
 {
@@ -18,7 +20,6 @@ namespace NoZ.Zisle
         [Header("General")]
         [SerializeField] private GameObject _postProcsUI = null;
         [SerializeField] private GameObject _postProcsGame = null;
-        [SerializeField] private GameObject _lobbyPrefab = null;
 
         [Header("Preview")]
         [SerializeField] private RenderTexture _previewLeftTexture = null;
@@ -70,15 +71,11 @@ namespace NoZ.Zisle
             var blur = loading.BlurBackground;
             _postProcsUI.SetActive(blur);
             _postProcsGame.SetActive(!blur);
-
-            GameEvent<GameStateChanged>.OnRaised += OnGameStateChanged;
         }
 
         protected override void OnShutdown()
         {
             base.OnShutdown();
-
-            GameEvent<GameStateChanged>.OnRaised -= OnGameStateChanged;
         }
 
 
@@ -168,15 +165,14 @@ namespace NoZ.Zisle
             UIController<UIGame>.Instance.AddFloatingText(text, className, position, duration);
         }
 
-        private void OnGameStateChanged (object sender, GameStateChanged evt)
-        {
-        }
-
         public void OnAfterSubsystemInitialize() => ShowMainMenu();
 
+        /// <summary>
+        /// Join or create a lobby
+        /// </summary>
         public void JoinLobby (string connection, bool create=false)
         {
-            IEnumerator JoinLobbyCoroutine(string connection, bool create)
+            IEnumerator JoinLobbyCoroutine(string connection, bool create=false)
             {
                 var startTime = Time.time;
 
@@ -192,24 +188,18 @@ namespace NoZ.Zisle
                 else
                     yield return GameManager.Instance.JoinLobbyAsync(connection);
 
-                _lobbyIsland = Instantiate(_lobbyPrefab);
-                GameManager.Instance.CameraOffset = new Vector3(0, 0, 0);
-                GameManager.Instance.CameraZoom = 35.0f;
-                GameManager.Instance.FrameCamera(_lobbyIsland.transform.position);
-
                 while (Time.time - startTime < MinLoadingTime)
                     yield return null;
 
-                UIController<UILobbyController>.Instance.IsSolo = true;
                 TransitionTo(UIController<UILobbyController>.Instance);
             }
 
-            StartCoroutine(JoinLobbyCoroutine(connection, create));
+            StartCoroutine(JoinLobbyCoroutine(connection,create));
         }
 
-        public void StartGame (GameOptions gameOptions)
+        public void StartGame ()
         {
-            IEnumerator StartGameCoroutine(GameOptions options)
+            IEnumerator StartGameCoroutine()
             {
                 var startTime = Time.time;
 
@@ -218,10 +208,9 @@ namespace NoZ.Zisle
                 ShowLoading(waitForLoading);
                 yield return waitForLoading;
 
-                Destroy(_lobbyIsland.gameObject);
-                _lobbyIsland = null;
+                GameManager.Instance.CameraOffset = Vector3.zero;
 
-                yield return GameManager.Instance.StartGameAsync(options);
+                yield return GameManager.Instance.StartGameAsync();
 
                 while (Time.time - startTime < MinLoadingTime)
                     yield return null;
@@ -229,7 +218,7 @@ namespace NoZ.Zisle
                 TransitionTo(UIController<UIGame>.Instance);
             }
 
-            StartCoroutine(StartGameCoroutine(gameOptions));
+            StartCoroutine(StartGameCoroutine());
         }
 
         /// <summary>
@@ -246,13 +235,18 @@ namespace NoZ.Zisle
                 ShowLoading(waitForLoading);
                 yield return waitForLoading;
 
-                // Leave whatever get is started
-                if (GameManager.Instance.State != GameState.None)
-                    yield return GameManager.Instance.LeaveLobbyAsync();
+                // Leave previous lobby
+                yield return GameManager.Instance.LeaveLobbyAsync();
 
                 // Make sure we have a background game
+                GameManager.Instance.MaxPlayers = 1;
                 yield return GameManager.Instance.CreateLobbyAsync("127.0.0.1:7722");
-                yield return GameManager.Instance.StartGameAsync(new GameOptions { MaxIslands = 24, StartingPaths = 4, SpawnEnemies = false });
+
+                GameManager.Instance.Options.MaxIslands = 24;
+                GameManager.Instance.Options.StartingLanes = 4;
+                GameManager.Instance.Options.SpawnEnemies = false;
+
+                yield return GameManager.Instance.StartGameAsync();
 
                 while (Time.time - startTime < MinLoadingTime)
                     yield return null;
@@ -282,7 +276,20 @@ namespace NoZ.Zisle
                 return;
             }
 
-            Instantiate(def.Preview, preview.transform).GetComponentInChildren<SkinnedMeshRenderer>().gameObject.layer = LayerMask.NameToLayer("Preview");
+            var go = Instantiate(def.Preview, preview.transform);
+            go.GetComponentInChildren<SkinnedMeshRenderer>().gameObject.layer = LayerMask.NameToLayer("Preview");
+            if(go.GetComponent<Animator>() == null)
+                go.AddComponent<Animator>();
+            var blend = go.AddComponent<BlendedAnimationController>();
+
+            IEnumerator Test()
+            {
+                yield return new WaitForEndOfFrame();
+                blend.Play(def.Prefab.GetComponent<Actor>().IdleAnimation, blendIn: false);
+            }
+
+            StartCoroutine(Test());
+            
             preview.transform.parent.gameObject.SetActive(true);
         }
     }

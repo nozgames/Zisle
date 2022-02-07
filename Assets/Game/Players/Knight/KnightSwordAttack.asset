@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34452f75e1a36f64988e322fb32d9d27, type: 3}
   m_Name: KnightSwordAttack
   m_EditorClassIdentifier: 
-  _targetCount: 1
+  _targetCount: 8
   _targetRange: 0.8
   _targetArc: 45
   _targetMask:

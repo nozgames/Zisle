@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.AI;
+using NoZ.Events;
 
 namespace NoZ.Zisle
 {
@@ -12,7 +13,7 @@ namespace NoZ.Zisle
         [SerializeField] private LayerMask _groundLayer = 0;
         [SerializeField] private LayerMask _clipLayer = 0;
 
-        [SerializeField] private GameObject _buildThing = null;
+        //[SerializeField] private GameObject _buildThing = null;
 
         [SerializeField] private SphereCollider _clipCollider = null;
 
@@ -33,6 +34,8 @@ namespace NoZ.Zisle
                 InputManager.Instance.OnPlayerZoom += OnPlayerZoom;
                 InputManager.Instance.OnPlayerAction += OnPlayerAction;
             }
+
+            GameEvent.Raise(this, new PlayerSpawned { Player = this });
         }
 
         private void OnPlayerZoom (float f) => GameManager.Instance.CameraZoom -= 5.0f * f;
@@ -85,6 +88,8 @@ namespace NoZ.Zisle
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
+
+            GameEvent.Raise(this, new PlayerDespawned { Player = this });
 
             InputManager.Instance.OnPlayerZoom -= OnPlayerZoom;
             InputManager.Instance.OnPlayerAction -= OnPlayerAction;
@@ -151,7 +156,8 @@ namespace NoZ.Zisle
             // Set the new position
             //GetComponent<NavMeshAgent>().updatePosition = false;
             //GetComponent<NavMeshAgent>().updateRotation = false;
-            GetComponent<NavMeshAgent>().Move(moveTarget - transform.position);
+            if(GetComponent<NavMeshAgent>().enabled)
+                GetComponent<NavMeshAgent>().Move(moveTarget - transform.position);
 
             //GetComponent<NavMeshAgent>().SetDestination(moveTarget);
             //transform.position = moveTarget;

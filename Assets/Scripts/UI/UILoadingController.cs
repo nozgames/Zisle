@@ -41,6 +41,8 @@ namespace NoZ.Zisle
             for (int i = 0; i < _squares.Length; i++)
             {
                 var square = _squares[i];
+                square.style.width = small;
+                square.style.height = small;
                 square.TweenGroup()
                     .Element(Tween.Sequence(square).Delay(i*0.5f).Element(Tween.FromTo(width, square.style, small, large).Duration(2.0f).PingPong()).Element(Tween.Wait(square, (4-i)*0.5f+3.0f)))
                     .Element(Tween.Sequence(square).Delay(i * 0.5f).Element(Tween.FromTo(height, square.style, small, large).Duration(2.0f).PingPong()).Element(Tween.Wait(square, (4-i) * 0.5f + 3.0f)))
