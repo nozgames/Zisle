@@ -35,6 +35,26 @@ namespace NoZ.Zisle
         private List<Cell> _cells = new List<Cell>();
         private Cell[] _cellGrid = new Cell[GridSize * GridSize];
 
+        [System.Serializable]
+        public struct Options
+        {
+            public int MaxIslands;
+            public float PathWeight0;
+            public float PathWeight1;
+            public float PathWeight2;
+            public float PathWeight3;
+
+            public int StartingLanes;
+
+            public IEnumerable<float> GetForkWeights()
+            {
+                yield return PathWeight0;
+                yield return PathWeight1;
+                yield return PathWeight2;
+                yield return PathWeight3;
+            }
+        }
+
         private class Cell
         {
             /// <summary>
@@ -71,7 +91,7 @@ namespace NoZ.Zisle
         /// <summary>
         /// Generate an array of island cells using the given options
         /// </summary>
-        public IslandCell[] Generate (GameOptions options)
+        public IslandCell[] Generate (Options options)
         {
             _cells = new List<Cell>();
             _cellGrid = new Cell[GridSize * GridSize];
@@ -154,7 +174,7 @@ namespace NoZ.Zisle
         /// <summary>
         /// Generate all of the cells for the game and return the home cell
         /// </summary>
-        private void GenerateCells (GameOptions options)
+        private void GenerateCells (Options options)
         {
 #if UNITY_EDITOR
             Random.InitState((int)(UnityEditor.EditorApplication.timeSinceStartup * 1000.0));
@@ -189,7 +209,7 @@ namespace NoZ.Zisle
                     // Choose a random number of forks
                     var forkCount = 0;
                     if (cell.Position == Vector2Int.zero)
-                        forkCount = GameManager.Instance.Options.StartingLanes;
+                        forkCount = options.StartingLanes;
                     else
                         forkCount = RandomWeightedIndex(options.GetForkWeights(), 0, forks.Count + 1, (f) => f);
 

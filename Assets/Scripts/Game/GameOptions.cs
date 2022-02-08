@@ -10,33 +10,31 @@ namespace NoZ.Zisle
     /// </summary>
     public class GameOptions : NetworkBehaviour
     {
-        public int MaxIslands = 64;
-        public bool SpawnEnemies = true;
+        [Header("General")]
+        [SerializeField] private int _maxIslands = 64;
+        [SerializeField] private int _startingLanes = 1;
+        [SerializeField] private bool _spawnEnemies = true;
 
         [Header("Path Weights")]
-        public float PathWeight0 = 0.1f;
-        public float PathWeight1 = 1.0f;
-        public float PathWeight2 = 0.4f;
-        public float PathWeight3 = 0.2f;
+        [SerializeField] public float _pathWeight0 = 0.1f;
+        [SerializeField] public float _pathWeight1 = 1.0f;
+        [SerializeField] public float _pathWeight2 = 0.4f;
+        [SerializeField] public float _pathWeight3 = 0.2f;
 
-        public IEnumerable<float> GetForkWeights()
-        {
-            yield return PathWeight0;
-            yield return PathWeight1;
-            yield return PathWeight2;
-            yield return PathWeight3;
-        }
 
-        private NetworkVariable<int> _startingLanes = new NetworkVariable<int>(1);
+        private NetworkVariable<int> _startingLanesSync = new NetworkVariable<int>(1);
 
         public int StartingLanes
         {
-            get => _startingLanes.Value;
+            get => _startingLanes;
             set
             {
-                if (_startingLanes.Value == value)
-                    return;
-                SetStartingLanesServerRpc(value);
+                if (_startingLanes == value) return;
+                
+                _startingLanes = value;
+
+                if(NetworkManager.Singleton != null)
+                    SetStartingLanesServerRpc(value);
             }
         }
 
@@ -46,7 +44,7 @@ namespace NoZ.Zisle
 
             name = "GameOptions";
 
-            _startingLanes.OnValueChanged += (p, n) => GameEvent.Raise(this, new GameOptionStartingLanesChanged { Options = this, OldValue = p, NewValue = n });
+            _startingLanesSync.OnValueChanged += (p, n) => GameEvent.Raise(this, new GameOptionStartingLanesChanged { Options = this, OldValue = p, NewValue = n });
 
             GameEvent.Raise(this, new GameOptionsSpawned { Options = this });
         }
@@ -58,6 +56,21 @@ namespace NoZ.Zisle
             GameEvent.Raise(this, new GameOptionsDespawned { Options = this });
         }
 
-        [ServerRpc(RequireOwnership = false)] void SetStartingLanesServerRpc (int lanes) => _startingLanes.Value = Mathf.Clamp(lanes, 1, 4);
+        [ServerRpc(RequireOwnership = false)] void SetStartingLanesServerRpc (int lanes)
+        {
+            _startingLanes = lanes;
+            _startingLanesSync.Value = Mathf.Clamp(lanes, 1, 4);
+        }        
+
+        public IslandGenerator.Options ToGeneratorOptions() =>
+            new IslandGenerator.Options
+            {
+                StartingLanes = _startingLanes,
+                MaxIslands = _maxIslands,
+                PathWeight0 = _pathWeight0,
+                PathWeight1 = _pathWeight1,
+                PathWeight2 = _pathWeight2,
+                PathWeight3 = _pathWeight3
+            };
     }
 }

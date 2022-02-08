@@ -94,7 +94,7 @@ namespace NoZ.Zisle
                 throw new System.InvalidOperationException("Generate islands can only be called on the host");
             
             // Generate the cells
-            _cells = (new IslandGenerator()).Generate(options);
+            _cells = (new IslandGenerator()).Generate(options.ToGeneratorOptions());
 
             // Spawn the islands on the host will all prefabs
             foreach(var cell in _cells)
@@ -133,7 +133,7 @@ namespace NoZ.Zisle
             GetComponent<NavMeshSurface>().BuildNavMesh();
         }
 
-        private Vector3 CellToWorld(Vector2Int position) =>
+        public static Vector3 CellToWorld(Vector2Int position) =>
             new Vector3(position.x * 12.0f, 0, position.y * -12.0f);
     }
 }

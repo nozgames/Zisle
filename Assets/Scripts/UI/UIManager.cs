@@ -2,10 +2,8 @@ using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using NoZ.Tweening;
-using NoZ.Events;
 using System.Collections;
 using NoZ.Animations;
-using Unity.Netcode;
 
 namespace NoZ.Zisle
 {
@@ -14,12 +12,18 @@ namespace NoZ.Zisle
 #if UNITY_EDITOR
         private const float MinLoadingTime = 0.0f;
 #else
-        private const float MinLoadingTime = 2.0f;
+        private const float MinLoadingTime = 1.0f;
 #endif
 
         [Header("General")]
         [SerializeField] private GameObject _postProcsUI = null;
         [SerializeField] private GameObject _postProcsGame = null;
+
+        [Header("Background")]
+        [SerializeField] private Transform _background = null;
+        [SerializeField] private GameOptions _backgroundOptions = null;
+        [SerializeField] private GameObject _backgroundIslandPrefab = null;
+        [SerializeField] private Transform _backgroundIslands = null;
 
         [Header("Preview")]
         [SerializeField] private RenderTexture _previewLeftTexture = null;
@@ -181,9 +185,7 @@ namespace NoZ.Zisle
                 ShowLoading(waitForLoading);
                 yield return waitForLoading;
 
-                yield return GameManager.Instance.LeaveLobbyAsync();
-
-                if(create)
+                if (create)
                     yield return GameManager.Instance.CreateLobbyAsync(connection);
                 else
                     yield return GameManager.Instance.JoinLobbyAsync(connection);
@@ -207,6 +209,8 @@ namespace NoZ.Zisle
                 var waitForLoading = new WaitForDone();
                 ShowLoading(waitForLoading);
                 yield return waitForLoading;
+
+                ClearBackground();
 
                 GameManager.Instance.CameraOffset = Vector3.zero;
 
@@ -238,20 +242,13 @@ namespace NoZ.Zisle
                 // Leave previous lobby
                 yield return GameManager.Instance.LeaveLobbyAsync();
 
-                // Make sure we have a background game
-                GameManager.Instance.MaxPlayers = 1;
-                yield return GameManager.Instance.CreateLobbyAsync("127.0.0.1:7722");
+                GenerateBackground();
 
-                GameManager.Instance.Options.MaxIslands = 100;
-                GameManager.Instance.Options.StartingLanes = 4;
-                GameManager.Instance.Options.SpawnEnemies = false;
-
-                yield return GameManager.Instance.StartGameAsync();
+                GameManager.Instance.CameraOffset = new Vector3(6f, 0, 0);
+                GameManager.Instance.FrameCamera(_backgroundIslands.position);
 
                 while (Time.time - startTime < MinLoadingTime)
                     yield return null;
-
-                GameManager.Instance.CameraOffset = new Vector3(6f, 0, 0);
 
                 ShowTitle();
 
@@ -291,6 +288,54 @@ namespace NoZ.Zisle
             StartCoroutine(Test());
             
             preview.transform.parent.gameObject.SetActive(true);
+        }
+
+        public void GenerateBackground (int startingPaths = 4)
+        {
+            ClearBackground();
+
+            var options = _backgroundOptions.ToGeneratorOptions();
+            options.StartingLanes = startingPaths;
+            var cells = (new IslandGenerator()).Generate(options);
+
+            // Spawn the islands in simplified form
+            // Spawn the islands on the host will all prefabs
+            foreach (var cell in cells)
+            {
+                var biome = NetworkScriptableObject<Biome>.Get(cell.BiomeId);
+                if (biome == null)
+                    throw new InvalidProgramException($"Biome id {cell.BiomeId} not found");
+
+                var islandPrefab = biome.Islands[cell.IslandIndex];
+
+                // Instatiate the island itself
+                var island = Instantiate(
+                    _backgroundIslandPrefab,
+                    Game.CellToWorld(cell.Position),
+                    Quaternion.Euler(0, 90 * cell.Rotation, 0), 
+                    _backgroundIslands);
+                island.GetComponent<MeshFilter>().sharedMesh = islandPrefab.GetComponent<MeshFilter>().sharedMesh;
+                island.GetComponent<MeshRenderer>().material = biome.Material;
+
+                // Spawn bridges
+                // TODO: eventaully need to spawn just the mesh if bridge is networked
+                if (cell.Position != Vector2Int.zero && biome.Bridge != null)
+                {
+                    var from = Game.CellToWorld(cell.Position);
+                    var to = Game.CellToWorld(cell.To);
+                    Instantiate(biome.Bridge, (from + to) * 0.5f, Quaternion.LookRotation((to - from).normalized, Vector3.up), island.transform);
+                }
+            }
+
+            _background.gameObject.SetActive(true);
+        }
+
+        private void ClearBackground()
+        {
+            for (int i = _backgroundIslands.childCount - 1; i >= 0; i--)
+                Destroy(_backgroundIslands.GetChild(i).gameObject);
+
+            _background.gameObject.SetActive(false);
         }
     }
 }

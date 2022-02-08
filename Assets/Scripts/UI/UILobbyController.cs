@@ -24,6 +24,18 @@ namespace NoZ.Zisle
 
             this.Q<Image>("player-left-preview").image = UIManager.Instance.PreviewLeftTexture;
 
+            BindClick("quit", () =>
+            {
+                if (GameManager.Instance.MaxPlayers == 1)
+                    UIManager.Instance.ShowMainMenu();
+                else
+                {
+                    UIManager.Instance.ShowConfirmationPopup(
+                        message: "Are you sure you want to leave the lobby?",
+                        onYes: () => UIManager.Instance.ShowMainMenu());
+                }
+            });
+
             BindClick("player-class-prev", () =>
             {
                 var index = _playerClasses.IndexOf(_playerClassLeft);
@@ -80,6 +92,8 @@ namespace NoZ.Zisle
 
             this.Q("join-code-container").EnableInClassList("hidden", GameManager.Instance.JoinCode == null);
             this.Q<Label>("join-code").text = GameManager.Instance.JoinCode ?? "";
+
+            UIManager.Instance.GenerateBackground(GameManager.Instance.Options.StartingLanes);
 
             this.Q<RadioButton>($"lane{GameManager.Instance.Options.StartingLanes}").value = true;
             this.Q<RadioButton>($"lane1").RegisterValueChangedCallback((evt) => { if (evt.newValue) GameManager.Instance.Options.StartingLanes = 1; });
@@ -182,6 +196,8 @@ namespace NoZ.Zisle
         private void OnStartingLanesChanged(object sender, GameOptionStartingLanesChanged evt)
         {
             this.Q<RadioButton>($"lane{GameManager.Instance.Options.StartingLanes}").value = true;
+
+            UIManager.Instance.GenerateBackground(evt.NewValue);
         }
 
         private void OnPlayerReadyChanged(object sender, PlayerReadyChanged evt)

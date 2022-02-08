@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Home
   m_EditorClassIdentifier: 
   _material: {fileID: 2100000, guid: becf63c2ba55d404d877ea5c9a31c518, type: 2}
+  _bridge: {fileID: 0}
   _minLevel: 0
   _maxLevel: 0
   _weight: 1
@@ -21,3 +22,4 @@ MonoBehaviour:
   - {fileID: 2598226603739545213, guid: a4f0df5e26e5a2b4e801a3bbc78f65da, type: 3}
   - {fileID: 2598226603739545213, guid: dcb909d193d5fc64294e4f719fa5928c, type: 3}
   - {fileID: 2598226603739545213, guid: 1455d42f368afab4085e6660c9666115, type: 3}
+  - {fileID: 2598226603739545213, guid: 5d157a80c3910854eb17191f570df067, type: 3}
