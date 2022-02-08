@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace NoZ.Zisle
 {
+    /// <summary>
+    /// Synchronized game options
+    /// </summary>
     public class GameOptions : NetworkBehaviour
     {
         public int MaxIslands = 64;
@@ -40,6 +43,8 @@ namespace NoZ.Zisle
         public override void OnNetworkSpawn ()
         {
             base.OnNetworkDespawn();
+
+            name = "GameOptions";
 
             _startingLanes.OnValueChanged += (p, n) => GameEvent.Raise(this, new GameOptionStartingLanesChanged { Options = this, OldValue = p, NewValue = n });
 

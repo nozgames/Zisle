@@ -10,9 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 6545126541673913844}
   - component: {fileID: 1142748639717300114}
-  - component: {fileID: 1221780272864191960}
+  - component: {fileID: 1521580718038392050}
+  - component: {fileID: 3995368475223908622}
   m_Layer: 0
-  m_Name: GameOptions
+  m_Name: Game
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49,7 +50,7 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 0
---- !u!114 &1221780272864191960
+--- !u!114 &1521580718038392050
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -58,12 +59,38 @@ MonoBehaviour:
   m_GameObject: {fileID: 7032271380058666704}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97e5502a72c89ef4b8ba7a0379506e2d, type: 3}
+  m_Script: {fileID: 11500000, guid: 91f60797dc56bad428751da156162cd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxIslands: 64
-  SpawnEnemies: 1
-  PathWeight0: 0.1
-  PathWeight1: 1
-  PathWeight2: 0.4
-  PathWeight3: 0.2
+  _clientIslandPrefab: {fileID: 7032271380058666704, guid: dd0bc6793ebbf9846871b9660e0e8427,
+    type: 3}
+--- !u!114 &3995368475223908622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7032271380058666704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: 0
+  m_CollectObjects: 2
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  m_UseGeometry: 1
+  m_DefaultArea: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.033333335
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 0}
+  m_BuildHeightMesh: 0

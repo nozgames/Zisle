@@ -5,7 +5,7 @@ using UnityEngine;
 namespace NoZ.Zisle
 {
     [CreateAssetMenu(menuName = "Zisle/Actor Definition")]
-    public class ActorDefinition : NetworkScriptableObject
+    public class ActorDefinition : NetworkScriptableObject<ActorDefinition>
     {
         [Header("General")]
         [SerializeField] private ActorType _type = ActorType.Player;
@@ -72,8 +72,7 @@ namespace NoZ.Zisle
         {
             base.RegisterNetworkId();
 
-            foreach (var ability in _abilities)
-                ability.RegisterNetworkId();
+            _abilities.RegisterNetworkIds();
         }
     }
 }

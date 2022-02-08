@@ -27,13 +27,20 @@ namespace NoZ.Zisle
         {
             base.OnNetworkSpawn();
 
+            name = $"Player{OwnerClientId}";
+
             All.Add(this);
+
+            NavAgent.updateRotation = false;
 
             if (IsOwner)
             {
                 InputManager.Instance.OnPlayerZoom += OnPlayerZoom;
                 InputManager.Instance.OnPlayerAction += OnPlayerAction;
             }
+
+            //if (IsOwner)
+              //  NavAgent.enabled = true;
 
             GameEvent.Raise(this, new PlayerSpawned { Player = this });
         }
@@ -154,13 +161,8 @@ namespace NoZ.Zisle
             }
 
             // Set the new position
-            //GetComponent<NavMeshAgent>().updatePosition = false;
-            //GetComponent<NavMeshAgent>().updateRotation = false;
-            if(GetComponent<NavMeshAgent>().enabled)
-                GetComponent<NavMeshAgent>().Move(moveTarget - transform.position);
-
-            //GetComponent<NavMeshAgent>().SetDestination(moveTarget);
-            //transform.position = moveTarget;
+            if(NavAgent.enabled)
+                NavAgent.Move(moveTarget - transform.position);
 
             var newState = ActorState.Idle;
             if (moveDelta.magnitude > float.Epsilon)

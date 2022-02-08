@@ -133,7 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 118181208}
   - component: {fileID: 118181207}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Game
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -152,6 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4969e5c979a4bb04aad787fc14a1cf4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gamePrefab: {fileID: 1521580718038392050, guid: 51a461a87d673b648ab858ee94f5dd85,
+    type: 3}
   _optionsPrefab: {fileID: 1221780272864191960, guid: 1fd9e8ad3dc23b749a805ba871d64469,
     type: 3}
   _camera: {fileID: 1403908677}
@@ -160,6 +162,9 @@ MonoBehaviour:
   _cameraZoom: 20
   _cameraZoomMin: 5
   _cameraZoomMax: 40
+  _biomes:
+  - {fileID: 11400000, guid: d4295230db603754abc66fd715f68b2f, type: 2}
+  - {fileID: 11400000, guid: 5d43f93ff9d9eef4eaf625ec1b05db25, type: 2}
   _actorDefinitions:
   - {fileID: 11400000, guid: fca8138147002de439ecb886c7696d59, type: 2}
   - {fileID: 11400000, guid: 34a4fcc95f40ac348a965f2e6fce2f52, type: 2}
@@ -181,7 +186,6 @@ Transform:
   - {fileID: 1403908678}
   - {fileID: 2010879122}
   - {fileID: 806896941}
-  - {fileID: 1211536308}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -534,7 +538,6 @@ MonoBehaviour:
   - {fileID: 374313204}
   - {fileID: 612517314}
   - {fileID: 1170935351}
-  - {fileID: 1211536309}
   - {fileID: 118181207}
   onBeforeInitialize:
     m_PersistentCalls:
@@ -878,7 +881,7 @@ GameObject:
   - component: {fileID: 1170935354}
   - component: {fileID: 1170935353}
   m_Layer: 0
-  m_Name: Multiplayer
+  m_Name: Network
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -958,7 +961,19 @@ MonoBehaviour:
       type: 3}
     NetworkPrefabs:
     - Override: 0
+      Prefab: {fileID: 7032271380058666704, guid: 51a461a87d673b648ab858ee94f5dd85,
+        type: 3}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
+    - Override: 0
       Prefab: {fileID: 7032271380058666704, guid: 1fd9e8ad3dc23b749a805ba871d64469,
+        type: 3}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
+    - Override: 0
+      Prefab: {fileID: 7506981431210532055, guid: 6ff7ec3e87930e24e9b25f7a1a8df697,
         type: 3}
       SourcePrefabToOverride: {fileID: 0}
       SourceHashToOverride: 0
@@ -987,12 +1002,6 @@ MonoBehaviour:
       SourcePrefabToOverride: {fileID: 0}
       SourceHashToOverride: 0
       OverridingTargetPrefab: {fileID: 0}
-    - Override: 0
-      Prefab: {fileID: 7506981431210532055, guid: 6ff7ec3e87930e24e9b25f7a1a8df697,
-        type: 3}
-      SourcePrefabToOverride: {fileID: 0}
-      SourceHashToOverride: 0
-      OverridingTargetPrefab: {fileID: 0}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
@@ -1000,7 +1009,7 @@ MonoBehaviour:
     EnableTimeResync: 0
     TimeResyncInterval: 30
     EnsureNetworkVariableLengthSafety: 0
-    EnableSceneManagement: 1
+    EnableSceneManagement: 0
     ForceSamePrefabs: 1
     RecycleNetworkIds: 1
     NetworkIdRecycleDelay: 120
@@ -1008,99 +1017,6 @@ MonoBehaviour:
     LoadSceneTimeOut: 120
     MessageBufferTimeout: 20
     EnableNetworkLogs: 1
---- !u!1 &1211536307
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1211536308}
-  - component: {fileID: 1211536309}
-  - component: {fileID: 1211536311}
-  - component: {fileID: 1211536312}
-  m_Layer: 6
-  m_Name: Islands
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1211536308
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1211536307}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 118181208}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1211536309
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1211536307}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c78dea0dadae514593156deea6e11f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _biomes:
-  - {fileID: 11400000, guid: 5d43f93ff9d9eef4eaf625ec1b05db25, type: 2}
-  - {fileID: 11400000, guid: d4295230db603754abc66fd715f68b2f, type: 2}
-  _navMesh: {fileID: 1211536311}
---- !u!114 &1211536311
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1211536307}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AgentTypeID: 0
-  m_CollectObjects: 2
-  m_Size: {x: 10, y: 10, z: 10}
-  m_Center: {x: 0, y: 2, z: 0}
-  m_LayerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  m_UseGeometry: 1
-  m_DefaultArea: 0
-  m_IgnoreNavMeshAgent: 1
-  m_IgnoreNavMeshObstacle: 1
-  m_OverrideTileSize: 0
-  m_TileSize: 256
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.033333335
-  m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: fb0db936319cac849bd63ad3d834bf4f, type: 2}
-  m_BuildHeightMesh: 0
---- !u!65 &1211536312
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1211536307}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 10, y: 1, z: 10}
-  m_Center: {x: 0, y: -0.5, z: 0}
 --- !u!1 &1212070445
 GameObject:
   m_ObjectHideFlags: 0

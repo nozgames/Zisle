@@ -242,7 +242,7 @@ namespace NoZ.Zisle
                 GameManager.Instance.MaxPlayers = 1;
                 yield return GameManager.Instance.CreateLobbyAsync("127.0.0.1:7722");
 
-                GameManager.Instance.Options.MaxIslands = 24;
+                GameManager.Instance.Options.MaxIslands = 100;
                 GameManager.Instance.Options.StartingLanes = 4;
                 GameManager.Instance.Options.SpawnEnemies = false;
 

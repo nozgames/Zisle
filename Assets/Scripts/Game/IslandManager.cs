@@ -30,7 +30,6 @@ namespace NoZ.Zisle
     {
         private const int IslandGridSize = 64;
         private const int IslandGridCenter = IslandGridSize / 2 + (IslandGridSize / 2) * IslandGridSize;
-        private const int MaxCells = 32 * 32;
 
         [SerializeField] private Biome[] _biomes = null;
         [SerializeField] private NavMeshSurface _navMesh = null;
@@ -41,19 +40,6 @@ namespace NoZ.Zisle
         public void UpdateNavMesh()
         {
             _navMesh.BuildNavMesh();
-        }
-
-        public override void Initialize()
-        {
-            base.Initialize();
-
-            foreach (var biome in _biomes)
-                biome.RegisterNetworkId();
-
-            Debug.Log("Bake Start");
-            //_navMesh = transform.GetComponentInChildren<NavMeshSurface>();
-            //_navMesh.BuildNavMesh();
-            Debug.Log("Bake End");
         }
 
         public void ClearIslands()
@@ -76,13 +62,106 @@ namespace NoZ.Zisle
 
             GetComponent<BoxCollider>().enabled = true;
             _navMesh.BuildNavMesh();
+
+            //var writer = new BitWriter();
+            //var reader = new BitReader();
+            
         }
+
+
+        public struct NetworkCell : INetworkSerializable
+        {
+            public Vector2Int Position;
+            public Vector2Int From;
+            public uint ConnectionMask;
+            public int Level;
+            public ulong BiomeId;
+            public int IslandIndex;
+            public int Rotation;
+
+            public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+            {
+                if (serializer.IsWriter)
+                {
+                    var writer = serializer.GetFastBufferWriter();
+                    writer.WriteValue((byte)(Position.x * Position.y * IslandGridSize));
+                    writer.WriteValue((byte)(From.x * From.y * IslandGridSize));
+                    // TODO: can biome id be 16bits?  both server and client should initialize them in the same order 
+                    writer.WriteValue(BiomeId);
+                    writer.WriteValue((byte)IslandIndex);
+                    writer.WriteValue((byte)Level);
+                    using (var bitWriter = writer.EnterBitwiseContext())
+                    {                        
+                        bitWriter.WriteBits((byte)ConnectionMask, 4);
+                        bitWriter.WriteBits((byte)Rotation, 2);
+                    }
+                }                
+                else
+                {
+                    var reader = serializer.GetFastBufferReader();
+                    byte b;
+                    reader.ReadValue(out b);
+                    Position.y = b / IslandGridSize;
+                    Position.x = b - (Position.y * IslandGridSize);
+                    reader.ReadValue(out b);
+                    From.y = b / IslandGridSize;
+                    From.x = b - (From.y * IslandGridSize);
+                    reader.ReadValue(out BiomeId);
+                    reader.ReadValue(out b);
+                    IslandIndex = b;
+                    reader.ReadValue(out b);
+                    Level = b;
+                    using (var bitreader = reader.EnterBitwiseContext())
+                    {
+                        bitreader.ReadBits(out b, 4);
+                        ConnectionMask = b;
+                        bitreader.ReadBits(out b, 2);
+                        Rotation = b;
+                    }                    
+                }
+            }
+
+
+        }
+
+        public void Test ()
+        {
+            var networkCells = _cells.Where(c => c.ConnectionMask != 0).Select(c =>
+            {
+                var rotations = c.Biome.Islands.SelectMany(i => i.GetRotations()).Where(r => r.Mask == c.ConnectionMask).ToArray();
+                if (rotations.Length == 0)
+                    return new NetworkCell { IslandIndex = -1 };
+
+                // Choose a random island
+                var rotation = rotations[Random.Range(0, rotations.Length)];
+                var islandIndex = c.Biome.IndexOf(rotation.Island);
+                if(islandIndex == -1)
+                    return new NetworkCell { IslandIndex = -1 };
+
+                return new NetworkCell
+                {
+                    ConnectionMask = c.ConnectionMask,
+                    Position = c.Position,
+                    From = c.From?.Position ?? Vector2Int.zero,
+                    Level = c.Level,
+                    BiomeId = c.Biome.NetworkId,
+                    IslandIndex = islandIndex,
+                    Rotation = rotation.Rotation
+                };
+            }).Where(nc => nc.IslandIndex != -1).ToArray();
+
+            // TODO: stuff these in the game state
+        }
+
 
         public void SpawnIslands ()
         {
             ClearIslands();
 
             GenerateCells();
+
+            var sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
 
             for (int i = 0; i < _cells.Count; i++)
             {
@@ -93,6 +172,8 @@ namespace NoZ.Zisle
                 var rotations = cell.Biome.Islands.SelectMany(i => i.GetRotations()).Where(r => r.Mask == cell.ConnectionMask).ToArray();
                 if (rotations.Length == 0)
                     continue;
+
+                // TODO: save off which island index is being used here for the NetworkCell
 
                 var rotation = rotations[Random.Range(0, rotations.Length)];
                 cell.Island = Instantiate(rotation.Island, new Vector3(cell.Position.x * 12.0f, 0, cell.Position.y * -12.0f), Quaternion.Euler(0, 90 * rotation.Rotation, 0), transform).GetComponent<Island>();
@@ -113,10 +194,15 @@ namespace NoZ.Zisle
                             //go.AddComponent<EnemySpawner>();
                     }
                 }
+
             }
+            _navMesh.UpdateNavMesh(_navMesh.navMeshData); //  BuildNavMesh();
+            Debug.Log($"Navmesh update took: {sw.Elapsed} s");
+
+            // TODO: synchronize the generated CELLS in the game?  
+            //       biome id, index of island, rotation
 
             GetComponent<BoxCollider>().enabled = false;
-            _navMesh.BuildNavMesh();
         }
 
 

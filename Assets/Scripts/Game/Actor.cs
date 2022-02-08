@@ -92,7 +92,7 @@ namespace NoZ.Zisle
             NavAgent = GetComponent<NavMeshAgent>();
             NavObstacle = GetComponent<NavMeshObstacle>();
 
-            // We only want these enabled on the host
+            // By default these should only be enabled on the host
             if (NavAgent != null) NavAgent.enabled = false;
             if (NavObstacle != null) NavObstacle.enabled = false;
         }
@@ -317,7 +317,7 @@ namespace NoZ.Zisle
         }
 
         [ServerRpc(RequireOwnership = false)]
-        public void ExecuteCommandServerRpc (ulong commandId, ulong sourceId)
+        public void ExecuteCommandServerRpc (ushort commandId, ulong sourceId)
         {
             var command = NetworkScriptableObject.Get<ActorCommand>(commandId);
             if (command == null)
@@ -337,7 +337,7 @@ namespace NoZ.Zisle
         }
         
         [ClientRpc]
-        public void ExecuteCommandClientRpc (ulong commandId, ulong sourceId)
+        public void ExecuteCommandClientRpc (ushort commandId, ulong sourceId)
         {
             // We already executed this command, dont execute again
             var source = FromNetworkId(sourceId);

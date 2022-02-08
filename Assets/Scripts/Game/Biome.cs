@@ -3,7 +3,7 @@ using UnityEngine;
 namespace NoZ.Zisle
 {
     [CreateAssetMenu(menuName = "Zisle/Biome")]
-    public class Biome : NetworkScriptableObject, ISerializationCallbackReceiver
+    public class Biome : NetworkScriptableObject<Biome>, ISerializationCallbackReceiver
     {
         [SerializeField] private Material _material = null;
         [SerializeField] private GameObject _bridge = null;
@@ -34,6 +34,18 @@ namespace NoZ.Zisle
 
         public void OnBeforeSerialize()
         {
+        }
+
+        /// <summary>
+        /// Return the index of the island within the biome or -1 if it would not be found
+        /// </summary>
+        public int IndexOf (Island island)
+        {
+            for (int i = 0; i < _islands.Length; i++)
+                if (_islands[i] == island)
+                    return i;
+
+            return -1;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace NoZ.Zisle
     /// </summary>
     public class PlayerController : NetworkBehaviour
     {
-        private NetworkVariable<ulong> _playerClassId = new NetworkVariable<ulong>();
+        private NetworkVariable<ushort> _playerClassId = new NetworkVariable<ushort>();
         private NetworkVariable<bool> _ready = new NetworkVariable<bool>();
 
         private Player _player = null;
@@ -36,7 +36,7 @@ namespace NoZ.Zisle
 
         public ActorDefinition PlayerClass => NetworkScriptableObject.Get<ActorDefinition>(PlayerClassId);
 
-        public ulong PlayerClassId
+        public ushort PlayerClassId
         {
             get => _playerClassId.Value;
             set
@@ -51,6 +51,8 @@ namespace NoZ.Zisle
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
+
+            name = $"PlayerController{OwnerClientId}";
 
             GameEvent<PlayerSpawned>.OnRaised += OnPlayerSpawned;
             GameEvent<PlayerDespawned>.OnRaised += OnPlayerDespawned;
@@ -114,7 +116,7 @@ namespace NoZ.Zisle
         #region Server RPC
 
         [ServerRpc] private void SetReadyServerRpc(bool value) => _ready.Value = value;
-        [ServerRpc] private void SetPlayerClassIdServerRpc(ulong playerClassId) => _playerClassId.Value = playerClassId;
+        [ServerRpc] private void SetPlayerClassIdServerRpc(ushort playerClassId) => _playerClassId.Value = playerClassId;
 
         #endregion
     }

@@ -6,23 +6,31 @@ namespace NoZ.Zisle
 {
     public class NetworkScriptableObject : ScriptableObject
     {
-        private static Dictionary<ulong, NetworkScriptableObject> _networkedObjects = new Dictionary<ulong, NetworkScriptableObject>();
+        public static T Get<T>(ushort networkId) where T : NetworkScriptableObject =>
+            NetworkScriptableObject<T>.Get(networkId);
+    }
 
-        public ulong NetworkId { get; private set; }
+    public class NetworkScriptableObject<T> : NetworkScriptableObject where T : class
+    {
+        private static List<T> _networkedObjects = new List<T> (1024);
+
+        public ushort NetworkId { get; private set; }
 
         public virtual void RegisterNetworkId ()
         {
-            NetworkId = HashCode.GetStableHash64(name);
-            _networkedObjects[NetworkId] = this;
+            _networkedObjects.Add(this as T);
+            NetworkId = (ushort)(_networkedObjects.Count);
         }
 
-        public static NetworkScriptableObject Get (ulong networkId)
+        public static T Get(ushort networkId) => networkId == 0 ? null : _networkedObjects[networkId - 1];
+    }
+
+    public static class NetworkScriptableObjectExtensions
+    {
+        public static void RegisterNetworkIds<T>(this T[] objects) where T : NetworkScriptableObject<T>
         {
-            _networkedObjects.TryGetValue(networkId, out var obj);
-            return obj;
+            foreach (var def in objects)
+                def.RegisterNetworkId();
         }
-
-        public static T Get<T>(ulong networkId) where T : NetworkScriptableObject =>
-            Get(networkId) as T;
     }
 }

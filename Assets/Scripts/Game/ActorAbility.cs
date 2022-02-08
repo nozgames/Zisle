@@ -6,7 +6,7 @@ using UnityEngine;
 namespace NoZ.Zisle
 {
     [CreateAssetMenu(menuName = "Zisle/Actor Ability")]
-    public class ActorAbility : NetworkScriptableObject
+    public class ActorAbility : NetworkScriptableObject<ActorAbility>
     {
         [Header("Target")]
         [SerializeField] private int _targetCount = 1;
@@ -113,9 +113,9 @@ namespace NoZ.Zisle
         {
             base.RegisterNetworkId();
 
-            foreach (var command in _commandsOnHit) command.RegisterNetworkId();
-            foreach (var command in _commandsOnMiss) command.RegisterNetworkId();
-            foreach (var command in _commandsOnUse) command.RegisterNetworkId();
+            _commandsOnHit.RegisterNetworkIds();
+            _commandsOnMiss.RegisterNetworkIds();
+            _commandsOnUse.RegisterNetworkIds();
         }
     }
 }

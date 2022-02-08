@@ -9,6 +9,7 @@ using Unity.Services.Core;
 using Unity.Services.Authentication;
 using System;
 using static Unity.Netcode.NetworkManager;
+using Unity.AI.Navigation;
 
 namespace NoZ.Zisle
 {
@@ -17,6 +18,7 @@ namespace NoZ.Zisle
         private const float UnityServicesRetryDelay = 2.0f;
 
         [Header("General")]
+        [SerializeField] private Game _gamePrefab = null;
         [SerializeField] private GameOptions _optionsPrefab = null;
 
         [Header("Camera")]
@@ -26,6 +28,9 @@ namespace NoZ.Zisle
         [SerializeField] private float _cameraZoom = 10.0f;
         [SerializeField] private float _cameraZoomMin = 10.0f;
         [SerializeField] private float _cameraZoomMax = 40.0f;
+
+        [Space]
+        [SerializeField] private Biome[] _biomes = null;
 
         [Space]
         [SerializeField] private ActorDefinition[] _actorDefinitions = null;
@@ -76,6 +81,16 @@ namespace NoZ.Zisle
         /// </summary>
         public GameOptions Options => _options;
 
+        /// <summary>
+        /// Get / Set the current game
+        /// </summary>
+        public Game Game { get; set; }
+
+        /// <summary>
+        /// Return the available biomes
+        /// </summary>
+        public IEnumerable<Biome> Biomes => _biomes;
+
         public Vector2 CameraOffset
         {
             get => _cameraOffset;
@@ -118,8 +133,8 @@ namespace NoZ.Zisle
         {
             base.Initialize();
 
-            foreach (var def in _actorDefinitions)
-                def.RegisterNetworkId();
+            _actorDefinitions.RegisterNetworkIds();
+            _biomes.RegisterNetworkIds();
 
             InputManager.Instance.onPlayerMenu += OnPlayerMenu;
 
@@ -192,9 +207,13 @@ namespace NoZ.Zisle
         {
             IEnumerator StartGame ()
             {
-                yield return null;
+                // Host will spawn the game object
+                if(NetworkManager.Singleton.IsHost)
+                    Instantiate(_gamePrefab).NetworkObject.Spawn(); ;
 
-                //IslandManager.Instance.SpawnIslands();
+                // Wait for the game to spawn
+                while (Game == null && !Game.HasIslands)
+                    yield return null;
 
                 // Spawn all of the players
                 if(NetworkManager.Singleton.IsHost)
@@ -217,9 +236,11 @@ namespace NoZ.Zisle
             if (!IsInLobby)
                 yield break;
 
-            // TODO: different if host            
-
-            IslandManager.Instance.ClearIslands();
+            if (Game != null)
+            {
+                Game.NetworkObject.Despawn();
+                Game = null;
+            }
 
             yield break;
         }

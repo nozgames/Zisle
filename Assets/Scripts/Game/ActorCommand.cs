@@ -10,7 +10,7 @@ namespace NoZ.Zisle
         public void ExecuteOnClient(Actor source, Actor target);
     }
 
-    public abstract class ActorCommand : NetworkScriptableObject
+    public abstract class ActorCommand : NetworkScriptableObject<ActorCommand>
     {
     }
 }
