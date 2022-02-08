@@ -12,12 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34452f75e1a36f64988e322fb32d9d27, type: 3}
   m_Name: KnightSwordAttack
   m_EditorClassIdentifier: 
-  _targetCount: 8
-  _targetRange: 0.8
-  _targetArc: 45
-  _targetMask:
-    serializedVersion: 2
-    m_Bits: 512
+  _targetFinder: {fileID: 11400000, guid: 6cc71e8184019114f84446dc2f521cea, type: 2}
+  _conditions:
+  - {fileID: 11400000, guid: 875b08af8e28f064b8ac12b51b7ffa53, type: 2}
   _commandsOnUse:
   - {fileID: 11400000, guid: f3a0a085e5c96d24e9b4315ee676d279, type: 2}
   - {fileID: 11400000, guid: 9f2f588e6b4e5fb4e9a9f50eb068be21, type: 2}

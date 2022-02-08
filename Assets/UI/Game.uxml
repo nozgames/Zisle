@@ -9,7 +9,7 @@
 >
     <Style src="project://database/Assets/UI/Game.uss" />
     <zisle:UIGame class="screen centered-vertical">
-        <Label name="joincode" class="joincode" text="XBX6B7"/>
+        <Label name="joincode" class="joincode hidden" text="XBX6B7"/>
 
         <VisualElement name="floating-text-container">
         </VisualElement>

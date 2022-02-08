@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.AI.Navigation;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -12,8 +14,59 @@ namespace NoZ.Zisle
     public class Game : NetworkBehaviour
     {
         [SerializeField] private GameObject _clientIslandPrefab = null;
+        [SerializeField] private GameObject _clientBridgePrefab = null;
+
+        private struct IslandVisibility
+        {
+            public ulong Chunk1;
+            public ulong Chunk2;
+            public ulong Chunk3;
+            public ulong Chunk4;
+
+            public bool IsVisible (int index)
+            {
+                if (index < 64) return (Chunk1 & (1UL << index)) != 0;
+                index -= 64;
+                if (index < 64) return (Chunk2 & (1UL << index)) != 0;
+                index -= 64;
+                if (index < 64) return (Chunk3 & (1UL << index)) != 0;
+                index -= 64;
+                if (index < 64) return (Chunk4 & (1UL << index)) != 0;
+                return false;
+            }
+
+            public IslandVisibility SetVisible(int index, bool visible)
+            {
+                if (visible)
+                {
+                    if (index < 64) { Chunk1 |= (1UL << index); return this; }
+                    index -= 64;
+                    if (index < 64) { Chunk2 |= (1UL << index); return this; }
+                    index -= 64;
+                    if (index < 64) { Chunk3 |= (1UL << index); return this; }
+                    index -= 64;
+                    if (index < 64) { Chunk4 |= (1UL << index); return this; }
+                }
+                else
+                {
+                    if (index < 64) { Chunk1 &= ~(1UL << index); return this; }
+                    index -= 64;
+                    if (index < 64) { Chunk2 &= ~(1UL << index); return this; }
+                    index -= 64;
+                    if (index < 64) { Chunk3 &= ~(1UL << index); return this; }
+                    index -= 64;
+                    if (index < 64) { Chunk4 &= ~(1UL << index); return this; }
+                }
+
+                return this;
+            }
+        }
+
+        private NetworkVariable<IslandVisibility> _islandVisibility = new NetworkVariable<IslandVisibility> ();
 
         private IslandCell[] _cells = null;
+
+        private Island[] _islands = new Island[WorldGenerator.GridIndexMax];
 
         public bool HasIslands { get; private set; }
 
@@ -42,6 +95,8 @@ namespace NoZ.Zisle
             }
 
             GameManager.Instance.Game = this;
+
+            _islandVisibility.OnValueChanged += OnIslandVisibilityChanged;
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -62,6 +117,15 @@ namespace NoZ.Zisle
             // Save the cells
             _cells = cells;
 
+            SpawnIslandMeshes();
+
+            HasIslands = true;
+        }
+
+        private Island GetIsland(Vector2Int position) => _islands[WorldGenerator.GetCellIndex(position)];
+
+        private void SpawnIslandMeshes ()
+        {
             // Spawn the islands in simplified form
             // Spawn the islands on the host will all prefabs
             foreach (var cell in _cells)
@@ -75,17 +139,30 @@ namespace NoZ.Zisle
                 // Instatiate the island itself
                 var island = Instantiate(
                     _clientIslandPrefab,
-                    CellToWorld(cell.Position),
-                    Quaternion.Euler(0, 90 * cell.Rotation, 0), transform);
-                island.GetComponent<MeshFilter>().sharedMesh = islandPrefab.GetComponent<MeshFilter>().sharedMesh;
+                    WorldGenerator.CellToWorld(cell.Position),
+                    Quaternion.Euler(0, 90 * cell.Rotation, 0), transform).GetComponent<Island>();
+
+                var mesh = islandPrefab.GetComponent<MeshFilter>().sharedMesh;
+                island.GetComponent<MeshFilter>().sharedMesh = mesh;
+                island.GetComponent<MeshCollider>().sharedMesh = mesh;
                 island.GetComponent<MeshRenderer>().material = biome.Material;
+                island.Position = cell.Position;
+
+                _islands[WorldGenerator.GetCellIndex(cell.Position)] = island;
+
+                // Bridge navmeshes
+                if (cell.Position != Vector2Int.zero && biome.Bridge != null)
+                {
+                    var from = WorldGenerator.CellToWorld(cell.Position);
+                    var to = WorldGenerator.CellToWorld(cell.To);
+                    Instantiate(_clientBridgePrefab, (from + to) * 0.5f, Quaternion.LookRotation((to - from).normalized, Vector3.up), transform);
+                }
             }
 
             GetComponent<NavMeshSurface>().BuildNavMesh();
 
-            Debug.Log("Islands Generated as Client");
-
-            HasIslands = true;
+            foreach(var island in _islands.Where(i => i != null))
+                island.gameObject.SetActive(false);
         }
 
         private void GenerateIslands (GameOptions options)
@@ -94,38 +171,39 @@ namespace NoZ.Zisle
                 throw new System.InvalidOperationException("Generate islands can only be called on the host");
             
             // Generate the cells
-            _cells = (new IslandGenerator()).Generate(options.ToGeneratorOptions());
+            _cells = (new WorldGenerator()).Generate(options.ToGeneratorOptions());
 
-            // Spawn the islands on the host will all prefabs
-            foreach(var cell in _cells)
+            SpawnIslandMeshes();
+
+            // Create bridge definitions for all islands
+            foreach (var cell in _cells)
             {
                 var biome = NetworkScriptableObject<Biome>.Get(cell.BiomeId);
                 if (biome == null)
                     throw new System.InvalidProgramException($"Biome id {cell.BiomeId} not found");
 
+                var island = GetIsland(cell.Position);
                 var islandPrefab = biome.Islands[cell.IslandIndex];
 
-                // Instatiate the island itself
-                var island = Instantiate(
-                    islandPrefab, 
-                    CellToWorld(cell.Position), 
-                    Quaternion.Euler(0, 90 * cell.Rotation, 0), transform).GetComponent<Island>();
-                island.GetComponent<MeshRenderer>().material = biome.Material;
+                foreach (var spawner in islandPrefab.GetComponentsInChildren<ActorSpawner>())
+                    if (spawner.gameObject != islandPrefab)
+                        island.AddSpawner(spawner);
 
-                // Spawn all network objects on the island
-                foreach (var netobj in island.GetComponentsInChildren<NetworkObject>())
-                    netobj.Spawn();
-
-                // Spawn bridges
-                if (cell.Position != Vector2Int.zero && biome.Bridge != null)
-                {
-                    var from = CellToWorld(cell.Position);
-                    var to = CellToWorld(cell.To);
-                    Instantiate(biome.Bridge, (from + to) * 0.5f, Quaternion.LookRotation((to-from).normalized, Vector3.up), transform);
+                // Create bridge links 
+                if(cell.Position != Vector2Int.zero)
+                { 
+                    var from = WorldGenerator.CellToWorld(cell.Position);
+                    var to = WorldGenerator.CellToWorld(cell.To);
+                    var bridgePos = (from + to) * 0.5f;
+                    var bridgeRot = Quaternion.LookRotation((to - from).normalized, Vector3.up);
+                    GetIsland(cell.To).AddBridge(biome.Bridge, bridgePos, bridgeRot, island);
                 }
-            }
+            }            
+        }
 
-            GetComponent<NavMeshSurface>().BuildNavMesh();
+        public void Play()
+        {
+            GetIsland(Vector2Int.zero).RiseFromTheDeep();
         }
 
         public void BuildNavMesh()
@@ -133,7 +211,19 @@ namespace NoZ.Zisle
             GetComponent<NavMeshSurface>().BuildNavMesh();
         }
 
-        public static Vector3 CellToWorld(Vector2Int position) =>
-            new Vector3(position.x * 12.0f, 0, position.y * -12.0f);
+        public void ShowIsland (Island island)
+        {
+            _islandVisibility.Value = _islandVisibility.Value.SetVisible(island.GridIndex, true);
+        }
+
+        private void OnIslandVisibilityChanged (IslandVisibility oldValue, IslandVisibility newValue)
+        {
+            // Determine which islands are visible
+            for(int i=0; i<WorldGenerator.GridIndexMax; i++)
+            {
+                if(oldValue.IsVisible(i) != newValue.IsVisible(i))
+                    _islands[i].RiseFromTheDeep();
+            }
+        }
     }
 }

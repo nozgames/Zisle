@@ -161,7 +161,7 @@ MonoBehaviour:
   _cameraPitch: -45
   _cameraZoom: 20
   _cameraZoomMin: 5
-  _cameraZoomMax: 40
+  _cameraZoomMax: 50
   _biomes:
   - {fileID: 11400000, guid: d4295230db603754abc66fd715f68b2f, type: 2}
   - {fileID: 11400000, guid: 5d43f93ff9d9eef4eaf625ec1b05db25, type: 2}
@@ -1080,6 +1080,12 @@ MonoBehaviour:
       OverridingTargetPrefab: {fileID: 0}
     - Override: 0
       Prefab: {fileID: 5107839595957495342, guid: 6b36ac434d432434dacc564ef46a5ae5,
+        type: 3}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
+    - Override: 0
+      Prefab: {fileID: 7645202214170706019, guid: 15391079271f8b84798d5e7ff9427fbc,
         type: 3}
       SourcePrefabToOverride: {fileID: 0}
       SourceHashToOverride: 0

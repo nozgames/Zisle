@@ -6,11 +6,18 @@ namespace NoZ.Zisle.Commands
     [CreateAssetMenu(menuName = "Zisle/Commands/Play Sound")]
     public class PlaySound : ActorCommand, IExecuteOnClient
     {
-        [SerializeField] private AudioClip _clip = null;
+        [SerializeField] private AudioClip[] _clips = null;
+
+        private int _next = 0;
 
         public void ExecuteOnClient(Actor source, Actor target)
         {
-            target.StartCoroutine(PlaySoundCoroutine(target, _clip));
+            if (_clips == null || _clips.Length == 0)
+                return;
+
+            target.StartCoroutine(PlaySoundCoroutine(target, _clips[_next]));
+
+            _next = (_next + 1) % _clips.Length;
         }
 
         static IEnumerator PlaySoundCoroutine(Actor target, AudioClip clip)

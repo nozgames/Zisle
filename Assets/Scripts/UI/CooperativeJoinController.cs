@@ -1,5 +1,3 @@
-using System;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace NoZ.Zisle
@@ -45,19 +43,6 @@ namespace NoZ.Zisle
         }
 
         private void OnBack() => UIManager.Instance.ShowCooperative();
-
-        private void OnJoin()
-        {
-            UIManager.Instance.ShowLoading();
-
-            MultiplayerManager.Instance.OnConnected -= OnConnected;
-            MultiplayerManager.Instance.OnConnected += OnConnected;
-            MultiplayerManager.Instance.Join(_joinCode.text);
-        }
-
-        private void OnConnected()
-        {
-            UIManager.Instance.ShowGame();
-        }
+        private void OnJoin() => UIManager.Instance.JoinLobby(_joinCode.text);
     }
 }

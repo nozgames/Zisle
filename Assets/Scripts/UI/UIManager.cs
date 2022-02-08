@@ -296,7 +296,7 @@ namespace NoZ.Zisle
 
             var options = _backgroundOptions.ToGeneratorOptions();
             options.StartingLanes = startingPaths;
-            var cells = (new IslandGenerator()).Generate(options);
+            var cells = (new WorldGenerator()).Generate(options);
 
             // Spawn the islands in simplified form
             // Spawn the islands on the host will all prefabs
@@ -311,7 +311,7 @@ namespace NoZ.Zisle
                 // Instatiate the island itself
                 var island = Instantiate(
                     _backgroundIslandPrefab,
-                    Game.CellToWorld(cell.Position),
+                    WorldGenerator.CellToWorld(cell.Position),
                     Quaternion.Euler(0, 90 * cell.Rotation, 0), 
                     _backgroundIslands);
                 island.GetComponent<MeshFilter>().sharedMesh = islandPrefab.GetComponent<MeshFilter>().sharedMesh;
@@ -321,9 +321,14 @@ namespace NoZ.Zisle
                 // TODO: eventaully need to spawn just the mesh if bridge is networked
                 if (cell.Position != Vector2Int.zero && biome.Bridge != null)
                 {
-                    var from = Game.CellToWorld(cell.Position);
-                    var to = Game.CellToWorld(cell.To);
-                    Instantiate(biome.Bridge, (from + to) * 0.5f, Quaternion.LookRotation((to - from).normalized, Vector3.up), island.transform);
+                    var from = WorldGenerator.CellToWorld(cell.Position);
+                    var to = WorldGenerator.CellToWorld(cell.To);
+
+                    var bridge = new GameObject();
+                    Instantiate(biome.Bridge.GetComponentInChildren<MeshFilter>().gameObject, bridge.transform);
+                    bridge.transform.position = (from + to) * 0.5f;
+                    bridge.transform.rotation = Quaternion.LookRotation((to - from).normalized, Vector3.up);
+                    bridge.transform.SetParent(_backgroundIslands);
                 }
             }
 

@@ -215,6 +215,8 @@ namespace NoZ.Zisle
                 while (Game == null && !Game.HasIslands)
                     yield return null;
 
+                Game.Play();
+
                 // Spawn all of the players
                 if(NetworkManager.Singleton.IsHost)
                 {

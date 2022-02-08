@@ -17,8 +17,6 @@ namespace NoZ.Zisle
 
         [SerializeField] private SphereCollider _clipCollider = null;
 
-        private float _cooldown;
-
         public static List<Player> All { get; private set; } = new List<Player> ();
 
         public PlayerController Controller { get; set; }
@@ -39,9 +37,6 @@ namespace NoZ.Zisle
                 InputManager.Instance.OnPlayerAction += OnPlayerAction;
             }
 
-            //if (IsOwner)
-              //  NavAgent.enabled = true;
-
             GameEvent.Raise(this, new PlayerSpawned { Player = this });
         }
 
@@ -52,8 +47,6 @@ namespace NoZ.Zisle
             if (State != ActorState.Idle && State != ActorState.Run)
                 return;
 
-            if (_cooldown > Time.time)
-                return;
             if (!gamepad)
             {
                 var look = Vector3.zero;
@@ -66,7 +59,10 @@ namespace NoZ.Zisle
                     transform.rotation = Quaternion.LookRotation(look.normalized, Vector3.up);
             }
 
-            ExecuteAbility(Abilities[0]);
+            // Use best ability
+            foreach (var ability in Abilities)
+                if (ExecuteAbility(ability))
+                    break;
         }
 
         private void OnPlayerBuild(bool gamepad)
@@ -108,6 +104,9 @@ namespace NoZ.Zisle
         {
             if (!IsOwner)
                 return;
+
+            if (!NavAgent.enabled && GameManager.Instance.Game.HasIslands)
+                NavAgent.enabled = true;
 
             if(State == ActorState.Idle || State == ActorState.Run)
                 MoveTo(InputManager.Instance.playerMove * Time.deltaTime * GetAttributeValue(ActorAttribute.Speed));

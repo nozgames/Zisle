@@ -4,100 +4,64 @@ using UnityEngine;
 
 namespace NoZ.Zisle
 {
-    public enum IslandTile
+    public class Island : MonoBehaviour
     {
-        Water,
-        Grass,
-        Path
-    }
+        private struct BridgeDef
+        {
+            public Bridge Prefab;
+            public Vector3 Position;
+            public Quaternion Rotation;
+            public Island To;
+        }
 
-    /// <summary>
-    /// Manages all island related spawning
-    /// </summary>
-    //[ExecuteInEditMode]
-    [RequireComponent(typeof(MeshFilter))]
-    [RequireComponent(typeof(MeshRenderer))]
-    public class Island : NetworkBehaviour, ISerializationCallbackReceiver
-    {
-        [SerializeField] private IslandTile[] _tiles = null;
+        private List<BridgeDef> _bridges = new List<BridgeDef>();
+
+        private List<ActorSpawner> _spawners = new List<ActorSpawner>();
 
         /// <summary>
-        /// Position of the island within the island grid
+        /// Position within the world grid
         /// </summary>
         public Vector2Int Position { get; set; }
 
         /// <summary>
-        /// Biome the island is from
+        /// Return the index on the island grid
         /// </summary>
-        public Biome Biome { get; set; }
+        public int GridIndex => WorldGenerator.GetCellIndex(Position);
 
-        /// <summary>
-        /// Island tiles
-        /// </summary>
-        public IslandTile[] Tiles { get => _tiles; set => _tiles = value; }
-
-        /// <summary>
-        /// Returns the mask that represents the available connections using cardinal directions 
-        /// </summary>
-        public uint ConnectionMask { get; private set; }
-
-        /// <summary>
-        /// Return the index of the tile at the given position within the tile array
-        /// </summary>
-        private int GetTileIndex(Vector2Int position) => position.x + position.y * 13;
-
-        /// <summary>
-        /// Return the tile at the given position
-        /// </summary>
-        public IslandTile GetTile(Vector2Int position) => _tiles[GetTileIndex(position)];
-
-        /// <summary>
-        /// Returns true if the given tile matches the actual tile at the given position
-        /// </summary>
-        public bool IsTile(Vector2Int position, IslandTile tile) => GetTile(position) == tile;
-
-        /// <summary>
-        /// Set the tile at the given position
-        /// </summary>
-        public void SetTile(Vector2Int position, IslandTile tile) => _tiles[GetTileIndex(position)] = tile;
-
-
-        public static uint RotateMask (uint mask, int count)
+        public void AddBridge(Bridge prefab, Vector3 position, Quaternion rotation, Island to)
         {
-            mask = mask << (count % 4);
-            return (mask & 0x0000000F) | ((mask & 0xFFFFFFF0) >> 4);
+            _bridges.Add(new BridgeDef { Prefab = prefab, Position = position, Rotation = rotation, To = to });
         }
 
-        public void OnBeforeSerialize()
+        public void AddSpawner (ActorSpawner spawner)
         {
+            var spawned = Instantiate(spawner.gameObject, spawner.transform.localPosition, spawner.transform.localRotation, transform).GetComponent<ActorSpawner>();
+            if (null == spawned)
+                return;
+
+            _spawners.Add(spawned);
         }
 
-        public void OnAfterDeserialize()
+        public void RiseFromTheDeep()
         {
-            ConnectionMask =
-                (IsTile(new Vector2Int(1, 6), IslandTile.Path) ? CardinalDirection.West.ToMask() : 0) |
-                (IsTile(new Vector2Int(11, 6), IslandTile.Path) ? CardinalDirection.East.ToMask() : 0) |
-                (IsTile(new Vector2Int(6, 1), IslandTile.Path) ? CardinalDirection.North.ToMask() : 0) |
-                (IsTile(new Vector2Int(6, 11), IslandTile.Path) ? CardinalDirection.South.ToMask() : 0);
+            gameObject.SetActive(true);
+            SpawnActors();
+            SpawnBridges();
         }
 
-        public struct IslandRotation
+        private void SpawnActors ()
         {
-            public Island Island;
-            public uint Mask;
-            public int Rotation;
+            foreach (var spawner in _spawners)
+                spawner.Spawn();
         }
 
-        public IEnumerable<IslandRotation> GetRotations ()
+        private void SpawnBridges()
         {
-            for(int i=0; i<4; i++)
+            foreach (var def in _bridges)
             {
-                yield return new IslandRotation
-                {
-                    Island = this,
-                    Mask = RotateMask(ConnectionMask, i),
-                    Rotation = i
-                };
+                var bridge = Instantiate(def.Prefab, def.Position, def.Rotation, GameManager.Instance.Game.transform).GetComponent<Bridge>();
+                bridge.Bind(from: this, to: def.To);
+                bridge.GetComponent<NetworkObject>().Spawn();
             }
         }
     }

@@ -25,9 +25,10 @@ namespace NoZ.Zisle
     ///             
     /// 
     /// </summary>
-    public class IslandGenerator
+    public class WorldGenerator
     {
         public const int GridSize = 16;
+        public const int GridIndexMax = GridSize * GridSize;
         public const int GridCenter = GridSize / 2;
         public const int GridCenterIndex = GridCenter + GridCenter * GridSize;
 
@@ -80,7 +81,7 @@ namespace NoZ.Zisle
             /// <summary>
             /// Island that was spawned for this cell, will be null until the island is opened
             /// </summary>
-            public Island Island;
+            public IslandMesh Island;
 
             /// <summary>
             /// Cell the path came from
@@ -137,9 +138,15 @@ namespace NoZ.Zisle
             GetCellIndex(position) >= 0 && GetCellIndex(position) < _cellGrid.Length;
 
         /// <summary>
+        /// Return the world coordinate for the given cell coordinate
+        /// </summary>
+        public static Vector3 CellToWorld(Vector2Int position) =>
+            new Vector3(position.x * 12.0f, 0, position.y * -12.0f);
+
+        /// <summary>
         /// Return the index of the cell at the given position within the cell grid
         /// </summary>
-        private int GetCellIndex(Vector2Int position) =>
+        public static int GetCellIndex(Vector2Int position) =>
             GridCenterIndex + position.x + position.y * GridSize;
         
         /// <summary>

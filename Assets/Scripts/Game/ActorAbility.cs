@@ -1,6 +1,4 @@
-using NoZ.Animations;
 using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace NoZ.Zisle
@@ -8,32 +6,37 @@ namespace NoZ.Zisle
     [CreateAssetMenu(menuName = "Zisle/Actor Ability")]
     public class ActorAbility : NetworkScriptableObject<ActorAbility>
     {
-        [Header("Target")]
-        [SerializeField] private int _targetCount = 1;
-        [SerializeField] private float _targetRange = 0.5f;
-        [SerializeField] private float _targetArc = 45.0f;
-        [SerializeField] private LayerMask _targetMask = -1;
+        [Header("General")]
+        [SerializeField] private TargetFinder _targetFinder = null;
 
-        [Header("Commands")]
+        [Space]
+        [Space]
+        [SerializeField] private ActorAbilityCondition[] _conditions = null;
+
+        [Space]
         [SerializeField] private ActorCommand[] _commandsOnUse = null;
+
+        [Space]
         [SerializeField] private ActorCommand[] _commandsOnHit = null;
+
+        [Space]
         [SerializeField] private ActorCommand[] _commandsOnMiss = null;
 
-        private static Collider[] _colliders = new Collider[128];
         private static List<Actor> _targets = new List<Actor>(128);
 
-        private float _targetArcScore;
-        private float _targetArcCos;
-
-        private void OnEnable()
+        public bool Execute (Actor source)
         {
-            _targetArcCos = Mathf.Cos(_targetArc * Mathf.Deg2Rad);
-            _targetArcScore = 1.0f / (1.0f - _targetArcCos);
-        }
+            foreach (var condition in _conditions)
+                if (!condition.CheckCondition(source, this))
+                    return false;
 
-        public void Execute (Actor source)
-        {
-            FindTargets(source);
+            _targets.Clear();
+            if (null != _targetFinder)
+                _targetFinder.FindTargets(source, _targets);
+
+            foreach (var condition in _conditions)
+                if (!condition.CheckCondition(source, this, _targets))
+                    return false;
 
             // Execute on use commands on ourselves
             ExecuteCommands(_commandsOnUse, source, source);
@@ -44,6 +47,8 @@ namespace NoZ.Zisle
                 foreach (var target in _targets) ExecuteCommands(_commandsOnHit, source, target);
 
             _targets.Clear();
+
+            return true;
         }
 
         /// <summary>
@@ -56,57 +61,6 @@ namespace NoZ.Zisle
         {
             foreach (var command in commands)
                 target.ExecuteCommand(command, source);
-        }
-
-        /// <summary>
-        /// Find all targets for the ability from the given source
-        /// </summary>
-        /// <param name="source">Source actor</param>
-        /// <returns>Number of targets hit</returns>
-        private int FindTargets (Actor source)
-        {
-            _targets.Clear();
-
-            var count = Physics.OverlapSphereNonAlloc(source.transform.position, _targetRange, _colliders, _targetMask);
-            var forward = source.transform.forward.ZeroY();
-            for(int i = 0; i <_targetCount; i++)
-            {
-                var bestScore = float.MaxValue;
-                var bestTarget = (Actor)null;
-                var bestIndex = 0;
-
-                for(int j=0; j<count; j++)
-                {
-                    var target = _colliders[j].GetComponentInParent<Actor>();
-                    if (target == null || target == source)
-                        continue;
-
-                    var delta = (target.transform.position - source.transform.position).ZeroY();
-                    var dot = Vector3.Dot(forward, delta.normalized);
-                    if (dot < _targetArcCos)
-                        continue;
-
-                    var score = ((1.0f - dot) + 0.1f) * _targetArcScore * (delta.magnitude / _targetRange);
-                    if (score < bestScore)
-                    {
-                        bestScore = score;
-                        bestTarget = target;
-                        bestIndex = j;
-                    }
-                }
-
-                if (bestTarget != null)
-                {
-                    _targets.Add(bestTarget);
-                    _colliders[bestIndex] = _colliders[_colliders.Length - 1];
-                    count--;
-                    break;
-                }
-            }
-
-            for (int j = 0; j < count; j++) _colliders[j] = null;
-
-            return _targets.Count;
         }
 
         public override void RegisterNetworkId ()

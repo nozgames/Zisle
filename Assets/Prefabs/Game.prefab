@@ -64,6 +64,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _clientIslandPrefab: {fileID: 7032271380058666704, guid: dd0bc6793ebbf9846871b9660e0e8427,
     type: 3}
+  _clientBridgePrefab: {fileID: 7545170549915501842, guid: 1472b325663a6ff488a27f98265b23f7,
+    type: 3}
 --- !u!114 &3995368475223908622
 MonoBehaviour:
   m_ObjectHideFlags: 0

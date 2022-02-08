@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 namespace NoZ.Zisle
 {
-    [CustomEditor(typeof(Island))]
+    [CustomEditor(typeof(IslandMesh))]
     public class IslandEditor : Editor
     {
         private const float PathHeight = -0.05f;
@@ -26,7 +26,7 @@ namespace NoZ.Zisle
         [MenuItem("Zisle/Regenerate Islands Meshes")]
         private static void RegenerateAllMeshes()
         {
-            foreach(var island in Resources.FindObjectsOfTypeAll<GameObject>().Select(g => g.GetComponent<Island>()).Where(c => c != null))
+            foreach(var island in Resources.FindObjectsOfTypeAll<GameObject>().Select(g => g.GetComponent<IslandMesh>()).Where(c => c != null))
                 UpdateMesh(island);
 
             AssetDatabase.SaveAssets();
@@ -40,7 +40,7 @@ namespace NoZ.Zisle
 
             // Only allow editing of the island when the prefab is opened as the current stage
             var currentStage = UnityEditor.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage();
-            if (currentStage?.prefabContentsRoot.gameObject != (target as Island).gameObject)
+            if (currentStage?.prefabContentsRoot.gameObject != (target as IslandMesh).gameObject)
             {
                 root.AddToClassList("disabled");
                 root.Add(new Label("Open the prefab to edit"));
@@ -65,7 +65,7 @@ namespace NoZ.Zisle
             var grid = new VisualElement();
             grid.AddToClassList("grid");
 
-            var island = (target as Island);
+            var island = (target as IslandMesh);
             var tiles = island.Tiles;
                       
             for (int y=0; y<13; y++)
@@ -147,7 +147,7 @@ namespace NoZ.Zisle
 
         private void OnTileClick (VisualElement tileElement, Vector2Int position)
         {
-            var island = target as Island;
+            var island = target as IslandMesh;
 
             // Remove any previous classes
             for(int i=0; i< TileToClass.Length; i++)
@@ -158,14 +158,14 @@ namespace NoZ.Zisle
             island.SetTile(position, _selectedTile);
             EditorUtility.SetDirty(island.gameObject);
 
-            UpdateMesh(target as Island);
+            UpdateMesh(target as IslandMesh);
         }
 
 
         private void InitializeIsland()
         {
             var dirty = false;
-            var island = (target as Island);
+            var island = (target as IslandMesh);
 
             if (island.Tiles == null || island.Tiles.Length != 13 * 13)
             {
@@ -206,7 +206,7 @@ namespace NoZ.Zisle
             }
         }
 
-        private static void UpdateMesh (Island island)
+        private static void UpdateMesh (IslandMesh island)
         {
             // Determine the prefab path
             var path = AssetDatabase.GetAssetPath(island.gameObject);
@@ -245,7 +245,7 @@ namespace NoZ.Zisle
         /// <summary>
         /// Generate an island mesh 
         /// </summary>
-        private static Mesh GenerateMesh (Island island)
+        private static Mesh GenerateMesh (IslandMesh island)
         {
             if (island.Tiles.Length != 13 * 13)
                 return null;
@@ -314,7 +314,7 @@ namespace NoZ.Zisle
             return mesh;
         }
 
-        private static int AddEdge(Island island, List<Vector3> verts, List<Vector2> uvs, List<int> tris, List<Vector3> normals, int x, int y, int xdir, int ydir, int color)
+        private static int AddEdge(IslandMesh island, List<Vector3> verts, List<Vector2> uvs, List<int> tris, List<Vector3> normals, int x, int y, int xdir, int ydir, int color)
         {
             var tile = island.GetTile(new Vector2Int(x, y));
             var neighbor = island.GetTile(new Vector2Int(x + xdir, y + ydir));

@@ -13,8 +13,7 @@ namespace NoZ.Zisle
         [Header("General")]
         [SerializeField] private int _maxIslands = 64;
         [SerializeField] private int _startingLanes = 1;
-        [SerializeField] private bool _spawnEnemies = true;
-
+        
         [Header("Path Weights")]
         [SerializeField] public float _pathWeight0 = 0.1f;
         [SerializeField] public float _pathWeight1 = 1.0f;
@@ -62,8 +61,8 @@ namespace NoZ.Zisle
             _startingLanesSync.Value = Mathf.Clamp(lanes, 1, 4);
         }        
 
-        public IslandGenerator.Options ToGeneratorOptions() =>
-            new IslandGenerator.Options
+        public WorldGenerator.Options ToGeneratorOptions() =>
+            new WorldGenerator.Options
             {
                 StartingLanes = _startingLanes,
                 MaxIslands = _maxIslands,

@@ -44,6 +44,8 @@ namespace NoZ.Zisle
         [SerializeField] private Collider _hitCollider = null;
 
         private NetworkVariable<bool> _running = new NetworkVariable<bool>();
+        private float[] _abilityUsedTime;
+        private float _lastAbilityUsedTime;
 
         private List<ActorEffect.Context> _effects = new List<ActorEffect.Context>();
         private ActorAttributeValue[] _attributeTable;
@@ -57,6 +59,9 @@ namespace NoZ.Zisle
 
         public NavMeshAgent NavAgent { get; private set; }
         public NavMeshObstacle NavObstacle { get; private set; }
+        public Material GhostMaterial => _ghostMaterial;
+
+        public float LastAbilityUsedTime => _lastAbilityUsedTime;
 
         public float Health => _health;
         public ActorState State
@@ -92,9 +97,8 @@ namespace NoZ.Zisle
             NavAgent = GetComponent<NavMeshAgent>();
             NavObstacle = GetComponent<NavMeshObstacle>();
 
-            // By default these should only be enabled on the host
-            if (NavAgent != null) NavAgent.enabled = false;
-            if (NavObstacle != null) NavObstacle.enabled = false;
+            if (_actorDefinition != null)
+                _abilityUsedTime = new float[_actorDefinition.Abilities.Length];
         }
 
         public void PlayAnimation(AnimationShader shader, BlendedAnimationController.AnimationCompleteDelegate onComplete=null)
@@ -292,14 +296,19 @@ namespace NoZ.Zisle
             }
         }
 
-        protected void ExecuteAbility(ActorAbility ability)
+        protected bool ExecuteAbility(ActorAbility ability)
         {
             if (ability == null)
-                return;
+                return false;
+
+            if (!ability.Execute(this))
+                return false;
+
+            MarkAbilityUsed(ability);
 
             _state = ActorState.Ability;
 
-            ability.Execute(this);
+            return true;
         }        
 
         public void ExecuteCommand(ActorCommand command, Actor source)
@@ -363,6 +372,33 @@ namespace NoZ.Zisle
                 return null;
 
             return sourceObj.GetComponent<Actor>();
+        }
+
+        public void MarkAbilityUsed (ActorAbility actorAbility)
+        {
+            _lastAbilityUsedTime = Time.time;
+
+            for (int i=0, c=_actorDefinition.Abilities.Length; i<c; i++)
+            {
+                var ability = _actorDefinition.Abilities[i];
+                if (ability == actorAbility)
+                {
+                    _abilityUsedTime[i] = Time.time;
+                    return;
+                }
+            }
+        }
+
+        public float GetAbilityLastUsedTime (ActorAbility actorAbility)
+        {
+            for (int i = 0, c = _actorDefinition.Abilities.Length; i < c; i++)
+            {
+                var ability = _actorDefinition.Abilities[i];
+                if (ability == actorAbility)
+                    return _abilityUsedTime[i];
+            }
+
+            return 0.0f;
         }
     }
 }

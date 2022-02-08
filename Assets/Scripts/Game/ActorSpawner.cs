@@ -7,7 +7,7 @@ namespace NoZ.Zisle
     {
         [SerializeField] private ActorDefinition[] _actorDefinitions = null;
 
-        private void Start()
+        public void Spawn()
         {
             if(_actorDefinitions != null)
             {

@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ac1701c6e243924eb1ed29293d00c51, type: 3}
   m_Name: KnightSwordAttackSwingSound
   m_EditorClassIdentifier: 
-  _clip: {fileID: 8300000, guid: e740ff675b9241345a8190aadd445017, type: 3}
+  _clips:
+  - {fileID: 8300000, guid: e740ff675b9241345a8190aadd445017, type: 3}

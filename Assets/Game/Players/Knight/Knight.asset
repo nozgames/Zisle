@@ -25,4 +25,5 @@ MonoBehaviour:
   _baseHarvest: 1
   _baseBuild: 1
   _abilities:
+  - {fileID: 11400000, guid: b941ed9298a177c478aa097d18572b51, type: 2}
   - {fileID: 11400000, guid: 406824669e16e984c994d92b98b772fd, type: 2}

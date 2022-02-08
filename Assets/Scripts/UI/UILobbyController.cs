@@ -152,6 +152,11 @@ namespace NoZ.Zisle
         private void UpdateReadyButton ()
         {
             this.Q("ready").SetEnabled(GameManager.Instance.PlayerCount == GameManager.Instance.MaxPlayers);
+
+            if (GameManager.Instance.MaxPlayers == 1)
+                this.Q<Button>("ready").text = "Play";
+            else
+                this.Q<Button>("ready").text = (GameManager.Instance.LocalPlayer != null && GameManager.Instance.LocalPlayer.IsReady) ? "Cancel" : "Ready";
         }
 
         private void UpdateRemotePlayer()
@@ -206,6 +211,8 @@ namespace NoZ.Zisle
                 this.Q("player-left-ready").EnableInClassList("ready", evt.PlayerController.IsReady);
             else
                 this.Q("player-right-ready").EnableInClassList("ready", evt.PlayerController.IsReady);
+
+            UpdateReadyButton();
 
             if(NetworkManager.Singleton.IsHost && GameManager.Instance.Players.Where(p => p.IsReady).Count() == GameManager.Instance.MaxPlayers)
                 UIManager.Instance.StartGame();
