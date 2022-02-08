@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 593126720898226325}
   - component: {fileID: 2598226603739545213}
   - component: {fileID: 374429281775171857}
+  - component: {fileID: 4448617390359935524}
   m_Layer: 6
   m_Name: Home_1P
   m_TagString: Untagged
@@ -112,6 +113,20 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -7353038269425335552}
+--- !u!114 &4448617390359935524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4678010474844694571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3759b39378a3484b8a3299b5ba90700, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _actorDefinitions:
+  - {fileID: 11400000, guid: cd5645f568fe9994db47bdd28f69db06, type: 2}
 --- !u!43 &-7353038269425335552
 Mesh:
   m_ObjectHideFlags: 0
