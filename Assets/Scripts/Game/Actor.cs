@@ -4,6 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 using NoZ.Tweening;
 using UnityEngine.AI;
+using NoZ.Events;
 
 namespace NoZ.Zisle
 {
@@ -142,22 +143,32 @@ namespace NoZ.Zisle
             UpdateAnimation();
         }
 
-        public virtual void Damage (float damage)
+        public virtual void Damage (Actor source, float damage)
         {
             if (IsDead)
                 return;
 
             _health = Mathf.Clamp(_health - damage, 0.0f, GetAttributeValue(ActorAttribute.HealthMax));
 
-            UIManager.Instance.AddFloatingText(((int)Mathf.Ceil(damage)).ToString(), null, transform.position + Vector3.up * (_height * 2.0f));
-
+            DamageClientRpc(source.OwnerClientId, damage);
+            
             if(_health <= 0.0f)
-                Die();
+                Die(source);
         }
 
-        public virtual void Die ()
+        [ClientRpc]
+        private void DamageClientRpc (ulong sourceId, float damage)
+        {
+            // Only show damage numbers on the local client
+            if(sourceId == NetworkManager.LocalClientId)
+                UIManager.Instance.AddFloatingText(((int)Mathf.Ceil(damage)).ToString(), null, transform.position + Vector3.up * (_height * 2.0f));
+        }
+
+        public virtual void Die (Actor source)
         {
             CanHit = false;
+            NavAgent.enabled = false;
+            GameEvent.Raise(this, new ActorDiedEvent { });
             DieClientRpc();
         }
 
@@ -172,6 +183,8 @@ namespace NoZ.Zisle
         [ClientRpc]
         private void DieClientRpc()
         {
+            _health = 0.0f;
+            
             if (_deathAnimation != null)
             {
                 if (_ghostMaterial != null)
@@ -400,7 +413,7 @@ namespace NoZ.Zisle
 
         private void UpdateAnimation ()
         {
-            if (IsBusy)
+            if (IsBusy || IsDead)
                 return;
 
             if(!IsMoving)

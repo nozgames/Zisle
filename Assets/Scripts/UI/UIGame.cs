@@ -100,9 +100,10 @@ namespace NoZ.Zisle
                         continue;
                     }
 
-                    var screen = camera.WorldToScreenPoint(ft.Position);
-                    ft.Element.style.top = _floatingTextContainer.layout.max.y - screen.y;
-                    ft.Element.style.left = screen.x;
+                    var screen = camera.WorldToViewportPoint(ft.Position);
+
+                    ft.Element.style.top = new StyleLength(new Length((1-screen.y) * 100, LengthUnit.Percent));
+                    ft.Element.style.left = new StyleLength(new Length(screen.x * 100, LengthUnit.Percent));
                     ft.Element.style.opacity = ft.Opacity;
                 }
 

@@ -3,21 +3,20 @@ using NoZ.Animations;
 using Unity.Netcode;
 using UnityEngine.AI;
 using System.Collections;
+using NoZ.Events;
 
 namespace NoZ.Zisle
 {
     public class Enemy : Actor
     {
-        private NavMeshAgent _agent;
         [SerializeField] private float _updateRate = 1.0f;
 
         protected override void Awake()
         {
             base.Awake();
 
-            _agent = GetComponent<NavMeshAgent>();
-            _agent.updateRotation = false;
-            _agent.enabled = false;
+            NavAgent.updateRotation = false;
+            NavAgent.enabled = false;
         }
 
         public override void OnNetworkSpawn()
@@ -27,23 +26,18 @@ namespace NoZ.Zisle
             if (IsHost)
             {
                 StartCoroutine(UpdateTarget());
-                _agent.enabled = true;
             }
+
+            NavAgent.enabled = true;
         }
 
         public override void UpdateAttributes()
         {
             base.UpdateAttributes();
 
-            _agent.speed = GetAttributeValue(ActorAttribute.Speed);
+            NavAgent.speed = GetAttributeValue(ActorAttribute.Speed);
         }
 
-        public override void Die()
-        {
-            _agent.enabled = false;            
-
-            base.Die();
-        }
 
         private IEnumerator UpdateTarget ()
         {
@@ -60,28 +54,12 @@ namespace NoZ.Zisle
                     transform.rotation = Quaternion.LookRotation((player.transform.position.ZeroY() - transform.position.ZeroY()), Vector3.up);
 
                     var playerDist = (player.transform.position.ZeroY() - transform.position.ZeroY()).sqrMagnitude;
-                    if (playerDist >= (_agent.stoppingDistance * _agent.stoppingDistance))
+                    if (playerDist >= (NavAgent.stoppingDistance * NavAgent.stoppingDistance))
                     {
-//                        _agent.SetDestination(player.transform.position.ZeroY());
+                        //                        NavAgent.SetDestination(player.transform.position.ZeroY());
                     }
-                    _agent.SetDestination(player.transform.position.ZeroY());
-
-#if false
-                    if ((transform.position - player.transform.position).magnitude < _attackRange)
-                    {
-                        if(_agent.hasPath)
-                            _agent.SetDestination(transform.position);
-                        State = ActorState.Idle;
-                    }
-                    else if ((transform.position - player.transform.position).magnitude > _attackRange + float.Epsilon)
-                    {
-                        _agent.SetDestination(player.transform.position);
-                        State = ActorState.Run;
-                    }
-#endif
+                    NavAgent.SetDestination(player.transform.position.ZeroY());
                 }
-
-
 
                 yield return wait;
             }
@@ -114,7 +92,7 @@ namespace NoZ.Zisle
             // TODO: pitch the character forward when moving
 
 
-            var speed = _agent.desiredVelocity.magnitude; //  (transform.position - _lastPosition).magnitude / Time.fixedDeltaTime;
+            var speed = NavAgent.desiredVelocity.magnitude; //  (transform.position - _lastPosition).magnitude / Time.fixedDeltaTime;
             _speed = Mathf.SmoothDamp(_speed, speed, ref _runPitchSmoothVelocity, _runPitchSmooth);
 
 

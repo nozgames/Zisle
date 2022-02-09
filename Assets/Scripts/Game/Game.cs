@@ -1,3 +1,4 @@
+using NoZ.Events;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,10 @@ namespace NoZ.Zisle
 
         public int Level { get; private set; }
 
+        public int WaveEnemyRemainingCount { get; set; }
+
+        public int WaveEnemyCount { get; set; } = 1;
+
         public static Game Instance => GameManager.Instance.Game;
 
         // TODO: if we have the island cells stored here then whenever a player connects and the GAme
@@ -50,6 +55,8 @@ namespace NoZ.Zisle
             // If we are on a client then request the islands from the server.
             if (IsHost)
             {
+                GameEvent<ActorDiedEvent>.OnRaised += OnActorDied;
+
                 GenerateIslands(GameManager.Instance.Options);
                 Debug.Log("Islands Generated as Host");
                 HasIslands = true;
@@ -65,6 +72,21 @@ namespace NoZ.Zisle
             GameManager.Instance.Game = this;
 
             _islandVisibility.OnValueChanged += OnIslandVisibilityChanged;
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+
+            GameEvent<ActorDiedEvent>.OnRaised -= OnActorDied;
+        }
+
+        private void OnActorDied(object sender, ActorDiedEvent evt)
+        {
+            if(sender is Enemy)
+            {
+                WaveEnemyRemainingCount--;
+            }
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -238,6 +260,8 @@ namespace NoZ.Zisle
             if (null == enemyDef)
                 return;
 
+            WaveEnemyRemainingCount++;
+
             enemyDef.Spawn(TileCellToWorld(spawnPoint.Cell), spawnPoint.Rotation);
         }
 
@@ -248,6 +272,9 @@ namespace NoZ.Zisle
                 yield return new WaitForSeconds(1.0f);
 
                 SpawnEnemy();
+
+                while (WaveEnemyRemainingCount >= WaveEnemyCount)
+                    yield return null;
             }
         }
     }

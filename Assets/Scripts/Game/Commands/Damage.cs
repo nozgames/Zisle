@@ -11,7 +11,7 @@ namespace NoZ.Zisle.Commands
             var attack = source.GetAttributeValue(ActorAttribute.Attack);
             var defense = target.GetAttributeValue(ActorAttribute.Defense);
             var damage = Mathf.Max(attack - defense, 0.0f);            
-            target.Damage(damage);
+            target.Damage(source, damage);
         }
     }
 }

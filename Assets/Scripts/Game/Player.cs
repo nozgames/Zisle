@@ -60,7 +60,7 @@ namespace NoZ.Zisle
             {
                 look = InputManager.Instance.PlayerMove;
             }
-            else if (gamepad)
+            else
             {
                 if (Physics.Raycast(InputManager.Instance.PlayerLookRay, out var hit, 100.0f) && hit.collider.GetComponentInParent<Actor>() != null)
                     look = (hit.collider.transform.position - transform.position);
@@ -100,7 +100,7 @@ namespace NoZ.Zisle
             if (!NavAgent.enabled && GameManager.Instance.Game.HasIslands)
                 NavAgent.enabled = true;
 
-            if(!IsBusy)
+            if(!IsBusy && NavAgent.isOnNavMesh)
                 MoveTo(InputManager.Instance.PlayerMove * Time.deltaTime * GetAttributeValue(ActorAttribute.Speed));
 
             GameManager.Instance.FrameCamera(transform.position);
