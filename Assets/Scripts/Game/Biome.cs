@@ -16,6 +16,8 @@ namespace NoZ.Zisle
         [Space]
         [SerializeField] private IslandMesh[] _islands = null;
 
+        [Space]
+        [SerializeField] private ActorDefinition[] _enemies = null;
 
         public Material Material => _material;
         public Bridge Bridge => _bridge;
@@ -47,5 +49,18 @@ namespace NoZ.Zisle
 
             return -1;
         }
+        
+        /// <summary>
+        /// Choose a weighted random enemy to spawn from the list of available enemies.  
+        /// </summary>
+        public ActorDefinition ChooseRandomEnemy ()
+        {
+            if (_enemies.Length == 0)
+                return null;
+
+            return _enemies[WeightedRandom.RandomWeightedIndex(_enemies, 0, _enemies.Length, GetEnemyWeight)];
+        }
+
+        private float GetEnemyWeight(ActorDefinition def) => def.GetSpawnWeight();
     }
 }

@@ -156,6 +156,9 @@ MonoBehaviour:
     type: 3}
   _optionsPrefab: {fileID: 1221780272864191960, guid: 1fd9e8ad3dc23b749a805ba871d64469,
     type: 3}
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
   _camera: {fileID: 1403908677}
   _cameraYaw: 45
   _cameraPitch: -45

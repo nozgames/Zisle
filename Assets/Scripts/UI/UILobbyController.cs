@@ -105,6 +105,8 @@ namespace NoZ.Zisle
 
             UpdateReadyButton();
             UpdateRemotePlayer();
+
+            this.Q("ready").Focus();
         }
 
         private void OnPlayerSpawned(object sender, PlayerSpawned evt)

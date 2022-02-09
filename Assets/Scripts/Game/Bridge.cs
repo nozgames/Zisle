@@ -7,6 +7,8 @@ namespace NoZ.Zisle
         private Island _from;
         private Island _to;
 
+        private Vector3 _spawnPosition;
+
         /// <summary>
         /// Bind the bridge to the given island so it can spawn the island when built (Host only)
         /// </summary>
@@ -14,11 +16,30 @@ namespace NoZ.Zisle
         {
             _from = from;
             _to = to;
+
+            _spawnPosition = transform.position + (_from.transform.position - _to.transform.position).normalized;
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+
+            if(IsHost)
+                Game.Instance.AddSpawnPoint(_to.Biome, _spawnPosition, Quaternion.LookRotation((_spawnPosition - _from.transform.position).normalized, Vector3.up));
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+
+            if (IsHost)
+                Game.Instance.RemoveSpawnPoint (_spawnPosition);
         }
 
         protected override void OnConstructedServer()
         {
             GameManager.Instance.Game.ShowIsland(_to);
+            Game.Instance.RemoveSpawnPoint(_spawnPosition);
         }
 
         protected override void OnConstructedClient()
@@ -27,8 +48,6 @@ namespace NoZ.Zisle
 
             if (NavObstacle != null)
                 NavObstacle.enabled = false;
-
-            // TODO: spawn the next island..
         }
     }
 }

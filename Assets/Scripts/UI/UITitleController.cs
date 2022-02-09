@@ -42,5 +42,12 @@ namespace NoZ.Zisle
             onNo:() => UIManager.Instance.ShowTitle()
             );
         }
+
+        public override void OnBeforeTransitionIn()
+        {
+            base.OnBeforeTransitionIn();
+
+            this.Q("solo-button").Focus();
+        }
     }
 }

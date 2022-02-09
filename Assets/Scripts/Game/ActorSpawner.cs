@@ -9,11 +9,8 @@ namespace NoZ.Zisle
 
         public void Spawn()
         {
-            if(_actorDefinitions != null)
-            {
-                var def = _actorDefinitions[Random.Range(0, _actorDefinitions.Length)];
-                Instantiate(def.Prefab, transform.position, transform.rotation).GetComponent<NetworkObject>().Spawn();
-            }
+            if(_actorDefinitions != null && _actorDefinitions.Length > 0)
+                _actorDefinitions[Random.Range(0, _actorDefinitions.Length)].Spawn(transform.position, transform.rotation);
         }
     }
 }

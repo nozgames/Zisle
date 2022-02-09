@@ -49,7 +49,7 @@ namespace NoZ.Zisle
         {
             var wait = new WaitForSeconds(_updateRate);
 
-            while (NetworkManager.Singleton == null)
+            while (NetworkManager.Singleton == null || !NavAgent.isOnNavMesh)
                 yield return null;
 
             while(gameObject.activeSelf && !IsDead)
@@ -105,11 +105,10 @@ namespace NoZ.Zisle
         }
 
 
-        private Vector3 _lastPosition;
-        private float _speed;
         public float _runPitchSmooth = 0.2f;
         private float _runPitchSmoothVelocity = 0.05f;
 
+#if false
         private void FixedUpdate()
         {
             // TODO: pitch the character forward when moving
@@ -118,10 +117,6 @@ namespace NoZ.Zisle
             var speed = _agent.desiredVelocity.magnitude; //  (transform.position - _lastPosition).magnitude / Time.fixedDeltaTime;
             _speed = Mathf.SmoothDamp(_speed, speed, ref _runPitchSmoothVelocity, _runPitchSmooth);
 
-            if(speed > 0.0001f)
-                State = ActorState.Run;
-            else
-                State = ActorState.Idle;
 
             if (_runPitchTransform != null)
             {
@@ -131,10 +126,6 @@ namespace NoZ.Zisle
 
             _lastPosition = transform.position;
         }
-
-        private void HandleAnimation ()
-        {
-
-        }
+#endif
     }
 }

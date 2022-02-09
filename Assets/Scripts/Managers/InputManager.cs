@@ -16,6 +16,7 @@ namespace NoZ.Zisle
         [SerializeField] private InputActionReference _uiClose = null;
 
         [Header("Player")]
+        [SerializeField] private float _playerYaw = 180.0f;
         [SerializeField] private InputActionReference _playerMenu = null;
         [SerializeField] private InputActionReference _playerMove = null;
         [SerializeField] private InputActionReference _playerMoveLeft = null;
@@ -112,6 +113,11 @@ namespace NoZ.Zisle
             }
         }
 
+        private void OnApplicationFocus(bool focus)
+        {
+            EnablePlayerActions(focus);
+        }
+
         private void Update()
         {
             if(_playerZoom.action.enabled && _playerZoom.action.activeControl != null)
@@ -164,7 +170,7 @@ namespace NoZ.Zisle
         /// <summary>
         /// Read the current value of player move
         /// </summary>
-        public Vector2 playerMove 
+        public Vector3 PlayerMove 
         {
             get 
             {
@@ -173,8 +179,9 @@ namespace NoZ.Zisle
                     _playerMoveUp.action.ReadValue<float>() + -1.0f * _playerMoveDown.action.ReadValue<float>()).normalized;
 
                 var gamepadMove = _playerMove.action.ReadValue<Vector2>();
+                var move = gamepadMove.sqrMagnitude > keyboardMove.sqrMagnitude ? gamepadMove : keyboardMove;
 
-                return gamepadMove.sqrMagnitude > keyboardMove.sqrMagnitude ? gamepadMove : keyboardMove;
+                return Quaternion.Euler(0.0f, GameManager.Instance.CameraYaw + _playerYaw, 0.0f) * move.ToVector3XZ();
             }
         }
 

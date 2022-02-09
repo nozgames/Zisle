@@ -20,6 +20,7 @@ namespace NoZ.Zisle
         [Header("General")]
         [SerializeField] private Game _gamePrefab = null;
         [SerializeField] private GameOptions _optionsPrefab = null;
+        [SerializeField] private LayerMask _groundLayer = 0;
 
         [Header("Camera")]
         [SerializeField] private Camera _camera = null;
@@ -85,6 +86,11 @@ namespace NoZ.Zisle
         /// Get / Set the current game
         /// </summary>
         public Game Game { get; set; }
+
+        /// <summary>
+        /// Layer used to determine what is the ground
+        /// </summary>
+        public LayerMask GroundLayer => _groundLayer;
 
         /// <summary>
         /// Return the available biomes

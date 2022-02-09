@@ -21,12 +21,17 @@ namespace NoZ.Zisle
         /// <summary>
         /// Position within the world grid
         /// </summary>
-        public Vector2Int Position { get; set; }
+        public Vector2Int Cell { get; set; }
+
+        /// <summary>
+        /// Biome the island was spawned from
+        /// </summary>
+        public Biome Biome { get; set; }
 
         /// <summary>
         /// Return the index on the island grid
         /// </summary>
-        public int GridIndex => WorldGenerator.GetCellIndex(Position);
+        public int GridIndex => WorldGenerator.GetCellIndex(Cell);
 
         public void AddBridge(Bridge prefab, Vector3 position, Quaternion rotation, Island to)
         {
@@ -59,7 +64,7 @@ namespace NoZ.Zisle
         {
             foreach (var def in _bridges)
             {
-                var bridge = Instantiate(def.Prefab, def.Position, def.Rotation, GameManager.Instance.Game.transform).GetComponent<Bridge>();
+                var bridge = Instantiate(def.Prefab, def.Position, def.Rotation).GetComponent<Bridge>();
                 bridge.Bind(from: this, to: def.To);
                 bridge.GetComponent<NetworkObject>().Spawn();
             }

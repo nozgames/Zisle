@@ -32,7 +32,6 @@ namespace NoZ.Zisle
         public const int GridCenter = GridSize / 2;
         public const int GridCenterIndex = GridCenter + GridCenter * GridSize;
 
-        private static List<float> _weights = new List<float>(1024);
         private List<Cell> _cells = new List<Cell>();
         private Cell[] _cellGrid = new Cell[GridSize * GridSize];
 
@@ -218,7 +217,7 @@ namespace NoZ.Zisle
                     if (cell.Position == Vector2Int.zero)
                         forkCount = options.StartingLanes;
                     else
-                        forkCount = RandomWeightedIndex(options.GetForkWeights(), 0, forks.Count + 1, (f) => f);
+                        forkCount = WeightedRandom.RandomWeightedIndex(options.GetForkWeights(), 0, forks.Count + 1, (f) => f);
 
                     // Do not allow all paths to close by making sure there is at least one 
                     // other cell to expand from
@@ -289,41 +288,6 @@ namespace NoZ.Zisle
             }
 
             return forks.Count;
-        }
-
-        /// <summary>
-        /// Pick a random index in a weighted array
-        /// </summary>
-        private int RandomWeightedIndex<T> (IEnumerable<T> items, int start, int count, System.Func<T,float> getWeight)
-        {
-            var totalWeight = 0.0f;
-            _weights.Clear();
-            foreach(var item in items)
-            {
-                if(start > 0)
-                {
-                    start--;
-                    continue;
-                }
-
-                var weight = Mathf.Max(getWeight(item),0.0f);
-                _weights.Add(weight);
-                totalWeight += weight;
-
-                if (--count == 0)
-                    break;
-            }
-
-            if (_weights.Count == 0)
-                return 0;
-
-            // Chooose a number between 0 and totalWeight and find the item that falls in that range
-            var random = Random.Range(0.0f, totalWeight);
-            var choice = 0;
-            for (; choice < _weights.Count - 1 && random > _weights[choice] - float.Epsilon; choice++)
-                random -= _weights[choice];
-
-            return choice;
         }
     }
 }

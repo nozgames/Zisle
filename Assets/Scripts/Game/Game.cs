@@ -16,59 +16,25 @@ namespace NoZ.Zisle
         [SerializeField] private GameObject _clientIslandPrefab = null;
         [SerializeField] private GameObject _clientBridgePrefab = null;
 
-        private struct IslandVisibility
+        private struct SpawnPoint
         {
-            public ulong Chunk1;
-            public ulong Chunk2;
-            public ulong Chunk3;
-            public ulong Chunk4;
-
-            public bool IsVisible (int index)
-            {
-                if (index < 64) return (Chunk1 & (1UL << index)) != 0;
-                index -= 64;
-                if (index < 64) return (Chunk2 & (1UL << index)) != 0;
-                index -= 64;
-                if (index < 64) return (Chunk3 & (1UL << index)) != 0;
-                index -= 64;
-                if (index < 64) return (Chunk4 & (1UL << index)) != 0;
-                return false;
-            }
-
-            public IslandVisibility SetVisible(int index, bool visible)
-            {
-                if (visible)
-                {
-                    if (index < 64) { Chunk1 |= (1UL << index); return this; }
-                    index -= 64;
-                    if (index < 64) { Chunk2 |= (1UL << index); return this; }
-                    index -= 64;
-                    if (index < 64) { Chunk3 |= (1UL << index); return this; }
-                    index -= 64;
-                    if (index < 64) { Chunk4 |= (1UL << index); return this; }
-                }
-                else
-                {
-                    if (index < 64) { Chunk1 &= ~(1UL << index); return this; }
-                    index -= 64;
-                    if (index < 64) { Chunk2 &= ~(1UL << index); return this; }
-                    index -= 64;
-                    if (index < 64) { Chunk3 &= ~(1UL << index); return this; }
-                    index -= 64;
-                    if (index < 64) { Chunk4 &= ~(1UL << index); return this; }
-                }
-
-                return this;
-            }
+            public Biome Biome;
+            public Vector2Int Cell;
+            public Quaternion Rotation;
         }
 
         private NetworkVariable<IslandVisibility> _islandVisibility = new NetworkVariable<IslandVisibility> ();
 
         private IslandCell[] _cells = null;
+        private List<SpawnPoint> _spawnPoints = new List<SpawnPoint>();
 
         private Island[] _islands = new Island[WorldGenerator.GridIndexMax];
 
         public bool HasIslands { get; private set; }
+
+        public int Level { get; private set; }
+
+        public static Game Instance => GameManager.Instance.Game;
 
         // TODO: if we have the island cells stored here then whenever a player connects and the GAme
         //       spawns on their client, they can request the cells be send
@@ -87,6 +53,8 @@ namespace NoZ.Zisle
                 GenerateIslands(GameManager.Instance.Options);
                 Debug.Log("Islands Generated as Host");
                 HasIslands = true;
+
+                StartCoroutine(SpawnWaves());
             }
             else
             {
@@ -122,7 +90,20 @@ namespace NoZ.Zisle
             HasIslands = true;
         }
 
-        private Island GetIsland(Vector2Int position) => _islands[WorldGenerator.GetCellIndex(position)];
+        /// <summary>
+        /// Convert a world position to a tile cell
+        /// </summary>
+        public Vector2Int WorldToTileCell(Vector3 position) => new Vector2Int((int)position.x, (int)position.z);
+
+        /// <summary>
+        /// Convert a tile cell to a world position
+        /// </summary>
+        public Vector3 TileCellToWorld(Vector2Int cell) => new Vector3((int)cell.x, 0.0f, (int)cell.y);
+
+        /// <summary>
+        /// Return the island at the given island cell
+        /// </summary>
+        public Island GetIsland(Vector2Int cell) => _islands[WorldGenerator.GetCellIndex(cell)];
 
         private void SpawnIslandMeshes ()
         {
@@ -147,7 +128,8 @@ namespace NoZ.Zisle
                 island.GetComponent<MeshFilter>().sharedMesh = mesh;
                 island.GetComponent<MeshCollider>().sharedMesh = mesh;
                 meshRenderer.sharedMaterials = new Material[] { biome.Material, meshRenderer.sharedMaterials[1] };
-                island.Position = cell.Position;
+                island.Cell = cell.Position;
+                island.Biome = biome;
 
                 _islands[WorldGenerator.GetCellIndex(cell.Position)] = island;
 
@@ -224,6 +206,48 @@ namespace NoZ.Zisle
             {
                 if(oldValue.IsVisible(i) != newValue.IsVisible(i))
                     _islands[i].RiseFromTheDeep();
+            }
+        }
+
+        public void AddSpawnPoint (Biome biome, Vector3 position, Quaternion rotation)
+        {
+            RemoveSpawnPoint(position);
+
+            _spawnPoints.Add(new SpawnPoint { Biome = biome, Cell = WorldToTileCell(position), Rotation = rotation });
+        }
+
+        public void RemoveSpawnPoint (Vector3 position)
+        {
+            var cell = WorldToTileCell(position);
+            for(int i=0; i<_spawnPoints.Count; i++)
+                if(_spawnPoints[i].Cell == cell)
+                {
+                    _spawnPoints[i] = _spawnPoints[_spawnPoints.Count - 1];
+                    _spawnPoints.RemoveAt(_spawnPoints.Count - 1);
+                    return;
+                }
+        }
+
+        public void SpawnEnemy ()
+        {
+            if (_spawnPoints.Count == 0)
+                return;
+
+            var spawnPoint = _spawnPoints[Random.Range(0, _spawnPoints.Count)];
+            var enemyDef = spawnPoint.Biome.ChooseRandomEnemy();
+            if (null == enemyDef)
+                return;
+
+            enemyDef.Spawn(TileCellToWorld(spawnPoint.Cell), spawnPoint.Rotation);
+        }
+
+        private IEnumerator SpawnWaves ()
+        {
+            while (IsSpawned)
+            {
+                yield return new WaitForSeconds(1.0f);
+
+                SpawnEnemy();
             }
         }
     }

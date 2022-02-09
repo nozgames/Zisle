@@ -58,9 +58,8 @@ namespace NoZ.Zisle
                 if (bestTarget != null)
                 {
                     targets.Add(bestTarget);
-                    _colliders[bestIndex] = _colliders[_colliders.Length - 1];
+                    _colliders[bestIndex] = _colliders[count - 1];
                     count--;
-                    break;
                 }
             }
 

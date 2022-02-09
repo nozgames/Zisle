@@ -26,6 +26,9 @@ namespace NoZ.Zisle
         [Space]
         [SerializeField] private ActorAbility[] _abilities = null;
 
+        [Space]
+        [SerializeField] private SpawnWeight[] _spawnWeights = null;
+
         /// <summary>
         /// Get the available abilities for this actor
         /// </summary>
@@ -73,6 +76,28 @@ namespace NoZ.Zisle
             base.RegisterNetworkId();
 
             _abilities.RegisterNetworkIds();
+        }
+
+        /// <summary>
+        /// Return the spawn weight for this actor definition using the current game state
+        /// </summary>
+        public float GetSpawnWeight ()
+        {
+            float weight = 1.0f;
+            foreach (var spawnWeight in _spawnWeights)
+                weight *= spawnWeight.GetWeight(this);
+
+            return weight;
+        }
+
+        /// <summary>
+        /// Spawn an actor from this definition
+        /// </summary>
+        public Actor Spawn (Vector3 position, Quaternion rotation)
+        {
+            var actor = Instantiate(Prefab, position, rotation).GetComponent<Actor>();
+            actor.NetworkObject.Spawn();
+            return actor;
         }
     }
 }

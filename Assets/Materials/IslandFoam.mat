@@ -109,6 +109,8 @@ Material:
     - _Step: 0.47
     - _Surface: 0
     - _TimeScale: 4.04
+    - _WaveSize: 0.2
+    - _WaveTime: 0.86
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:

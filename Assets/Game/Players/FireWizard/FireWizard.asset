@@ -15,7 +15,7 @@ MonoBehaviour:
   _type: 0
   _displayName: Fire Wizard
   _prefab: {fileID: 5107839595957495342, guid: 92b0d3703bdc3a34cbae82f72e44509d, type: 3}
-  _preview: {fileID: 919132149155446097, guid: 9c3057231dcd9d74f878b4b6e61fb80c, type: 3}
+  _preview: {fileID: 919132149155446097, guid: 8133a3f119034dd49880a9968561261b, type: 3}
   _baseHealthMax: 100
   _baseHealthRegen: 5
   _baseSpeed: 5
@@ -25,5 +25,6 @@ MonoBehaviour:
   _baseHarvest: 1
   _baseBuild: 1
   _abilities:
-  - {fileID: 11400000, guid: 406824669e16e984c994d92b98b772fd, type: 2}
   - {fileID: 11400000, guid: b941ed9298a177c478aa097d18572b51, type: 2}
+  - {fileID: 11400000, guid: 406824669e16e984c994d92b98b772fd, type: 2}
+  _spawnWeights: []

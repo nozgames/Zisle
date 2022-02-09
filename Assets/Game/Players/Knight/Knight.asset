@@ -26,4 +26,7 @@ MonoBehaviour:
   _baseBuild: 1
   _abilities:
   - {fileID: 11400000, guid: b941ed9298a177c478aa097d18572b51, type: 2}
+  - {fileID: 11400000, guid: ab12ab4b070e4774da4a5470e23de2a5, type: 2}
+  - {fileID: 11400000, guid: 00ec81f7db5b499448bbaafdcbecaddf, type: 2}
   - {fileID: 11400000, guid: 406824669e16e984c994d92b98b772fd, type: 2}
+  _spawnWeights: []

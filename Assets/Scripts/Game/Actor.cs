@@ -7,14 +7,6 @@ using UnityEngine.AI;
 
 namespace NoZ.Zisle
 {
-    public enum ActorState
-    {
-        None,
-        Idle,
-        Run,
-        Ability
-    }
-
     public enum ActorType
     {
         Player,
@@ -26,6 +18,8 @@ namespace NoZ.Zisle
     public class Actor : NetworkBehaviour
     {
         private static readonly int ActorAttributeCount = System.Enum.GetNames(typeof(ActorAttribute)).Length;
+
+        private const float MaxBusyTime = 5.0f;
 
         [Header("General")]
         [SerializeField] private ActorDefinition _actorDefinition = null;
@@ -42,16 +36,23 @@ namespace NoZ.Zisle
         [SerializeField] private AnimationShader _runAnimation = null;
         [SerializeField] private AnimationShader _deathAnimation = null;
 
-        private NetworkVariable<bool> _running = new NetworkVariable<bool>();
         private float[] _abilityUsedTime;
         private float _lastAbilityUsedTime;
+        private float _lastAbilityUsedEndTime;
+        private ActorAbility _lastAbilityUsed;
+        private AnimationShader _currentAnimation;
 
         private List<ActorEffect.Context> _effects = new List<ActorEffect.Context>();
         private ActorAttributeValue[] _attributeTable;
         private float _health = 100.0f;
         private BlendedAnimationController _animator;
-        private ActorState _state;
+        private bool _busy;
+        private float _busyTime;
+        private Vector3 _lastPosition;
+        private float _speed = 0.0f;
 
+        public float Speed => _speed;
+        public bool IsMoving => Speed > 0.1f;
         public bool IsDead => _health <= 0.0f;
 
         public AnimationShader IdleAnimation => _idleAnimation;
@@ -60,8 +61,33 @@ namespace NoZ.Zisle
         public NavMeshObstacle NavObstacle { get; private set; }
         public Material GhostMaterial => _ghostMaterial;
 
+        public ActorAbility LastAbilityUsed => _lastAbilityUsed;
+        public float LastAbilityUsedEndTime => _lastAbilityUsedEndTime;
         public float LastAbilityUsedTime => _lastAbilityUsedTime;
 
+        /// <summary>
+        /// True if the actor is in a busy state, preventing movement or controls
+        /// </summary>
+        public bool IsBusy
+        {
+            get => _busy;
+            set
+            {
+                if (_busy == value)
+                    return;
+
+                _busy = value;
+
+                if (value)
+                    _busyTime = Time.time;
+
+                OnBusyChanged();
+            }
+        }
+
+        /// <summary>
+        /// True if the actor can be hit by other actors
+        /// </summary>
         public bool CanHit
         {
             get => _hitCollider == null ? false : _hitCollider.enabled;
@@ -72,32 +98,10 @@ namespace NoZ.Zisle
             }
         }
 
+        /// <summary>
+        /// Current health value of the actor
+        /// </summary>
         public float Health => _health;
-        public ActorState State
-        {
-            get => _state;
-            set
-            {
-                if (value == _state)
-                    return;
-
-                var oldState = _state;
-                _state = value;
-
-                if(NetworkManager.LocalClientId == OwnerClientId)
-                    if (_state == ActorState.Run)
-                        SetRunServerRpc(true);
-                    else
-                        SetRunServerRpc(false);
-
-                OnNetworkStateChanged(oldState, _state);
-
-                //SetStateServerRpc(State);
-            }
-        }
-
-        [ServerRpc]
-        private void SetRunServerRpc(bool run) => _running.Value = run;
 
         protected virtual void Awake()
         {
@@ -110,34 +114,39 @@ namespace NoZ.Zisle
                 _abilityUsedTime = new float[_actorDefinition.Abilities.Length];
         }
 
-        public void PlayAnimation(AnimationShader shader, BlendedAnimationController.AnimationCompleteDelegate onComplete=null)
+        public void PlayAnimation(AnimationShader shader, BlendedAnimationController.AnimationCompleteDelegate onComplete = null)
         {
-            if (shader == null || _animator == null)
+            if (shader == null || _animator == null || shader == _currentAnimation)
                 return;
 
+            _currentAnimation = shader;
             _animator.Play(shader, onComplete: onComplete);
         }
 
-        public void PlayOneShotAnimation(AnimationShader shader, BlendedAnimationController.AnimationCompleteDelegate onComplete = null)
+        public void PlayOneShotAnimation(AnimationShader shader)
         {
-            if (shader == null)
+            if (shader == null || shader == _currentAnimation)
                 return;
 
-            _animator.Play(shader, onComplete: () => 
-            { 
-                State = ActorState.Idle;
+            IsBusy = true;
 
-                if(OwnerClientId != NetworkManager.LocalClientId && _running.Value)
-                    PlayAnimation(_runAnimation);
-                else
-                    PlayAnimation(_idleAnimation);
+            _currentAnimation = shader;
+            _animator.Play(shader, onComplete: OnOneShotAnimationComplete);
+        }
 
-                onComplete?.Invoke(); 
-            });
+        private void OnOneShotAnimationComplete ()
+        {
+            _lastAbilityUsedEndTime = Time.time;
+            _currentAnimation = null;
+            IsBusy = false;
+            UpdateAnimation();
         }
 
         public virtual void Damage (float damage)
         {
+            if (IsDead)
+                return;
+
             _health = Mathf.Clamp(_health - damage, 0.0f, GetAttributeValue(ActorAttribute.HealthMax));
 
             UIManager.Instance.AddFloatingText(((int)Mathf.Ceil(damage)).ToString(), null, transform.position + Vector3.up * (_height * 2.0f));
@@ -149,14 +158,27 @@ namespace NoZ.Zisle
         public virtual void Die ()
         {
             CanHit = false;
+            DieClientRpc();
+        }
 
+        private void Despawn()
+        {
+            if (IsHost)
+                NetworkObject.Despawn(true);
+            else
+                gameObject.SetActive(false);
+        }
+
+        [ClientRpc]
+        private void DieClientRpc()
+        {
             if (_deathAnimation != null)
             {
                 if (_ghostMaterial != null)
                 {
                     foreach (var renderer in GetComponentsInChildren<Renderer>())
                     {
-                        if(renderer.materials.Length == 1)
+                        if (renderer.materials.Length == 1)
                         {
                             renderer.material = _ghostMaterial;
                             renderer.material.TweenFloat(ShaderPropertyID.Opacity, 0.0f).EaseOutSine().Duration(_deathAnimation.length / _deathAnimation.speed).Play();
@@ -171,10 +193,10 @@ namespace NoZ.Zisle
                         }
                     }
                 }
-                PlayAnimation(_deathAnimation, () => NetworkObject.Despawn(true));
+                PlayAnimation(_deathAnimation, Despawn);
             }
             else
-                NetworkObject.Despawn(true);
+                Despawn();
         }
 
         /// <summary>
@@ -236,72 +258,11 @@ namespace NoZ.Zisle
         {
             base.OnNetworkSpawn();
 
+            _lastPosition = transform.position;
+
             ResetAttributes();
 
             UpdateAttributes();
-
-            // Local function that waits to play the idle animation until the player stops moving
-            System.Collections.IEnumerator WaitForStop(Vector3 start)
-            {
-                while (!_running.Value)
-                {
-                    if ((transform.position - start).magnitude < 0.001f)
-                    {
-                        PlayAnimation(_idleAnimation);
-                        break;
-                    }
-
-                    yield return null;
-
-                    start = transform.position;
-                }
-            }
-
-
-            if (OwnerClientId != NetworkManager.LocalClientId)
-                _running.OnValueChanged += (p, n) =>
-                {
-                    if (_running.Value)
-                        PlayAnimation(_runAnimation);
-                    else
-                        StartCoroutine(WaitForStop(transform.position));
-                };
-
-            // Default our state to idle and 
-            OnNetworkStateChanged(ActorState.None, ActorState.Idle);
-        }
-
-        private void OnNetworkStateChanged(ActorState p, ActorState n)
-        {
-            _state = n;
-
-            // Local function that waits to play the idle animation until the player stops moving
-            System.Collections.IEnumerator WaitForStop(Vector3 start)
-            {
-                while (_state == ActorState.Idle)
-                {
-                    if ((transform.position - start).magnitude < 0.001f)
-                    {
-                        PlayAnimation(_idleAnimation);
-                        break;
-                    }
-
-                    yield return null;
-
-                    start = transform.position;
-                }
-            }
-
-            switch (_state)
-            {
-                case ActorState.Idle:
-                    StartCoroutine(WaitForStop(transform.position));
-                    break;
-
-                case ActorState.Run:
-                    PlayAnimation(_runAnimation);
-                    break;
-            }
         }
 
         protected bool ExecuteAbility(ActorAbility ability)
@@ -312,9 +273,17 @@ namespace NoZ.Zisle
             if (!ability.Execute(this))
                 return false;
 
-            MarkAbilityUsed(ability);
+            _lastAbilityUsedTime = Time.time;
+            _lastAbilityUsed = ability;
 
-            _state = ActorState.Ability;
+            for (int i = 0, c = _actorDefinition.Abilities.Length; i < c; i++)
+            {
+                if (_actorDefinition.Abilities[i] == ability)
+                {
+                    _abilityUsedTime[i] = Time.time;
+                    break;
+                }
+            }
 
             return true;
         }        
@@ -382,21 +351,6 @@ namespace NoZ.Zisle
             return sourceObj.GetComponent<Actor>();
         }
 
-        public void MarkAbilityUsed (ActorAbility actorAbility)
-        {
-            _lastAbilityUsedTime = Time.time;
-
-            for (int i=0, c=_actorDefinition.Abilities.Length; i<c; i++)
-            {
-                var ability = _actorDefinition.Abilities[i];
-                if (ability == actorAbility)
-                {
-                    _abilityUsedTime[i] = Time.time;
-                    return;
-                }
-            }
-        }
-
         public float GetAbilityLastUsedTime (ActorAbility actorAbility)
         {
             for (int i = 0, c = _actorDefinition.Abilities.Length; i < c; i++)
@@ -407,6 +361,55 @@ namespace NoZ.Zisle
             }
 
             return 0.0f;
+        }
+
+        protected virtual void OnBusyChanged() { }
+
+        protected virtual void Update ()
+        {
+            if (!IsSpawned)
+                return;
+
+            // Just to make sure actors never get stuck in the busy state
+            if (IsBusy && (Time.time - _busyTime) > MaxBusyTime)
+                IsBusy = false;
+
+            if (IsDead)
+                return;
+
+            _speed = _speed * 0.9f + ((_lastPosition - transform.position).ZeroY().magnitude / Time.deltaTime) * 0.1f;
+            _lastPosition = transform.position;
+
+            SnapToGround();
+            UpdateAnimation();
+        }
+
+        private void SnapToGround()
+        {
+            // Only actors that can move need to snap
+            if (NavAgent == null)
+                return;
+
+            if (!Physics.Raycast(transform.position + Vector3.up * _height * 0.5f, Vector3.down, out var hit, 5.0f, GameManager.Instance.GroundLayer))
+                return;
+
+            var ychangemax = Time.deltaTime * 0.01f;
+            var ychange = Mathf.Clamp(hit.point.y - transform.position.y, -ychangemax, ychangemax);
+            transform.position += Vector3.up * ychange;
+        }
+
+        private void UpdateAnimation ()
+        {
+            if (IsBusy)
+                return;
+
+            if(!IsMoving)
+            {
+                PlayAnimation(_idleAnimation);
+                return;
+            }
+
+            PlayAnimation(_runAnimation);
         }
     }
 }
