@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: HumanoidAttack
   m_EditorClassIdentifier: 
   _clip: {fileID: 4723146814002874508, guid: 063bd7516258f7c46a4c61f2d45f5072, type: 3}
-  _speed: 12
-  _blendTime: 0.1
+  _speed: 16
+  _blendTime: 0.01
   _events: []
