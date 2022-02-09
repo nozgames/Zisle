@@ -8,7 +8,9 @@ namespace NoZ.Zisle
     {
         Water,
         Grass,
-        Path
+        Path,
+
+        None = 255
     }
 
     /// <summary>
@@ -19,6 +21,11 @@ namespace NoZ.Zisle
     [RequireComponent(typeof(MeshRenderer))]
     public class IslandMesh : NetworkBehaviour, ISerializationCallbackReceiver
     {
+        public const int GridSize = 13;
+        public const int GridCenter = 6;
+        public const int GridIndexMax = GridSize * GridSize;
+
+
         [SerializeField] private IslandTile[] _tiles = null;
 
         /// <summary>
@@ -47,6 +54,25 @@ namespace NoZ.Zisle
         private int GetTileIndex(Vector2Int position) => position.x + position.y * 13;
 
         /// <summary>
+        /// Return the tile position of the given tile index
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public Vector2Int IndexToPosition (int index) => new Vector2Int (index % GridSize, index / GridSize);
+
+        /// <summary>
+        /// Converts a tile index to a world coordinate relative to the island
+        /// </summary>
+        public Vector3 IndexToWorld(int index)
+        {
+            var v = (IndexToPosition(index) - new Vector2Int(GridCenter, GridCenter)).ToVector3XZ();
+            v.z *= -1;
+            return v;
+        }
+        
+
+        /// <summary>
         /// Return the tile at the given position
         /// </summary>
         public IslandTile GetTile(Vector2Int position) => _tiles[GetTileIndex(position)];
@@ -57,10 +83,31 @@ namespace NoZ.Zisle
         public bool IsTile(Vector2Int position, IslandTile tile) => GetTile(position) == tile;
 
         /// <summary>
+        /// Returns true if the tile at the given index is the given tile
+        /// </summary>
+        public bool IsTile(int index, IslandTile tile) => GetTile(index) == tile;
+
+        /// <summary>
         /// Set the tile at the given position
         /// </summary>
         public void SetTile(Vector2Int position, IslandTile tile) => _tiles[GetTileIndex(position)] = tile;
 
+        public IslandTile GetTile(int index) => _tiles[index];
+
+        public IslandTile GetTile (int index, Vector2Int offset)
+        {
+            index += offset.x;
+            index += offset.y * GridSize;
+            if (!IsValidIndex(index))
+                return IslandTile.None;
+
+            return _tiles[index];
+        }
+
+        public bool IsValidIndex(int index) => index >= 0 && index < GridIndexMax;
+
+        public bool IsTile(int index, Vector2Int offset, IslandTile tile) =>
+            GetTile(index, offset) == tile;
 
         public static uint RotateMask (uint mask, int count)
         {

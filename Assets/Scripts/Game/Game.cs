@@ -143,9 +143,10 @@ namespace NoZ.Zisle
                     Quaternion.Euler(0, 90 * cell.Rotation, 0), transform).GetComponent<Island>();
 
                 var mesh = islandPrefab.GetComponent<MeshFilter>().sharedMesh;
+                var meshRenderer = island.GetComponent<MeshRenderer>();
                 island.GetComponent<MeshFilter>().sharedMesh = mesh;
                 island.GetComponent<MeshCollider>().sharedMesh = mesh;
-                island.GetComponent<MeshRenderer>().material = biome.Material;
+                meshRenderer.sharedMaterials = new Material[] { biome.Material, meshRenderer.sharedMaterials[1] };
                 island.Position = cell.Position;
 
                 _islands[WorldGenerator.GetCellIndex(cell.Position)] = island;

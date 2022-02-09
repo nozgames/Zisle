@@ -315,7 +315,9 @@ namespace NoZ.Zisle
                     Quaternion.Euler(0, 90 * cell.Rotation, 0), 
                     _backgroundIslands);
                 island.GetComponent<MeshFilter>().sharedMesh = islandPrefab.GetComponent<MeshFilter>().sharedMesh;
-                island.GetComponent<MeshRenderer>().material = biome.Material;
+
+                var meshRenderer = island.GetComponent<MeshRenderer>();
+                meshRenderer.sharedMaterials = new Material[] { biome.Material, meshRenderer.sharedMaterials[1] };
 
                 // Spawn bridges
                 // TODO: eventaully need to spawn just the mesh if bridge is networked

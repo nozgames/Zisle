@@ -8,7 +8,7 @@ namespace NoZ.Zisle
     {
         [Header("Building")]
         [SerializeField] private float _construction = 0.0f;
-
+        
         public bool IsConstructed { get; private set; }
 
         protected override void Awake()
@@ -30,6 +30,8 @@ namespace NoZ.Zisle
 
             if (_construction >= 1.0f)
             {
+                CanHit = false;
+
                 OnConstructedServer();
                 SendConstructedEventClientRpc();
             }

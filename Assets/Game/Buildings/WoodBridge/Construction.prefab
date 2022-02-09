@@ -64,6 +64,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _actorDefinition: {fileID: 11400000, guid: f9fac8c8277b48f4990d8f0a001949a9, type: 2}
+  _hitCollider: {fileID: 542647475886606859}
   _ghostMaterial: {fileID: 2100000, guid: abc1f2e966f027f40b9bf15eacb40ad3, type: 2}
   _runPitchTransform: {fileID: 0}
   _runPitch: 20
@@ -71,7 +72,6 @@ MonoBehaviour:
   _idleAnimation: {fileID: 0}
   _runAnimation: {fileID: 0}
   _deathAnimation: {fileID: 0}
-  _hitCollider: {fileID: 0}
   _construction: 0
 --- !u!208 &4070223538180246473
 NavMeshObstacle:

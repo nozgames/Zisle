@@ -10,7 +10,9 @@ namespace NoZ.Zisle
     public class IslandEditor : Editor
     {
         private const float PathHeight = -0.05f;
-        private const float EdgeHeight = -0.5f;
+        private const float EdgeHeight = -0.2f;
+        private const float FoamHeight = -0.2f;
+        private const float FoamSize = 0.3f;
 
         private const int ColorGrass = 0;
         private const int ColorEdge = 2;
@@ -193,9 +195,10 @@ namespace NoZ.Zisle
             }
 
             var material = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/Island.mat");
-            if(meshRenderer.sharedMaterial != material)
+            var foam = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/IslandFoam.mat");
+            if (meshRenderer.sharedMaterials.Length != 2 || meshRenderer.sharedMaterials[0] != material || meshRenderer.sharedMaterials[1] != foam)
             {
-                meshRenderer.sharedMaterial = material;
+                meshRenderer.sharedMaterials = new Material[] { material, foam };
                 dirty = true;
             }
 
@@ -238,8 +241,22 @@ namespace NoZ.Zisle
             collider.sharedMesh = filter.sharedMesh;
             island.gameObject.layer = LayerMask.NameToLayer("Ground");
 
+
+            var material = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/Island.mat");
+            var foam = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/IslandFoam.mat");
+            var meshRenderer = island.GetComponent<MeshRenderer>();
+            meshRenderer.sharedMaterials = new Material[] { material, foam };
+
             AssetDatabase.AddObjectToAsset(filter.sharedMesh, path);
             EditorUtility.SetDirty(island.gameObject);
+        }
+
+        private class MeshBuilder
+        {
+            public List<Vector3> Verts = new List<Vector3>();
+            public List<int> Triangles = new List<int>();
+            public List<Vector2> UV = new List<Vector2>();
+            public List<Vector3> Normals = new List<Vector3>();
         }
 
         /// <summary>
@@ -247,16 +264,13 @@ namespace NoZ.Zisle
         /// </summary>
         private static Mesh GenerateMesh (IslandMesh island)
         {
-            if (island.Tiles.Length != 13 * 13)
+            if (island.Tiles.Length != IslandMesh.GridSize * IslandMesh.GridSize)
                 return null;
 
-            var verts = new List<Vector3>();
-            var tris = new List<int>();
-            var uvs = new List<Vector2>();
-            var normals = new List<Vector3>();
+            var builder = new MeshBuilder();
 
-            for (int y = 1, i = 0; y < 12; y++)
-                for (int x = 1; x < 12; x++)
+            for (int y = 1, i = 0; y < IslandMesh.GridSize - 1; y++)
+                for (int x = 1; x < IslandMesh.GridSize - 1; x++)
                 {
                     var tile = island.GetTile(new Vector2Int(x, y));
                     if (tile == 0)
@@ -273,48 +287,125 @@ namespace NoZ.Zisle
                         color = ColorPath;
                     }
 
-                    verts.Add(new Vector3(xx - 0.5f, height, -yy - 0.5f));
-                    verts.Add(new Vector3(xx + 0.5f, height, -yy - 0.5f));
-                    verts.Add(new Vector3(xx + 0.5f, height, -yy + 0.5f));
-                    verts.Add(new Vector3(xx - 0.5f, height, -yy + 0.5f));
+                    builder.Verts.Add(new Vector3(xx - 0.5f, height, -yy - 0.5f));
+                    builder.Verts.Add(new Vector3(xx + 0.5f, height, -yy - 0.5f));
+                    builder.Verts.Add(new Vector3(xx + 0.5f, height, -yy + 0.5f));
+                    builder.Verts.Add(new Vector3(xx - 0.5f, height, -yy + 0.5f));
 
-                    normals.Add(Vector3.up);
-                    normals.Add(Vector3.up);
-                    normals.Add(Vector3.up);
-                    normals.Add(Vector3.up);
+                    builder.Normals.Add(Vector3.up);
+                    builder.Normals.Add(Vector3.up);
+                    builder.Normals.Add(Vector3.up);
+                    builder.Normals.Add(Vector3.up);
 
                     var colorOffset = (x % 2) == (y % 2) ? 1 : 0;
                     var uv = new Vector2(0, color + colorOffset);
-                    uvs.Add(uv);
-                    uvs.Add(uv);
-                    uvs.Add(uv);
-                    uvs.Add(uv);
+                    builder.UV.Add(uv);
+                    builder.UV.Add(uv);
+                    builder.UV.Add(uv);
+                    builder.UV.Add(uv);
 
-                    tris.Add(i + 2);
-                    tris.Add(i + 1);
-                    tris.Add(i);
-                    tris.Add(i + 3);
-                    tris.Add(i + 2);
-                    tris.Add(i);
+                    builder.Triangles.Add(i + 2);
+                    builder.Triangles.Add(i + 1);
+                    builder.Triangles.Add(i);
+                    builder.Triangles.Add(i + 3);
+                    builder.Triangles.Add(i + 2);
+                    builder.Triangles.Add(i);
                     i += 4;
 
-                    i += AddEdge(island, verts, uvs, tris, normals, x, y, -1, 0, ColorEdge + colorOffset);
-                    i += AddEdge(island, verts, uvs, tris, normals, x, y, 1, 0, ColorEdge + colorOffset);
-                    i += AddEdge(island, verts, uvs, tris, normals, x, y, 0, 1, ColorEdge + colorOffset);
-                    i += AddEdge(island, verts, uvs, tris, normals, x, y, 0, -1, ColorEdge + colorOffset);
+                    i += AddEdge(island, builder, x, y, -1, 0, ColorEdge + colorOffset);
+                    i += AddEdge(island, builder, x, y, 1, 0, ColorEdge + colorOffset);
+                    i += AddEdge(island, builder, x, y, 0, 1, ColorEdge + colorOffset);
+                    i += AddEdge(island, builder, x, y, 0, -1, ColorEdge + colorOffset);
                 }
 
+            var prefoamVerts = builder.Verts.Count;
+            var prefoamIndex = builder.Triangles.Count; 
+            AddFoam(island, builder);
+            
             var mesh = new Mesh();
-            mesh.vertices = verts.ToArray();
-            mesh.triangles = tris.ToArray();
-            mesh.normals = normals.ToArray();
-            mesh.uv = uvs.ToArray();
+            mesh.vertices = builder.Verts.ToArray();
+            mesh.triangles = builder.Triangles.ToArray();
+            mesh.normals = builder.Normals.ToArray();
+            mesh.uv = builder.UV.ToArray();
             mesh.name = "IslandMesh";
             mesh.UploadMeshData(false);
+
+            mesh.subMeshCount = 2;
+            mesh.SetSubMesh(0, new UnityEngine.Rendering.SubMeshDescriptor { baseVertex = 0, firstVertex = 0, indexCount = prefoamIndex, indexStart = 0, vertexCount = prefoamVerts });
+            mesh.SetSubMesh(1, new UnityEngine.Rendering.SubMeshDescriptor { baseVertex = 0, firstVertex = prefoamVerts, indexCount = builder.Triangles.Count - prefoamIndex, indexStart = prefoamIndex, vertexCount = builder.Verts.Count - prefoamVerts });
+
             return mesh;
         }
 
-        private static int AddEdge(IslandMesh island, List<Vector3> verts, List<Vector2> uvs, List<int> tris, List<Vector3> normals, int x, int y, int xdir, int ydir, int color)
+        private static void AddFoam(IslandMesh island, MeshBuilder builder)
+        {
+            for(var i=0; i<IslandMesh.GridIndexMax; i++)
+            {
+                if (!island.IsTile(i, IslandTile.Water))
+                    continue;
+
+                AddFoam(island, builder, i, new Vector2Int( 1, 0));
+                AddFoam(island, builder, i, new Vector2Int(-1, 0));
+                AddFoam(island, builder, i, new Vector2Int( 0, 1));
+                AddFoam(island, builder, i, new Vector2Int( 0,-1));
+            }
+        }
+
+        private static float GetFoamMitre (IslandMesh island, int index, Vector2Int offset, int side)
+        {
+            var perpendicular = new Vector2Int(offset.y, -offset.x) * side;
+            var nearTile = island.GetTile(index, perpendicular);
+            if (nearTile != IslandTile.Water)
+                return -FoamSize;
+
+            var diagonalTile = island.GetTile(index, offset + perpendicular);
+            if (diagonalTile == IslandTile.Water)
+                return FoamSize;
+
+            return 0.0f;
+        }
+
+        private static void AddFoam (IslandMesh island, MeshBuilder builder, int index, Vector2Int offset)
+        {
+            var tile = island.GetTile(index, offset);
+            if (tile == IslandTile.Water || tile == IslandTile.None)
+                return;
+
+            var rightMitre = GetFoamMitre(island, index, offset, 1);
+            var leftMitre = GetFoamMitre(island, index, offset, -1);
+
+            offset.y *= -1;
+
+            var normal = (-offset).ToVector3XZ().normalized;
+            var position = island.IndexToWorld(index) + new Vector3(offset.x * 0.5f, 0.0f, offset.y * 0.5f);
+            var right = Vector3.Cross(normal, Vector3.up);
+
+            var v = builder.Verts.Count;
+            builder.Verts.Add(position + right * 0.5f + Vector3.up * FoamHeight);
+            builder.Verts.Add(position + right * (0.5f + leftMitre) + normal * FoamSize + Vector3.up * FoamHeight);
+            builder.Verts.Add(position - right * (0.5f + rightMitre) + normal * FoamSize + Vector3.up * FoamHeight);
+            builder.Verts.Add(position - right * 0.5f + Vector3.up * FoamHeight);
+
+            builder.UV.Add(new Vector2(1.0f, 1.0f));
+            builder.UV.Add(new Vector2(1.0f, 0.0f));
+            builder.UV.Add(new Vector2(0.0f, 0.0f));
+            builder.UV.Add(new Vector2(0.0f, 1.0f));
+
+            builder.Normals.Add(Vector3.up);
+            builder.Normals.Add(Vector3.up);
+            builder.Normals.Add(Vector3.up);
+            builder.Normals.Add(Vector3.up);
+
+
+            builder.Triangles.Add(v + 1);
+            builder.Triangles.Add(v + 2);
+            builder.Triangles.Add(v + 0);
+            builder.Triangles.Add(v + 0);
+            builder.Triangles.Add(v + 2);
+            builder.Triangles.Add(v + 3);
+        }
+
+        private static int AddEdge(IslandMesh island, MeshBuilder builder, int x, int y, int xdir, int ydir, int color)
         {
             var tile = island.GetTile(new Vector2Int(x, y));
             var neighbor = island.GetTile(new Vector2Int(x + xdir, y + ydir));
@@ -326,33 +417,33 @@ namespace NoZ.Zisle
             var c = new Vector3(x - 6, 0, -(y - 6));
             var s = Vector3.up * (tile == IslandTile.Path ? PathHeight : 0.0f);
             var d = Vector3.up * EdgeHeight;
-            var i = verts.Count;
+            var i = builder.Verts.Count;
 
-            normals.Add(n);
-            normals.Add(n);
-            normals.Add(n);
-            normals.Add(n);
+            builder.Normals.Add(n);
+            builder.Normals.Add(n);
+            builder.Normals.Add(n);
+            builder.Normals.Add(n);
 
             n *= 0.5f;
             p *= 0.5f;
 
-            verts.Add(c + n + p + s);
-            verts.Add(c + n - p + s);
-            verts.Add(c + n - p + d);
-            verts.Add(c + n + p + d);
+            builder.Verts.Add(c + n + p + s);
+            builder.Verts.Add(c + n - p + s);
+            builder.Verts.Add(c + n - p + d);
+            builder.Verts.Add(c + n + p + d);
 
             var uv = new Vector2(0, color);
-            uvs.Add(uv);
-            uvs.Add(uv);
-            uvs.Add(uv);
-            uvs.Add(uv);
+            builder.UV.Add(uv);
+            builder.UV.Add(uv);
+            builder.UV.Add(uv);
+            builder.UV.Add(uv);
 
-            tris.Add(i + 2);
-            tris.Add(i + 1);
-            tris.Add(i);
-            tris.Add(i + 3);
-            tris.Add(i + 2);
-            tris.Add(i);
+            builder.Triangles.Add(i + 2);
+            builder.Triangles.Add(i + 1);
+            builder.Triangles.Add(i);
+            builder.Triangles.Add(i + 3);
+            builder.Triangles.Add(i + 2);
+            builder.Triangles.Add(i);
 
             return 4;
         }

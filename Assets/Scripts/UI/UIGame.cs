@@ -49,8 +49,6 @@ namespace NoZ.Zisle
             _floatingTextContainer = this.Q("floating-text-container");
 
             UIManager.Instance.StartCoroutine(UpdateFloatingText());
-
-            GameEvent<BuildingConstructed>.OnRaised += (s,e) => Debug.Log("Building constructed!");
         }
 
         public override void Show()

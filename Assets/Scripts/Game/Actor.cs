@@ -29,6 +29,7 @@ namespace NoZ.Zisle
 
         [Header("General")]
         [SerializeField] private ActorDefinition _actorDefinition = null;
+        [SerializeField] private Collider _hitCollider = null;
 
         [Header("Visuals")]
         [SerializeField] protected Material _ghostMaterial = null;
@@ -40,8 +41,6 @@ namespace NoZ.Zisle
         [SerializeField] private AnimationShader _idleAnimation = null;
         [SerializeField] private AnimationShader _runAnimation = null;
         [SerializeField] private AnimationShader _deathAnimation = null;
-
-        [SerializeField] private Collider _hitCollider = null;
 
         private NetworkVariable<bool> _running = new NetworkVariable<bool>();
         private float[] _abilityUsedTime;
@@ -62,6 +61,16 @@ namespace NoZ.Zisle
         public Material GhostMaterial => _ghostMaterial;
 
         public float LastAbilityUsedTime => _lastAbilityUsedTime;
+
+        public bool CanHit
+        {
+            get => _hitCollider == null ? false : _hitCollider.enabled;
+            set
+            {
+                if (_hitCollider != null)
+                    _hitCollider.enabled = value;
+            }
+        }
 
         public float Health => _health;
         public ActorState State
@@ -139,8 +148,7 @@ namespace NoZ.Zisle
 
         public virtual void Die ()
         {
-            if(null != _hitCollider)
-                _hitCollider.enabled = false;
+            CanHit = false;
 
             if (_deathAnimation != null)
             {
