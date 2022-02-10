@@ -451,6 +451,7 @@ MonoBehaviour:
     type: 3}
   _uiClose: {fileID: -1518867730989686174, guid: 92783038ce5d74148b556e04433c7c93,
     type: 3}
+  _playerYaw: 180
   _playerMenu: {fileID: 1755185687716959511, guid: 92783038ce5d74148b556e04433c7c93,
     type: 3}
   _playerMove: {fileID: -7095444715687423244, guid: 92783038ce5d74148b556e04433c7c93,

@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 1245122302073704610}
   - component: {fileID: 5429814614147593989}
   - component: {fileID: 3857350800885879390}
+  - component: {fileID: 1308276740518367994}
+  - component: {fileID: 551545708437805557}
   m_Layer: 0
   m_Name: HumanoidEnemy
   m_TagString: Untagged
@@ -51,26 +53,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 931ea6f4a14b5b1499aa4b2a3361723e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _baseHealthMax: 100
-  _baseHealthRegen: 5
-  _baseSpeed: 3
-  _baseAttack: 60
-  _baseAttackSpeed: 1
-  _baseDefense: 50
-  _baseHarvest: 1
-  _baseBuild: 1
+  _actorDefinition: {fileID: 0}
+  _hitCollider: {fileID: 5285709882748307645}
   _ghostMaterial: {fileID: 2100000, guid: 58569cdaf9efd4745a5edd42d3e95b81, type: 2}
+  _spawnVFXPrefab: {fileID: 3214235347064349228, guid: b4a28c8597f55e5408e3eb3f6292381f,
+    type: 3}
   _runPitchTransform: {fileID: 3767794557118830940}
   _runPitch: 20
   _height: 0.5
   _idleAnimation: {fileID: 11400000, guid: f9cdcf35f4561b84082829acf74c2026, type: 2}
   _runAnimation: {fileID: 11400000, guid: 749689bbabc06d54fa8d3db56eb84a7e, type: 2}
   _deathAnimation: {fileID: 11400000, guid: 3632060de9552e3498aef82567fdb40d, type: 2}
-  _hitCollider: {fileID: 5285709882748307645}
-  _abilities:
-  - {fileID: 11400000, guid: 470c93773ec233141bdcb640088f8f11, type: 2}
   _updateRate: 0.1
-  _attackRange: 1
   _runPitchSmooth: 0.05
 --- !u!114 &5645462275788983784
 MonoBehaviour:
@@ -169,6 +163,83 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 1
   m_ObstacleAvoidanceType: 2
+--- !u!2083052967 &1308276740518367994
+VisualEffect:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261973430235558940}
+  m_Enabled: 1
+  m_Asset: {fileID: 8926484042661614526, guid: 81446159efbf82b469a424d0258e70b2, type: 3}
+  m_InitialEventName: 
+  m_InitialEventNameOverriden: 1
+  m_StartSeed: 0
+  m_ResetSeedOnPlay: 1
+  m_ResourceVersion: 1
+  m_PropertySheet:
+    m_Float:
+      m_Array: []
+    m_Vector2f:
+      m_Array: []
+    m_Vector3f:
+      m_Array: []
+    m_Vector4f:
+      m_Array: []
+    m_Uint:
+      m_Array: []
+    m_Int:
+      m_Array: []
+    m_Matrix4x4f:
+      m_Array: []
+    m_AnimationCurve:
+      m_Array: []
+    m_Gradient:
+      m_Array: []
+    m_NamedObject:
+      m_Array: []
+    m_Bool:
+      m_Array: []
+--- !u!73398921 &551545708437805557
+VFXRenderer:
+  serializedVersion: 1
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261973430235558940}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
 --- !u!1 &6085324528788541688
 GameObject:
   m_ObjectHideFlags: 0

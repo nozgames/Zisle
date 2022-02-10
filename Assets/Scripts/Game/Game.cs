@@ -37,7 +37,7 @@ namespace NoZ.Zisle
 
         public int WaveEnemyRemainingCount { get; set; }
 
-        public int WaveEnemyCount { get; set; } = 1;
+        public int WaveEnemyCount { get; set; } = 6;
 
         public static Game Instance => GameManager.Instance.Game;
 

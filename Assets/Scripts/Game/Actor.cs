@@ -5,6 +5,7 @@ using UnityEngine;
 using NoZ.Tweening;
 using UnityEngine.AI;
 using NoZ.Events;
+using UnityEngine.VFX;
 
 namespace NoZ.Zisle
 {
@@ -28,6 +29,7 @@ namespace NoZ.Zisle
 
         [Header("Visuals")]
         [SerializeField] protected Material _ghostMaterial = null;
+        [SerializeField] protected GameObject _spawnVFXPrefab = null;
         [SerializeField] protected Transform _runPitchTransform = null;
         [SerializeField] protected float _runPitch = 20.0f;
         [SerializeField] protected float _height = 0.5f;
@@ -272,6 +274,9 @@ namespace NoZ.Zisle
             base.OnNetworkSpawn();
 
             _lastPosition = transform.position;
+
+            if (_spawnVFXPrefab != null)
+                Instantiate(_spawnVFXPrefab, transform.position, transform.rotation);
 
             ResetAttributes();
 
