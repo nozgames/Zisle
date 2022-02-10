@@ -9,10 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2080bf67900783041b095e835af5af8b, type: 3}
-  m_Name: HumanoidSlashAttack
+  m_Script: {fileID: 11500000, guid: b2771c28ebfe1914bb3a6fa7c365f832, type: 3}
+  m_Name: Global Shader Properties
   m_EditorClassIdentifier: 
-  _clip: {fileID: 4723146814002874508, guid: 1bae3ca40606fc8439d512becd510c96, type: 3}
-  _speed: 12
-  _blendTime: 0.1
-  _events: []
+  _shadowColor: {r: 0.42969027, g: 0.4587661, b: 0.4811321, a: 1}
+  _sunColor: {r: 1, g: 1, b: 1, a: 1}

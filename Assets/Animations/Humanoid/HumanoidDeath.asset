@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _clip: {fileID: -982115091633673366, guid: 8ce3e3fb0e4afef44b0e76736b196fa9, type: 3}
   _speed: 4
-  _blendTime: 0.1
+  _blendTime: 0.05
   _events: []

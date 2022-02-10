@@ -78,5 +78,111 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 50eae47ab1632bd47904d1218e4cd5c0,
         type: 2}
+    - target: {fileID: 5429814614147593989, guid: c626647da39f58f4a9598683d11fcdc9,
+        type: 3}
+      propertyPath: _animator
+      value: 
+      objectReference: {fileID: 3747618724928831444}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c626647da39f58f4a9598683d11fcdc9, type: 3}
+--- !u!4 &6085852768695152274 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1291445172341955205, guid: c626647da39f58f4a9598683d11fcdc9,
+    type: 3}
+  m_PrefabInstance: {fileID: 5015154369657779223}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7957204325819855108
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 6085852768695152274}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: db787b28e2a5c8740bc91419ad188aec,
+        type: 3}
+      propertyPath: m_Name
+      value: Orc
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: db787b28e2a5c8740bc91419ad188aec, type: 3}
+--- !u!1 &7110272304562342997 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: db787b28e2a5c8740bc91419ad188aec,
+    type: 3}
+  m_PrefabInstance: {fileID: 7957204325819855108}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &3747618724928831444
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7110272304562342997}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

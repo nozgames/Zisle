@@ -100,8 +100,16 @@ namespace NoZ.Zisle
             if (!NavAgent.enabled && GameManager.Instance.Game.HasIslands)
                 NavAgent.enabled = true;
 
-            if(!IsBusy && NavAgent.isOnNavMesh)
-                MoveTo(InputManager.Instance.PlayerMove * Time.deltaTime * GetAttributeValue(ActorAttribute.Speed));
+            var moveSpeed = 1.0f;
+            if (!NavAgent.isOnNavMesh)
+                moveSpeed = 0.0f;
+            else if (IsBusy && LastAbilityUsed != null && LastAbilityUsed.MoveSpeed > 0.0f)
+                moveSpeed = LastAbilityUsed.MoveSpeed;
+            else if (IsBusy)
+                moveSpeed = 0.0f;
+
+            if(moveSpeed > 0.0f)
+                MoveTo(InputManager.Instance.PlayerMove * Time.deltaTime * GetAttributeValue(ActorAttribute.Speed) * moveSpeed);
 
             GameManager.Instance.FrameCamera(transform.position);
         }

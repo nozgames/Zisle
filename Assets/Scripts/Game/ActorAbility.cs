@@ -8,6 +8,7 @@ namespace NoZ.Zisle
     {
         [Header("General")]
         [SerializeField] private TargetFinder _targetFinder = null;
+        [SerializeField] private float _moveSpeed = 0.0f;
 
         [Space]
         [Space]
@@ -23,6 +24,8 @@ namespace NoZ.Zisle
         [SerializeField] private ActorCommand[] _commandsOnMiss = null;
 
         private static List<Actor> _targets = new List<Actor>(128);
+
+        public float MoveSpeed => _moveSpeed;
 
         public bool Execute (Actor source)
         {

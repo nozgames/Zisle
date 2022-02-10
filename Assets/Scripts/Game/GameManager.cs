@@ -21,6 +21,7 @@ namespace NoZ.Zisle
         [SerializeField] private Game _gamePrefab = null;
         [SerializeField] private GameOptions _optionsPrefab = null;
         [SerializeField] private LayerMask _groundLayer = 0;
+        [SerializeField] private GlobalShaderProperties _globalShaderProperties = null;
 
         [Header("Camera")]
         [SerializeField] private Camera _camera = null;
@@ -56,6 +57,8 @@ namespace NoZ.Zisle
         /// Local player connected to the lobby
         /// </summary>
         public PlayerController LocalPlayer { get; private set; }
+
+        public GlobalShaderProperties GlobalShaderProperties => _globalShaderProperties;
 
         /// <summary>
         /// Get the game camera
