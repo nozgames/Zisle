@@ -1,2 +1,2 @@
 # Zisle
-Survival / Twin Stick Shooter / Factory game made in Unity
+Survival / Action RPG / Tower Defense game made in Unity
