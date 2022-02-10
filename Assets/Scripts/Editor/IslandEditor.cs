@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEditor;
@@ -9,21 +8,12 @@ namespace NoZ.Zisle
     [CustomEditor(typeof(IslandMesh))]
     public class IslandEditor : Editor
     {
-        private const float PathHeight = -0.05f;
-        private const float EdgeHeight = -0.2f;
-        private const float FoamHeight = -0.2f;
         private const float FoamSize = 0.3f;
-
-        private const int ColorGrass = 0;
         private const int ColorEdge = 2;
-        private const int ColorPath = 4;
 
-        private static readonly string[] TileToClass = new string[]
-        {
-            "water",
-            "grass",
-            "path"
-        };
+        private static readonly float[] TileToColor = new float[] { 0, 0, 4 };
+        private static readonly float[] TileToHeight = new float[] { -0.2f, 0, -0.05f };
+        private static readonly string[] TileToClass = new string[] { "water", "grass", "path" };
 
         [MenuItem("Zisle/Regenerate Islands Meshes")]
         private static void RegenerateAllMeshes()
@@ -251,14 +241,6 @@ namespace NoZ.Zisle
             EditorUtility.SetDirty(island.gameObject);
         }
 
-        private class MeshBuilder
-        {
-            public List<Vector3> Verts = new List<Vector3>();
-            public List<int> Triangles = new List<int>();
-            public List<Vector2> UV = new List<Vector2>();
-            public List<Vector3> Normals = new List<Vector3>();
-        }
-
         /// <summary>
         /// Generate an island mesh 
         /// </summary>
@@ -268,77 +250,48 @@ namespace NoZ.Zisle
                 return null;
 
             var builder = new MeshBuilder();
+            builder.BeginSubmesh();
 
-            for (int y = 1, i = 0; y < IslandMesh.GridSize - 1; y++)
+            for (int y = 1; y < IslandMesh.GridSize - 1; y++)
+            {
                 for (int x = 1; x < IslandMesh.GridSize - 1; x++)
                 {
                     var tile = island.GetTile(new Vector2Int(x, y));
-                    if (tile == 0)
+                    if (tile == IslandTile.Water)
                         continue;
 
                     var xx = x - 6;
                     var yy = y - 6;
-                    var height = 0.0f;
-                    var color = ColorGrass;
-
-                    if (tile == IslandTile.Path)
-                    {
-                        height = PathHeight;
-                        color = ColorPath;
-                    }
-
-                    builder.Verts.Add(new Vector3(xx - 0.5f, height, -yy - 0.5f));
-                    builder.Verts.Add(new Vector3(xx + 0.5f, height, -yy - 0.5f));
-                    builder.Verts.Add(new Vector3(xx + 0.5f, height, -yy + 0.5f));
-                    builder.Verts.Add(new Vector3(xx - 0.5f, height, -yy + 0.5f));
-
-                    builder.Normals.Add(Vector3.up);
-                    builder.Normals.Add(Vector3.up);
-                    builder.Normals.Add(Vector3.up);
-                    builder.Normals.Add(Vector3.up);
-
+                    var color = TileToColor[(int)tile];
                     var colorOffset = (x % 2) == (y % 2) ? 1 : 0;
                     var uv = new Vector2(0, color + colorOffset);
-                    builder.UV.Add(uv);
-                    builder.UV.Add(uv);
-                    builder.UV.Add(uv);
-                    builder.UV.Add(uv);
+                    var height = TileToHeight[(int)tile];                    
 
-                    builder.Triangles.Add(i + 2);
-                    builder.Triangles.Add(i + 1);
-                    builder.Triangles.Add(i);
-                    builder.Triangles.Add(i + 3);
-                    builder.Triangles.Add(i + 2);
-                    builder.Triangles.Add(i);
-                    i += 4;
+                    builder.BeginConvex();
+                    builder.AddVertex(new Vector3(xx - 0.5f, height, -yy + 0.5f), uv, Vector3.up);
+                    builder.AddVertex(new Vector3(xx + 0.5f, height, -yy + 0.5f), uv, Vector3.up);
+                    builder.AddVertex(new Vector3(xx + 0.5f, height, -yy - 0.5f), uv, Vector3.up);
+                    builder.AddVertex(new Vector3(xx - 0.5f, height, -yy - 0.5f), uv, Vector3.up);
+                    builder.EndConvex();
 
-                    i += AddEdge(island, builder, x, y, -1, 0, ColorEdge + colorOffset);
-                    i += AddEdge(island, builder, x, y, 1, 0, ColorEdge + colorOffset);
-                    i += AddEdge(island, builder, x, y, 0, 1, ColorEdge + colorOffset);
-                    i += AddEdge(island, builder, x, y, 0, -1, ColorEdge + colorOffset);
+                    AddEdge(island, builder, x, y, -1, 0, ColorEdge + colorOffset);
+                    AddEdge(island, builder, x, y, 1, 0, ColorEdge + colorOffset);
+                    AddEdge(island, builder, x, y, 0, 1, ColorEdge + colorOffset);
+                    AddEdge(island, builder, x, y, 0, -1, ColorEdge + colorOffset);
                 }
+            }
 
-            var prefoamVerts = builder.Verts.Count;
-            var prefoamIndex = builder.Triangles.Count; 
             AddFoam(island, builder);
-            
-            var mesh = new Mesh();
-            mesh.vertices = builder.Verts.ToArray();
-            mesh.triangles = builder.Triangles.ToArray();
-            mesh.normals = builder.Normals.ToArray();
-            mesh.uv = builder.UV.ToArray();
+
+            var mesh = builder.ToMesh();
             mesh.name = "IslandMesh";
-            mesh.UploadMeshData(false);
-
-            mesh.subMeshCount = 2;
-            mesh.SetSubMesh(0, new UnityEngine.Rendering.SubMeshDescriptor { baseVertex = 0, firstVertex = 0, indexCount = prefoamIndex, indexStart = 0, vertexCount = prefoamVerts });
-            mesh.SetSubMesh(1, new UnityEngine.Rendering.SubMeshDescriptor { baseVertex = 0, firstVertex = prefoamVerts, indexCount = builder.Triangles.Count - prefoamIndex, indexStart = prefoamIndex, vertexCount = builder.Verts.Count - prefoamVerts });
-
             return mesh;
         }
 
         private static void AddFoam(IslandMesh island, MeshBuilder builder)
         {
+            builder.BeginSubmesh();
+
             for(var i=0; i<IslandMesh.GridIndexMax; i++)
             {
                 if (!island.IsTile(i, IslandTile.Water))
@@ -379,73 +332,37 @@ namespace NoZ.Zisle
             var normal = (-offset).ToVector3XZ().normalized;
             var position = island.IndexToWorld(index) + new Vector3(offset.x * 0.5f, 0.0f, offset.y * 0.5f);
             var right = Vector3.Cross(normal, Vector3.up);
+            var height = Vector3.up * TileToHeight[(int)IslandTile.Water];
 
-            var v = builder.Verts.Count;
-            builder.Verts.Add(position + right * 0.5f + Vector3.up * FoamHeight);
-            builder.Verts.Add(position + right * (0.5f + leftMitre) + normal * FoamSize + Vector3.up * FoamHeight);
-            builder.Verts.Add(position - right * (0.5f + rightMitre) + normal * FoamSize + Vector3.up * FoamHeight);
-            builder.Verts.Add(position - right * 0.5f + Vector3.up * FoamHeight);
-
-            builder.UV.Add(new Vector2(1.0f, 1.0f));
-            builder.UV.Add(new Vector2(1.0f, 0.0f));
-            builder.UV.Add(new Vector2(0.0f, 0.0f));
-            builder.UV.Add(new Vector2(0.0f, 1.0f));
-
-            builder.Normals.Add(Vector3.up);
-            builder.Normals.Add(Vector3.up);
-            builder.Normals.Add(Vector3.up);
-            builder.Normals.Add(Vector3.up);
-
-
-            builder.Triangles.Add(v + 1);
-            builder.Triangles.Add(v + 2);
-            builder.Triangles.Add(v + 0);
-            builder.Triangles.Add(v + 0);
-            builder.Triangles.Add(v + 2);
-            builder.Triangles.Add(v + 3);
+            builder.BeginConvex();
+            builder.AddVertex(position + right * 0.5f + height, new Vector2(1.0f, 1.0f), Vector3.up);
+            builder.AddVertex(position + right * (0.5f + leftMitre) + normal * FoamSize + height, new Vector2(1.0f, 0.0f), Vector3.up);
+            builder.AddVertex(position - right * (0.5f + rightMitre) + normal * FoamSize + height, new Vector2(0.0f, 0.0f), Vector3.up);
+            builder.AddVertex(position - right * 0.5f + height, new Vector2(0.0f, 1.0f), Vector3.up);
+            builder.EndConvex();
         }
 
-        private static int AddEdge(IslandMesh island, MeshBuilder builder, int x, int y, int xdir, int ydir, int color)
+        private static void AddEdge(IslandMesh island, MeshBuilder builder, int x, int y, int xdir, int ydir, int color)
         {
             var tile = island.GetTile(new Vector2Int(x, y));
             var neighbor = island.GetTile(new Vector2Int(x + xdir, y + ydir));
             if (neighbor == IslandTile.Grass || tile == neighbor)
-                return 0;
+                return;
 
             var n = new Vector3(xdir, 0.0f, -ydir);
-            var p = Vector3.Cross(n, Vector3.up);
+            var hn = n * 0.5f;
+            var p = Vector3.Cross(n, Vector3.up) * 0.5f;
             var c = new Vector3(x - 6, 0, -(y - 6));
-            var s = Vector3.up * (tile == IslandTile.Path ? PathHeight : 0.0f);
-            var d = Vector3.up * EdgeHeight;
-            var i = builder.Verts.Count;
-
-            builder.Normals.Add(n);
-            builder.Normals.Add(n);
-            builder.Normals.Add(n);
-            builder.Normals.Add(n);
-
-            n *= 0.5f;
-            p *= 0.5f;
-
-            builder.Verts.Add(c + n + p + s);
-            builder.Verts.Add(c + n - p + s);
-            builder.Verts.Add(c + n - p + d);
-            builder.Verts.Add(c + n + p + d);
+            var s = Vector3.up * TileToHeight[(int)tile];
+            var d = Vector3.up * TileToHeight[(int)IslandTile.Water];
 
             var uv = new Vector2(0, color);
-            builder.UV.Add(uv);
-            builder.UV.Add(uv);
-            builder.UV.Add(uv);
-            builder.UV.Add(uv);
-
-            builder.Triangles.Add(i + 2);
-            builder.Triangles.Add(i + 1);
-            builder.Triangles.Add(i);
-            builder.Triangles.Add(i + 3);
-            builder.Triangles.Add(i + 2);
-            builder.Triangles.Add(i);
-
-            return 4;
+            builder.BeginConvex();
+            builder.AddVertex(c + hn + p + d, uv, n);
+            builder.AddVertex(c + hn - p + d, uv, n);
+            builder.AddVertex(c + hn - p + s, uv, n);
+            builder.AddVertex(c + hn + p + s, uv, n);
+            builder.EndConvex();
         }
     }
 }
