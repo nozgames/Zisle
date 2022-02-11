@@ -25,8 +25,16 @@
                 <Label name="player-island" text="0,0" class="row-value"/>
             </VisualElement>
             <VisualElement class="row">
+                <Label text="Island.Next" class="row-name"/>
+                <Label name="player-island-next" text="0,0" class="row-value"/>
+            </VisualElement>
+            <VisualElement class="row">
                 <Label text="Tile" class="row-name"/>
                 <Label name="player-tile" text="0,0" class="row-value"/>
+            </VisualElement>
+            <VisualElement class="row">
+                <Label text="Path Node" class="row-name"/>
+                <Label name="player-tile-path" text="0,0" class="row-value"/>
             </VisualElement>
         </VisualElement>
     </zisle:UIDebugController>

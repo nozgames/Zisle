@@ -23,12 +23,18 @@ namespace NoZ.Zisle
             public Quaternion Rotation;
         }
 
+        public struct PathNode
+        {
+            public bool IsPath;
+            public Vector2Int To;
+        }
+
         private NetworkVariable<IslandVisibility> _islandVisibility = new NetworkVariable<IslandVisibility> ();
 
         private IslandCell[] _cells = null;
         private List<SpawnPoint> _spawnPoints = new List<SpawnPoint>();
-
         private Island[] _islands = new Island[IslandGrid.IndexMax];
+        private PathNode[] _pathMap = new PathNode[TileGrid.IndexMax];
 
         public bool HasIslands { get; private set; }
 
@@ -36,7 +42,7 @@ namespace NoZ.Zisle
 
         public int WaveEnemyRemainingCount { get; set; }
 
-        public int WaveEnemyCount { get; set; } = 6;
+        public int WaveEnemyCount { get; set; } = 0;
 
         public static Game Instance => GameManager.Instance.Game;
 
@@ -60,7 +66,7 @@ namespace NoZ.Zisle
                 Debug.Log("Islands Generated as Host");
                 HasIslands = true;
 
-                StartCoroutine(SpawnWaves());
+                //StartCoroutine(SpawnWaves());
             }
             else
             {
@@ -140,7 +146,7 @@ namespace NoZ.Zisle
                 // Instatiate the island itself
                 var island = Instantiate(_clientIslandPrefab, transform).GetComponent<Island>();
                 _islands[IslandGrid.CellToIndex(cell.Position)] = island;
-                island.Bind(biome.Islands[cell.IslandIndex], cell.Position, biome, cell.Rotation);
+                island.Bind(biome.Islands[cell.IslandIndex], cell.Position, biome, cell.Rotation, cell.Position != IslandGrid.CenterCell ? CellToIsland(cell.To) : null);
 
                 // Spawn client bridge for navmesh
                 if (cell.Position != IslandGrid.CenterCell && biome.Bridge != null)
@@ -288,5 +294,16 @@ namespace NoZ.Zisle
 
             return island.WorldToTile(position);
         }
+
+        public void SetPathMap (Vector2Int from, Vector2Int to)
+        {
+            _pathMap[TileGrid.CellToIndex(from)] = new PathNode { IsPath = true, To = to };
+        }
+
+        public PathNode WorldToPathNode(Vector3 position) =>
+            _pathMap[TileGrid.WorldToIndex(position)];
+
+        public Vector3 WorldToPathMapDestination (Vector3 position) =>
+            TileGrid.CellToWorld(WorldToPathNode(position).To);
     }
 }

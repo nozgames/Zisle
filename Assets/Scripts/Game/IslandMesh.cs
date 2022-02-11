@@ -63,7 +63,7 @@ namespace NoZ.Zisle
         /// </summary>
         public IslandTile GetTile(Vector2Int cell)
         {
-            if (cell.x < GridMin || cell.y < GridMin || cell.x > GridMax || cell.y > GridMax)
+            if (!IsValidCell(cell))
                 return IslandTile.None;
 
             return _tiles[CellToIndex(cell)];
@@ -100,6 +100,12 @@ namespace NoZ.Zisle
         public bool IsValidIndex(int index) => index >= 0 && index < GridIndexMax;
 
         /// <summary>
+        /// Returns true if the given cell is a valid coordinate within the mesh
+        /// </summary>
+        public bool IsValidCell(Vector2Int cell) =>
+            cell.x >= GridMin && cell.y >= GridMin && cell.x <= GridMax && cell.y <= GridMax;
+
+        /// <summary>
         /// Returns true if the tile at <paramref name="index"/> with the <paramref name="offset"/> matches the <paramref name="tile"/>
         /// </summary>
         public bool IsTile(int index, Vector2Int offset, IslandTile tile) =>
@@ -118,13 +124,19 @@ namespace NoZ.Zisle
         /// <summary>
         /// Converts the given cell coordinate to a world coordinate
         /// </summary>
-        public static Vector3 CellToWorld(Vector2Int cell) =>
+        public static Vector3 CellToLocal(Vector2Int cell) =>
             new Vector3(cell.x - GridCenter, 0, -(cell.y - GridCenter));
 
         /// <summary>
         /// Convert a grid array index to a world coordinate
         /// </summary>
-        public static Vector3 IndexToWorld(int index) => CellToWorld(IndexToCell(index));
+        public static Vector3 IndexToLocal(int index) => CellToLocal(IndexToCell(index));
+
+        /// <summary>
+        /// Convert a local island coordinate to a cell
+        /// </summary>
+        public static Vector2Int LocalToCell (Vector3 local) =>
+            new Vector2Int(Mathf.RoundToInt(local.x + GridCenter), Mathf.RoundToInt(GridCenter - local.z));
 
         /// <summary>
         /// Rotate a connection mask by 90 * <paramref name="count"/> degrees counter clockwise 

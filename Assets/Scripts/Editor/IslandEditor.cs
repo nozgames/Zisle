@@ -268,7 +268,7 @@ namespace NoZ.Zisle
                 if (tile == IslandTile.Water)
                     continue;
 
-                var world = IslandMesh.CellToWorld(cell);
+                var world = IslandMesh.CellToLocal(cell);
                 var color = TileToColor[(int)tile];
                 var colorOffset = (cell.x % 2) == (cell.y % 2) ? 1 : 0;
                 var uv = new Vector2(0, color + colorOffset);
@@ -330,7 +330,7 @@ namespace NoZ.Zisle
             var leftMitre = GetFoamMitre(island, cell, dir, dir.Rotate(1));
 
             var edgeNormal = -dir.ToWorld();
-            var edgeCenter = IslandMesh.CellToWorld(cell) - edgeNormal * 0.5f;
+            var edgeCenter = IslandMesh.CellToLocal(cell) - edgeNormal * 0.5f;
             var edgePerpendicular = Vector3.Cross(edgeNormal, Vector3.up);
             var edgeHeight = Vector3.up * TileToHeight[(int)IslandTile.Water];
 
@@ -347,13 +347,13 @@ namespace NoZ.Zisle
             var tile = island.GetTile(cell);
             var neighbor = island.GetTile(cell + dir.ToOffset());
 
-            if(neighbor != IslandTile.None && TileToHeight[(int)neighbor] > TileToHeight[(int)tile])
+            if(neighbor != IslandTile.None && TileToHeight[(int)neighbor] >= TileToHeight[(int)tile])
                 return;
 
             var normal = dir.ToWorld();
             var halfNormal = normal * 0.5f;
             var perpendicular = Vector3.Cross(normal, Vector3.up) * 0.5f;
-            var center = IslandMesh.CellToWorld(cell);
+            var center = IslandMesh.CellToLocal(cell);
             var top = Vector3.up * TileToHeight[(int)tile];
             var bottom = Vector3.up * TileToHeight[(int)IslandTile.Water];
 
