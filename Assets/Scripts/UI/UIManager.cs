@@ -311,7 +311,7 @@ namespace NoZ.Zisle
                 // Instatiate the island itself
                 var island = Instantiate(
                     _backgroundIslandPrefab,
-                    WorldGenerator.CellToWorld(cell.Position),
+                    IslandGrid.CellToWorld(cell.Position),
                     Quaternion.Euler(0, 90 * cell.Rotation, 0), 
                     _backgroundIslands);
                 island.GetComponent<MeshFilter>().sharedMesh = islandPrefab.GetComponent<MeshFilter>().sharedMesh;
@@ -323,8 +323,8 @@ namespace NoZ.Zisle
                 // TODO: eventaully need to spawn just the mesh if bridge is networked
                 if (cell.Position != Vector2Int.zero && biome.Bridge != null)
                 {
-                    var from = WorldGenerator.CellToWorld(cell.Position);
-                    var to = WorldGenerator.CellToWorld(cell.To);
+                    var from = IslandGrid.CellToWorld(cell.Position);
+                    var to = IslandGrid.CellToWorld(cell.To);
 
                     var bridge = new GameObject();
                     Instantiate(biome.Bridge.GetComponentInChildren<MeshFilter>().gameObject, bridge.transform);

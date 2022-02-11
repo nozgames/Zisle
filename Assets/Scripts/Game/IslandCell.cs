@@ -49,10 +49,10 @@ namespace NoZ.Zisle
                 using (var bitWriter = writer.EnterBitwiseContext())
                 {
                     bitWriter.WriteBits((byte)BiomeId, 5);
-                    bitWriter.WriteBits((byte)(Position.x + WorldGenerator.GridCenter), 4);
-                    bitWriter.WriteBits((byte)(Position.y + WorldGenerator.GridCenter), 4);
-                    bitWriter.WriteBits((byte)(To.x + WorldGenerator.GridCenter), 4);
-                    bitWriter.WriteBits((byte)(To.y + WorldGenerator.GridCenter), 4);
+                    bitWriter.WriteBits((byte)Position.x, 4);
+                    bitWriter.WriteBits((byte)Position.y, 4);
+                    bitWriter.WriteBits((byte)To.x, 4);
+                    bitWriter.WriteBits((byte)To.y, 4);
                     bitWriter.WriteBits((byte)Rotation, 2);
                 }
             }
@@ -76,12 +76,12 @@ namespace NoZ.Zisle
                     // Position
                     bitreader.ReadBits(out x, 4);
                     bitreader.ReadBits(out y, 4);
-                    Position = new Vector2Int((int)x - WorldGenerator.GridCenter, (int)y - WorldGenerator.GridCenter);
+                    Position = new Vector2Int((int)x, (int)y);
 
                     // To
                     bitreader.ReadBits(out x, 4);
                     bitreader.ReadBits(out y, 4);
-                    To = new Vector2Int((int)x - WorldGenerator.GridCenter, (int)y - WorldGenerator.GridCenter);
+                    To = new Vector2Int((int)x, (int)y);
 
                     // Rotation
                     bitreader.ReadBits(out b, 2);

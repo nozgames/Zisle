@@ -5,15 +5,18 @@ using UnityEngine.UIElements;
 
 namespace NoZ.Zisle
 {
+    /// <summary>
+    /// Custom editor for designing the look and feel of the island.
+    /// </summary>
     [CustomEditor(typeof(IslandMesh))]
     public class IslandEditor : Editor
     {
         private const float FoamSize = 0.3f;
-        private const int ColorEdge = 2;
-
-        private static readonly float[] TileToColor = new float[] { 0, 0, 4 };
-        private static readonly float[] TileToHeight = new float[] { -0.2f, 0, -0.05f };
-        private static readonly string[] TileToClass = new string[] { "water", "grass", "path" };
+        private const int ColorEdge = 0;
+        
+        private static readonly float[] TileToColor = new float[] { 0, 2, 4, 6, 8 };
+        private static readonly float[] TileToHeight = new float[] { -0.2f, -0.05f, 0, 0.05f, 0.1f };
+        private static readonly string[] TileToClass = new string[] { "water", "path", "grass", "grass2", "grass3" };
 
         [MenuItem("Zisle/Regenerate Islands Meshes")]
         private static void RegenerateAllMeshes()
@@ -59,33 +62,39 @@ namespace NoZ.Zisle
 
             var island = (target as IslandMesh);
             var tiles = island.Tiles;
+            var gridSize = IslandMesh.GridSize + 2;
+            var gridMin = 0;
+            var gridMax = gridSize - 1;
+            var gridCenter = gridSize / 2;
                       
-            for (int y=0; y<13; y++)
+            for (int y=0; y< gridSize; y++)
             {
                 var row = new VisualElement();
                 row.AddToClassList("grid-row");
-                for (int x=0; x<13; x++)
+                for (int x=0; x< gridSize; x++)
                 {
                     var col = new VisualElement();
                     col.AddToClassList("grid-col");                    
                     row.Add(col);
 
-                    var tile = island.GetTile(new Vector2Int(x, y));
-
-                    if (x != 0 && y != 0 && y != 12 && x != 12)
+                    if(x == gridMin || x == gridMax || y == gridMin || y == gridMax)
                     {
-                        var position = new Vector2Int(x, y);
-                        col.RegisterCallback<MouseDownEvent>((evt) => OnTileClick(col, position));
-                        col.RegisterCallback<MouseEnterEvent>((evt) =>
-                        {
-                            if ((evt.pressedButtons & 1) == 1)
-                                OnTileClick(col, position);
-                        });
+                        col.AddToClassList(TileToClass[(int)IslandTile.Water]);
+                        continue;
                     }
+
+                    var cell = new Vector2Int(x - 1, y - 1);
+                    var tile = island.GetTile(cell);
+                    col.RegisterCallback<MouseDownEvent>((evt) => OnTileClick(col, cell));
+                    col.RegisterCallback<MouseEnterEvent>((evt) =>
+                    {
+                        if ((evt.pressedButtons & 1) == 1)
+                            OnTileClick(col, cell);
+                    });
 
                     col.AddToClassList(TileToClass[(int)tile]);
 
-                    if ((x == 6 && (y == 1 || y == 11)) || (y == 6 && (x == 1 || x == 11)))
+                    if ((x == gridCenter && (y == gridMin + 1 || y == gridMax - 1)) || (y == gridCenter && (x == gridMin + 1 || x == gridMax - 1)))
                     {
                         var border = new VisualElement();
                         border.AddToClassList("connection");
@@ -159,12 +168,12 @@ namespace NoZ.Zisle
             var dirty = false;
             var island = (target as IslandMesh);
 
-            if (island.Tiles == null || island.Tiles.Length != 13 * 13)
+            if (island.Tiles == null || island.Tiles.Length != IslandMesh.GridIndexMax)
             {
-                var tiles = new IslandTile[13 * 13];
-                for (int y = 0, i = 0; y < 13; y++)
-                    for (int x = 0; x < 13; x++, i++)
-                        tiles[i] = (x > 0 && x < 12 && y > 0 && y < 12) ? IslandTile.Grass : IslandTile.Water;
+                var tiles = new IslandTile[IslandMesh.GridIndexMax];
+                for (int y = 0, i = 0; y < IslandMesh.GridSize; y++)
+                    for (int x = 0; x < IslandMesh.GridSize; x++, i++)
+                        tiles[i] = IslandTile.Grass;
 
                 island.Tiles = tiles;
                 dirty = true;
@@ -218,9 +227,9 @@ namespace NoZ.Zisle
             if (null == filter)
                 return;
 
-            if(filter.sharedMesh != null)
-                foreach(var mesh in AssetDatabase.LoadAllAssetsAtPath(path).Select(a => a as Mesh).Where(m => m != null))
-                    AssetDatabase.RemoveObjectFromAsset(mesh);
+            // Remove old meshes
+            foreach(var mesh in AssetDatabase.LoadAllAssetsAtPath(path).Select(a => a as Mesh).Where(m => m != null))
+                AssetDatabase.RemoveObjectFromAsset(mesh);
 
             filter.sharedMesh = GenerateMesh(island);
             
@@ -246,123 +255,158 @@ namespace NoZ.Zisle
         /// </summary>
         private static Mesh GenerateMesh (IslandMesh island)
         {
-            if (island.Tiles.Length != IslandMesh.GridSize * IslandMesh.GridSize)
+            if (island.Tiles.Length != IslandMesh.GridIndexMax)
                 return null;
 
             var builder = new MeshBuilder();
             builder.BeginSubmesh();
 
-            for (int y = 1; y < IslandMesh.GridSize - 1; y++)
+            for(int index=0; index<IslandMesh.GridIndexMax; index++)
             {
-                for (int x = 1; x < IslandMesh.GridSize - 1; x++)
-                {
-                    var tile = island.GetTile(new Vector2Int(x, y));
-                    if (tile == IslandTile.Water)
-                        continue;
+                var cell = IslandMesh.IndexToCell(index);
+                var tile = island.GetTile(index);
+                if (tile == IslandTile.Water)
+                    continue;
 
-                    var xx = x - 6;
-                    var yy = y - 6;
-                    var color = TileToColor[(int)tile];
-                    var colorOffset = (x % 2) == (y % 2) ? 1 : 0;
-                    var uv = new Vector2(0, color + colorOffset);
-                    var height = TileToHeight[(int)tile];                    
+                var world = IslandMesh.CellToWorld(cell);
+                var color = TileToColor[(int)tile];
+                var colorOffset = (cell.x % 2) == (cell.y % 2) ? 1 : 0;
+                var uv = new Vector2(0, color + colorOffset);
+                var height = TileToHeight[(int)tile];                    
 
-                    builder.BeginConvex();
-                    builder.AddVertex(new Vector3(xx - 0.5f, height, -yy + 0.5f), uv, Vector3.up);
-                    builder.AddVertex(new Vector3(xx + 0.5f, height, -yy + 0.5f), uv, Vector3.up);
-                    builder.AddVertex(new Vector3(xx + 0.5f, height, -yy - 0.5f), uv, Vector3.up);
-                    builder.AddVertex(new Vector3(xx - 0.5f, height, -yy - 0.5f), uv, Vector3.up);
-                    builder.EndConvex();
+                builder.BeginConvex();
+                builder.AddVertex(new Vector3(world.x - 0.5f, height, world.z + 0.5f), uv, Vector3.up);
+                builder.AddVertex(new Vector3(world.x + 0.5f, height, world.z + 0.5f), uv, Vector3.up);
+                builder.AddVertex(new Vector3(world.x + 0.5f, height, world.z - 0.5f), uv, Vector3.up);
+                builder.AddVertex(new Vector3(world.x - 0.5f, height, world.z - 0.5f), uv, Vector3.up);
+                builder.EndConvex();
 
-                    AddEdge(island, builder, x, y, -1, 0, ColorEdge + colorOffset);
-                    AddEdge(island, builder, x, y, 1, 0, ColorEdge + colorOffset);
-                    AddEdge(island, builder, x, y, 0, 1, ColorEdge + colorOffset);
-                    AddEdge(island, builder, x, y, 0, -1, ColorEdge + colorOffset);
-                }
+                // Add edges on all 4 sides
+                for(var dir=0; dir<4; dir++)
+                    AddEdge(island, builder, cell, (CardinalDirection)dir, ColorEdge + colorOffset);
             }
 
-            AddFoam(island, builder);
+            // Add foam for the full grid, including the outside edges
+            builder.BeginSubmesh();
+            for (int y = -1; y <= IslandMesh.GridSize; y++)
+                for (int x = -1; x <= IslandMesh.GridSize; x++)
+                {
+                    var tile = island.GetTile(new Vector2Int(x, y));
+                    if (tile != IslandTile.Water && tile != IslandTile.None)
+                        continue;
+
+                    for (int dir = 0; dir < 4; dir++)
+                        AddFoam(island, builder, new Vector2Int(x, y), (CardinalDirection)dir);
+                }
 
             var mesh = builder.ToMesh();
             mesh.name = "IslandMesh";
             return mesh;
         }
 
-        private static void AddFoam(IslandMesh island, MeshBuilder builder)
+        private static float GetFoamMitre (IslandMesh island, Vector2Int cell, CardinalDirection dir, CardinalDirection perpendicularDir)
         {
-            builder.BeginSubmesh();
-
-            for(var i=0; i<IslandMesh.GridIndexMax; i++)
-            {
-                if (!island.IsTile(i, IslandTile.Water))
-                    continue;
-
-                AddFoam(island, builder, i, new Vector2Int( 1, 0));
-                AddFoam(island, builder, i, new Vector2Int(-1, 0));
-                AddFoam(island, builder, i, new Vector2Int( 0, 1));
-                AddFoam(island, builder, i, new Vector2Int( 0,-1));
-            }
-        }
-
-        private static float GetFoamMitre (IslandMesh island, int index, Vector2Int offset, int side)
-        {
-            var perpendicular = new Vector2Int(offset.y, -offset.x) * side;
-            var nearTile = island.GetTile(index, perpendicular);
-            if (nearTile != IslandTile.Water)
+            var offset = dir.ToOffset();
+            var perpendicular = perpendicularDir.ToOffset();
+            var nearTile = island.GetTile(cell + perpendicular);
+            if (nearTile != IslandTile.Water && nearTile != IslandTile.None)
                 return -FoamSize;
 
-            var diagonalTile = island.GetTile(index, offset + perpendicular);
-            if (diagonalTile == IslandTile.Water)
+            var diagonalTile = island.GetTile(cell + offset + perpendicular);
+            if (diagonalTile == IslandTile.Water || diagonalTile == IslandTile.None)
                 return FoamSize;
 
             return 0.0f;
         }
 
-        private static void AddFoam (IslandMesh island, MeshBuilder builder, int index, Vector2Int offset)
+        private static void AddFoam (IslandMesh island, MeshBuilder builder, Vector2Int cell, CardinalDirection dir)
         {
-            var tile = island.GetTile(index, offset);
-            if (tile == IslandTile.Water || tile == IslandTile.None)
+            // Get the neighbor tile in the cardinal direction
+            var neighbor = island.GetTile(cell + dir.ToOffset());
+            if (neighbor == IslandTile.Water || neighbor == IslandTile.None)
                 return;
 
-            var rightMitre = GetFoamMitre(island, index, offset, 1);
-            var leftMitre = GetFoamMitre(island, index, offset, -1);
+            var rightMitre = GetFoamMitre(island, cell, dir, dir.Rotate(3));
+            var leftMitre = GetFoamMitre(island, cell, dir, dir.Rotate(1));
 
-            offset.y *= -1;
-
-            var normal = (-offset).ToVector3XZ().normalized;
-            var position = island.IndexToWorld(index) + new Vector3(offset.x * 0.5f, 0.0f, offset.y * 0.5f);
-            var right = Vector3.Cross(normal, Vector3.up);
-            var height = Vector3.up * TileToHeight[(int)IslandTile.Water];
+            var edgeNormal = -dir.ToWorld();
+            var edgeCenter = IslandMesh.CellToWorld(cell) - edgeNormal * 0.5f;
+            var edgePerpendicular = Vector3.Cross(edgeNormal, Vector3.up);
+            var edgeHeight = Vector3.up * TileToHeight[(int)IslandTile.Water];
 
             builder.BeginConvex();
-            builder.AddVertex(position + right * 0.5f + height, new Vector2(1.0f, 1.0f), Vector3.up);
-            builder.AddVertex(position + right * (0.5f + leftMitre) + normal * FoamSize + height, new Vector2(1.0f, 0.0f), Vector3.up);
-            builder.AddVertex(position - right * (0.5f + rightMitre) + normal * FoamSize + height, new Vector2(0.0f, 0.0f), Vector3.up);
-            builder.AddVertex(position - right * 0.5f + height, new Vector2(0.0f, 1.0f), Vector3.up);
+            builder.AddVertex(edgeCenter + edgePerpendicular * 0.5f + edgeHeight, new Vector2(1.0f, 1.0f), Vector3.up);
+            builder.AddVertex(edgeCenter + edgePerpendicular * (0.5f + leftMitre) + edgeNormal * FoamSize + edgeHeight, new Vector2(1.0f, 0.0f), Vector3.up);
+            builder.AddVertex(edgeCenter - edgePerpendicular * (0.5f + rightMitre) + edgeNormal * FoamSize + edgeHeight, new Vector2(0.0f, 0.0f), Vector3.up);
+            builder.AddVertex(edgeCenter - edgePerpendicular * 0.5f + edgeHeight, new Vector2(0.0f, 1.0f), Vector3.up);
             builder.EndConvex();
         }
 
-        private static void AddEdge(IslandMesh island, MeshBuilder builder, int x, int y, int xdir, int ydir, int color)
+        private static void AddEdge(IslandMesh island, MeshBuilder builder, Vector2Int cell, CardinalDirection dir, int color)
         {
-            var tile = island.GetTile(new Vector2Int(x, y));
-            var neighbor = island.GetTile(new Vector2Int(x + xdir, y + ydir));
-            if (neighbor == IslandTile.Grass || tile == neighbor)
+            var tile = island.GetTile(cell);
+            var neighbor = island.GetTile(cell + dir.ToOffset());
+
+            if(neighbor != IslandTile.None && TileToHeight[(int)neighbor] > TileToHeight[(int)tile])
                 return;
 
-            var n = new Vector3(xdir, 0.0f, -ydir);
-            var hn = n * 0.5f;
-            var p = Vector3.Cross(n, Vector3.up) * 0.5f;
-            var c = new Vector3(x - 6, 0, -(y - 6));
-            var s = Vector3.up * TileToHeight[(int)tile];
-            var d = Vector3.up * TileToHeight[(int)IslandTile.Water];
+            var normal = dir.ToWorld();
+            var halfNormal = normal * 0.5f;
+            var perpendicular = Vector3.Cross(normal, Vector3.up) * 0.5f;
+            var center = IslandMesh.CellToWorld(cell);
+            var top = Vector3.up * TileToHeight[(int)tile];
+            var bottom = Vector3.up * TileToHeight[(int)IslandTile.Water];
 
             var uv = new Vector2(0, color);
             builder.BeginConvex();
-            builder.AddVertex(c + hn + p + d, uv, n);
-            builder.AddVertex(c + hn - p + d, uv, n);
-            builder.AddVertex(c + hn - p + s, uv, n);
-            builder.AddVertex(c + hn + p + s, uv, n);
+            builder.AddVertex(center + halfNormal + perpendicular + bottom, uv, normal);
+            builder.AddVertex(center + halfNormal - perpendicular + bottom, uv, normal);
+            builder.AddVertex(center + halfNormal - perpendicular + top, uv, normal);
+            builder.AddVertex(center + halfNormal + perpendicular + top, uv, normal);
             builder.EndConvex();
+        }
+
+        private struct PathMapNode
+        {
+            public Vector2Int from;
+            public Vector2Int position;
+            public int cost;
+        }
+
+        private void GeneratePathMap (IslandMesh islandMesh)
+        {
+#if false
+            var nodes = new PathMapNode[IslandMesh.GridIndexMax];
+            var center = new Vector2Int(IslandMesh.GridCenter, IslandMesh.GridCenter);
+            var queue = new Queue<Vector2Int>();
+
+            for (int i=0; i<4; i++)
+            {
+                // Skip if there is no connection for this direction
+                if (!islandMesh.HasConnection((CardinalDirection)i))
+                    continue;
+
+                for(int j=0; j < IslandMesh.GridIndexMax; j++)
+                    nodes[j] = new PathMapNode();
+
+                queue.Enqueue(center + ((CardinalDirection)i).ToOffset() * (IslandMesh.GridCenter - 1));
+
+                while (queue.Count > 0)
+                {
+                    var position = queue.Dequeue();
+                    ref var node = ref nodes[IslandMesh.PositionToIndex(position)];
+                    //if(node.cost == 0)
+                    //closed[IslandMesh.PositionToIndex(position)] = true;
+                }
+            }
+
+            
+            
+
+            // TODO: for each tile we need 8 bits, 2 bits for each island exit saying which tile to go to next if following the path
+
+            // TODO: for each exit of the tile run a simple astar algorithm to determine the best path 
+#endif
         }
     }
 }

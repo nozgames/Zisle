@@ -7,8 +7,10 @@ namespace NoZ.Zisle
     public enum IslandTile
     {
         Water,
-        Grass,
         Path,
+        Grass,
+        Grass2,
+        Grass3,
 
         None = 255
     }
@@ -21,12 +23,13 @@ namespace NoZ.Zisle
     [RequireComponent(typeof(MeshRenderer))]
     public class IslandMesh : NetworkBehaviour, ISerializationCallbackReceiver
     {
-        public const int GridSize = 13;
-        public const int GridCenter = 6;
-        public const int GridIndexMax = GridSize * GridSize;
-
-
         [SerializeField] private IslandTile[] _tiles = null;
+
+        public const int GridSize = 11;
+        public const int GridMin = 0;
+        public const int GridCenter = GridSize / 2;
+        public const int GridMax = GridSize - 1;
+        public const int GridIndexMax = GridSize * GridSize;
 
         /// <summary>
         /// Position of the island within the island grid
@@ -49,33 +52,32 @@ namespace NoZ.Zisle
         public uint ConnectionMask { get; private set; }
 
         /// <summary>
-        /// Return the index of the tile at the given position within the tile array
+        /// Returns true if the island has a connection in the given cardinal direction
         /// </summary>
-        private int GetTileIndex(Vector2Int position) => position.x + position.y * 13;
-
-        /// <summary>
-        /// Return the tile position of the given tile index
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
-        public Vector2Int IndexToPosition (int index) => new Vector2Int (index % GridSize, index / GridSize);
-
-        /// <summary>
-        /// Converts a tile index to a world coordinate relative to the island
-        /// </summary>
-        public Vector3 IndexToWorld(int index)
-        {
-            var v = (IndexToPosition(index) - new Vector2Int(GridCenter, GridCenter)).ToVector3XZ();
-            v.z *= -1;
-            return v;
-        }
-        
+        /// <param name="dir">Cardinal direction</param>
+        /// <returns>True if there is a valid connection the given cardinal direction</returns>
+        public bool HasConnection (CardinalDirection dir) => (dir.ToMask() & ConnectionMask) != 0;
 
         /// <summary>
         /// Return the tile at the given position
         /// </summary>
-        public IslandTile GetTile(Vector2Int position) => _tiles[GetTileIndex(position)];
+        public IslandTile GetTile(Vector2Int cell)
+        {
+            if(cell.x < GridMin || cell.y < GridMin || cell.x > GridMax || cell.y > GridMax)
+                return IslandTile.None;
+
+            return _tiles[CellToIndex(cell)];
+        }
+
+        /// <summary>
+        /// Return the tile at the given grid index
+        /// </summary>
+        public IslandTile GetTile(int index) => GetTile(index, Vector2Int.zero);
+
+        /// <summary>
+        /// Return the tile at <paramref name="index"/> offset by <paramref name="offset"/>
+        /// </summary>
+        public IslandTile GetTile(int index, Vector2Int offset) => GetTile(IndexToCell(index) + offset);
 
         /// <summary>
         /// Returns true if the given tile matches the actual tile at the given position
@@ -90,25 +92,46 @@ namespace NoZ.Zisle
         /// <summary>
         /// Set the tile at the given position
         /// </summary>
-        public void SetTile(Vector2Int position, IslandTile tile) => _tiles[GetTileIndex(position)] = tile;
+        public void SetTile(Vector2Int cell, IslandTile tile) => _tiles[CellToIndex(cell)] = tile;
 
-        public IslandTile GetTile(int index) => _tiles[index];
-
-        public IslandTile GetTile (int index, Vector2Int offset)
-        {
-            index += offset.x;
-            index += offset.y * GridSize;
-            if (!IsValidIndex(index))
-                return IslandTile.None;
-
-            return _tiles[index];
-        }
-
+        /// <summary>
+        /// Returns true if the given index is within the Island Mesh
+        /// </summary>
         public bool IsValidIndex(int index) => index >= 0 && index < GridIndexMax;
 
+        /// <summary>
+        /// Returns true if the tile at <paramref name="index"/> with the <paramref name="offset"/> matches the <paramref name="tile"/>
+        /// </summary>
         public bool IsTile(int index, Vector2Int offset, IslandTile tile) =>
             GetTile(index, offset) == tile;
 
+        /// <summary>
+        /// Convert a grid cell to a grid array index
+        /// </summary>
+        public static int CellToIndex (Vector2Int cell) => cell.x + cell.y * GridSize;
+
+        /// <summary>
+        /// Convert a grid array index to a cell
+        /// </summary>
+        public static Vector2Int IndexToCell(int index) => new Vector2Int(index % GridSize, index / GridSize);
+
+        /// <summary>
+        /// Converts the given cell coordinate to a world coordinate
+        /// </summary>
+        public static Vector3 CellToWorld(Vector2Int cell) =>
+            new Vector3(cell.x - GridCenter, 0, -(cell.y - GridCenter));
+
+        /// <summary>
+        /// Convert a grid array index to a world coordinate
+        /// </summary>
+        public static Vector3 IndexToWorld(int index) => CellToWorld(IndexToCell(index));
+
+        /// <summary>
+        /// Rotate a connection mask by 90 * <paramref name="count"/> degrees counter clockwise 
+        /// </summary>
+        /// <param name="mask">Mask to rotate</param>
+        /// <param name="count">Number of times to rotate</param>
+        /// <returns>New mask</returns>
         public static uint RotateMask (uint mask, int count)
         {
             mask = mask << (count % 4);
@@ -122,10 +145,10 @@ namespace NoZ.Zisle
         public void OnAfterDeserialize()
         {
             ConnectionMask =
-                (IsTile(new Vector2Int(1, 6), IslandTile.Path) ? CardinalDirection.West.ToMask() : 0) |
-                (IsTile(new Vector2Int(11, 6), IslandTile.Path) ? CardinalDirection.East.ToMask() : 0) |
-                (IsTile(new Vector2Int(6, 1), IslandTile.Path) ? CardinalDirection.North.ToMask() : 0) |
-                (IsTile(new Vector2Int(6, 11), IslandTile.Path) ? CardinalDirection.South.ToMask() : 0);
+                (IsTile(new Vector2Int(GridMin, GridCenter), IslandTile.Path) ? CardinalDirection.West.ToMask() : 0) |
+                (IsTile(new Vector2Int(GridMax, GridCenter), IslandTile.Path) ? CardinalDirection.East.ToMask() : 0) |
+                (IsTile(new Vector2Int(GridCenter, GridMin), IslandTile.Path) ? CardinalDirection.North.ToMask() : 0) |
+                (IsTile(new Vector2Int(GridCenter, GridMax), IslandTile.Path) ? CardinalDirection.South.ToMask() : 0);
         }
 
         public struct IslandRotation

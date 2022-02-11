@@ -13,9 +13,6 @@ namespace NoZ.Zisle
 
 #if UNITY_EDITOR
         private void OnValidate() => UpdateProperties();
-
-        [InitializeOnLoadMethod]
-        private void UpdatePropertiesOnLoade() => UpdateProperties();
 #endif
 
         private void OnEnable() => UpdateProperties();

@@ -27,13 +27,8 @@ namespace NoZ.Zisle
     /// </summary>
     public class WorldGenerator
     {
-        public const int GridSize = 16;
-        public const int GridIndexMax = GridSize * GridSize;
-        public const int GridCenter = GridSize / 2;
-        public const int GridCenterIndex = GridCenter + GridCenter * GridSize;
-
-        private List<Cell> _cells = new List<Cell>();
-        private Cell[] _cellGrid = new Cell[GridSize * GridSize];
+        private List<Cell> _cells;
+        private Cell[] _cellGrid;
 
         [System.Serializable]
         public struct Options
@@ -94,7 +89,7 @@ namespace NoZ.Zisle
         public IslandCell[] Generate (Options options)
         {
             _cells = new List<Cell>();
-            _cellGrid = new Cell[GridSize * GridSize];
+            _cellGrid = new Cell[IslandGrid.IndexMax];
 
             GenerateCells(options);
     
@@ -114,7 +109,7 @@ namespace NoZ.Zisle
                 return new IslandCell
                 {
                     Position = c.Position,
-                    To = c.From?.Position ?? Vector2Int.zero,
+                    To = c.From?.Position ?? IslandGrid.CenterCell,
                     Level = c.Level,
                     BiomeId = c.Biome.NetworkId,
                     IslandIndex = islandIndex,
@@ -129,29 +124,11 @@ namespace NoZ.Zisle
 
             return result;
         }
-
-        /// <summary>
-        /// Returns true if the given position is a valid cell in the cell grid
-        /// </summary>
-        private bool IsValidCell(Vector2Int position) =>
-            GetCellIndex(position) >= 0 && GetCellIndex(position) < _cellGrid.Length;
-
-        /// <summary>
-        /// Return the world coordinate for the given cell coordinate
-        /// </summary>
-        public static Vector3 CellToWorld(Vector2Int position) =>
-            new Vector3(position.x * 12.0f, 0, position.y * -12.0f);
-
-        /// <summary>
-        /// Return the index of the cell at the given position within the cell grid
-        /// </summary>
-        public static int GetCellIndex(Vector2Int position) =>
-            GridCenterIndex + position.x + position.y * GridSize;
-        
+       
         /// <summary>
         /// Return the cell at the given position
         /// </summary>
-        private Cell GetCell(Vector2Int position) => _cellGrid[GetCellIndex(position)];
+        private Cell GetCell(Vector2Int position) => _cellGrid[IslandGrid.CellToIndex(position)];
 
         /// <summary>
         /// Add a new cell at the given position 
@@ -162,7 +139,7 @@ namespace NoZ.Zisle
 
             var cell = new Cell { Biome = biome, Position = position };
             _cells.Add(cell);
-            _cellGrid[GetCellIndex(position)] = cell;
+            _cellGrid[IslandGrid.CellToIndex(position)] = cell;
 
             // Add connection masks if coming from another cell
             if(from != null)
@@ -195,7 +172,7 @@ namespace NoZ.Zisle
             var homeBiome = homeBiomes[Random.Range(0, homeBiomes.Length)];
 
             // Queue the home cell
-            var home = AddCell(Vector2Int.zero, null, homeBiome);
+            var home = AddCell(IslandGrid.CenterCell, null, homeBiome);
             queue.Enqueue(home);
 
             // Fill all cells until we are done
@@ -214,7 +191,7 @@ namespace NoZ.Zisle
 
                     // Choose a random number of forks
                     var forkCount = 0;
-                    if (cell.Position == Vector2Int.zero)
+                    if (cell.Position == IslandGrid.CenterCell)
                         forkCount = options.StartingLanes;
                     else
                         forkCount = WeightedRandom.RandomWeightedIndex(options.GetForkWeights(), 0, forks.Count + 1, (f) => f);
@@ -277,7 +254,7 @@ namespace NoZ.Zisle
 
                 // Skip this path if it is off the grid
                 var position = cell.Position + dir.ToOffset();
-                if (!IsValidCell(position))
+                if (!IslandGrid.IsValidCell(position))
                     continue;
 
                 // If there is already a cell at the this position then we cannot fork that direction

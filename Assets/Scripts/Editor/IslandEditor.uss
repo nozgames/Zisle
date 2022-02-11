@@ -33,7 +33,15 @@
 }
 
 .grass {
-	background-color: #74ba49;
+	background-color: #8ecf52;
+}
+
+.grass2 {
+	background-color: #a5d975;
+}
+
+.grass3 {
+	background-color: #acdc80;
 }
 
 .water {

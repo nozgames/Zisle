@@ -29,9 +29,9 @@ namespace NoZ.Zisle
         public Biome Biome { get; set; }
 
         /// <summary>
-        /// Return the index on the island grid
+        /// Return the island grid array index
         /// </summary>
-        public int GridIndex => WorldGenerator.GetCellIndex(Cell);
+        public int GridIndex => IslandGrid.CellToIndex (Cell);
 
         public void AddBridge(Bridge prefab, Vector3 position, Quaternion rotation, Island to)
         {

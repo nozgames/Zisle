@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.AI.Navigation;
-using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -29,7 +28,7 @@ namespace NoZ.Zisle
         private IslandCell[] _cells = null;
         private List<SpawnPoint> _spawnPoints = new List<SpawnPoint>();
 
-        private Island[] _islands = new Island[WorldGenerator.GridIndexMax];
+        private Island[] _islands = new Island[IslandGrid.IndexMax];
 
         public bool HasIslands { get; private set; }
 
@@ -115,17 +114,17 @@ namespace NoZ.Zisle
         /// <summary>
         /// Convert a world position to a tile cell
         /// </summary>
-        public Vector2Int WorldToTileCell(Vector3 position) => new Vector2Int((int)position.x, (int)position.z);
+        public static Vector2Int WorldToTileCell(Vector3 position) => new Vector2Int((int)position.x, (int)position.z);
 
         /// <summary>
         /// Convert a tile cell to a world position
         /// </summary>
-        public Vector3 TileCellToWorld(Vector2Int cell) => new Vector3((int)cell.x, 0.0f, (int)cell.y);
+        public static Vector3 TileCellToWorld(Vector2Int cell) => new Vector3((int)cell.x, 0.0f, (int)cell.y);
 
         /// <summary>
         /// Return the island at the given island cell
         /// </summary>
-        public Island GetIsland(Vector2Int cell) => _islands[WorldGenerator.GetCellIndex(cell)];
+        public Island GetIsland(Vector2Int cell) => _islands[IslandGrid.CellToIndex(cell)];
 
         private void SpawnIslandMeshes ()
         {
@@ -142,7 +141,7 @@ namespace NoZ.Zisle
                 // Instatiate the island itself
                 var island = Instantiate(
                     _clientIslandPrefab,
-                    WorldGenerator.CellToWorld(cell.Position),
+                    IslandGrid.CellToWorld(cell.Position),
                     Quaternion.Euler(0, 90 * cell.Rotation, 0), transform).GetComponent<Island>();
 
                 var mesh = islandPrefab.GetComponent<MeshFilter>().sharedMesh;
@@ -153,13 +152,13 @@ namespace NoZ.Zisle
                 island.Cell = cell.Position;
                 island.Biome = biome;
 
-                _islands[WorldGenerator.GetCellIndex(cell.Position)] = island;
+                _islands[IslandGrid.CellToIndex(cell.Position)] = island;
 
                 // Bridge navmeshes
-                if (cell.Position != Vector2Int.zero && biome.Bridge != null)
+                if (cell.Position != IslandGrid.CenterCell && biome.Bridge != null)
                 {
-                    var from = WorldGenerator.CellToWorld(cell.Position);
-                    var to = WorldGenerator.CellToWorld(cell.To);
+                    var from = IslandGrid.CellToWorld(cell.Position);
+                    var to = IslandGrid.CellToWorld(cell.To);
                     Instantiate(_clientBridgePrefab, (from + to) * 0.5f, Quaternion.LookRotation((to - from).normalized, Vector3.up), transform);
                 }
             }
@@ -195,10 +194,10 @@ namespace NoZ.Zisle
                         island.AddSpawner(spawner);
 
                 // Create bridge links 
-                if(cell.Position != Vector2Int.zero)
+                if(cell.Position != IslandGrid.CenterCell)
                 { 
-                    var from = WorldGenerator.CellToWorld(cell.Position);
-                    var to = WorldGenerator.CellToWorld(cell.To);
+                    var from = IslandGrid.CellToWorld(cell.Position);
+                    var to = IslandGrid.CellToWorld(cell.To);
                     var bridgePos = (from + to) * 0.5f;
                     var bridgeRot = Quaternion.LookRotation((to - from).normalized, Vector3.up);
                     GetIsland(cell.To).AddBridge(biome.Bridge, bridgePos, bridgeRot, island);
@@ -208,7 +207,7 @@ namespace NoZ.Zisle
 
         public void Play()
         {
-            GetIsland(Vector2Int.zero).RiseFromTheDeep();
+            GetIsland(IslandGrid.CenterCell).RiseFromTheDeep();
         }
 
         public void BuildNavMesh()
@@ -224,7 +223,7 @@ namespace NoZ.Zisle
         private void OnIslandVisibilityChanged (IslandVisibility oldValue, IslandVisibility newValue)
         {
             // Determine which islands are visible
-            for(int i=0; i<WorldGenerator.GridIndexMax; i++)
+            for(int i=0; i<IslandGrid.IndexMax; i++)
             {
                 if(oldValue.IsVisible(i) != newValue.IsVisible(i))
                     _islands[i].RiseFromTheDeep();
