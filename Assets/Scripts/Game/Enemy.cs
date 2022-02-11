@@ -11,6 +11,8 @@ namespace NoZ.Zisle
     {
         [SerializeField] private float _updateRate = 1.0f;
 
+        private Game.PathNode _lastPath;
+
         protected override void Awake()
         {
             base.Awake();
@@ -26,6 +28,8 @@ namespace NoZ.Zisle
             if (IsHost)
             {
                 StartCoroutine(UpdateTarget());
+
+                _lastPath = new Game.PathNode { IsPath = true, To = new Vector2Int(-1000,-1000)};
             }
 
             NavAgent.enabled = true;
@@ -51,14 +55,31 @@ namespace NoZ.Zisle
                 var player = FindNearestPlayer();
                 if (null != player)
                 {
-                    transform.rotation = Quaternion.LookRotation((player.transform.position.ZeroY() - transform.position.ZeroY()), Vector3.up);
+                    
 
                     var playerDist = (player.transform.position.ZeroY() - transform.position.ZeroY()).sqrMagnitude;
                     if (playerDist >= (NavAgent.stoppingDistance * NavAgent.stoppingDistance))
                     {
                         //                        NavAgent.SetDestination(player.transform.position.ZeroY());
                     }
-                    NavAgent.SetDestination(player.transform.position.ZeroY());
+
+                    // Follow the path!
+                    var currentPath = Game.Instance.WorldToPathNode(transform.position);
+                    if(currentPath.IsPath && (_lastPath.To != currentPath.To || !_lastPath.IsPath))
+                    {
+                        NavAgent.SetDestination(TileGrid.CellToWorld(currentPath.To).ZeroY()); // player.transform.position.ZeroY());
+                        NavAgent.stoppingDistance = 0.001f;
+                        _lastPath = currentPath;
+                    }
+                    else if (_lastPath.IsPath && !currentPath.IsPath)
+                    {
+                        _lastPath = new Game.PathNode();
+                        NavAgent.stoppingDistance = 0.9f;
+                        NavAgent.SetDestination(Vector3.zero);
+                    }
+
+                    // TODO: smooth this out a bit
+                    transform.rotation = Quaternion.LookRotation((NavAgent.destination.ZeroY() - transform.position.ZeroY()), Vector3.up);
                 }
 
                 yield return wait;

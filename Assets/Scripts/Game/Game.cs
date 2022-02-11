@@ -42,7 +42,7 @@ namespace NoZ.Zisle
 
         public int WaveEnemyRemainingCount { get; set; }
 
-        public int WaveEnemyCount { get; set; } = 0;
+        public int WaveEnemyCount { get; set; } = 1;
 
         public static Game Instance => GameManager.Instance.Game;
 
@@ -66,7 +66,7 @@ namespace NoZ.Zisle
                 Debug.Log("Islands Generated as Host");
                 HasIslands = true;
 
-                //StartCoroutine(SpawnWaves());
+                StartCoroutine(SpawnWaves());
             }
             else
             {
