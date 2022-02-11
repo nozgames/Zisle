@@ -51,9 +51,9 @@ namespace NoZ.Zisle
             UIManager.Instance.StartCoroutine(UpdateFloatingText());
         }
 
-        public override void Show()
+        public override void OnBeforeTransitionIn()
         {
-            base.Show();
+            base.OnBeforeTransitionIn();
 
             _joinCode.text = MultiplayerManager.Instance.JoinCode;
         }

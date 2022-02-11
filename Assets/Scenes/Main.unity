@@ -162,7 +162,7 @@ MonoBehaviour:
   _globalShaderProperties: {fileID: 11400000, guid: f19531f68fec71f438eb1c31e8311a05,
     type: 2}
   _camera: {fileID: 1403908677}
-  _cameraYaw: 45
+  _cameraYaw: 135
   _cameraPitch: -45
   _cameraZoom: 20
   _cameraZoomMin: 5
@@ -452,6 +452,8 @@ MonoBehaviour:
   _inputActions: {fileID: -944628639613478452, guid: 92783038ce5d74148b556e04433c7c93,
     type: 3}
   _uiClose: {fileID: -1518867730989686174, guid: 92783038ce5d74148b556e04433c7c93,
+    type: 3}
+  _uiDebug: {fileID: -2874456454418019026, guid: 92783038ce5d74148b556e04433c7c93,
     type: 3}
   _playerYaw: 180
   _playerMenu: {fileID: 1755185687716959511, guid: 92783038ce5d74148b556e04433c7c93,

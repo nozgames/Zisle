@@ -14,6 +14,7 @@ namespace NoZ.Zisle
 
         [Header("UI")]
         [SerializeField] private InputActionReference _uiClose = null;
+        [SerializeField] private InputActionReference _uiDebug = null;
 
         [Header("Player")]
         [SerializeField] private float _playerYaw = 180.0f;
@@ -90,6 +91,8 @@ namespace NoZ.Zisle
             _playerMenu.action.started += (ctx) => onPlayerMenu?.Invoke();
             //_debugMenu.action.started += (ctx) => onDebugMenu?.Invoke();
             _uiClose.action.started += (ctx) => OnUIClose?.Invoke();
+            _uiDebug.action.started += (ctx) => UIManager.Instance.ToggleDebug();
+            _uiDebug.action.Enable();
 
             //_playerZoom.action.performed += (ctx) => OnPlayerZoom?.Invoke(ctx.ReadValue<float>());
 
@@ -105,7 +108,7 @@ namespace NoZ.Zisle
         {
             if (enable)
             {
-                _uiClose.action.Enable();
+                _uiClose.action.Enable();                
             }
             else
             {

@@ -124,7 +124,8 @@ namespace NoZ.Zisle
         /// <summary>
         /// Return the island at the given island cell
         /// </summary>
-        public Island GetIsland(Vector2Int cell) => _islands[IslandGrid.CellToIndex(cell)];
+        public Island CellToIsland(Vector2Int cell) => _islands[IslandGrid.CellToIndex(cell)];
+
 
         private void SpawnIslandMeshes ()
         {
@@ -136,25 +137,12 @@ namespace NoZ.Zisle
                 if (biome == null)
                     throw new System.InvalidProgramException($"Biome id {cell.BiomeId} not found");
 
-                var islandPrefab = biome.Islands[cell.IslandIndex];
-
                 // Instatiate the island itself
-                var island = Instantiate(
-                    _clientIslandPrefab,
-                    IslandGrid.CellToWorld(cell.Position),
-                    Quaternion.Euler(0, 90 * cell.Rotation, 0), transform).GetComponent<Island>();
-
-                var mesh = islandPrefab.GetComponent<MeshFilter>().sharedMesh;
-                var meshRenderer = island.GetComponent<MeshRenderer>();
-                island.GetComponent<MeshFilter>().sharedMesh = mesh;
-                island.GetComponent<MeshCollider>().sharedMesh = mesh;
-                meshRenderer.sharedMaterials = new Material[] { biome.Material, meshRenderer.sharedMaterials[1] };
-                island.Cell = cell.Position;
-                island.Biome = biome;
-
+                var island = Instantiate(_clientIslandPrefab, transform).GetComponent<Island>();
                 _islands[IslandGrid.CellToIndex(cell.Position)] = island;
+                island.Bind(biome.Islands[cell.IslandIndex], cell.Position, biome, cell.Rotation);
 
-                // Bridge navmeshes
+                // Spawn client bridge for navmesh
                 if (cell.Position != IslandGrid.CenterCell && biome.Bridge != null)
                 {
                     var from = IslandGrid.CellToWorld(cell.Position);
@@ -186,7 +174,7 @@ namespace NoZ.Zisle
                 if (biome == null)
                     throw new System.InvalidProgramException($"Biome id {cell.BiomeId} not found");
 
-                var island = GetIsland(cell.Position);
+                var island = CellToIsland(cell.Position);
                 var islandPrefab = biome.Islands[cell.IslandIndex];
 
                 foreach (var spawner in islandPrefab.GetComponentsInChildren<ActorSpawner>())
@@ -200,14 +188,14 @@ namespace NoZ.Zisle
                     var to = IslandGrid.CellToWorld(cell.To);
                     var bridgePos = (from + to) * 0.5f;
                     var bridgeRot = Quaternion.LookRotation((to - from).normalized, Vector3.up);
-                    GetIsland(cell.To).AddBridge(biome.Bridge, bridgePos, bridgeRot, island);
+                    CellToIsland(cell.To).AddBridge(biome.Bridge, bridgePos, bridgeRot, island);
                 }
             }            
         }
 
         public void Play()
         {
-            GetIsland(IslandGrid.CenterCell).RiseFromTheDeep();
+            CellToIsland(IslandGrid.CenterCell).RiseFromTheDeep();
         }
 
         public void BuildNavMesh()
@@ -275,6 +263,30 @@ namespace NoZ.Zisle
                 while (WaveEnemyRemainingCount >= WaveEnemyCount)
                     yield return null;
             }
+        }
+
+        /// <summary>
+        /// Convert a world coordinate into an island, null if there is no island at that world coordinate
+        /// </summary>
+        public Island WorldToIsland (Vector3 position)
+        {
+            var cell = IslandGrid.WorldToCell(position);
+            if (!IslandGrid.IsValidCell(cell))
+                return null; ;
+
+            return _islands[IslandGrid.CellToIndex(cell)];
+        }
+
+        /// <summary>
+        /// Convert a world coordinate to a tile on an island
+        /// </summary>
+        public IslandTile WorldToTile(Vector3 position)
+        {
+            var island = WorldToIsland(position);
+            if(island == null)
+                return IslandTile.None;
+
+            return island.WorldToTile(position);
         }
     }
 }

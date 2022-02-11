@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="UnityEngine.UIElements"
+    xmlns:engine="UnityEngine.UIElements"
+    xmlns:editor="UnityEditor.UIElements"
+    xmlns:zisle="NoZ.Zisle"
+    xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
+>
+    <Style src="project://database/Assets/UI/Debug.uss" />
+    <zisle:UIDebugController class="screen" pickingMode="ignore">
+        <VisualElement class="panel">
+            <Label text="Server" class="row-header"/>
+            <VisualElement class="row">
+                <Label text="Connection" class="row-name"/>
+                <Label name="server-connection" text="" class="row-value"/>
+            </VisualElement>
+            <VisualElement class="row">
+                <Label text="Join Code" class="row-name"/>
+                <Label name="server-joincode" text="" class="row-value"/>
+            </VisualElement>
+            <Label text="Player" class="row-header"/>
+            <VisualElement class="row">
+                <Label text="Island" class="row-name"/>
+                <Label name="player-island" text="0,0" class="row-value"/>
+            </VisualElement>
+            <VisualElement class="row">
+                <Label text="Tile" class="row-name"/>
+                <Label name="player-tile" text="0,0" class="row-value"/>
+            </VisualElement>
+        </VisualElement>
+    </zisle:UIDebugController>
+</engine:UXML>

@@ -52,15 +52,11 @@ namespace NoZ.Zisle
             action?.Invoke();
         }
 
-        public override void Show()
+        public override void OnBeforeTransitionIn()
         {
-            base.Show();
+            base.OnBeforeTransitionIn();
 
-            if (_onCancel == null)
-                _cancel.AddToClassList("hidden");
-            else
-                _cancel.RemoveFromClassList("hidden");
-
+            _cancel.EnableInClassList("hidden", _onCancel == null);
             _yes.Focus();
         }
     }

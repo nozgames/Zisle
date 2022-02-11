@@ -7,9 +7,7 @@ using Unity.Services.Relay;
 using System.Collections.Generic;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
-using System;
 using static Unity.Netcode.NetworkManager;
-using Unity.AI.Navigation;
 
 namespace NoZ.Zisle
 {
@@ -42,6 +40,7 @@ namespace NoZ.Zisle
         private Vector3 _cameraOffset;
         private List<PlayerController> _players = new List<PlayerController>();
         private GameOptions _options = null;
+        private string _connection;
 
         /// <summary>
         /// Optional join code if the connection was to a relay server
@@ -54,9 +53,19 @@ namespace NoZ.Zisle
         public bool HasJoinCode => !string.IsNullOrEmpty(JoinCode);
 
         /// <summary>
-        /// Local player connected to the lobby
+        /// Controller for local player connected to the lobby
         /// </summary>
-        public PlayerController LocalPlayer { get; private set; }
+        public PlayerController LocalPlayerController { get; private set; }
+
+        /// <summary>
+        /// Connection string used to join the lobby
+        /// </summary>
+        public string Connection => _connection ?? "";
+
+        /// <summary>
+        /// Local player in the game
+        /// </summary>
+        public Player LocalPlayer => LocalPlayerController == null ? null : LocalPlayerController.Player;
 
         public GlobalShaderProperties GlobalShaderProperties => _globalShaderProperties;
 
@@ -171,7 +180,7 @@ namespace NoZ.Zisle
         private void OnPlayerConnected(object sender, PlayerConnected evt)
         {
             if (evt.PlayerController.IsLocalPlayer)
-                LocalPlayer = evt.PlayerController;
+                LocalPlayerController = evt.PlayerController;
 
             _players.Add(evt.PlayerController);
         }
@@ -179,7 +188,7 @@ namespace NoZ.Zisle
         private void OnPlayerDisconnected(object sender, PlayerDisconnected evt)
         {
             if (evt.PlayerController.IsLocalPlayer)
-                LocalPlayer = null;
+                LocalPlayerController = null;
 
             _players.Remove(evt.PlayerController);
         }
@@ -279,7 +288,7 @@ namespace NoZ.Zisle
                 NetworkManager.Singleton.StartHost();
 
                 // Wait for the local player to connect
-                while (LocalPlayer == null)
+                while (LocalPlayerController == null)
                     yield return null;
 
                 // Spawn the game options and wait for it 
@@ -318,7 +327,7 @@ namespace NoZ.Zisle
                 NetworkManager.Singleton.StartClient();
 
                 // Wait until we see ourself join and the options spawns
-                while (NetworkManager.Singleton.IsClient && (LocalPlayer == null || _options == null))
+                while (NetworkManager.Singleton.IsClient && (LocalPlayerController == null || _options == null))
                     yield return null;
 
                 Debug.Log("Local Player Connected");
@@ -355,6 +364,8 @@ namespace NoZ.Zisle
                     allocation.Key,
                     allocation.ConnectionData);
 
+                _connection = JoinCode;
+
                 yield break;
             }
 
@@ -365,6 +376,8 @@ namespace NoZ.Zisle
                 var ip = colon == -1 ? connection : connection.Substring(0, colon);
                 var port = colon == -1 ? 7777 : (int.TryParse(connection.Substring(colon + 1), out var parsed) ? parsed : 7777);
                 _transport.SetConnectionData(ip, (ushort)port);
+
+                _connection = connection;
             }
             // Join code
             else
@@ -386,6 +399,8 @@ namespace NoZ.Zisle
                     allocation.Key,
                     allocation.ConnectionData,
                     allocation.HostConnectionData);
+
+                _connection = JoinCode;
             }
         }
 

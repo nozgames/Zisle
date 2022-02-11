@@ -36,9 +36,9 @@ namespace NoZ.Zisle
             UIManager.Instance.ShowGame();
         }
 
-        public override void Show()
+        public override void OnBeforeTransitionIn()
         {
-            base.Show();
+            base.OnBeforeTransitionIn();
 
             this.Q("resume").Focus();
         }

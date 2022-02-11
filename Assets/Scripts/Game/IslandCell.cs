@@ -36,7 +36,7 @@ namespace NoZ.Zisle
         /// <summary>
         /// Rotation of the island
         /// </summary>
-        public int Rotation;
+        public CardinalDirection Rotation;
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
@@ -85,7 +85,7 @@ namespace NoZ.Zisle
 
                     // Rotation
                     bitreader.ReadBits(out b, 2);
-                    Rotation = b;
+                    Rotation = (CardinalDirection)b;
                 }
             }
         }

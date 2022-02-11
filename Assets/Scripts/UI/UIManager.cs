@@ -61,6 +61,7 @@ namespace NoZ.Zisle
             UIController<UIGameMenu>.Bind(_root).Hide();
             UIController<UITitleController>.Bind(_root).Hide();
             UIController<UILobbyController>.Bind(_root).Hide();
+            UIController<UIDebugController>.Bind(_root).Hide();
 
             InputManager.Instance.OnUIClose += () => _activeController.OnNavigationBack();
 
@@ -312,7 +313,7 @@ namespace NoZ.Zisle
                 var island = Instantiate(
                     _backgroundIslandPrefab,
                     IslandGrid.CellToWorld(cell.Position),
-                    Quaternion.Euler(0, 90 * cell.Rotation, 0), 
+                    Quaternion.Euler(0, 90 * (int)cell.Rotation, 0), 
                     _backgroundIslands);
                 island.GetComponent<MeshFilter>().sharedMesh = islandPrefab.GetComponent<MeshFilter>().sharedMesh;
 
@@ -343,6 +344,11 @@ namespace NoZ.Zisle
                 Destroy(_backgroundIslands.GetChild(i).gameObject);
 
             _background.gameObject.SetActive(false);
+        }
+
+        public void ToggleDebug ()
+        {
+            UIController<UIDebugController>.Instance.Toggle();
         }
     }
 }

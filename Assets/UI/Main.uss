@@ -15,6 +15,7 @@
     --font-size-large: 50px;
     --font-size-title: 70px;
     --font-definition-normal: url("project://database/Assets/Fonts/Bidan-Pll7.ttf");
+    --font-definition-fixed: url("project://database/Assets/Fonts/CONSOLA.ttf");
     --image-rounded-border: url("project://database/Assets/RoundedBorder.png");
 }
 

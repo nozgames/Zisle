@@ -375,6 +375,9 @@ namespace NoZ.Zisle
 
         private void GeneratePathMap (IslandMesh islandMesh)
         {
+            var dir = CardinalDirection.West;
+            var tile = islandMesh.GetTile(new Vector2Int(IslandMesh.GridCenter - dir.ToOffset().x * IslandMesh.GridCenter, IslandMesh.GridCenter - dir.ToOffset().y * IslandMesh.GridCenter));
+
 #if false
             var nodes = new PathMapNode[IslandMesh.GridIndexMax];
             var center = new Vector2Int(IslandMesh.GridCenter, IslandMesh.GridCenter);

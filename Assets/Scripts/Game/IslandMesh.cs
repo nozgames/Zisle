@@ -63,7 +63,7 @@ namespace NoZ.Zisle
         /// </summary>
         public IslandTile GetTile(Vector2Int cell)
         {
-            if(cell.x < GridMin || cell.y < GridMin || cell.x > GridMax || cell.y > GridMax)
+            if (cell.x < GridMin || cell.y < GridMin || cell.x > GridMax || cell.y > GridMax)
                 return IslandTile.None;
 
             return _tiles[CellToIndex(cell)];
@@ -155,7 +155,7 @@ namespace NoZ.Zisle
         {
             public IslandMesh Island;
             public uint Mask;
-            public int Rotation;
+            public CardinalDirection Rotation;
         }
 
         public IEnumerable<IslandRotation> GetRotations ()
@@ -166,7 +166,7 @@ namespace NoZ.Zisle
                 {
                     Island = this,
                     Mask = RotateMask(ConnectionMask, i),
-                    Rotation = i
+                    Rotation = (CardinalDirection)i
                 };
             }
         }

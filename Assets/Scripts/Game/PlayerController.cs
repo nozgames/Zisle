@@ -19,6 +19,8 @@ namespace NoZ.Zisle
 
         public bool IsDisconnecting { get; private set; }
 
+        public Player Player => _player;
+
         /// <summary>
         /// True if the player is ready to start the game
         /// </summary>
@@ -84,8 +86,8 @@ namespace NoZ.Zisle
         {
             if (evt.Player.OwnerClientId == this.OwnerClientId)
             {
-                _player = evt.Player;
-                Debug.Log("Local PlayerController connected to Player");
+                _player = null;
+                Debug.Log("Local PlayerController disconnected from Player");
             }
         }
 
@@ -93,8 +95,8 @@ namespace NoZ.Zisle
         {
             if (evt.Player.OwnerClientId == this.OwnerClientId)
             {
-                _player = null;
-                Debug.Log("Local PlayerController disconnected from Player");
+                _player = evt.Player;
+                Debug.Log("Local PlayerController connected to Player");
             }
         }
 
@@ -109,7 +111,6 @@ namespace NoZ.Zisle
 
             // TODO: orientation
             _player = Instantiate(actorDef.Prefab).GetComponent<Player>();
-            _player.Controller = this;
             _player.NetworkObject.SpawnWithOwnership(this.OwnerClientId);
         }
 

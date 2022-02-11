@@ -55,7 +55,7 @@ namespace NoZ.Zisle
         /// Converts the given world coordinate to a grid cell
         /// </summary>
         public static Vector2Int WorldToCell(Vector3 world) =>
-            new Vector2Int((int)(world.x + Center + 0.5f), -(int)(world.z  + Center + 0.5f));
+            new Vector2Int((int)(world.x + 0.5f) + Center, (int)(-world.z + 0.5f) + Center);
 
         /// <summary>
         /// Converts the given world coordintate to a grid array index

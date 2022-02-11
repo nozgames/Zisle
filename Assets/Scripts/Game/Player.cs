@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using NoZ.Events;
+using System.Linq;
 
 namespace NoZ.Zisle
 {
@@ -15,7 +16,7 @@ namespace NoZ.Zisle
 
         public static List<Player> All { get; private set; } = new List<Player> ();
 
-        public PlayerController Controller { get; set; }
+        public PlayerController Controller { get; private set; }
 
         public override void OnNetworkSpawn()
         {
@@ -24,6 +25,8 @@ namespace NoZ.Zisle
             name = $"Player{OwnerClientId}";
 
             All.Add(this);
+
+            Controller = GameManager.Instance.Players.Where(p => p.OwnerClientId == OwnerClientId).FirstOrDefault();
 
             NavAgent.updateRotation = false;
 

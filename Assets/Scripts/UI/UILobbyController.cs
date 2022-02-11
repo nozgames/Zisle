@@ -46,7 +46,7 @@ namespace NoZ.Zisle
 
                 SetPlayerClassLeft(_playerClasses[index]);
 
-                GameManager.Instance.LocalPlayer.PlayerClassId = _playerClasses[index].NetworkId;
+                GameManager.Instance.LocalPlayerController.PlayerClassId = _playerClasses[index].NetworkId;
             });
 
             BindClick("player-class-next", () =>
@@ -59,7 +59,7 @@ namespace NoZ.Zisle
 
                 SetPlayerClassLeft(_playerClasses[index]);
 
-                GameManager.Instance.LocalPlayer.PlayerClassId = _playerClasses[index].NetworkId;
+                GameManager.Instance.LocalPlayerController.PlayerClassId = _playerClasses[index].NetworkId;
             });
 
             BindClick("ready", () =>
@@ -68,8 +68,8 @@ namespace NoZ.Zisle
                     UIManager.Instance.StartGame();
                 else
                 {
-                    GameManager.Instance.LocalPlayer.IsReady = !GameManager.Instance.LocalPlayer.IsReady;
-                    this.Q<Button>("ready").text = GameManager.Instance.LocalPlayer.IsReady ? "Cancel" : "Ready";
+                    GameManager.Instance.LocalPlayerController.IsReady = !GameManager.Instance.LocalPlayerController.IsReady;
+                    this.Q<Button>("ready").text = GameManager.Instance.LocalPlayerController.IsReady ? "Cancel" : "Ready";
                 }
             });
         }
@@ -144,8 +144,8 @@ namespace NoZ.Zisle
             {
                 UpdateRemotePlayer();
 
-                if(GameManager.Instance.LocalPlayer != null)
-                    GameManager.Instance.LocalPlayer.IsReady = false;
+                if(GameManager.Instance.LocalPlayerController != null)
+                    GameManager.Instance.LocalPlayerController.IsReady = false;
             }
 
             UpdateReadyButton();
@@ -158,7 +158,7 @@ namespace NoZ.Zisle
             if (GameManager.Instance.MaxPlayers == 1)
                 this.Q<Button>("ready").text = "Play";
             else
-                this.Q<Button>("ready").text = (GameManager.Instance.LocalPlayer != null && GameManager.Instance.LocalPlayer.IsReady) ? "Cancel" : "Ready";
+                this.Q<Button>("ready").text = (GameManager.Instance.LocalPlayerController != null && GameManager.Instance.LocalPlayerController.IsReady) ? "Cancel" : "Ready";
         }
 
         private void UpdateRemotePlayer()

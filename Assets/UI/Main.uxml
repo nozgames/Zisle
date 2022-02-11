@@ -19,6 +19,7 @@
     <ui:Template name="GameMenu" src="GameMenu.uxml" />
     <ui:Template name="ConfirmPopup" src="ConfirmPopup.uxml" />
     <ui:Template name="Lobby" src="Lobby.uxml" />
+    <ui:Template name="Debug" src="Debug.uxml" />
 
     <VisualElement class="root">
         <VisualElement class="main-background"/>
@@ -30,10 +31,11 @@
         <ui:Instance template="Cooperative" class="screen hidden"/>
         <ui:Instance template="CooperativeJoin" class="screen hidden"/>
         <ui:Instance template="Loading" class="screen hidden"/>
-        <ui:Instance template="Lobby" class="screen"/>
+        <ui:Instance template="Lobby" class="screen hidden"/>
         <ui:Instance template="Game" class="screen hidden"/>
         <ui:Instance template="GameMenu" class="screen hidden"/>
         <ui:Instance template="ConfirmPopup" class="screen hidden"/>
+        <ui:Instance template="Debug" class="screen hidden"  pickingMode="ignore"/>
 
     </VisualElement>
 
