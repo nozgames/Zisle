@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2080bf67900783041b095e835af5af8b, type: 3}
+  m_Name: HorseRun
+  m_EditorClassIdentifier: 
+  _clip: {fileID: 1513717263979871970, guid: 5b7e1160da8705e4ea4d7bec72ed880a, type: 3}
+  _speed: 10
+  _blendTime: 0.1
+  _events: []

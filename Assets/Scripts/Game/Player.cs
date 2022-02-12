@@ -111,8 +111,12 @@ namespace NoZ.Zisle
             else if (IsBusy)
                 moveSpeed = 0.0f;
 
+            var y = transform.position.y;
             if(moveSpeed > 0.0f)
                 MoveTo(InputManager.Instance.PlayerMove * Time.deltaTime * GetAttributeValue(ActorAttribute.Speed) * moveSpeed);
+
+            //transform.position = new Vector3(transform.position.x, y, transform.position.z);
+            SnapToGround();
 
             GameManager.Instance.FrameCamera(transform.position);
         }

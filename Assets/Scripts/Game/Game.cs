@@ -25,6 +25,8 @@ namespace NoZ.Zisle
 
         public struct PathNode
         {
+            public static readonly PathNode Invalid = new PathNode { IsPath = false, To = new Vector2Int(int.MaxValue, int.MaxValue) };
+
             public bool IsPath;
             public Vector2Int To;
         }

@@ -18,12 +18,15 @@ MonoBehaviour:
   _preview: {fileID: 0}
   _baseHealthMax: 100
   _baseHealthRegen: 5
-  _baseSpeed: 3
+  _baseSpeed: 2
   _baseAttack: 60
   _baseAttackSpeed: 1
   _baseDefense: 20
   _baseHarvest: 1
   _baseBuild: 1
   _abilities: []
+  _brains:
+  - {fileID: 11400000, guid: 92fd643ccf983784a850b6b0ff4b0deb, type: 2}
+  - {fileID: 11400000, guid: 11373fd3c1c08a242adaffbeb07c547c, type: 2}
   _spawnWeights:
   - {fileID: 11400000, guid: 26ebaee076b2d8d438b67f0eb50fc085, type: 2}

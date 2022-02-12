@@ -52,6 +52,7 @@ namespace NoZ.Zisle
 
             while(gameObject.activeSelf && !IsDead)
             {
+#if false
                 var player = FindNearestPlayer();
                 if (null != player)
                 {
@@ -81,6 +82,7 @@ namespace NoZ.Zisle
                     // TODO: smooth this out a bit
                     transform.rotation = Quaternion.LookRotation((NavAgent.destination.ZeroY() - transform.position.ZeroY()), Vector3.up);
                 }
+#endif
 
                 yield return wait;
             }

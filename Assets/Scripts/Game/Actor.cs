@@ -47,6 +47,7 @@ namespace NoZ.Zisle
 
         private List<ActorEffect.Context> _effects = new List<ActorEffect.Context>();
         private ActorAttributeValue[] _attributeTable;
+        private IThinkState[] _thinkStates;
         private float _health = 100.0f;
         private BlendedAnimationController _animator;
         private bool _busy;
@@ -281,6 +282,42 @@ namespace NoZ.Zisle
             ResetAttributes();
 
             UpdateAttributes();
+
+            // Allocate the think states
+            _thinkStates = new IThinkState[_actorDefinition.Brains.Length];
+            for (int i = 0; i < _thinkStates.Length; i++)
+                _thinkStates[i] = _actorDefinition.Brains[i].AllocThinkState(this);
+        }
+
+        public override void OnNetworkDespawn()
+        {
+            base.OnNetworkDespawn();
+
+            // Release the think states to allow for pooling
+            for (int i = 0; i < _thinkStates.Length; i++)
+                if(_thinkStates[i] != null)
+                    _actorDefinition.Brains[i].ReleaseThinkState(_thinkStates[i]);
+        }
+
+        public void LookAt(Actor actor) => LookAt(actor.transform.position);
+
+        public void LookAt (Vector3 target)
+        {
+            var delta = (target - transform.position).ZeroY();
+            if (delta.sqrMagnitude < (0.001f * 0.001f))
+                return;
+
+            transform.rotation = Quaternion.LookRotation(delta.normalized, Vector3.up);
+        }
+
+        public void SetDestination (Vector3 destination, bool force=false, float stoppingDistance=0.001f)
+        {
+            if (NavAgent == null || (!force && destination == NavAgent.destination))
+                return;
+
+            NavAgent.stoppingDistance = stoppingDistance;
+            NavAgent.enabled = true;
+            NavAgent.SetDestination(destination);
         }
 
         protected bool ExecuteAbility(ActorAbility ability)
@@ -385,7 +422,7 @@ namespace NoZ.Zisle
 
         protected virtual void Update ()
         {
-            if (!IsSpawned)
+            if (!IsSpawned || Game.Instance == null)
                 return;
 
             // Just to make sure actors never get stuck in the busy state
@@ -400,9 +437,13 @@ namespace NoZ.Zisle
 
             SnapToGround();
             UpdateAnimation();
+
+            for (int i = 0; i < _thinkStates.Length; i++)
+                if (!_actorDefinition.Brains[i].Think(this, _thinkStates[i]))
+                    break;
         }
 
-        private void SnapToGround()
+        public void SnapToGround()
         {
             // Only actors that can move need to snap
             if (NavAgent == null)
@@ -413,7 +454,8 @@ namespace NoZ.Zisle
 
             var ychangemax = Time.deltaTime * 0.01f;
             var ychange = Mathf.Clamp(hit.point.y - transform.position.y, -ychangemax, ychangemax);
-            transform.position += Vector3.up * ychange;
+            //transform.position += Vector3.up * ychange;
+            transform.position = hit.point;
         }
 
         private void UpdateAnimation ()

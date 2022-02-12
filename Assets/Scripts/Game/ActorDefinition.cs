@@ -27,12 +27,20 @@ namespace NoZ.Zisle
         [SerializeField] private ActorAbility[] _abilities = null;
 
         [Space]
+        [SerializeField] private Brain[] _brains = null;
+
+        [Space]
         [SerializeField] private SpawnWeight[] _spawnWeights = null;
 
         /// <summary>
         /// Get the available abilities for this actor
         /// </summary>
         public ActorAbility[] Abilities => _abilities;
+
+        /// <summary>
+        /// Get the actor brains
+        /// </summary>
+        public Brain[] Brains => _brains;
 
         /// <summary>
         /// Get the prefab used to spawn the player
