@@ -8,20 +8,25 @@ namespace NoZ.Zisle
     /// Brain that causes the actor to follow the current path to the home tile.  If the 
     /// Actor is not on a path then path following will resume when a path is encountered again.
     /// </summary>
-    [CreateAssetMenu(menuName = "Zisle/Brains/FollowPath")]
-    public class FollowPath : Brain
+    [CreateAssetMenu(menuName = "Zisle/Lobes/FollowPath")]
+    public class FollowPath : Lobe<FollowPath.ThinkState>
     {
         [Header("Follow Path")]
         [SerializeField] private float _stoppingDistance = 0.2f;
 
-        private class State : IThinkState
+        public class ThinkState : IThinkState
         {
             public Game.PathNode NextPathNode;
+
+            public void OnAlloc(Actor actor) => NextPathNode = Game.PathNode.Invalid;
+            public void OnRelease() { }
         }
 
-        public override bool Think (Actor actor, IThinkState thinkState)
+        public override float CalculateScore(Actor actor, IThinkState state) => 1.0f;
+
+        public override void Think (Actor actor, IThinkState istate)
         {
-            var state = thinkState as State;
+            var state = istate as ThinkState;
 
             // Current path node
             var pathNode = Game.Instance.WorldToPathNode(actor.transform.position);
@@ -56,17 +61,7 @@ namespace NoZ.Zisle
             }
 
             // Look at the path
-            actor.LookAt(actor.NavAgent.destination);
-
-            return true;
-        }
-
-        public override IThinkState AllocThinkState(Actor actor)
-        {
-            return new State
-            {
-                NextPathNode = Game.PathNode.Invalid
-            };
+            actor.LookAt(actor.NavAgent.destination);            
         }
     }
 }

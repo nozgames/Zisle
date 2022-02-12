@@ -47,7 +47,7 @@ namespace NoZ.Zisle
 
         private List<ActorEffect.Context> _effects = new List<ActorEffect.Context>();
         private ActorAttributeValue[] _attributeTable;
-        private IThinkState[] _thinkStates;
+        private IThinkState _thinkState;
         private float _health = 100.0f;
         private BlendedAnimationController _animator;
         private bool _busy;
@@ -283,20 +283,16 @@ namespace NoZ.Zisle
 
             UpdateAttributes();
 
-            // Allocate the think states
-            _thinkStates = new IThinkState[_actorDefinition.Brains.Length];
-            for (int i = 0; i < _thinkStates.Length; i++)
-                _thinkStates[i] = _actorDefinition.Brains[i].AllocThinkState(this);
+            if (_actorDefinition.Brain != null)
+                _thinkState = _actorDefinition.Brain.AllocThinkState(this);
         }
 
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
 
-            // Release the think states to allow for pooling
-            for (int i = 0; i < _thinkStates.Length; i++)
-                if(_thinkStates[i] != null)
-                    _actorDefinition.Brains[i].ReleaseThinkState(_thinkStates[i]);
+            if (_thinkState != null)
+                _actorDefinition.Brain.ReleaseThinkState(_thinkState);
         }
 
         public void LookAt(Actor actor) => LookAt(actor.transform.position);
@@ -438,9 +434,8 @@ namespace NoZ.Zisle
             SnapToGround();
             UpdateAnimation();
 
-            for (int i = 0; i < _thinkStates.Length; i++)
-                if (!_actorDefinition.Brains[i].Think(this, _thinkStates[i]))
-                    break;
+            if(_actorDefinition.Brain != null)
+                _actorDefinition.Brain.Think(this, _thinkState);
         }
 
         public void SnapToGround()

@@ -2,23 +2,38 @@ using UnityEngine;
 
 namespace NoZ.Zisle
 {
-    [CreateAssetMenu(menuName = "Zisle/Brains/Attack Target")]
-    public class AttackTarget : Brain
+    [CreateAssetMenu(menuName = "Zisle/Lobes/Attack Target")]
+    public class AttackTarget : Lobe<AttackTarget.ThinkState>
     {
+        public class ThinkState : IThinkState
+        {
+            public Actor Follow;
+
+            public void OnAlloc(Actor actor) { }
+            public void OnRelease() { Follow = null; }
+        }
+
         [Header("Attack Target")]
         [SerializeField] private float _aggroRange = 2.0f;
 
-        public override bool Think(Actor actor, IThinkState state)
+        public override float CalculateScore(Actor actor, IThinkState state)
         {
             var player = FindNearestPlayer(actor);
-            if(player != null)
-            {
-                actor.SetDestination(player.transform.position);
-                actor.LookAt(player);
-                return false;
-            }
+            if (null == player)
+                return 0.0f;
 
-            return true;
+            (state as ThinkState).Follow = player;
+
+            // TODO: increase score the closer they are?
+            return 1.0f;
+        }
+
+        public override void Think(Actor actor, IThinkState state)
+        {
+            var thinkState = state as ThinkState;
+
+            actor.SetDestination(thinkState.Follow.transform.position);
+            actor.LookAt(thinkState.Follow);
         }
 
         private Player FindNearestPlayer(Actor actor)

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _type: 1
   _displayName: Orc
+  _brain: {fileID: 11400000, guid: f0f42f484ce0e684bac436bcfd5248e2, type: 2}
   _prefab: {fileID: 6060163351921082379, guid: 7d8a01711b2a36545a88dcbe8bf3c2d2, type: 3}
   _preview: {fileID: 0}
   _baseHealthMax: 100
@@ -25,8 +26,5 @@ MonoBehaviour:
   _baseHarvest: 1
   _baseBuild: 1
   _abilities: []
-  _brains:
-  - {fileID: 11400000, guid: 92fd643ccf983784a850b6b0ff4b0deb, type: 2}
-  - {fileID: 11400000, guid: 11373fd3c1c08a242adaffbeb07c547c, type: 2}
   _spawnWeights:
   - {fileID: 11400000, guid: 26ebaee076b2d8d438b67f0eb50fc085, type: 2}

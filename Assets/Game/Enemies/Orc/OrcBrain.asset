@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd6fdf0fb5a3ba84db0abfa51d273288, type: 3}
-  m_Name: DefaultFollowPath
+  m_Script: {fileID: 11500000, guid: 9982214062f235b44b566d0c681e330c, type: 3}
+  m_Name: OrcBrain
   m_EditorClassIdentifier: 
-  _baseScore: 0.1
-  _stoppingDistance: 0.3
+  _lobes:
+  - {fileID: 11400000, guid: 11373fd3c1c08a242adaffbeb07c547c, type: 2}
+  - {fileID: 11400000, guid: 92fd643ccf983784a850b6b0ff4b0deb, type: 2}

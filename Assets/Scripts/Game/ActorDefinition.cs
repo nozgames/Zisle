@@ -10,6 +10,7 @@ namespace NoZ.Zisle
         [Header("General")]
         [SerializeField] private ActorType _type = ActorType.Player;
         [SerializeField] private string _displayName = null;
+        [SerializeField] private Brain _brain = null;
         [SerializeField] private GameObject _prefab = null;
         [SerializeField] private GameObject _preview = null;
 
@@ -27,9 +28,6 @@ namespace NoZ.Zisle
         [SerializeField] private ActorAbility[] _abilities = null;
 
         [Space]
-        [SerializeField] private Brain[] _brains = null;
-
-        [Space]
         [SerializeField] private SpawnWeight[] _spawnWeights = null;
 
         /// <summary>
@@ -40,7 +38,7 @@ namespace NoZ.Zisle
         /// <summary>
         /// Get the actor brains
         /// </summary>
-        public Brain[] Brains => _brains;
+        public Brain Brain => _brain;
 
         /// <summary>
         /// Get the prefab used to spawn the player
