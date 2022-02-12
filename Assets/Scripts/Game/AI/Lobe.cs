@@ -35,6 +35,11 @@ namespace NoZ.Zisle
         public abstract void Think(Actor actor, IThinkState state);
 
         /// <summary>
+        /// Called after CalculateScore was called but this lobe was not chosen to be active
+        /// </summary>
+        public virtual void DontThink(Actor actor, IThinkState state) { }
+
+        /// <summary>
         /// Create an optional think state to be passed to think
         /// </summary>
         public virtual IThinkState AllocThinkState(Actor actor) => null;

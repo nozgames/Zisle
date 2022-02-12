@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9982214062f235b44b566d0c681e330c, type: 3}
+  m_Name: DefaultPlayerBrain
+  m_EditorClassIdentifier: 
+  _lobes:
+  - {fileID: 11400000, guid: df7943e316ef7f547b2f8d89d5b9b141, type: 2}

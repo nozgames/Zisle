@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9484d5a17efd42f42b24dd30747e0d5e, type: 3}
-  m_Name: DefaultAttackTarget
+  m_Script: {fileID: 11500000, guid: 08050e425259c1841ab2d44f928145df, type: 3}
+  m_Name: ActionButton
   m_EditorClassIdentifier: 
-  _aggroRange: 2
+  _action: {fileID: 904065791343046597, guid: 92783038ce5d74148b556e04433c7c93, type: 3}

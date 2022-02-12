@@ -9,9 +9,9 @@ namespace NoZ.Zisle
     {
         [SerializeField] private float _duration = 1.0f;
 
-        public override bool CheckCondition(Actor source, ActorAbility ability) => 
-            (Time.time - source.GetAbilityLastUsedTime(ability)) >= _duration;
+        public override float CheckCondition(Actor source, ActorAbility ability) => 
+            (Time.time - source.GetAbilityLastUsedTime(ability)) >= _duration ? 1.0f : 0.0f;
 
-        public override bool CheckCondition(Actor source, ActorAbility ability, List<Actor> targets) => true;        
+        public override float CheckCondition(Actor source, ActorAbility ability, List<Actor> targets) => 1.0f;
     }
 }

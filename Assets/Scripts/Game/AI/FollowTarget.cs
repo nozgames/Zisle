@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace NoZ.Zisle
 {
-    [CreateAssetMenu(menuName = "Zisle/Lobes/Attack Target")]
-    public class AttackTarget : Lobe<AttackTarget.ThinkState>
+    [CreateAssetMenu(menuName = "Zisle/Lobes/Follow Target")]
+    public class FollowTarget : Lobe<FollowTarget.ThinkState>
     {
         public class ThinkState : IThinkState
         {
@@ -13,7 +13,7 @@ namespace NoZ.Zisle
             public void OnRelease() { Follow = null; }
         }
 
-        [Header("Attack Target")]
+        [Header("Follow Target")]
         [SerializeField] private float _aggroRange = 2.0f;
 
         public override float CalculateScore(Actor actor, IThinkState state)

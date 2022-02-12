@@ -9,9 +9,9 @@ namespace NoZ.Zisle
         [SerializeField] private int _minTargetCount = 0;
         [SerializeField] private int _maxTargetCount = 128;
 
-        public override bool CheckCondition(Actor source, ActorAbility ability) => true;
+        public override float CheckCondition(Actor source, ActorAbility ability) => 1.0f;
 
-        public override bool CheckCondition(Actor source, ActorAbility ability, List<Actor> targets) =>
-            targets.Count >= _minTargetCount && targets.Count <= _maxTargetCount;
+        public override float CheckCondition(Actor source, ActorAbility ability, List<Actor> targets) =>
+            (targets.Count >= _minTargetCount && targets.Count <= _maxTargetCount) ? 1.0f : 0.0f;
     }
 }

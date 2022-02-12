@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9982214062f235b44b566d0c681e330c, type: 3}
-  m_Name: OrcBrain
+  m_Name: DefaultEnemyBrain
   m_EditorClassIdentifier: 
   _lobes:
   - {fileID: 11400000, guid: 11373fd3c1c08a242adaffbeb07c547c, type: 2}
   - {fileID: 11400000, guid: 92fd643ccf983784a850b6b0ff4b0deb, type: 2}
+  - {fileID: 11400000, guid: d6c46d21bf1834d468a466d65673cd0b, type: 2}

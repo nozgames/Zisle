@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _type: 0
   _displayName: Knight
+  _brain: {fileID: 11400000, guid: d7f905ae2cfee25419a4455cff5df649, type: 2}
   _prefab: {fileID: 5107839595957495342, guid: 6b36ac434d432434dacc564ef46a5ae5, type: 3}
   _preview: {fileID: 919132149155446097, guid: 2fe570a8a7c4d90489e9c6fc5eb55d15, type: 3}
   _baseHealthMax: 100

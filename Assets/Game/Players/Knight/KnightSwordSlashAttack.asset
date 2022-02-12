@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: KnightSwordSlashAttack
   m_EditorClassIdentifier: 
   _targetFinder: {fileID: 11400000, guid: 18c10586b1cda65499e428688ff139d3, type: 2}
+  _moveSpeed: 0
   _conditions:
+  - {fileID: 11400000, guid: 7a6eb5984851642459787074d571563a, type: 2}
   - {fileID: 11400000, guid: 6b64f3db4032ebe41a97f195d454e067, type: 2}
   _commandsOnUse:
   - {fileID: 11400000, guid: f3a0a085e5c96d24e9b4315ee676d279, type: 2}

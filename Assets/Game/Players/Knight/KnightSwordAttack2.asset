@@ -15,6 +15,7 @@ MonoBehaviour:
   _targetFinder: {fileID: 11400000, guid: 6cc71e8184019114f84446dc2f521cea, type: 2}
   _moveSpeed: 0.1
   _conditions:
+  - {fileID: 11400000, guid: 7a6eb5984851642459787074d571563a, type: 2}
   - {fileID: 11400000, guid: 1f7faad1a928e68419b17824b301451b, type: 2}
   _commandsOnUse:
   - {fileID: 11400000, guid: f3a0a085e5c96d24e9b4315ee676d279, type: 2}

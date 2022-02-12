@@ -8,7 +8,7 @@ namespace NoZ.Zisle
     /// Brain that causes the actor to follow the current path to the home tile.  If the 
     /// Actor is not on a path then path following will resume when a path is encountered again.
     /// </summary>
-    [CreateAssetMenu(menuName = "Zisle/Lobes/FollowPath")]
+    [CreateAssetMenu(menuName = "Zisle/Lobes/Follow Path")]
     public class FollowPath : Lobe<FollowPath.ThinkState>
     {
         [Header("Follow Path")]

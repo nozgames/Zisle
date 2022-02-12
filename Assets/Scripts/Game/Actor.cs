@@ -104,6 +104,7 @@ namespace NoZ.Zisle
         private Vector3 _lastPosition;
         private float _speed = 0.0f;
 
+        public ActorDefinition Definition => _actorDefinition;
         public float Speed => _speed;
         public bool IsMoving => Speed > 0.1f;
         public bool IsDead => _health <= 0.0f;
@@ -388,12 +389,12 @@ namespace NoZ.Zisle
             NavAgent.SetDestination(destination);
         }
 
-        protected bool ExecuteAbility(ActorAbility ability)
+        public virtual bool ExecuteAbility(ActorAbility ability, List<Actor> targets)
         {
             if (ability == null)
                 return false;
 
-            if (!ability.Execute(this))
+            if (!ability.Execute(this, targets))
                 return false;
 
             _lastAbilityUsedTime = Time.time;
@@ -506,6 +507,7 @@ namespace NoZ.Zisle
             SnapToGround();
             UpdateAnimation();
 
+            // TODO: think rate?
             if(_actorDefinition.Brain != null)
                 _actorDefinition.Brain.Think(this, _thinkState);
         }

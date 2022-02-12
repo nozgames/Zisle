@@ -6,8 +6,8 @@ namespace NoZ.Zisle
 {
     public abstract class ActorAbilityCondition : ScriptableObject
     {
-        public abstract bool CheckCondition(Actor source, ActorAbility ability);
+        public abstract float CheckCondition(Actor source, ActorAbility ability);
 
-        public abstract bool CheckCondition(Actor source, ActorAbility ability, List<Actor> targets);
+        public abstract float CheckCondition(Actor source, ActorAbility ability, List<Actor> targets);
     }
 }

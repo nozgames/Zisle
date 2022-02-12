@@ -5,14 +5,34 @@ using System.Linq;
 
 namespace NoZ.Zisle
 {
+    public enum PlayerButton
+    {
+        Action
+    }
+
     public class Player : Actor
     {
+        private static readonly int PlayerButtonCount = System.Enum.GetNames(typeof(PlayerButton)).Length;
+
         [Header("Player")]
         [SerializeField] private float _rotationSpeed = 1.0f;
-        [SerializeField] private float _actionSlop = 0.2f;
+        [SerializeField] private float _buttonSlop = 0.4f;
 
-        private float _lastActionTime = 0.0f;
-        private bool _lastActionGamepad = false;
+        private struct PlayerButtonState
+        {
+            /// <summary>
+            /// Time the player button was last pressed
+            /// </summary>
+            public float LastPressedTime;
+
+            /// <summary>
+            /// True if the last time the action was pressed it was with a gamepad
+            /// </summary>
+            public bool LastPressedGamepad;
+        }
+
+        private PlayerButton _lastPressed = PlayerButton.Action;
+        private PlayerButtonState[] _buttonStates = new PlayerButtonState[PlayerButtonCount];
 
         public static List<Player> All { get; private set; } = new List<Player> ();
 
@@ -43,19 +63,33 @@ namespace NoZ.Zisle
         
         private void OnPlayerAction (bool gamepad)
         {
-            _lastActionGamepad = gamepad;
-            _lastActionTime = Time.time;
+            SetLastPressed(PlayerButton.Action, gamepad);
 
-            if (IsBusy)
-                return;
+            //if (IsBusy)
+              //  return;
 
-            ExecuteAction(gamepad);
+            //ExecuteAction(gamepad);
+        }
+
+        private void SetLastPressed (PlayerButton button, bool gamepad)
+        {
+            _lastPressed = button;
+
+            ref var state = ref _buttonStates[(int)button];
+            state.LastPressedTime = Time.time;
+            state.LastPressedGamepad = gamepad;
+        }
+
+        private void ClearLastPressed ()
+        {
+            ref var state = ref _buttonStates[(int)_lastPressed];
+            state.LastPressedTime = 0.0f;
+            state.LastPressedGamepad = false;
         }
 
         private void ExecuteAction (bool gamepad)
         {
-            _lastActionTime = 0.0f;
-            _lastActionGamepad = false;
+            ClearLastPressed();
 
             // Snap look
             var look = Vector3.zero;
@@ -74,11 +108,6 @@ namespace NoZ.Zisle
             look = look.ZeroY();
             if (look.magnitude >= 0.001f)
                 transform.rotation = Quaternion.LookRotation(look.normalized, Vector3.up);
-
-            // Use best ability
-            foreach (var ability in Abilities)
-                if (ExecuteAbility(ability))
-                    break;
         }
 
         public override void OnNetworkDespawn()
@@ -138,8 +167,21 @@ namespace NoZ.Zisle
         {
             base.OnBusyChanged();
 
-            if (!IsBusy && (Time.time - _lastActionTime) < _actionSlop)
-                ExecuteAction(_lastActionGamepad);
+            //if (!IsBusy && (Time.time - _lastActionTime) < _actionSlop)
+                //ExecuteAction(_lastActionGamepad);
         }
+
+        public override bool ExecuteAbility(ActorAbility ability, List<Actor> targets)
+        {
+            ClearLastPressed();
+
+            return base.ExecuteAbility(ability, targets);
+        }
+
+        /// <summary>
+        /// Returns true if the given player button was pressed
+        /// </summary>
+        public bool WasButtonPressed (PlayerButton button) =>
+            !IsBusy && _lastPressed == button && (Time.time - _buttonStates[(int)button].LastPressedTime) < _buttonSlop;
     }
 }

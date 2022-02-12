@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _targetFinder: {fileID: 11400000, guid: 6cc71e8184019114f84446dc2f521cea, type: 2}
   _moveSpeed: 0.1
-  _conditions: []
+  _conditions:
+  - {fileID: 11400000, guid: 7a6eb5984851642459787074d571563a, type: 2}
   _commandsOnUse:
   - {fileID: 11400000, guid: f3a0a085e5c96d24e9b4315ee676d279, type: 2}
   - {fileID: 11400000, guid: 9f2f588e6b4e5fb4e9a9f50eb068be21, type: 2}

@@ -83,7 +83,14 @@ namespace NoZ.Zisle
                 }
             }
 
+            // Give the lobes that calculated score and may have saved state a chance to clean it up
+            for (int i = 0; i < _lobes.Length; i++)
+                if (i != bestLobe)
+                    _lobes[i].DontThink(actor, thinkState.LobeThinkStates[i]);
+
+            // Let the chosen lobe think
             if (bestLobe != -1)
+                // TODO: BeginThink / EndThink ?
                 _lobes[bestLobe].Think(actor, thinkState.LobeThinkStates[bestLobe]);
         }
     }

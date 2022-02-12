@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _targetFinder: {fileID: 11400000, guid: 6756eb52851087247a68dd89d3028b0d, type: 2}
   _moveSpeed: 0
-  _conditions: []
+  _conditions:
+  - {fileID: 11400000, guid: 87506c1e90fa8034cbbd9d9a5ea89b62, type: 2}
   _commandsOnUse:
+  - {fileID: 11400000, guid: 9f2f588e6b4e5fb4e9a9f50eb068be21, type: 2}
   - {fileID: 11400000, guid: f3a0a085e5c96d24e9b4315ee676d279, type: 2}
   _commandsOnHit:
   - {fileID: 11400000, guid: 1fa98e47851eaa84d8337c19a54fe104, type: 2}

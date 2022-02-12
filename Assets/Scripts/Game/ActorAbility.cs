@@ -26,37 +26,20 @@ namespace NoZ.Zisle
         [Space]
         [SerializeField] private ActorCommand[] _commandsOnMiss = null;
 
-        private static List<Actor> _targets = new List<Actor>(128);
-
         public float MoveSpeed => _moveSpeed;
 
-        public bool Execute (Actor source)
+        public bool Execute (Actor source, List<Actor> targetCache)
         {
-            // Check pre-target conditions
-            foreach (var condition in _conditions)
-                if (!condition.CheckCondition(source, this))
-                    return false;
-
-            // Use the target finder to find all possible targets
-            _targets.Clear();
-            if (null != _targetFinder)
-                _targetFinder.FindTargets(source, _targets);
-
-            // Check target conditions
-            foreach (var condition in _conditions)
-                if (!condition.CheckCondition(source, this, _targets))
-                    return false;
-
             // Execute on use commands on ourselves
             ExecuteCommands(_commandsOnUse, source, source);
 
-            if (_targets.Count == 0)
+            if (targetCache.Count == 0)
                 ExecuteCommands(_commandsOnMiss, source, source);
             else
-                foreach (var target in _targets) 
+                foreach (var target in targetCache) 
                     ExecuteCommands(_commandsOnHit, source, target);
 
-            _targets.Clear();
+            targetCache.Clear();
 
             return true;
         }
@@ -83,6 +66,33 @@ namespace NoZ.Zisle
             _commandsOnHit.RegisterNetworkIds();
             _commandsOnMiss.RegisterNetworkIds();
             _commandsOnUse.RegisterNetworkIds();
+        }
+
+        public float CalculateScore (Actor source, List<Actor> targetCache)
+        {
+            // Check pre-target conditions
+            var score = 1.0f;
+            foreach (var condition in _conditions)
+            {
+                score *= condition.CheckCondition(source, this);
+                if (score <= float.Epsilon)
+                    return 0.0f;
+            }
+
+            // Use the target finder to find all possible targets
+            targetCache.Clear();
+            if (null != _targetFinder)
+                _targetFinder.FindTargets(source, targetCache);
+
+            // Check target conditions
+            foreach (var condition in _conditions)
+            {
+                score *= condition.CheckCondition(source, this, targetCache);
+                if (score <= float.Epsilon)
+                    return 0.0f;
+            }
+
+            return score;
         }
     }
 }
