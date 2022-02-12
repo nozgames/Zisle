@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5b981476debd134998cdc95326df576, type: 3}
-  m_Name: KnightSwordSlashAttackTargets
+  m_Name: DefaultEnemyTargetFinder
   m_EditorClassIdentifier: 
-  _targetCount: 8
-  _targetRange: 1.5
-  _targetArc: 210
-  _targetMask: 8
+  _targetCount: 1
+  _targetRange: 0.9
+  _targetArc: 45
+  _targetMask: 3

@@ -8,7 +8,7 @@ namespace NoZ.Zisle.Commands
         public void ExecuteOnServer(Actor source, Actor target)
         {
             if(target is Building building)
-                building.Build(source.GetAttributeValue(ActorAttribute.Build) * target.GetAttributeValue(ActorAttribute.Build));
+                building.Heal(source, source.GetAttributeValue(ActorAttribute.Build));
         }
     }
 }

@@ -12,21 +12,21 @@ TagManager:
   - Water
   - UI
   - Ground
-  - Clip
-  - Player
-  - Enemy
+  - 
+  - 
+  - 
   - Ghost
   - Preview
-  - Building
+  - 
   - Construction
   - 
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Base
+  - Building
+  - Enemy
   - 
   - 
   - 

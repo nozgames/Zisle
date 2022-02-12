@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1a8441a7fe5c024fb553e4089f38878, type: 3}
   m_Name: Obelisk
   m_EditorClassIdentifier: 
-  _type: 0
+  _type: 1
   _displayName: Obelisk
+  _brain: {fileID: 0}
   _prefab: {fileID: 7506981431210532055, guid: 6ff7ec3e87930e24e9b25f7a1a8df697, type: 3}
   _preview: {fileID: 0}
   _baseHealthMax: 10000
@@ -25,3 +26,4 @@ MonoBehaviour:
   _baseHarvest: 1
   _baseBuild: 1
   _abilities: []
+  _spawnWeights: []

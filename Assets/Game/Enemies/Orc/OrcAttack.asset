@@ -12,6 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34452f75e1a36f64988e322fb32d9d27, type: 3}
   m_Name: OrcAttack
   m_EditorClassIdentifier: 
-  _applyEffects:
+  _targetFinder: {fileID: 11400000, guid: 6756eb52851087247a68dd89d3028b0d, type: 2}
+  _moveSpeed: 0
+  _conditions: []
+  _commandsOnUse:
+  - {fileID: 11400000, guid: f3a0a085e5c96d24e9b4315ee676d279, type: 2}
+  _commandsOnHit:
   - {fileID: 11400000, guid: 1fa98e47851eaa84d8337c19a54fe104, type: 2}
-  _removeEffects: []
+  - {fileID: 11400000, guid: 08221277cea7bd14eacaf1493a67d5c9, type: 2}
+  - {fileID: 11400000, guid: 7bfb66ed311842649806e517b10ebc4c, type: 2}
+  _commandsOnMiss: []

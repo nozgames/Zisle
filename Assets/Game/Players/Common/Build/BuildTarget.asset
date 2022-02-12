@@ -15,6 +15,4 @@ MonoBehaviour:
   _targetCount: 1
   _targetRange: 0.9
   _targetArc: 45
-  _targetMask:
-    serializedVersion: 2
-    m_Bits: 8192
+  _targetMask: 4

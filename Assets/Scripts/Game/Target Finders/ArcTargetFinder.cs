@@ -10,7 +10,7 @@ namespace NoZ.Zisle
         [SerializeField] private int _targetCount = 1;
         [SerializeField] private float _targetRange = 0.5f;
         [SerializeField] private float _targetArc = 45.0f;
-        [SerializeField] private LayerMask _targetMask = -1;
+        [SerializeField] private ActorTypeMask _targetMask = ActorTypeMask.None;
 
         private static Collider[] _colliders = new Collider[128];
 
@@ -27,7 +27,7 @@ namespace NoZ.Zisle
         {
             targets.Clear();
 
-            var count = Physics.OverlapSphereNonAlloc(source.transform.position, _targetRange, _colliders, _targetMask);
+            var count = Physics.OverlapSphereNonAlloc(source.transform.position, _targetRange, _colliders, _targetMask.ToLayerMask());
             var forward = source.transform.forward.ZeroY();
             for (int i = 0; i < _targetCount && count> 0; i++)
             {

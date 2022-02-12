@@ -9,12 +9,61 @@ using UnityEngine.VFX;
 
 namespace NoZ.Zisle
 {
+    /// <summary>
+    /// WARNING: DO NOT REORDER THESE!!!
+    /// 
+    /// List of actor types.  
+    /// 
+    /// Note that there must be matching entries in the LayerMask as well
+    /// </summary>
     public enum ActorType
     {
+        /// <summary>
+        /// Player
+        /// </summary>
         Player,
-        Enemy,
-        StaticEnemy,
-        Building
+
+        /// <summary>
+        /// Player's base and ultimate goal of enemy attacks
+        /// </summary>
+        Base,
+
+        /// <summary>
+        /// Building built by players
+        /// </summary>
+        Building,
+
+        /// <summary>
+        /// Enemy that tries to attack player and the base
+        /// </summary>
+        Enemy
+    }
+
+    [System.Flags]
+    public enum ActorTypeMask
+    {
+        None = 0,
+
+        Player = 1 << ActorType.Player,
+
+        Base = 1 << ActorType.Base,
+
+        Building = 1 << ActorType.Building,
+
+        Enemy = 1 << ActorType.Enemy
+    }
+
+    public static class ActorTypeMaskExtensions
+    {
+        private static readonly int _shift = LayerMask.NameToLayer("Player");
+
+        public static LayerMask ToLayerMask (this ActorTypeMask mask) => (LayerMask)((int)mask << _shift);
+
+        public static ActorTypeMask ToMask(this ActorType type) => (ActorTypeMask)(1 << (int)type);
+
+        public static LayerMask ToLayerMask(this ActorType type) => ToLayerMask(ToMask(type));
+
+        public static int ToLayer(this ActorType type) => _shift + (int)type;
     }
 
     public class Actor : NetworkBehaviour
@@ -105,7 +154,16 @@ namespace NoZ.Zisle
         /// <summary>
         /// Current health value of the actor
         /// </summary>
-        public float Health => _health;
+        public float Health
+        {
+            get => _health;
+            protected set => _health = value;
+        }
+
+        /// <summary>
+        /// Returns true if the actor has taken any damage
+        /// </summary>
+        public bool IsDamaged => Health < GetAttributeValue(ActorAttribute.HealthMax);
 
         protected virtual void Awake()
         {
@@ -116,6 +174,10 @@ namespace NoZ.Zisle
 
             if (_actorDefinition != null)
                 _abilityUsedTime = new float[_actorDefinition.Abilities.Length];
+
+            // Force layer of hit collider to match actor type
+            if (_hitCollider != null)
+                _hitCollider.gameObject.layer = _actorDefinition.ActorType.ToLayer();
         }
 
         public void PlayAnimation(AnimationShader shader, BlendedAnimationController.AnimationCompleteDelegate onComplete = null)
@@ -148,7 +210,7 @@ namespace NoZ.Zisle
 
         public virtual void Damage (Actor source, float damage)
         {
-            if (IsDead)
+            if (IsDead || damage < 0)
                 return;
 
             _health = Mathf.Clamp(_health - damage, 0.0f, GetAttributeValue(ActorAttribute.HealthMax));
@@ -157,6 +219,16 @@ namespace NoZ.Zisle
             
             if(_health <= 0.0f)
                 Die(source);
+        }
+
+        public virtual void Heal (Actor source, float heal)
+        {
+            if (IsDead || heal < 0)
+                return;
+
+            _health = Mathf.Clamp(_health + heal, 0.0f, GetAttributeValue(ActorAttribute.HealthMax));
+
+            DamageClientRpc(source.OwnerClientId, heal);
         }
 
         [ClientRpc]

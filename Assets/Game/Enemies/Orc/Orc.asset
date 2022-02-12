@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1a8441a7fe5c024fb553e4089f38878, type: 3}
   m_Name: Orc
   m_EditorClassIdentifier: 
-  _type: 1
+  _type: 3
   _displayName: Orc
   _brain: {fileID: 11400000, guid: f0f42f484ce0e684bac436bcfd5248e2, type: 2}
   _prefab: {fileID: 6060163351921082379, guid: 7d8a01711b2a36545a88dcbe8bf3c2d2, type: 3}
@@ -25,6 +25,7 @@ MonoBehaviour:
   _baseDefense: 20
   _baseHarvest: 1
   _baseBuild: 1
-  _abilities: []
+  _abilities:
+  - {fileID: 11400000, guid: 470c93773ec233141bdcb640088f8f11, type: 2}
   _spawnWeights:
   - {fileID: 11400000, guid: 26ebaee076b2d8d438b67f0eb50fc085, type: 2}

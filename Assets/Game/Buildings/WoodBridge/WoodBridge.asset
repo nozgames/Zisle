@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1a8441a7fe5c024fb553e4089f38878, type: 3}
   m_Name: WoodBridge
   m_EditorClassIdentifier: 
-  _type: 3
+  _type: 2
   _displayName: Bridge
-  _prefab: {fileID: 6661235486082152556, guid: 07b7bb1060a194f4f9767168873f3476, type: 3}
+  _brain: {fileID: 0}
+  _prefab: {fileID: 7645202214170706019, guid: 15391079271f8b84798d5e7ff9427fbc, type: 3}
   _preview: {fileID: 0}
-  _baseHealthMax: 100
+  _baseHealthMax: 4
   _baseHealthRegen: 5
   _baseSpeed: 10
   _baseAttack: 60
@@ -25,3 +26,4 @@ MonoBehaviour:
   _baseHarvest: 1
   _baseBuild: 1
   _abilities: []
+  _spawnWeights: []

@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1a8441a7fe5c024fb553e4089f38878, type: 3}
   m_Name: TrainingDummy
   m_EditorClassIdentifier: 
-  _type: 2
+  _type: 3
   _displayName: Training Dummy
+  _brain: {fileID: 0}
   _prefab: {fileID: 9124806088355504971, guid: 04731ff460f738a40845782e1e53007f, type: 3}
   _preview: {fileID: 0}
   _baseHealthMax: 10000
@@ -25,3 +26,4 @@ MonoBehaviour:
   _baseHarvest: 1
   _baseBuild: 1
   _abilities: []
+  _spawnWeights: []

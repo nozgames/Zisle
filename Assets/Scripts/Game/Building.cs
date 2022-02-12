@@ -6,29 +6,16 @@ namespace NoZ.Zisle
 {
     public class Building : Actor
     {
-        [Header("Building")]
-        [SerializeField] private float _construction = 0.0f;
-        
-        public bool IsConstructed { get; private set; }
+        public bool IsConstructed => !IsDamaged;
 
-        protected override void Awake()
-        {
-            base.Awake();
-
-            if (_construction < 1.0f)
-                foreach (var renderer in GetComponentsInChildren<Renderer>())
-                    renderer.gameObject.GetOrAddComponent<MaterialOverride>().Override = GhostMaterial;
-        }
-
-        public void Build(float build)
+        public override void Heal(Actor source, float heal)
         {
             if (IsConstructed)
                 return;
 
-            _construction += build;
-            _construction = Mathf.Clamp01(build);
+            base.Heal(source, heal);
 
-            if (_construction >= 1.0f)
+            if(IsConstructed)
             {
                 CanHit = false;
 
@@ -51,5 +38,17 @@ namespace NoZ.Zisle
         protected virtual void OnConstructedServer() { }
 
         protected virtual void OnConstructedClient() { }
+
+        public override void UpdateAttributes()
+        {
+            base.UpdateAttributes();
+
+            // Start health at 1 because building will heal 
+            Health = 1.0f;
+
+            if (IsDamaged)
+                foreach (var renderer in GetComponentsInChildren<Renderer>())
+                    renderer.gameObject.GetOrAddComponent<MaterialOverride>().Override = GhostMaterial;
+        }
     }
 }
