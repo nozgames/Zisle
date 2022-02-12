@@ -37,6 +37,7 @@ namespace NoZ.Zisle
         private List<SpawnPoint> _spawnPoints = new List<SpawnPoint>();
         private Island[] _islands = new Island[IslandGrid.IndexMax];
         private PathNode[] _pathMap = new PathNode[TileGrid.IndexMax];
+        private List<Actor>[] _actorsByType;
 
         public bool HasIslands { get; private set; }
 
@@ -78,6 +79,14 @@ namespace NoZ.Zisle
 
             GameManager.Instance.Game = this;
 
+            // Prepare the actors by type lists
+            _actorsByType = new List<Actor>[Actor.ActorTypeCount];
+            for (int i = 0; i < Actor.ActorTypeCount; i++)
+                _actorsByType[i] = new List<Actor>();
+
+            GameEvent<ActorSpawnEvent>.OnRaised += OnActorSpawn;
+            GameEvent<ActorDespawnEvent>.OnRaised += OnActorDespawn;
+
             _islandVisibility.OnValueChanged += OnIslandVisibilityChanged;
         }
 
@@ -90,10 +99,21 @@ namespace NoZ.Zisle
 
         private void OnActorDied(object sender, ActorDiedEvent evt)
         {
-            if(sender is Enemy)
-            {
+            var actor = sender as Actor;
+            if(actor.Definition.ActorType == ActorType.Enemy)
                 WaveEnemyRemainingCount--;
-            }
+        }
+
+        private void OnActorSpawn(object sender, ActorSpawnEvent evt)
+        {
+            var actor = sender as Actor;
+            _actorsByType[(int)actor.Definition.ActorType].Add(actor);
+        }
+
+        private void OnActorDespawn(object sender, ActorDespawnEvent evt)
+        {
+            var actor = sender as Actor;
+            _actorsByType[(int)actor.Definition.ActorType].Remove(actor);
         }
 
         [ServerRpc(RequireOwnership = false)]

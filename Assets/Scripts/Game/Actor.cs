@@ -43,13 +43,9 @@ namespace NoZ.Zisle
     public enum ActorTypeMask
     {
         None = 0,
-
         Player = 1 << ActorType.Player,
-
         Base = 1 << ActorType.Base,
-
         Building = 1 << ActorType.Building,
-
         Enemy = 1 << ActorType.Enemy
     }
 
@@ -68,7 +64,8 @@ namespace NoZ.Zisle
 
     public class Actor : NetworkBehaviour
     {
-        private static readonly int ActorAttributeCount = System.Enum.GetNames(typeof(ActorAttribute)).Length;
+        public static readonly int ActorTypeCount = System.Enum.GetNames(typeof(ActorType)).Length;
+        public static readonly int ActorAttributeCount = System.Enum.GetNames(typeof(ActorAttribute)).Length;
 
         private const float MaxBusyTime = 5.0f;
 
@@ -172,6 +169,9 @@ namespace NoZ.Zisle
 
             NavAgent = GetComponent<NavMeshAgent>();
             NavObstacle = GetComponent<NavMeshObstacle>();
+
+            if(NavAgent != null)
+                NavAgent.updateRotation = false;
 
             if (_actorDefinition != null)
                 _abilityUsedTime = new float[_actorDefinition.Abilities.Length];
@@ -341,6 +341,9 @@ namespace NoZ.Zisle
                 _health += (newMaxHealth - oldMaxHealth);
             else
                 _health = Mathf.Min(_health, newMaxHealth);
+
+            if(NavAgent != null)
+                NavAgent.speed = GetAttributeValue(ActorAttribute.Speed);
         }
 
         public override void OnNetworkSpawn()
@@ -358,6 +361,8 @@ namespace NoZ.Zisle
 
             if (_actorDefinition.Brain != null)
                 _thinkState = _actorDefinition.Brain.AllocThinkState(this);
+
+            GameEvent.Raise(this, new ActorSpawnEvent { });
         }
 
         public override void OnNetworkDespawn()
@@ -366,6 +371,8 @@ namespace NoZ.Zisle
 
             if (_thinkState != null)
                 _actorDefinition.Brain.ReleaseThinkState(_thinkState);
+
+            GameEvent.Raise(this, new ActorDespawnEvent{ });
         }
 
         public void LookAt(Actor actor) => LookAt(actor.transform.position);
@@ -506,9 +513,10 @@ namespace NoZ.Zisle
 
             SnapToGround();
             UpdateAnimation();
+            UpdateRunPitch();
 
             // TODO: think rate?
-            if(_actorDefinition.Brain != null)
+            if (_actorDefinition.Brain != null)
                 _actorDefinition.Brain.Think(this, _thinkState);
         }
 
@@ -539,6 +547,15 @@ namespace NoZ.Zisle
             }
 
             PlayAnimation(_runAnimation);
+        }
+
+        private void UpdateRunPitch ()
+        {
+            if (_runPitchTransform != null)
+            {
+                var normalizedSpeed = Mathf.Clamp01(_speed / GetAttributeValue(ActorAttribute.Speed));
+                _runPitchTransform.localRotation = Quaternion.Euler(_runPitch * normalizedSpeed, 0, 0);
+            }
         }
     }
 }

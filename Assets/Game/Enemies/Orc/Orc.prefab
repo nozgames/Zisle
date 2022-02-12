@@ -167,6 +167,17 @@ PrefabInstance:
       propertyPath: _animator
       value: 
       objectReference: {fileID: 3747618724928831444}
+    - target: {fileID: 8906246932429870938, guid: c626647da39f58f4a9598683d11fcdc9,
+        type: 3}
+      propertyPath: _actorDefinition
+      value: 
+      objectReference: {fileID: 11400000, guid: 50eae47ab1632bd47904d1218e4cd5c0,
+        type: 2}
+    - target: {fileID: 8906246932429870938, guid: c626647da39f58f4a9598683d11fcdc9,
+        type: 3}
+      propertyPath: _runPitchTransform
+      value: 
+      objectReference: {fileID: 7631088235439773423}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c626647da39f58f4a9598683d11fcdc9, type: 3}
 --- !u!4 &6085852768695152274 stripped
@@ -276,3 +287,9 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!4 &7631088235439773423 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
+    type: 3}
+  m_PrefabInstance: {fileID: 7957204325819855108}
+  m_PrefabAsset: {fileID: 0}
