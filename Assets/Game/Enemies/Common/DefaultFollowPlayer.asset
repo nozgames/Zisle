@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: DefaultFollowPlayer
   m_EditorClassIdentifier: 
   _baseScore: 0.5
-  _aggroRange: 2
+  _followType: 3
+  _followRange: 2

@@ -27,35 +27,23 @@ namespace NoZ.Zisle
         public override void Think (Actor actor, IThinkState istate)
         {
             var state = istate as ThinkState;
-
-            // Current path node
             var pathNode = Game.Instance.WorldToPathNode(actor.transform.position);
+            var withinRange = actor.NavAgent.remainingDistance <= _stoppingDistance;
 
-            // Were we already following the path?            
-            if(state.NextPathNode.IsPath)
-            {
-                // New destination?
-                if(pathNode.IsPath && pathNode.To != state.NextPathNode.To && actor.NavAgent.remainingDistance <= _stoppingDistance)
-                {
-                    state.NextPathNode = pathNode;
-                    actor.SetDestination(TileGrid.CellToWorld(pathNode.To), stoppingDistance:_stoppingDistance);
-                }
-                // If we are not on the path then head back towards the last path we were heading towards
-                else
-                {
-                    actor.SetDestination(TileGrid.CellToWorld(state.NextPathNode.To), stoppingDistance: _stoppingDistance);
-                }
-            } 
-            // If we have a path now then head towards it
-            else if (pathNode.IsPath)
+            // New path
+            if (pathNode.IsPath && (!state.NextPathNode.IsPath || (state.NextPathNode.IsPath && withinRange && pathNode.To != state.NextPathNode.To)))
             {
                 state.NextPathNode = pathNode;
-                actor.SetDestination(TileGrid.CellToWorld(pathNode.To), stoppingDistance:_stoppingDistance);
+                actor.SetDestination(TileGrid.CellToWorld(pathNode.To), stoppingDistance: _stoppingDistance);
             }
-            // If not on the path then head towards the home tile instead in hopes we find a path
+            // Continue path
+            else if (state.NextPathNode.IsPath && !withinRange)
+            {
+                actor.SetDestination(TileGrid.CellToWorld(state.NextPathNode.To), stoppingDistance: _stoppingDistance);
+            }
+            // Move towards base in hopes that we will find a path
             else
             {
-                // TODO: too hard coded
                 state.NextPathNode = Game.PathNode.Invalid;
                 actor.SetDestination(Vector3.zero, stoppingDistance: _stoppingDistance);
             }

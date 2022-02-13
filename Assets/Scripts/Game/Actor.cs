@@ -1,11 +1,11 @@
-using NoZ.Animations;
 using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
-using NoZ.Tweening;
 using UnityEngine.AI;
+using Unity.Netcode;
+using NoZ.Animations;
+using NoZ.Tweening;
 using NoZ.Events;
-using UnityEngine.VFX;
+using NoZ.Zisle.UI;
 
 namespace NoZ.Zisle
 {
@@ -90,6 +90,8 @@ namespace NoZ.Zisle
         private float _lastAbilityUsedEndTime;
         private ActorAbility _lastAbilityUsed;
         private AnimationShader _currentAnimation;
+        private LinkedListNode<Actor> _node;
+        private WorldVisualElement<HealthCircle> _healthCircle;
 
         private List<ActorEffect.Context> _effects = new List<ActorEffect.Context>();
         private ActorAttributeValue[] _attributeTable;
@@ -115,6 +117,12 @@ namespace NoZ.Zisle
         public ActorAbility LastAbilityUsed => _lastAbilityUsed;
         public float LastAbilityUsedEndTime => _lastAbilityUsedEndTime;
         public float LastAbilityUsedTime => _lastAbilityUsedTime;
+
+        public ActorType Type => _actorDefinition.ActorType;
+
+        public ActorTypeMask TypeMask => (ActorTypeMask)(1 << (int)_actorDefinition.ActorType);
+
+        public Vector3 Position => transform.position.ZeroY();
 
         /// <summary>
         /// True if the actor is in a busy state, preventing movement or controls
@@ -158,13 +166,20 @@ namespace NoZ.Zisle
             protected set => _health = value;
         }
 
+        public float HealthRatio => Health / GetAttributeValue(ActorAttribute.HealthMax);
+
         /// <summary>
         /// Returns true if the actor has taken any damage
         /// </summary>
         public bool IsDamaged => Health < GetAttributeValue(ActorAttribute.HealthMax);
 
+
+        public LinkedListNode<Actor> Node => _node;
+
         protected virtual void Awake()
         {
+            _node = new LinkedListNode<Actor>(this);
+
             _animator = GetComponent<BlendedAnimationController>();
 
             NavAgent = GetComponent<NavMeshAgent>();
@@ -216,6 +231,8 @@ namespace NoZ.Zisle
 
             _health = Mathf.Clamp(_health - damage, 0.0f, GetAttributeValue(ActorAttribute.HealthMax));
 
+            OnHealthChanged();
+
             DamageClientRpc(source.OwnerClientId, damage);
             
             if(_health <= 0.0f)
@@ -229,7 +246,23 @@ namespace NoZ.Zisle
 
             _health = Mathf.Clamp(_health + heal, 0.0f, GetAttributeValue(ActorAttribute.HealthMax));
 
+            OnHealthChanged();
+
             DamageClientRpc(source.OwnerClientId, heal);
+        }
+
+        protected virtual void OnHealthChanged() 
+        {
+            UpdateHealthCircle();
+        }
+
+        private void UpdateHealthCircle()
+        {
+            if (_healthCircle != null)
+            {
+                _healthCircle.Element.Health = HealthRatio;
+                _healthCircle.Show(HealthRatio < 1.0f);
+            }
         }
 
         [ClientRpc]
@@ -242,6 +275,8 @@ namespace NoZ.Zisle
 
         public virtual void Die (Actor source)
         {
+            RemoveHealthCircle();
+
             CanHit = false;
             NavAgent.enabled = false;
             GameEvent.Raise(this, new ActorDiedEvent { });
@@ -363,11 +398,31 @@ namespace NoZ.Zisle
                 _thinkState = _actorDefinition.Brain.AllocThinkState(this);
 
             GameEvent.Raise(this, new ActorSpawnEvent { });
+
+            if(!string.IsNullOrEmpty(Definition.HealthCircleClass))
+            {
+                _healthCircle = WorldVisualElement<HealthCircle>.Alloc(Vector3.up * (_height + 0.5f), transform);
+                _healthCircle.Element.Health = 1.0f;
+                _healthCircle.Element.AddToClassList(Definition.HealthCircleClass);
+                UpdateHealthCircle();
+            }
+        }
+
+        private void RemoveHealthCircle ()
+        {
+            if (_healthCircle == null)
+                return;
+
+            _healthCircle.Element.RemoveFromClassList(Definition.HealthCircleClass);
+            _healthCircle.Release();
+            _healthCircle = null;
         }
 
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
+
+            RemoveHealthCircle();
 
             if (_thinkState != null)
                 _actorDefinition.Brain.ReleaseThinkState(_thinkState);
@@ -557,5 +612,13 @@ namespace NoZ.Zisle
                 _runPitchTransform.localRotation = Quaternion.Euler(_runPitch * normalizedSpeed, 0, 0);
             }
         }
+
+        public float DistanceTo(Vector3 position) => (transform.position - position).magnitude;
+
+        public float DistanceTo(Actor actor) => (Position - actor.Position).magnitude;
+
+        public float DistanceToSqr (Vector3 position) => (transform.position - position).sqrMagnitude;
+
+        public float DistanceToSqr (Actor actor) => (Position - actor.Position).sqrMagnitude;
     }
 }

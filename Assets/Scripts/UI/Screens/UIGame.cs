@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using NoZ.Tweening;
-using System;
-using NoZ.Events;
 
-namespace NoZ.Zisle
+namespace NoZ.Zisle.UI
 {
     public class UIGame : UIController
     {
@@ -25,6 +23,7 @@ namespace NoZ.Zisle
         private Label _joinCode;
         private VisualElement _floatingTextContainer;
         private List<FloatingText> _floatingText = new List<FloatingText>();
+        private List<WorldVisualElement> _worldElements = new List<WorldVisualElement>();
 
         public UIGame ()
         {
@@ -49,6 +48,9 @@ namespace NoZ.Zisle
             _floatingTextContainer = this.Q("floating-text-container");
 
             UIManager.Instance.StartCoroutine(UpdateFloatingText());
+            UIManager.Instance.StartCoroutine(UpdateWorldElements());
+
+            WorldVisualElement.Root = _floatingTextContainer;
         }
 
         public override void OnBeforeTransitionIn()
@@ -84,6 +86,17 @@ namespace NoZ.Zisle
                 .Play();
         }        
 
+        private IEnumerator UpdateWorldElements()
+        {
+            // Update until the game shuts down
+            var wait = new WaitForEndOfFrame();
+            while (UIManager.IsInitialized)
+            {
+                yield return wait;
+                WorldVisualElement.UpdateElements();
+            }
+        }
+
         private IEnumerator UpdateFloatingText ()
         {
             var camera = Camera.main;
@@ -109,6 +122,12 @@ namespace NoZ.Zisle
 
                 yield return null;
             }
+        }
+
+        public void Add (WorldVisualElement worldElement)
+        {
+            _worldElements.Add(worldElement);
+            _floatingTextContainer.Add(worldElement.VisualElement);
         }
     }
 }

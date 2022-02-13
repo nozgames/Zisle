@@ -1,4 +1,5 @@
 using NoZ.Events;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
@@ -15,6 +16,7 @@ namespace NoZ.Zisle
 
         private List<ActorDefinition> _playerClasses;
         private ActorDefinition _playerClassLeft;
+        private Coroutine _startGameCountdown;
 
         public override void Initialize()
         {
@@ -69,10 +71,30 @@ namespace NoZ.Zisle
                 else
                 {
                     GameManager.Instance.LocalPlayerController.IsReady = !GameManager.Instance.LocalPlayerController.IsReady;
-                    this.Q<Button>("ready").text = GameManager.Instance.LocalPlayerController.IsReady ? "Cancel" : "Ready";
+                    UpdateReadyButton();
                 }
             });
         }
+
+        private IEnumerator StartGameCountdown (int seconds)
+        {
+            var wait = new WaitForSeconds(1);
+            while (seconds > 0 && AreAllPlayersReady)
+            {
+                UpdateReadyButton(seconds);
+                yield return wait;
+                seconds--;
+            }
+
+            _startGameCountdown = null;
+
+            UpdateReadyButton();
+
+            if(NetworkManager.Singleton.IsHost && AreAllPlayersReady)
+                UIManager.Instance.StartGame();
+        }
+
+        private bool AreAllPlayersReady => GameManager.Instance.Players.Where(p => p.IsReady).Count() == GameManager.Instance.MaxPlayers;
 
         public override void OnBeforeTransitionIn()
         {
@@ -151,14 +173,25 @@ namespace NoZ.Zisle
             UpdateReadyButton();
         }
 
-        private void UpdateReadyButton ()
+        private void UpdateReadyButton (int seconds=-1)
         {
             this.Q("ready").SetEnabled(GameManager.Instance.PlayerCount == GameManager.Instance.MaxPlayers);
 
-            if (GameManager.Instance.MaxPlayers == 1)
-                this.Q<Button>("ready").text = "Play";
-            else
-                this.Q<Button>("ready").text = (GameManager.Instance.LocalPlayerController != null && GameManager.Instance.LocalPlayerController.IsReady) ? "Cancel" : "Ready";
+            var text = "Play";            
+            if (GameManager.Instance.MaxPlayers > 1)
+            {
+                if (GameManager.Instance.LocalPlayerController != null && GameManager.Instance.LocalPlayerController.IsReady)
+                {
+                    if (seconds >= 0)
+                        text = $"Cancel ({seconds})";
+                    else
+                        text = $"Cancel";
+                }
+                else
+                    text = "Ready";
+            }
+
+            this.Q<Button>("ready").text = text;
         }
 
         private void UpdateRemotePlayer()
@@ -216,8 +249,18 @@ namespace NoZ.Zisle
 
             UpdateReadyButton();
 
-            if(NetworkManager.Singleton.IsHost && GameManager.Instance.Players.Where(p => p.IsReady).Count() == GameManager.Instance.MaxPlayers)
-                UIManager.Instance.StartGame();
+            if (AreAllPlayersReady)
+            {
+                if (_startGameCountdown != null)
+                    UIManager.Instance.StopCoroutine(_startGameCountdown);
+
+                _startGameCountdown = UIManager.Instance.StartCoroutine(StartGameCountdown(5));
+            }                
+            else if (_startGameCountdown != null)
+            {
+                UIManager.Instance.StopCoroutine(_startGameCountdown);
+                _startGameCountdown = null;
+            }
         }
 
         private void OnPlayerClassChanged(object sender, PlayerClassChanged evt)

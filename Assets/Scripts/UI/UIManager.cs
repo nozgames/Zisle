@@ -57,7 +57,7 @@ namespace NoZ.Zisle
             UIController<CooperativeController>.Bind(_root).Hide();
             UIController<CooperativeJoinController>.Bind(_root).Hide();
             UIController<UILoadingController>.Bind(_root).Hide();
-            UIController<UIGame>.Bind(_root).Hide();
+            UIController<UI.UIGame>.Bind(_root).Hide();
             UIController<UIGameMenu>.Bind(_root).Hide();
             UIController<UITitleController>.Bind(_root).Hide();
             UIController<UILobbyController>.Bind(_root).Hide();
@@ -124,7 +124,7 @@ namespace NoZ.Zisle
             TransitionTo(UIController<UILoadingController>.Instance, wait);
 
         public void ShowGame() =>
-            TransitionTo(UIController<UIGame>.Instance);
+            TransitionTo(UIController<UI.UIGame>.Instance);
 
         public void ShowGameMenu() =>
             TransitionTo(UIController<UIGameMenu>.Instance);
@@ -167,7 +167,7 @@ namespace NoZ.Zisle
 
         public void AddFloatingText(string text, string className, Vector3 position, float duration = 1.0f)
         {
-            UIController<UIGame>.Instance.AddFloatingText(text, className, position, duration);
+            UIController<UI.UIGame>.Instance.AddFloatingText(text, className, position, duration);
         }
 
         public void OnAfterSubsystemInitialize() => ShowMainMenu();
@@ -220,7 +220,7 @@ namespace NoZ.Zisle
                 while (Time.time - startTime < MinLoadingTime)
                     yield return null;
 
-                TransitionTo(UIController<UIGame>.Instance);
+                TransitionTo(UIController<UI.UIGame>.Instance);
             }
 
             StartCoroutine(StartGameCoroutine());

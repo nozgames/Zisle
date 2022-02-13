@@ -27,6 +27,8 @@ namespace NoZ.Zisle
         {
             public static readonly PathNode Invalid = new PathNode { IsPath = false, To = new Vector2Int(int.MaxValue, int.MaxValue) };
 
+            public bool IsValid => To != Invalid.To;
+
             public bool IsPath;
             public Vector2Int To;
         }
@@ -38,6 +40,8 @@ namespace NoZ.Zisle
         private Island[] _islands = new Island[IslandGrid.IndexMax];
         private PathNode[] _pathMap = new PathNode[TileGrid.IndexMax];
         private List<Actor>[] _actorsByType;
+
+        private LinkedList<Actor> _actors = new LinkedList<Actor> ();
 
         public bool HasIslands { get; private set; }
 
@@ -108,12 +112,14 @@ namespace NoZ.Zisle
         {
             var actor = sender as Actor;
             _actorsByType[(int)actor.Definition.ActorType].Add(actor);
+            _actors.AddLast(actor.Node);
         }
 
         private void OnActorDespawn(object sender, ActorDespawnEvent evt)
         {
             var actor = sender as Actor;
             _actorsByType[(int)actor.Definition.ActorType].Remove(actor);
+            _actors.Remove(actor.Node);
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -327,5 +333,54 @@ namespace NoZ.Zisle
 
         public Vector3 WorldToPathMapDestination (Vector3 position) =>
             TileGrid.CellToWorld(WorldToPathNode(position).To);
+
+        /// <summary>
+        /// Find all actors in the <paramref name="radius"/> from <paramref name="position"/> that match the <paramref name="mask"/>
+        /// </summary>
+        public int FindActors (Vector3 position, float radius, ActorTypeMask mask, List<Actor> results)
+        {
+            results.Clear();
+
+            var radiusSqr = radius * radius;
+            for(var node = _actors.First; node != null; node = node.Next)
+            {
+                var actor = node.Value;
+                if ((actor.TypeMask & mask) == 0)
+                    continue;
+
+                var distSqr = actor.DistanceToSqr(position);
+                if (distSqr > radiusSqr)
+                    continue;
+
+                results.Add(actor);
+            }
+
+            return results.Count;
+        }
+
+        /// <summary>
+        /// Find the actor within <paramref name="radius"/> of <paramref name="position"/> that matches the <paramref name="mask"/>
+        /// </summary>
+        public Actor FindClosestActor (Vector3 position, float radius, ActorTypeMask mask)
+        {
+            var radiusSqr = radius * radius;
+            var bestDistSqr = float.MaxValue;
+            var bestActor = (Actor)null;
+            for (var node = _actors.First; node != null; node = node.Next)
+            {
+                var actor = node.Value;
+                if ((actor.TypeMask & mask) == 0)
+                    continue;
+
+                var distSqr = actor.DistanceToSqr(position);
+                if (distSqr > radiusSqr || distSqr > bestDistSqr)
+                    continue;
+
+                bestDistSqr = distSqr;
+                bestActor = actor;
+            }
+
+            return bestActor;
+        }
     }
 }

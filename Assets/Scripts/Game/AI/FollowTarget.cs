@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace NoZ.Zisle
@@ -14,15 +15,18 @@ namespace NoZ.Zisle
         }
 
         [Header("Follow Target")]
-        [SerializeField] private float _aggroRange = 2.0f;
+        [SerializeField] private ActorTypeMask _followType = ActorTypeMask.Player;
+        [SerializeField] private float _followRange = 2.0f;
 
-        public override float CalculateScore(Actor actor, IThinkState state)
+        private static List<Actor> _actors = new List<Actor>();
+
+        public override float CalculateScore(Actor actor, IThinkState istate)
         {
-            var player = FindNearestPlayer(actor);
-            if (null == player)
+            var follow = Game.Instance.FindClosestActor(actor.transform.position, _followRange, _followType);
+            if (null == follow)
                 return 0.0f;
 
-            (state as ThinkState).Follow = player;
+            (istate as ThinkState).Follow = follow;
 
             // TODO: increase score the closer they are?
             return 1.0f;
@@ -34,23 +38,6 @@ namespace NoZ.Zisle
 
             actor.SetDestination(thinkState.Follow.transform.position);
             actor.LookAt(thinkState.Follow);
-        }
-
-        private Player FindNearestPlayer(Actor actor)
-        {
-            var bestDist = float.MaxValue;
-            var bestPlayer = (Player)null;
-            foreach (var player in Player.All)
-            {
-                var dist = (player.transform.position - actor.transform.position).sqrMagnitude;
-                if (dist < bestDist && dist <= _aggroRange)
-                {
-                    bestDist = dist;
-                    bestPlayer = player;
-                }
-            }
-
-            return bestPlayer;
         }
     }
 }

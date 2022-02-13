@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using NoZ.Events;
 using System.Linq;
+using NoZ.Zisle.UI;
 
 namespace NoZ.Zisle
 {
@@ -33,9 +34,7 @@ namespace NoZ.Zisle
 
         private PlayerButton _lastPressed = PlayerButton.Action;
         private PlayerButtonState[] _buttonStates = new PlayerButtonState[PlayerButtonCount];
-
-        public static List<Player> All { get; private set; } = new List<Player> ();
-
+        
         public PlayerController Controller { get; private set; }
 
         public override void OnNetworkSpawn()
@@ -43,8 +42,6 @@ namespace NoZ.Zisle
             base.OnNetworkSpawn();
 
             name = $"Player{OwnerClientId}";
-
-            All.Add(this);
 
             Controller = GameManager.Instance.Players.Where(p => p.OwnerClientId == OwnerClientId).FirstOrDefault();
 
@@ -63,12 +60,25 @@ namespace NoZ.Zisle
         
         private void OnPlayerAction (bool gamepad)
         {
+            // Snap look
+            var look = Vector3.zero;
+            if (gamepad)
+            {
+                look = InputManager.Instance.PlayerMove;
+            }
+            else
+            {
+                if (Physics.Raycast(InputManager.Instance.PlayerLookRay, out var hit, 100.0f) && hit.collider.GetComponentInParent<Actor>() != null)
+                    look = (hit.collider.transform.position - transform.position);
+                else
+                    look = (InputManager.Instance.PlayerLook - transform.position);
+            }
+
+            look = look.ZeroY();
+            if (look.magnitude >= 0.001f)
+                transform.rotation = Quaternion.LookRotation(look.normalized, Vector3.up);
+
             SetLastPressed(PlayerButton.Action, gamepad);
-
-            //if (IsBusy)
-              //  return;
-
-            //ExecuteAction(gamepad);
         }
 
         private void SetLastPressed (PlayerButton button, bool gamepad)
@@ -87,29 +97,6 @@ namespace NoZ.Zisle
             state.LastPressedGamepad = false;
         }
 
-        private void ExecuteAction (bool gamepad)
-        {
-            ClearLastPressed();
-
-            // Snap look
-            var look = Vector3.zero;
-            if (gamepad)
-            {
-                look = InputManager.Instance.PlayerMove;
-            }
-            else
-            {
-                if (Physics.Raycast(InputManager.Instance.PlayerLookRay, out var hit, 100.0f) && hit.collider.GetComponentInParent<Actor>() != null)
-                    look = (hit.collider.transform.position - transform.position);
-                else
-                    look = (InputManager.Instance.PlayerLook - transform.position);
-            }
-
-            look = look.ZeroY();
-            if (look.magnitude >= 0.001f)
-                transform.rotation = Quaternion.LookRotation(look.normalized, Vector3.up);
-        }
-
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
@@ -118,8 +105,6 @@ namespace NoZ.Zisle
 
             InputManager.Instance.OnPlayerZoom -= OnPlayerZoom;
             InputManager.Instance.OnPlayerAction -= OnPlayerAction;
-
-            All.Remove(this);
         }
 
         protected override void Update()
@@ -163,18 +148,9 @@ namespace NoZ.Zisle
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(offset, Vector3.up), Time.deltaTime * _rotationSpeed);
         }
 
-        protected override void OnBusyChanged() 
-        {
-            base.OnBusyChanged();
-
-            //if (!IsBusy && (Time.time - _lastActionTime) < _actionSlop)
-                //ExecuteAction(_lastActionGamepad);
-        }
-
         public override bool ExecuteAbility(ActorAbility ability, List<Actor> targets)
         {
             ClearLastPressed();
-
             return base.ExecuteAbility(ability, targets);
         }
 

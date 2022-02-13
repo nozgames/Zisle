@@ -17,6 +17,7 @@ MonoBehaviour:
   _brain: {fileID: 11400000, guid: f0f42f484ce0e684bac436bcfd5248e2, type: 2}
   _prefab: {fileID: 6060163351921082379, guid: 7d8a01711b2a36545a88dcbe8bf3c2d2, type: 3}
   _preview: {fileID: 0}
+  _healthCircleClass: zisle-health-circle-red
   _baseHealthMax: 100
   _baseHealthRegen: 5
   _baseSpeed: 2

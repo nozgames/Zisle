@@ -61,5 +61,7 @@
         <Button name="ready" text="Play" class="menu-row menu-row-gap"/>
         <Button name="options" text="Options" class="menu-row" enabled="false"/>
         <Button name="quit" text="Quit" class="menu-row menu-row-gap"/>
+
+        <Label name="countdown" text="" class="hidden"/>
     </zisle:UILobbyController>
 </engine:UXML>

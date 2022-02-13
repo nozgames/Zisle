@@ -14,6 +14,9 @@ namespace NoZ.Zisle
         [SerializeField] private GameObject _prefab = null;
         [SerializeField] private GameObject _preview = null;
 
+        [Header("Visuals")]
+        [SerializeField] private string _healthCircleClass = null;
+
         [Header("Attributes")]
         [SerializeField] private float _baseHealthMax = 100.0f;
         [SerializeField] private float _baseHealthRegen = 5.0f;
@@ -59,6 +62,11 @@ namespace NoZ.Zisle
         /// Get the actor type
         /// </summary>
         public ActorType ActorType => _type;
+
+        /// <summary>
+        /// USS class to use for health circles, if empty no health circle will be displayed for this actor
+        /// </summary>
+        public string HealthCircleClass => _healthCircleClass;
 
         /// <summary>
         /// Return the base attribute for the given attribute

@@ -40,3 +40,177 @@
 	margin-left: -100px;
 	margin-top: -20px;
 }
+
+.zisle-health-circle
+{
+	position: absolute;
+	width: 150px;
+	height: 150px;
+	margin-top: -75px;
+	margin-left: -75px;
+}
+
+.zisle-health-circle-mask
+{
+	position: absolute;
+	left:0px;
+	right: 0px;
+	top:0px;
+	bottom:0px;
+	
+	border-width: 0.01px;
+	border-color: white;
+	border-radius: 100%;
+	overflow: hidden;
+}
+
+.zisle-health-circle-health
+{	
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+}
+
+.zisle-health-circle-highlight
+{
+	background-color: white;
+	opacity: .05;
+	position: absolute;
+	left: 0px;
+	right: 50%;
+	top: 0px;
+	bottom: 0px;
+}
+
+.zisle-health-circle-border
+{
+	border-width: 5px;
+	border-color: white;
+	border-radius: 200px;
+	position: absolute;
+	top:0;
+	right:0;
+	left:0;
+	bottom:0;
+}
+
+.zisle-health-circle-red .zisle-health-circle-mask
+{
+	background-color: rgba(255,255,255,.2);
+}
+
+.zisle-health-circle-red .zisle-health-circle-health
+{
+	background-color: #FF5555;
+}
+
+.zisle-health-circle-green .zisle-health-circle-mask
+{
+	background-color: rgba(255,255,255,.2);
+}
+
+.zisle-health-circle-green .zisle-health-circle-health
+{
+	background-color: #55FF55;
+}
+
+#test4
+{
+	background-color: #b0d977;
+	width: 500px;
+	height: 500px;
+	margin-top: auto;
+	margin-bottom: auto;
+	border-width: 15px;
+	border-radius: 45px;
+	border-color: white;
+	padding-top: 20px;
+}
+
+#test5
+{
+	background-color: #d7edb8;
+	width: 100%;
+	height: 80px;
+	margin-top: 10px;
+	border-top-width: 5px;
+	border-bottom-width: 5px;
+	border-color: white;
+}
+
+
+#test6
+{
+	position: absolute;
+	bottom: -40px;
+	left: 50%;
+	margin-left: -150px;
+	width: 300px;
+	height: 80px;
+	color: #ecfffe;
+}
+
+.zisle-button
+{
+	border-width: 10px;
+	border-color: white;
+	border-radius: 20px;
+	padding-bottom: 10px;
+	-unity-text-align: lower-center;
+	overflow: hidden;
+
+}
+
+.zisle-button > .zisle-button-raised
+{
+	position: absolute;
+	bottom: 10px;
+	right: 0;
+	left: 0;
+	top: 0;
+	background-color: #ee4545;
+	border-color: #ee4545;
+	border-radius: 10px;
+	border-width: 1px;
+}
+
+.zisle-button > .zisle-button-shadow
+{
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	top: 0;
+	background-color: #c11b1a;
+	border-radius: 10px;
+	border-color: #c11b1a;
+	border-width: 1px;
+}
+
+.zisle-button:focus > .zisle-button-raised
+{
+	background-color: #f96c69;
+	border-color: #f96c69;
+}
+
+.zisle-button:active > .zisle-button-raised
+{
+	background-color: #f96c69;
+	border-color: #f96c69;
+	display: none;
+}
+
+.zisle-button-text
+{
+	color: #000000;
+	position: absolute;
+	top: 0;
+	bottom: 5px;
+	left: 0;
+	right: 0;
+	color: white;
+	-unity-text-outline: 1px;
+	-unity-text-outline-color: #c11b1a;
+}
+

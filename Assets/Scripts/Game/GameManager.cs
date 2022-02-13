@@ -133,6 +133,13 @@ namespace NoZ.Zisle
         }
 
         /// <summary>
+        /// Returns the camera zoom as a ratio of 0-1 where 0 is maximum zoom and 1 is minimum zoom
+        /// </summary>
+        public float CameraZoomRatio => (_cameraZoom - _cameraZoomMin) / (_cameraZoomMax - _cameraZoomMin);
+
+        public float CameraDistance { get; private set; }
+
+        /// <summary>
         /// Return the actor definitions
         /// </summary>
         public IEnumerable<ActorDefinition> ActorDefinitions => _actorDefinitions;
@@ -459,6 +466,7 @@ namespace NoZ.Zisle
             _cameraTarget += Quaternion.Euler(0, _cameraYaw, 0) * _cameraOffset;
             _camera.transform.position = _cameraTarget + Quaternion.Euler(_cameraPitch, _cameraYaw, 0) * new Vector3(0, 0, 1) * _cameraZoom;
             _camera.transform.LookAt(_cameraTarget, Vector3.up);
+            CameraDistance = (_camera.transform.position - _cameraTarget).magnitude;
         }
     }
 }
