@@ -10,13 +10,12 @@ namespace NoZ.Zisle
         {
             base.Initialize();
 
-            BindClick("back", OnBack).Focus();
-            BindClick("join", OnJoin);
-            BindClick("host", OnHost);
-            BindClick("continue", OnContinue);
-
-            BindClick("host-local", OnHostLocal);
-            BindClick("join-local", OnJoinLocal);
+            this.Q("back").BindClick(OnBack).Focus();
+            this.Q("join").BindClick(OnJoin);
+            this.Q("host").BindClick(OnHost);
+            this.Q("continue").BindClick(OnContinue);
+            this.Q("host-local").BindClick(OnHostLocal);
+            this.Q("join-local").BindClick(OnJoinLocal);
         }
 
         public override void OnNavigationBack()

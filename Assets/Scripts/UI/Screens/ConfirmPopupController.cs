@@ -32,9 +32,14 @@ namespace NoZ.Zisle
             _no = this.Q<Button>("no");
             _cancel = this.Q<Button>("cancel");
 
-            _yes = (Button)BindClick("yes", OnYesButton);
-            _no = (Button)BindClick("no", OnNoButton);
-            _cancel = (Button)BindClick("cancel", OnCancelButton);
+            _yes = this.Q<Button>("yes");
+            _yes.BindClick(OnYesButton);
+
+            _no = this.Q<Button>("no");
+            _no.BindClick(OnNoButton);
+
+            _cancel = this.Q<Button>("cancel");
+            _cancel.BindClick(OnCancelButton);
         }
 
         private void OnYesButton() => PerformAction(_onYes);

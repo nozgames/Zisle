@@ -121,3 +121,138 @@
 {
     margin-top: 15px;
 }
+
+
+
+
+/* Zisle Button */
+
+.zisle-button 
+{
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.zisle-button > .zisle-button-raised
+{
+	position: absolute;
+	bottom: 6px;
+	right: 0;
+	left: 0;
+	top: 0;
+	border-radius: 10px;
+	border-width: 1px;
+}
+
+.zisle-button > .zisle-button-shadow
+{
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	top: 0;
+	border-radius: 10px;
+	border-width: 1px;
+}
+
+.zisle-button:active > .zisle-button-raised
+{
+	display: none;
+}
+
+.zisle-button > Label
+{
+    margin-top: 6px;
+    margin-bottom: 12px;
+	-unity-text-outline: 1px;
+    font-size: 120%;
+    -unity-text-align: middle-center;
+}
+
+/* Zisle Button Red */
+
+.zisle-button-red > Label
+{
+	color: white;
+	-unity-text-outline-color: #c11b1a;
+}
+
+.zisle-button-red > .zisle-button-raised
+{
+	background-color: #ee4545;
+	border-color: #ee4545;
+}
+
+.zisle-button-red > .zisle-button-shadow
+{
+	background-color: #c11b1a;
+}
+
+.zisle-button-red:focus > .zisle-button-raised
+{
+	background-color: #f96c69;
+	border-color: #f96c69;
+}
+
+/* Zisle Button Orange */
+
+.zisle-button-orange> Label
+{
+	color: white;
+	-unity-text-outline-color: #e67819;
+}
+
+.zisle-button-orange > .zisle-button-raised
+{
+	background-color: #fd921e;
+	border-color: #fd921e;
+}
+
+.zisle-button-orange > .zisle-button-shadow
+{
+	background-color: #d96c13;
+}
+
+.zisle-button-orange:focus > .zisle-button-raised
+{
+	background-color: #fdc866;
+	border-color: #fdc866;
+}
+
+/* Zisle Button Blue */
+
+.zisle-button-blue > Label
+{
+	color: white;
+	-unity-text-outline-color: #2c68bf;
+}
+
+.zisle-button-blue > .zisle-button-raised
+{
+	background-color: #3f9af3;
+	border-color: #3f9af3;
+}
+
+.zisle-button-blue > .zisle-button-shadow
+{
+	background-color: #2a6dbb;
+}
+
+.zisle-button-blue:focus > .zisle-button-raised
+{
+	background-color: #54b6f0;
+	border-color: #54b6f0;
+}
+
+/* Zisle Panel */
+
+.zisle-panel
+{
+	border-radius: 20px;
+	border-width: 10px;
+    border-color: white;
+    padding: 40px 80px;
+    background-color: #e9e6ea;
+}

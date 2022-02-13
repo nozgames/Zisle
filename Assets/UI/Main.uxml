@@ -8,7 +8,6 @@
     noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd"
     editor-extension-mode="False">
 
-    <ui:Template name="Title" src="Title.uxml" />
     <ui:Template name="Options" src="Options.uxml" />
     <ui:Template name="KeyboardControls" src="KeyboardControls.uxml" />
     <ui:Template name="GamepadControls" src="GamepadControls.uxml" />
@@ -24,7 +23,11 @@
     <VisualElement class="root">
         <VisualElement class="main-background"/>
 
-        <ui:Instance template="Title" class="screen hidden"/>
+        <VisualElement class="screen">
+            <Style src="project://database/Assets/UI/Title.uss" />
+            <zisle:TitleScreen/>
+        </VisualElement>
+
         <ui:Instance template="Options" class="screen hidden"/>
         <ui:Instance template="KeyboardControls" class="screen hidden"/>
         <ui:Instance template="GamepadControls" class="screen hidden"/>

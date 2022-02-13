@@ -26,7 +26,7 @@ namespace NoZ.Zisle
 
             this.Q<Image>("player-left-preview").image = UIManager.Instance.PreviewLeftTexture;
 
-            BindClick("quit", () =>
+            this.Q("quit").BindClick(() =>
             {
                 if (GameManager.Instance.MaxPlayers == 1)
                     UIManager.Instance.ShowMainMenu();
@@ -38,7 +38,7 @@ namespace NoZ.Zisle
                 }
             });
 
-            BindClick("player-class-prev", () =>
+            this.Q("player-class-prev").BindClick(() =>
             {
                 var index = _playerClasses.IndexOf(_playerClassLeft);
                 if (index == -1)
@@ -51,7 +51,7 @@ namespace NoZ.Zisle
                 GameManager.Instance.LocalPlayerController.PlayerClassId = _playerClasses[index].NetworkId;
             });
 
-            BindClick("player-class-next", () =>
+            this.Q("player-class-next").BindClick(() =>
             {
                 var index = _playerClasses.IndexOf(_playerClassLeft);
                 if (index == -1)
@@ -64,7 +64,7 @@ namespace NoZ.Zisle
                 GameManager.Instance.LocalPlayerController.PlayerClassId = _playerClasses[index].NetworkId;
             });
 
-            BindClick("ready", () =>
+            this.Q("ready").BindClick(() =>
             {
                 if (GameManager.Instance.IsSolo)
                     UIManager.Instance.StartGame();

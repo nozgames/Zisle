@@ -20,10 +20,11 @@ namespace NoZ.Zisle
             joinCode.Focus();
             _joinCode = joinCode;
 
-            _join = BindClick("join", OnJoin);
+            _join = this.Q("join");
+            _join.BindClick(OnJoin);
             _join.SetEnabled(false);
 
-            BindClick("back", OnBack);
+            this.Q("back").BindClick(OnBack);
         }
 
         private void OnValueChanged(ChangeEvent<string> evt)

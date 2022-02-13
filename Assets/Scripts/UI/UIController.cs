@@ -33,25 +33,6 @@ namespace NoZ.Zisle
             }
         }
 
-        public VisualElement BindClick (string name, System.Action action=null)
-        {
-            var element = this.Q(name);
-            if (element is Button button)
-                button.clicked += () =>
-                {
-                    AudioManager.Instance.PlayButtonClick();
-                    action?.Invoke();
-                };
-            else
-                element.AddManipulator(new Clickable((e) =>
-                {
-                    AudioManager.Instance.PlayButtonClick();
-                    action?.Invoke();
-                }));
-
-            return element;
-        }
-
         public virtual void OnBeforeTransitionOut() { }
         public virtual void OnBeforeTransitionIn() { }
         public virtual void OnAfterTransitionOut() { }

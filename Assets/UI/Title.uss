@@ -1,13 +1,35 @@
-.menu-row {
-    width: 400px;
-    margin-bottom: 15px;
+.logo {
+    background-image : url("project://database/Assets/Sprites/UI/Logo.png");
+
+    width: 1300px;
+    height: 300px;
+    margin-bottom: 100px;
+    -unity-background-image-tint-color: var(--color-title);
+    -unity-background-scale-mode: scale-and-crop;
 }
 
-.logo {
-    background-image : url("project://database/Assets/Sprites/Logo.psd");
-    width: 768px;
-    height: 384px;
-    margin-top: -128px;
-    margin-bottom: 60px;
-    -unity-background-image-tint-color: var(--color-title);
+.zisle-button
+{
+    width: 300px;
+    margin-top: 20px;
+}
+
+.zisle-button > Label
+{
+    font-size: 80%;
+}
+
+.zisle-panel
+{
+    padding-top: 0px;
+    margin-bottom: 0px;
+    padding-left: 40px;
+    padding-right : 40px;
+    padding-top: 20px;
+}
+
+.vertical
+{
+    margin-top: auto;
+    margin-bottom:auto;
 }

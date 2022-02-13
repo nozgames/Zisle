@@ -13,7 +13,7 @@ namespace NoZ.Zisle
         {
             base.Initialize();
 
-            BindClick("back", OnBack).Focus();
+            this.Q("back").BindClick(OnBack).Focus();
         }
 
         private void OnBack()

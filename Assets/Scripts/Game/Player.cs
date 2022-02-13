@@ -159,5 +159,12 @@ namespace NoZ.Zisle
         /// </summary>
         public bool WasButtonPressed (PlayerButton button) =>
             !IsBusy && _lastPressed == button && (Time.time - _buttonStates[(int)button].LastPressedTime) < _buttonSlop;
+
+        protected override void OnHealthChanged()
+        {
+            base.OnHealthChanged();
+
+            Health = Mathf.Max(Health, 1.0f);
+        }
     }
 }

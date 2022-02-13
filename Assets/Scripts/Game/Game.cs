@@ -49,7 +49,13 @@ namespace NoZ.Zisle
 
         public int WaveEnemyRemainingCount { get; set; }
 
-        public int WaveEnemyCount { get; set; } = 1;
+        public int WaveEnemyCount { get; set; } = 5;
+
+        public int WaveDelay { get; set; } = 10;
+
+        public int WaveEnemyDelay { get; set; } = 1;
+
+        public int WaveInitialDelay { get; set; } = 5;
 
         public static Game Instance => GameManager.Instance.Game;
 
@@ -288,14 +294,21 @@ namespace NoZ.Zisle
 
         private IEnumerator SpawnWaves ()
         {
+            yield return new WaitForSeconds(WaveInitialDelay);
+
             while (IsSpawned)
             {
-                yield return new WaitForSeconds(1.0f);
+                for(int i=0; i< WaveEnemyCount; i++)
+                {
+                    SpawnEnemy();
+                    yield return new WaitForSeconds(WaveEnemyDelay);
+                }
 
-                SpawnEnemy();
-
-                while (WaveEnemyRemainingCount >= WaveEnemyCount)
+                while (WaveEnemyRemainingCount > 0)
                     yield return null;
+
+
+                yield return new WaitForSeconds(WaveDelay);
             }
         }
 

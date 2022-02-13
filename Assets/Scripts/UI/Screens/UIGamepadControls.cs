@@ -11,7 +11,7 @@ namespace NoZ.Zisle
         {
             base.Initialize();
 
-            BindClick("back", OnBackInternal ).Focus();
+            this.Q("back").BindClick(OnBackInternal ).Focus();
 
             var zoomSpeed = this.Q<Slider>("zoom-speed");
             zoomSpeed.lowValue = 0.0f;

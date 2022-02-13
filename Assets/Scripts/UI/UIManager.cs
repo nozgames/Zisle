@@ -45,7 +45,7 @@ namespace NoZ.Zisle
 
             var doc = GetComponent<UIDocument>();
             _root = doc.rootVisualElement;
-            doc.enabled = true;
+            //doc.enabled = true;
 
             // Initialzie and bind all UIControllers
             _root.Query<UIController>().ForEach(c => c.Initialize());
@@ -59,7 +59,7 @@ namespace NoZ.Zisle
             UIController<UILoadingController>.Bind(_root).Hide();
             UIController<UI.UIGame>.Bind(_root).Hide();
             UIController<UIGameMenu>.Bind(_root).Hide();
-            UIController<UITitleController>.Bind(_root).Hide();
+            UIController<TitleScreen>.Bind(_root).Hide();
             UIController<UILobbyController>.Bind(_root).Hide();
             UIController<UIDebugController>.Bind(_root).Hide();
 
@@ -112,7 +112,7 @@ namespace NoZ.Zisle
             TransitionTo(UIController<UIGamepadControls>.Instance);
 
         public void ShowTitle () =>
-            TransitionTo(UIController<UITitleController>.Instance);
+            TransitionTo(UIController<TitleScreen>.Instance);
 
         public void ShowCooperative () =>
             TransitionTo(UIController<CooperativeController>.Instance);

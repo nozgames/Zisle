@@ -13,9 +13,9 @@ namespace NoZ.Zisle
         {
             base.Initialize();
 
-            BindClick("resume", OnResume);
-            BindClick("quit", OnQuit);
-            BindClick("options", OnOptions);
+            this.Q("resume").BindClick(OnResume);
+            this.Q("quit").BindClick(OnQuit);
+            this.Q("options").BindClick(OnOptions);
         }
 
         private void OnOptions()
