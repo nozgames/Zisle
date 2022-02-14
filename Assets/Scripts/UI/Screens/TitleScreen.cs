@@ -2,9 +2,9 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using NoZ.Zisle.UI;
 
-namespace NoZ.Zisle
+namespace NoZ.Zisle.UI
 {
-    public class TitleScreen : UIController
+    public class TitleScreen : ScreenElement
     {
         public new class UxmlFactory : UxmlFactory<TitleScreen, UxmlTraits> { }
 
@@ -17,25 +17,21 @@ namespace NoZ.Zisle
 
             this.Add<VisualElement>(className: "logo");
 
-            var panel = this.Add<Panel>().AddClass("centered-vertical");
+            var panel = this.Add<Panel>().SetTitle("MAIN MENU").AddClass("centered-vertical");
             _solo = panel.Add<RaisedButton>().SetColor(RaisedButtonColor.Blue).LocalizedText("solo").BindClick(OnSolo);
             panel.Add<RaisedButton>().SetColor(RaisedButtonColor.Blue).LocalizedText("cooperative").BindClick(OnCooperative);
             panel.Add<RaisedButton>().SetColor(RaisedButtonColor.Blue).LocalizedText("options").BindClick(OnOptions);
-            panel.Add<RaisedButton>().SetColor(RaisedButtonColor.Orange).LocalizedText("quit").BindClick(OnQuit);
+            panel.Add<RaisedButton>().SetColor(RaisedButtonColor.Orange).LocalizedText("quit").AddClass("gap").BindClick(OnQuit);
         }
+
+        private void OnCooperative() => UIManager.Instance.ShowCooperative();
+        private void OnOptions() => UIManager.Instance.ShowOptions();
 
         private void OnSolo()
         {
             GameManager.Instance.MaxPlayers = 1;
             UIManager.Instance.JoinLobby("127.0.0.1", true);
         }
-
-        private void OnCooperative()
-        {
-            UIManager.Instance.ShowCooperative();
-        }
-
-        private void OnOptions() => UIManager.Instance.ShowOptions();
 
         private void OnQuit()
         {

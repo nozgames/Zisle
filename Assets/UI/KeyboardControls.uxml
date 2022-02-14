@@ -4,7 +4,7 @@
     xmlns="UnityEngine.UIElements"
     xmlns:engine="UnityEngine.UIElements"
     xmlns:editor="UnityEditor.UIElements"
-    xmlns:zisle="NoZ.Zisle"
+    xmlns:zisle="NoZ.Zisle.UI"
     xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
 >
     <Style src="project://database/Assets/UI/Options.uss" />

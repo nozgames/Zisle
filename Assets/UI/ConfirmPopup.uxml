@@ -5,7 +5,7 @@
     xmlns="UnityEngine.UIElements" 
     engine="UnityEngine.UIElements"
     editor="UnityEditor.UIElements"
-    xmlns:zisle="NoZ.Zisle"
+    xmlns:zisle="NoZ.Zisle.UI"
     noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
     editor-extension-mode="False">
     <Style src="project://database/Assets/UI/ConfirmPopup.uss" />

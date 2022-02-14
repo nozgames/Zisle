@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _type: 0
   _displayName: Fire Wizard
-  _brain: {fileID: 0}
+  _brain: {fileID: 11400000, guid: d7f905ae2cfee25419a4455cff5df649, type: 2}
   _prefab: {fileID: 5107839595957495342, guid: 92b0d3703bdc3a34cbae82f72e44509d, type: 3}
-  _preview: {fileID: 919132149155446097, guid: 8133a3f119034dd49880a9968561261b, type: 3}
+  _preview: {fileID: 2491801748512037273, guid: 6f15db5566b30344398e891b4020e0e1,
+    type: 3}
   _healthCircleClass: zisle-health-circle-green
   _baseHealthMax: 100
   _baseHealthRegen: 5

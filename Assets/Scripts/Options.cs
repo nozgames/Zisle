@@ -21,8 +21,6 @@ namespace NoZ.Zisle
         private static float _gamepadZoomSpeed;
 
         private static string _playerName;
-        private static string _playerClass;
-        private static Color _playerSkinColor;
 
         public static event Action<bool> OnScreenShakeChange;
         public static event Action<float> OnSoundVolumeChange;

@@ -109,6 +109,14 @@ namespace NoZ.Zisle
             if (null == actorDef)
                 throw new System.InvalidOperationException($"No ActorDefinition found for player class id [{_playerClassId.Value}]");
 
+            // No brain it must be random or an error, pick another random class that isnt one of the other players
+            if(actorDef.Brain == null)
+            {
+                var defs = GameManager.Instance.ActorDefinitions.Where(d => d.ActorType == ActorType.Player && !GameManager.Instance.Players.Any(p => p.PlayerClass == d)).ToArray();
+                actorDef = defs[UnityEngine.Random.Range(0, defs.Length)];
+                _playerClassId.Value = actorDef.NetworkId;
+            }
+
             // TODO: orientation
             _player = Instantiate(actorDef.Prefab).GetComponent<Player>();
             _player.NetworkObject.SpawnWithOwnership(this.OwnerClientId);

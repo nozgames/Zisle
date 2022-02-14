@@ -6,7 +6,7 @@ using NoZ.Tweening;
 
 namespace NoZ.Zisle.UI
 {
-    public class UIGame : UIController
+    public class UIGame : ScreenElement
     {
         public new class UxmlFactory : UxmlFactory<UIGame, UxmlTraits> { }
 

@@ -34,6 +34,46 @@ MonoBehaviour:
     m_Localized: Quit
     m_Metadata:
       m_Items: []
+  - m_Id: 66359079026688
+    m_Localized: Ready
+    m_Metadata:
+      m_Items: []
+  - m_Id: 67011045834752
+    m_Localized: Cooperative
+    m_Metadata:
+      m_Items: []
+  - m_Id: 67038908596224
+    m_Localized: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 109666895216640
+    m_Localized: Lanes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 109715490422784
+    m_Localized: Local
+    m_Metadata:
+      m_Items: []
+  - m_Id: 109748520566784
+    m_Localized: Remote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 131266227027968
+    m_Localized: Class
+    m_Metadata:
+      m_Items: []
+  - m_Id: 131284979761152
+    m_Localized: Play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 141094118834176
+    m_Localized: Waiting for player
+    m_Metadata:
+      m_Items: []
+  - m_Id: 141165195509760
+    m_Localized: Connecting
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using NoZ.Zisle.UI;
 
 namespace NoZ.Zisle
 {

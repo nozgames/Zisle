@@ -3,9 +3,9 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NoZ.Zisle
+namespace NoZ.Zisle.UI
 {
-    public class UIGameMenu : UIController
+    public class UIGameMenu : ScreenElement
     {
         public new class UxmlFactory : UxmlFactory<UIGameMenu, UxmlTraits> { }
 

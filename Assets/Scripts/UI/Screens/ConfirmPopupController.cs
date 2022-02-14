@@ -1,9 +1,9 @@
 using System;
 using UnityEngine.UIElements;
 
-namespace NoZ.Zisle
+namespace NoZ.Zisle.UI
 {
-    public class ConfirmPopupController : UIController
+    public class ConfirmPopupController : ScreenElement
     {
         public new class UxmlFactory : UxmlFactory<ConfirmPopupController, UxmlTraits> { }
 

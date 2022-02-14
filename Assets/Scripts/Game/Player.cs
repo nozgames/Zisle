@@ -68,9 +68,9 @@ namespace NoZ.Zisle
             }
             else
             {
-                if (Physics.Raycast(InputManager.Instance.PlayerLookRay, out var hit, 100.0f) && hit.collider.GetComponentInParent<Actor>() != null)
-                    look = (hit.collider.transform.position - transform.position);
-                else
+//                if (Physics.Raycast(InputManager.Instance.PlayerLookRay, out var hit, 100.0f) && hit.collider.GetComponentInParent<Actor>() != null)
+//                    look = (hit.collider.transform.position - transform.position);
+//                else
                     look = (InputManager.Instance.PlayerLook - transform.position);
             }
 
@@ -144,7 +144,7 @@ namespace NoZ.Zisle
                 NavAgent.Move(moveTarget - transform.position);
 
             // If the player is moving then use the original look delta to rotate using the rotation speed
-            if(IsMoving && offset.magnitude > 0.001f)
+            if(!IsBusy && IsMoving && offset.magnitude > 0.001f)
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(offset, Vector3.up), Time.deltaTime * _rotationSpeed);
         }
 

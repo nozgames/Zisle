@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
-namespace NoZ.Zisle
+namespace NoZ.Zisle.UI
 {
     public class UIControlBinding : VisualElement
     {

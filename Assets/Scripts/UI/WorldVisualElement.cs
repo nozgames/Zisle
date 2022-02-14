@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NoZ.Zisle
+namespace NoZ.Zisle.UI
 {
     public abstract class WorldVisualElement
     {

@@ -1,9 +1,10 @@
 .logo {
     background-image : url("project://database/Assets/Sprites/UI/Logo.png");
 
-    width: 1300px;
-    height: 300px;
+    width: 1000px;
+    height: 190px;
     margin-bottom: 100px;
+    margin-top: -60px;
     -unity-background-image-tint-color: var(--color-title);
     -unity-background-scale-mode: scale-and-crop;
 }
@@ -16,20 +17,26 @@
 
 .zisle-button > Label
 {
-    font-size: 80%;
+    font-size: 100%;
 }
 
 .zisle-panel
 {
     padding-top: 0px;
     margin-bottom: 0px;
-    padding-left: 40px;
-    padding-right : 40px;
+    padding-left: 60px;
+    padding-right : 60px;
     padding-top: 20px;
+    background-color: #e8e7ea;
 }
 
 .vertical
 {
     margin-top: auto;
     margin-bottom:auto;
+}
+
+.gap
+{
+    margin-top: 40px;
 }

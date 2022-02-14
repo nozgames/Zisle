@@ -3,9 +3,9 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NoZ.Zisle
+namespace NoZ.Zisle.UI
 {
-    public class UIDebugController : UIController
+    public class UIDebugController : ScreenElement
     {
         public new class UxmlFactory : UxmlFactory<UIDebugController, UxmlTraits> { }
 

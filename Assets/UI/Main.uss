@@ -17,13 +17,51 @@
     --font-definition-normal: url("project://database/Assets/Fonts/Bidan-Pll7.ttf");
     --font-definition-fixed: url("project://database/Assets/Fonts/CONSOLA.ttf");
     --image-rounded-border: url("project://database/Assets/RoundedBorder.png");
+
+    --zisle-color-label: white;
+    --zisle-color-label-dk: #767376;
+
+    --zisle-color-border: white;
+
+    --zisle-color-gray: #e9e6ea;
+    --zisle-color-gray-dk: #d9d6d9;
+    
+    --zisle-button-color-orange: #ff9223;
+    --zisle-button-color-orange-dk: #d96c13;
+    --zisle-button-color-orange-lt: #fdc866;
+
+    --zisle-button-color-red: #ee4545;
+    --zisle-button-color-red-dk: #c11b1a;
+    --zisle-button-color-red-lt: #f96c69;
+
+    --zisle-button-color-blue: #3f9af3;
+    --zisle-button-color-blue-dk: #2a6dbb;
+    --zisle-button-color-blue-lt: #54b6f0;     
+
+    --zisle-button-border-color: white;
+    --zisle-button-border-width: 6px;
+    --zisle-button-border-radius: 2px;
+
+    --zisle-button-color-green: #81ca37;
+    --zisle-button-color-green-dk: #4b9821;
+    --zisle-button-color-green-lt: #a8db4d;
+
+    --zisle-button-color-disabled: #d6d7d8;
+    --zisle-button-color-disabled-dk: #b4afb1;
+
+    --zisle-panel-border-radius: 5px;
+    --zisle-panel-border-width: 10px;
+    --zisle-panel-border-color: white;
+    --zisle-panel-background-color: #e9e6ea;
 }
 
-.hidden {
+.hidden 
+{
     display: none;
 }
 
-.root {
+.root 
+{
     flex-direction: column;
     flex-grow: 1;
     -unity-font-definition: var(--font-definition-normal);
@@ -133,16 +171,16 @@
     margin-right: auto;
     padding-left: 20px;
     padding-right: 20px;
+
 }
 
 .zisle-button > .zisle-button-raised
 {
 	position: absolute;
-	bottom: 6px;
+	bottom: 4px;
 	right: 0;
 	left: 0;
 	top: 0;
-	border-radius: 10px;
 	border-width: 1px;
 }
 
@@ -153,7 +191,6 @@
 	right: 0;
 	left: 0;
 	top: 0;
-	border-radius: 10px;
 	border-width: 1px;
 }
 
@@ -164,36 +201,60 @@
 
 .zisle-button > Label
 {
-    margin-top: 6px;
-    margin-bottom: 12px;
+    margin-top: 2px;
+    margin-bottom: 10px;
 	-unity-text-outline: 1px;
     font-size: 120%;
     -unity-text-align: middle-center;
+    padding: 0px;
 }
+
+.zisle-button:disabled
+{
+    opacity: 1;
+}
+
+.zisle-button:disabled .zisle-button-raised
+{
+   background-color: var(--zisle-button-color-disabled);
+   border-color:var(--zisle-button-color-disabled);
+}
+
+.zisle-button:disabled .zisle-button-shadow
+{
+   background-color: var(--zisle-button-color-disabled-dk);
+   border-color:var(--zisle-button-color-disabled-dk);
+}
+
+.zisle-button:disabled Label
+{
+   -unity-text-outline: 0px;
+}
+
 
 /* Zisle Button Red */
 
 .zisle-button-red > Label
 {
 	color: white;
-	-unity-text-outline-color: #c11b1a;
+	-unity-text-outline-color: var(--zisle-button-color-red-dk);
 }
 
 .zisle-button-red > .zisle-button-raised
 {
-	background-color: #ee4545;
-	border-color: #ee4545;
+	background-color: var(--zisle-button-color-red);
+	border-color: var(--zisle-button-color-red);
 }
 
 .zisle-button-red > .zisle-button-shadow
 {
-	background-color: #c11b1a;
+	background-color: var(--zisle-button-color-red-dk);
 }
 
 .zisle-button-red:focus > .zisle-button-raised
 {
-	background-color: #f96c69;
-	border-color: #f96c69;
+	background-color: var(--zisle-button-color-red-lt);
+	border-color: var(--zisle-button-color-red-lt);
 }
 
 /* Zisle Button Orange */
@@ -206,19 +267,19 @@
 
 .zisle-button-orange > .zisle-button-raised
 {
-	background-color: #fd921e;
-	border-color: #fd921e;
+	background-color: var(--zisle-button-color-orange);
+	border-color: var(--zisle-button-color-orange);
 }
 
 .zisle-button-orange > .zisle-button-shadow
 {
-	background-color: #d96c13;
+	background-color: var(--zisle-button-color-orange-dk);
 }
 
 .zisle-button-orange:focus > .zisle-button-raised
 {
-	background-color: #fdc866;
-	border-color: #fdc866;
+	background-color: var(--zisle-button-color-orange-lt);
+	border-color: var(--zisle-button-color-orange-lt);
 }
 
 /* Zisle Button Blue */
@@ -226,33 +287,68 @@
 .zisle-button-blue > Label
 {
 	color: white;
-	-unity-text-outline-color: #2c68bf;
+	-unity-text-outline-color: var(--zisle-button-color-blue-dk);
 }
 
 .zisle-button-blue > .zisle-button-raised
 {
-	background-color: #3f9af3;
-	border-color: #3f9af3;
+	background-color: var(--zisle-button-color-blue);
+	border-color: var(--zisle-button-color-blue);
 }
 
 .zisle-button-blue > .zisle-button-shadow
 {
-	background-color: #2a6dbb;
+	background-color: var(--zisle-button-color-blue-dk);
 }
 
 .zisle-button-blue:focus > .zisle-button-raised
 {
-	background-color: #54b6f0;
-	border-color: #54b6f0;
+	background-color: var(--zisle-button-color-blue-lt);
+	border-color: var(--zisle-button-color-blue-lt);
 }
 
 /* Zisle Panel */
 
 .zisle-panel
 {
-	border-radius: 20px;
-	border-width: 10px;
-    border-color: white;
+    border-radius: var(--zisle-panel-border-radius);
+	border-width: var(--zisle-panel-border-width);
+    border-color: var(--zisle-panel-border-color);
     padding: 40px 80px;
-    background-color: #e9e6ea;
+    background-color: var(--zisle-panel-background-color);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.zisle-panel-title
+{
+    margin-top: -80px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: var(--zisle-button-color-red);
+    border-color: white;
+    border-radius: 5px;
+    border-width: 10px;
+    color: white;
+    padding: 10px 40px;
+    font-size: 120%;
+    margin-bottom: 20px;
+}
+
+.zisle-panel-close
+{
+    font-size: 60%;
+    position: absolute;
+    top: -35px;
+    right: -35px;
+    border-color: var(--zisle-button-border-color);
+    border-radius: var(--zisle-button-border-radius);
+    border-width: var(--zisle-button-border-width);
+    padding: 3px 15px;
+}
+
+.zisle-panel-items
+{
+    width: 100%;
 }

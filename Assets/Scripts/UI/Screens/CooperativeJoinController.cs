@@ -1,8 +1,8 @@
 using UnityEngine.UIElements;
 
-namespace NoZ.Zisle
+namespace NoZ.Zisle.UI
 {
-    public class CooperativeJoinController : UIController
+    public class CooperativeJoinController : ScreenElement
     {
         public new class UxmlFactory : UxmlFactory<CooperativeJoinController, UxmlTraits> { }
 

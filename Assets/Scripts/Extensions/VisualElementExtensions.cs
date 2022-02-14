@@ -50,5 +50,11 @@ namespace NoZ.Zisle
             return element;
         }
 
+        public static RaisedButton Text(this RaisedButton element, string text)
+        {
+            element.text = text;
+            return element;
+        }
+
     }
 }

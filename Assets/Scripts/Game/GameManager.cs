@@ -7,6 +7,7 @@ using Unity.Services.Relay;
 using System.Collections.Generic;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
+using NoZ.Zisle.UI;
 using static Unity.Netcode.NetworkManager;
 
 namespace NoZ.Zisle
@@ -241,13 +242,6 @@ namespace NoZ.Zisle
                     yield return null;
 
                 Game.Play();
-
-                // Spawn all of the players
-                if(NetworkManager.Singleton.IsHost)
-                {
-                    foreach (var player in _players)
-                        player.SpawnPlayer();
-                }
 
                 Debug.Log("Game Started");
             }

@@ -1,149 +1,3 @@
-.screen-title
-{
-	-unity-text-align: middle-center;
-	width: 100%;
-}
-
-.menu-row {
-    width: 400px;
-}
-
-.menu-row-gap {
-	margin-top: 30px;
-}
-
-
-.preview
-{
-	background-image: var(--image-rounded-border);
-	-unity-background-image-tint-color: var(--color-background-dark);
-	padding: 60px 20px;
-}
-
-.preview Image
-{
-	width: 400px;
-	height: 400px;
-	top: 50%;
-	left: 50%;
-	margin-left: -200px;
-	margin-top: -220px;
-	position: absolute;
-}
-
-.preview-box
-{
-	width: 300px;
-	height: 300px;
-}
-
-.player-class-button
-{
-	width: 60px;
-	height: 60px;
-	padding: 8px;
-	opacity: .2;
-	-unity-background-image-tint-color: var(--color-background);
-}
-
-
-#player-class-prev
-{
-	background-image: url("project://database/Assets/Sprites/Icons/ArrowLeft.png");
-}
-
-#player-class-next
-{
-	background-image: url("project://database/Assets/Sprites/Icons/ArrowRight.png");
-}
-
-.gap-left
-{
-	margin-left: 80px;
-}
-
-.player
-{
-}
-
-.players
-{
-    -unity-background-image-tint-color: var(--color-background);
-    background-image: url("../RoundedBorder.png");
-    padding: 10px 20px 20px 20px;
-    margin-bottom: 2px;
-	flex-direction: row;
-}
-
-.menu-row Label
-{
-	color : var(--color-text);
-	-unity-text-align: middle-left;
-}
-
-.lanes
-{
-	width: 100px;
-	flex-direction: column;
-	margin-top: 0px;
-}
-
-.lanes .lane
-{
-	margin-left: auto;
-	margin-right: auto;
-	width: 50px;
-	height: 50px;
-	margin-bottom: 0px;
-	padding: 0px;
-	color: var(--color-text);
-	background-color: var(--color-background-dark);
-	margin-top: 40px;
-	rotate: 45deg;
-}
-
-.lane Label
-{
-	width: 100%;
-	height: 100%;
-	padding: 0px;
-	margin: 0;
-	rotate: -45deg;
-	-unity-text-align: middle-center;
-	font-size: 80%;
-}
-
-#quit
-{
-	position: absolute;
-	left: 30px;
-	bottom: 30px;
-	width: 200px;
-	height: 50px;
-	font-size: 80%;
-}
-
-#options
-{
-	position: absolute;
-	right: 30px;
-	bottom: 30px;
-	width: 200px;
-	height: 50px;
-	font-size: 80%;
-}
-
-#countdown
-{
-	position: absolute;
-	left: 50%;
-	bottom: 140px;
-	width: 600px;
-	height: 80px;
-	margin-left: -300;
-	font-size: 100%;
-}
-
 #ready
 {
 	position: absolute;
@@ -155,54 +9,10 @@
 	font-size: 100%;
 }
 
-.header
-{
-	color: var(--color-text);
-	font-size: var(--font-size-small);
-	-unity-text-align: middle-center;
-	opacity: .5;
-}
-
-#not
-{
-	background-image: url("project://database/Assets/Sprites/Icons/Not.png");
-	width: 250px;
-	height: 250px;
-	opacity: .05;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	margin-left: -125px;
-	margin-top: -125px;
-}
-
-#ghost
+.ghost
 {
 	background-image: url("project://database/Assets/Sprites/Icons/Player.png");
-	width: 300px;
-	height: 300px;
-	opacity: .05;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	margin-left: -150px;
-	margin-top: -150px;
-}
-
-
-.unity-radio-button__input
-{
-	display: none;
-}
-
-.unity-radio-button:checked 
-{
-	border-width: 6px;
-	border-color: var(--color-background-highlight);
-	width: 60px;
-	height: 60px;
-	margin-top: 35px;
-	margin-bottom: -5px;
+	-unity-background-image-tint-color: var(--zisle-button-color-disabled-dk);
 }
 
 .ready-indicator
@@ -219,27 +29,13 @@
 .ready
 {
 	background-image: url("project://database/Assets/Sprites/Icons/Ready.png");
-	-unity-background-image-tint-color: var(--color-background-highlight);
-}
+	-unity-background-image-tint-color: var(--zisle-button-color-green-dk);
 
-.footer
-{
-	flex-direction: row;
-	position: absolute;
-	left: -20px;
-	right: -20px;
-	bottom: -50px;
+	width: 60px;
 	height: 60px;
-}
-
-.footer Label
-{
-	-unity-text-align: middle-center;
-	color: var(--color-text);
-	font-size: 70%;
-	margin-left: auto;
-	margin-right: auto;
-	height: 100%;
+	position: absolute;
+	top: 10px;
+	right: 10px;
 }
 
 .join-code
@@ -269,4 +65,206 @@
 .ghosted > Label
 {
 	color: var(--color-text-ghosted) !important;
+}
+
+
+
+
+
+
+
+.zisle-panel 
+{
+	width: 1000px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: auto;
+	margin-top: auto;
+	padding: 20px 10px;
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+.zisle-panel-solo
+{
+	width: 700px;
+}
+
+#ready
+{
+	margin-top: auto;
+	margin-bottom: -100px;
+	border-color: var(--zisle-button-border-color);
+	border-width: var(--zisle-button-border-width);
+	border-radius: var(--zisle-button-border-radius)
+}
+
+.players
+{
+    padding: 10px 20px 20px 20px;
+	flex-direction: row;
+	margin-top: 0px;
+	margin-bottom: 40px;
+	width: 100%;
+}
+
+.preview
+{
+	padding: 20px 10px;
+	background-color: var(--zisle-color-gray-dk);
+	margin: 0px 20px;
+	border-color: white;
+	border-width: 8px;
+}
+
+.preview Image
+{
+	width:300px;
+	height: 300px;
+
+	top: 50%;
+	left: 50%;
+	margin-left: -150px;
+	margin-top: -150px;
+	position: absolute;
+}
+
+.preview-box
+{
+	width: 300px;
+	height: 300px;
+	margin-bottom: 30px;
+}
+
+.player-local-class-button
+{
+	width: 50px;
+	height: 50px;
+	padding: 0px;
+}
+
+.player-local-class-button Label
+{
+	padding: 0px;
+	width: 35px;
+	height: 35px;
+	margin: auto;
+	margin-bottom: 10px;
+}
+
+.player-local-class-prev Label
+{
+	background-image: url("project://database/Assets/Sprites/Icons/ArrowLeft.png");
+}
+
+.player-local-class-next Label
+{
+	background-image: url("project://database/Assets/Sprites/Icons/ArrowRight.png");
+}
+
+.preview-footer
+{
+	flex-direction: row;
+	padding: 0px;
+	margin: 0px;
+}
+
+.preview-footer .preview-name
+{
+	margin-top: auto;
+	-unity-text-align: middle-center;
+	color: var(--zisle-color-label-dk);
+	font-size: 70%;
+	height: 100%;
+	flex-grow: 1;
+}
+
+
+/*  Lanes */
+
+.lanes
+{
+	flex-grow: 1;
+	flex-direction: column;
+	margin-top: 0px;
+}
+
+.lanes .lane
+{
+	margin-left: auto;
+	margin-right: auto;
+	width: 50px;
+	height: 50px;
+	margin-bottom: 0px;
+	padding: 0px;
+	color: var(--color-text);
+	background-color: var(--zisle-button-color-orange-dk);
+	margin-top: 40px;
+	rotate: 45deg;
+}
+
+.lane .raised
+{
+	background-color: var(--zisle-button-color-orange);
+	width: 100%;
+	height: 100%;
+	margin-right: 5px;
+	padding: 0px;
+}
+
+.lane:focus .raised
+{
+	background-color: var(--zisle-button-color-orange-lt);
+}
+
+.lane:checked .raised
+{
+	background-color: rgba(0,0,0,0);
+}
+
+.lane:checked
+{
+	background-color: var(--zisle-button-color-green-dk);
+}
+
+.lane:checked:focus
+{
+	background-color: var(--zisle-button-color-green-lt);
+}
+
+.lane Label
+{
+	width: 100%;
+	height: 100%;
+	padding: 0px;
+	margin: 0;
+	rotate: -45deg;
+	-unity-text-align: middle-center;
+	font-size: 80%;
+	color: white;
+}
+
+
+.players .header
+{
+	color: var(--zisle-color-label-dk);
+	font-size: var(--font-size-small);
+	-unity-text-align: middle-center;
+	opacity: .75;
+}
+
+
+.unity-radio-button__input
+{
+	display: none;
+}
+
+.unity-radio-button:checked 
+{
+	border-width: var(--zisle-button-border-width);
+	border-color: var(--zisle-button-border-color);
+	width: 60px;
+	height: 60px;
+	margin-top: 35px;
+	margin-bottom: -5px;
 }

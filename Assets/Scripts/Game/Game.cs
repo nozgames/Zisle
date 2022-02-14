@@ -105,6 +105,8 @@ namespace NoZ.Zisle
             base.OnNetworkDespawn();
 
             GameEvent<ActorDiedEvent>.OnRaised -= OnActorDied;
+            GameEvent<ActorSpawnEvent>.OnRaised -= OnActorSpawn;
+            GameEvent<ActorDespawnEvent>.OnRaised -= OnActorDespawn;
         }
 
         private void OnActorDied(object sender, ActorDiedEvent evt)
@@ -236,6 +238,18 @@ namespace NoZ.Zisle
         public void Play()
         {
             CellToIsland(IslandGrid.CenterCell).RiseFromTheDeep();
+
+            if(IsHost)
+            {
+                // Spawn all of the players
+                if (NetworkManager.Singleton.IsHost)
+                {
+                    foreach (var player in GameManager.Instance.Players)
+                    {
+                        player.SpawnPlayer();
+                    }
+                }
+            }
         }
 
         public void BuildNavMesh()

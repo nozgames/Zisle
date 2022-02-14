@@ -1,9 +1,9 @@
 using UnityEngine.UIElements;
 using NoZ.Tweening;
 
-namespace NoZ.Zisle
+namespace NoZ.Zisle.UI
 {
-    public class UILoadingController : UIController
+    public class UILoadingController : ScreenElement
     {
         public new class UxmlFactory : UxmlFactory<UILoadingController, UxmlTraits> { }
 

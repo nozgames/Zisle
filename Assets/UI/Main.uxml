@@ -4,7 +4,7 @@
     engine="UnityEngine.UIElements" 
     editor="UnityEditor.UIElements"
     xmlns="UnityEngine.UIElements"
-    xmlns:zisle="NoZ.Zisle"
+    xmlns:zisle="NoZ.Zisle.UI"
     noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd"
     editor-extension-mode="False">
 
@@ -17,15 +17,19 @@
     <ui:Template name="Game" src="Game.uxml" />
     <ui:Template name="GameMenu" src="GameMenu.uxml" />
     <ui:Template name="ConfirmPopup" src="ConfirmPopup.uxml" />
-    <ui:Template name="Lobby" src="Lobby.uxml" />
     <ui:Template name="Debug" src="Debug.uxml" />
 
     <VisualElement class="root">
         <VisualElement class="main-background"/>
 
-        <VisualElement class="screen">
+        <VisualElement class="screen hidden">
             <Style src="project://database/Assets/UI/Title.uss" />
-            <zisle:TitleScreen/>
+            <zisle:TitleScreen class="screen"/>
+        </VisualElement>
+
+        <VisualElement class="screen ">
+            <Style src="project://database/Assets/UI/Lobby.uss" />
+            <zisle:LobbyScreen class="screen"/>
         </VisualElement>
 
         <ui:Instance template="Options" class="screen hidden"/>
@@ -34,7 +38,6 @@
         <ui:Instance template="Cooperative" class="screen hidden"/>
         <ui:Instance template="CooperativeJoin" class="screen hidden"/>
         <ui:Instance template="Loading" class="screen hidden"/>
-        <ui:Instance template="Lobby" class="screen hidden"/>
         <ui:Instance template="Game" class="screen hidden"/>
         <ui:Instance template="GameMenu" class="screen hidden"/>
         <ui:Instance template="ConfirmPopup" class="screen hidden"/>

@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace NoZ.Zisle
+namespace NoZ.Zisle.UI
 {
-    public class UIGamepadControls : UIController
+    public class UIGamepadControls : ScreenElement
     {
         public new class UxmlFactory : UxmlFactory<UIGamepadControls, UxmlTraits> { }
 

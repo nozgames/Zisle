@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1a8441a7fe5c024fb553e4089f38878, type: 3}
+  m_Name: NoPlayer
+  m_EditorClassIdentifier: 
+  _type: 0
+  _displayName: Random
+  _brain: {fileID: 0}
+  _prefab: {fileID: 5979792487354804065, guid: d748c872bc410f346b5e524d5c3b3e09, type: 3}
+  _preview: {fileID: 5979792487354804065, guid: bf03b2e9239a00e428b96aff8f83e4c3,
+    type: 3}
+  _healthCircleClass: 
+  _baseHealthMax: 100
+  _baseHealthRegen: 5
+  _baseSpeed: 10
+  _baseAttack: 60
+  _baseAttackSpeed: 1
+  _baseDefense: 50
+  _baseHarvest: 1
+  _baseBuild: 1
+  _abilities: []
+  _spawnWeights: []
