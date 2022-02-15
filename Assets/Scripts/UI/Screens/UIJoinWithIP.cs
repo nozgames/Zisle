@@ -8,9 +8,9 @@ namespace NoZ.Zisle.UI
         private TextField _ip;
         private VisualElement _join;
 
-        public override void OnShow()
+        protected override void Awake ()
         {
-            base.OnShow();
+            base.Awake();
 
             Q<Panel>("panel").OnClose(OnBack);
 
@@ -18,13 +18,24 @@ namespace NoZ.Zisle.UI
             _ip.value = "";
             _ip.maxLength = 15;
             _ip.RegisterValueChangedCallback(OnValueChanged);
-            _ip.value = Options.LanIP;
-            _ip.SelectAll();
-            _ip.Focus();
 
             _join = Q("join");
             _join.BindClick(OnJoin);
             _join.SetEnabled(false);
+        }
+
+        protected override void OnShow()
+        {
+            base.OnShow();
+
+            _ip.value = Options.LanIP;
+            _ip.SelectAll();
+        }
+
+        protected override void OnLateShow()
+        {
+            base.OnLateShow();
+            _ip.Focus();
         }
 
         private static Regex TextFilterRegex = new Regex(@"[^\d^\.]");

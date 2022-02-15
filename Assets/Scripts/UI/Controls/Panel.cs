@@ -33,7 +33,7 @@ namespace NoZ.Zisle.UI
         public Panel OnClose (Action action)
         {
             _onClose = action;
-            _close.RemoveFromClassList("hidden");
+            _close.RemoveFromClassList(USS.Hidden);
             return this;
         }
 
@@ -49,11 +49,13 @@ namespace NoZ.Zisle.UI
 
         public Panel ()
         {
-            AddToClassList("zisle-panel");
+            AddToClassList(USS.Panel);
 
-            _title = base.hierarchy.Add<Label>().AddClass("zisle-panel-title").AddClass("hidden");
-            _items = base.hierarchy.Add<VisualElement>().AddClass("zisle-panel-items");
-            _close = base.hierarchy.Add<RaisedButton>().Text("X").AddClass("zisle-panel-close").AddClass("hidden").AddClass("zisle-button-red").BindClick(() => _onClose?.Invoke());
+            _title = hierarchy.Add<Label>().AddClass(USS.PanelTitle).AddClass(USS.Hidden);
+            _items = hierarchy.Add<VisualElement>().AddClass(USS.PanelItems);
+            _close = hierarchy.Add<RaisedButton>().AddClass(USS.PanelClose).AddClass(USS.ButtonRed).BindClick(() => _onClose?.Invoke());
+            _close.Add<VisualElement>().AddClass(USS.PanelCloseIcon);
+            _close.AddClass(USS.Hidden);
 
             RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
         }
@@ -65,10 +67,7 @@ namespace NoZ.Zisle.UI
 
         private void UpdateTitle()
         {
-            if (string.IsNullOrEmpty(_title.text))
-                _title.AddToClassList("hidden");
-            else
-                _title.RemoveFromClassList("hidden");
+            _title.EnableInClassList(USS.Hidden, string.IsNullOrEmpty(_title.text));
         }
 
         public override VisualElement contentContainer => _items;
@@ -78,6 +77,5 @@ namespace NoZ.Zisle.UI
             Title = title;
             return this;
         }
-
     }
 }

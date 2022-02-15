@@ -3,15 +3,13 @@ using UnityEngine.UIElements;
 
 namespace NoZ.Zisle.UI
 {
-    public class UIGamepadControls : ScreenElement
+    public class UIGamepadControls : UIScreen
     {
-        public new class UxmlFactory : UxmlFactory<UIGamepadControls, UxmlTraits> { }
-
-        public override void Initialize()
+        protected override void Awake ()
         {
-            base.Initialize();
+            base.Awake();
 
-            this.Q("back").BindClick(OnBackInternal ).Focus();
+            Q("back").BindClick(OnBackInternal ).Focus();
 
             var zoomSpeed = this.Q<Slider>("zoom-speed");
             zoomSpeed.lowValue = 0.0f;

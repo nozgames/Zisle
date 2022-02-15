@@ -1,23 +1,15 @@
-using UnityEngine;
-using UnityEngine.UIElements;
-
 namespace NoZ.Zisle.UI
 {
-    public class UIKeyboardControls : ScreenElement
+    public class UIKeyboardControls : UIScreen
     {
-        public new class UxmlFactory : UxmlFactory<UIKeyboardControls, UxmlTraits> { }
-
-        public override void Initialize()
+        protected override void Awake ()
         {
-            base.Initialize();
+            base.Awake();
 
-            this.Q("back").BindClick(OnBackInternal).Focus();
+            Q("back").BindClick(OnBackInternal).Focus();
         }
 
-        private void OnBackInternal()
-        {
-            UIManager.Instance.ShowOptions();
-        }
+        private void OnBackInternal() => UIManager.Instance.ShowOptions();
 
         public override void OnNavigationBack()
         {

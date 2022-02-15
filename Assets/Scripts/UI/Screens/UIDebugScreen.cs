@@ -1,40 +1,38 @@
 using System.Collections;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace NoZ.Zisle.UI
 {
-    public class UIDebugController : ScreenElement
+    public class UIDebugScreen : UIScreen
     {
-        public new class UxmlFactory : UxmlFactory<UIDebugController, UxmlTraits> { }
-
         private Coroutine _coroutine = null;
 
-        public override void Initialize()
+        protected override void Awake()
         {
-            base.Initialize();
+            base.Awake();
 
-            parent.pickingMode = PickingMode.Ignore;
-            pickingMode = PickingMode.Ignore;
+            Root.parent.pickingMode = PickingMode.Ignore;
+            Root.pickingMode = PickingMode.Ignore;
+
         }
 
-        public override void OnShow()
+        protected override void OnShow()
         {
             base.OnShow();
-
-            _coroutine = UIManager.Instance.StartCoroutine(Update());
+            _coroutine = UIManager.Instance.StartCoroutine(UpdateValues());
         }
 
-        public override void OnHide()
+        protected override void OnHide()
         {
             base.OnHide();
 
-            UIManager.Instance.StopCoroutine(_coroutine);
+            if(null != _coroutine)
+                UIManager.Instance.StopCoroutine(_coroutine);
             _coroutine = null;
         }
 
-        private IEnumerator Update()
+        private IEnumerator UpdateValues()
         {
             do
             {
@@ -49,8 +47,8 @@ namespace NoZ.Zisle.UI
 
         public void UpdateServer()
         {
-            this.Q<Label>("server-connection").text = ValueOrNone(GameManager.Instance.Connection);
-            this.Q<Label>("server-joincode").text = ValueOrNone(GameManager.Instance.JoinCode);
+            Q<Label>("server-connection").text = ValueOrNone(GameManager.Instance.Connection);
+            Q<Label>("server-joincode").text = ValueOrNone(GameManager.Instance.JoinCode);
         }
 
         private string ValueOrNone (string value, string none = "<None>") => (value == null || string.IsNullOrEmpty(value)) ? none : value;

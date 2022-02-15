@@ -4,9 +4,9 @@ namespace NoZ.Zisle.UI
 {
     public class UIMultiplayerScreen : UIScreen
     {
-        public override void OnShow()
+        protected override void Awake()
         {
-            base.OnShow();
+            base.Awake();
 
             Q<Panel>("panel").OnClose(OnNavigationBack);
 

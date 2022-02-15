@@ -8,12 +8,11 @@
     xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
 >
     <Style src="project://database/Assets/UI/Game.uss" />
-    <zisle:UIGameMenu class="screen centered-vertical">
-        <Label text="Game Menu" class="screen-title"/>
-        <VisualElement class="centered-vertical">
-            <Button name="options" text="Options" class="menu-row"/>
-            <Button name="quit" text="Quit Game" class="menu-row"/>
-            <Button name="resume" text="Resume" class="menu-row menu-row-gap"/>
-        </VisualElement>
-    </zisle:UIGameMenu>
+    <VisualElement class="root screen centered-vertical">
+      <zisle:Panel name="game-menu" title="game-menu">
+        <zisle:RaisedButton name="resume" text="resume" class="zisle-button-blue"/>
+        <zisle:RaisedButton name="options" text="options" class="zisle-button-blue gap"/>
+        <zisle:RaisedButton name="quit" text="quit-game" class="zisle-button-orange gap"/>
+      </zisle:Panel>
+    </VisualElement>
 </engine:UXML>

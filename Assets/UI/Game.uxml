@@ -8,12 +8,12 @@
     xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
 >
     <Style src="project://database/Assets/UI/Game.uss" />
-    <zisle:UIGame class="screen centered-vertical">
+    <VisualElement class="root screen centered-vertical">
         <Label name="joincode" class="joincode hidden" text="XBX6B7"/>
 
         <VisualElement name="floating-text-container">
           
         </VisualElement>
 
-    </zisle:UIGame>
+    </VisualElement>
 </engine:UXML>

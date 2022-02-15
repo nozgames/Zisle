@@ -5,26 +5,19 @@ using UnityEngine.UIElements;
 
 namespace NoZ.Zisle.UI
 {
-    public class OptionsController : ScreenElement
+    public class UIOptionsScreen : UIScreen
     {
-        public new class UxmlFactory : UxmlFactory<OptionsController, UxmlTraits> { }
-
         private string ResolutionToString(Resolution r) => $"{r.width} x {r.height} @ {r.refreshRate}Hz";
 
         public Action OnBack = null;
 
-        public OptionsController()
+        protected override void Awake ()
         {
-            //RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
-        }
+            base.Awake();
 
-        public override void Initialize()
-        {
-            base.Initialize();
-
-            this.Q("back").BindClick(OnBackInternal).Focus();
-            this.Q("keyboard-controls").BindClick(() => UIManager.Instance.ShowKeyboardControls());
-            this.Q("gamepad-controls").BindClick(() => UIManager.Instance.ShowGamepadControls());
+            BindClick("back",OnBackInternal).Focus();
+            BindClick("keyboard-controls", () => UIManager.Instance.ShowKeyboardControls());
+            BindClick("gamepad-controls", () => UIManager.Instance.ShowGamepadControls());
 
             var resolutions = this.Q<DropdownField>("resolutions");
             resolutions.choices = Screen.resolutions.Select(r => ResolutionToString(r)).ToList();

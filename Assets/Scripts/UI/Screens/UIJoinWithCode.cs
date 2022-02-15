@@ -7,21 +7,32 @@ namespace NoZ.Zisle.UI
         private TextField _joinCode;
         private VisualElement _join;
 
-        public override void OnShow()
+        protected override void Awake()
         {
-            base.OnShow();
+            base.Awake();
 
             Q<Panel>("panel").OnClose(OnBack);
 
             _joinCode = Q<TextField>("join-code");
-            _joinCode.value = "";
             _joinCode.maxLength = 6;
             _joinCode.RegisterValueChangedCallback(OnValueChanged);
-            _joinCode.Focus();
 
             _join = Q("join");
             _join.BindClick(OnJoin);
             _join.SetEnabled(false);
+        }
+
+        protected override void OnShow()
+        {
+            base.OnShow();
+
+            _joinCode.value = "";
+        }
+
+        protected override void OnLateShow()
+        {
+            base.OnLateShow();
+            _joinCode.Focus();
         }
 
         private void OnValueChanged(ChangeEvent<string> evt)

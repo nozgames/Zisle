@@ -51,7 +51,7 @@
 	-unity-font-definition: var(--font-definition-fixed);
 }
 
-.zisle-panel-items
+.zisle-panel__items
 {
 	padding-top: 30px;
 }
@@ -61,9 +61,6 @@
 {
 	margin-top: auto;
 	margin-bottom: -85px;
-	border-color: var(--zisle-button-border-color);
-	border-width: var(--zisle-button-border-width);
-	border-radius: var(--zisle-button-border-radius)
 }
 
 .players
@@ -75,13 +72,13 @@
 	width: 100%;
 }
 
-.preview
-{
+.preview {
 	padding: 20px 10px 10px 10px;
 	background-color: var(--zisle-color-gray-darker);
 	margin: 0px 20px;
-	border-color: white;
-	border-width: 8px;
+	border-color: var(--zisle-button-border-color);
+	border-width: var(--zisle-button-border-width);
+	border-radius: var(--zisle-button-border-radius);
 }
 
 .preview Image
@@ -103,20 +100,12 @@
 	margin-bottom: 30px;
 }
 
-.local-player-class-button
-{
-	width: 50px;
-	height: 50px;
-	padding: 0px;
-}
-
 .local-player-class-button Label
 {
 	padding: 0px;
 	width: 35px;
-	height: 35px;
-	margin: auto;
-	margin-bottom: 10px;
+	height: 35px;		
+	margin: 0px 8px;
 }
 
 .local-player-class-prev Label

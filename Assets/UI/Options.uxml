@@ -8,7 +8,7 @@
     xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
 >
     <Style src="project://database/Assets/UI/Options.uss" />
-    <zisle:OptionsController class="screen centered-vertical">
+    <VisualElement class="root screen centered-vertical">
         <VisualElement class="centered-vertical left-align">
             <Label text="Options" class="screen-title"/>
             <Slider name="sound-volume" label="Sound Volume" class="menu-row"/>
@@ -20,5 +20,5 @@
             <Button name="gamepad-controls" text="Gamepad Controls" class="menu-row menu-row-button"/>
             <Button name="back" text="Back" class="menu-row menu-row-gap menu-row-button"/>
         </VisualElement>
-    </zisle:OptionsController>
+    </VisualElement>
 </engine:UXML>

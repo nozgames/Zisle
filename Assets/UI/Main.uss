@@ -17,47 +17,38 @@
     --font-definition-normal: url("project://database/Assets/Fonts/Bidan-Pll7.ttf");
     --font-definition-fixed: url("project://database/Assets/Fonts/CONSOLA.ttf");
     --image-rounded-border: url("project://database/Assets/RoundedBorder.png");
-
     --zisle-color-label: white;
     --zisle-color-label-dk: #767376;
-
     --zisle-color-border: white;
-
     --zisle-color-gray: #e9e6ea;
     --zisle-color-gray-dk: d9d8db;
     --zisle-color-gray-darker: #c9c6c9;
-    
+    /* Zisle TextField */
     --zisle-textfield-color-background: #FFFFFF;
     --zisle-textfield-color-shadow: #d8d7da;
-
+    /* Zisle Button */
     --zisle-button-label-color: white;
-
     --zisle-button-color-orange: #ff9223;
     --zisle-button-color-orange-dk: #d96c13;
     --zisle-button-color-orange-lt: #fdc866;
-
     --zisle-button-color-red: #ee4545;
     --zisle-button-color-red-dk: #c11b1a;
     --zisle-button-color-red-lt: #f96c69;
-
     --zisle-button-color-blue: #3f9af3;
     --zisle-button-color-blue-dk: #2a6dbb;
-    --zisle-button-color-blue-lt: #54b6f0;     
-
-    --zisle-button-border-color: white;
-    --zisle-button-border-width: 6px;
-    --zisle-button-border-radius: 2px;
-    --zisle-button-shadow-width: 4px;
-
+    --zisle-button-color-blue-lt: #54b6f0;
     --zisle-button-color-green: #81ca37;
     --zisle-button-color-green-dk: #4b9821;
     --zisle-button-color-green-lt: #a8db4d;
-
     --zisle-button-color-disabled: #d6d7d8;
     --zisle-button-color-disabled-dk: #b4afb1;
-
-    --zisle-panel-border-radius: 5px;
-    --zisle-panel-border-width: 10px;
+    --zisle-button-border-color: white;
+    --zisle-button-border-width: 3px;
+    --zisle-button-border-radius: 2px;
+    --zisle-button-shadow-width: 4px;
+    /* Zisle Panel */
+    --zisle-panel-border-radius: 3px;
+    --zisle-panel-border-width: 5px;
     --zisle-panel-border-color: white;
     --zisle-panel-background-color: #e9e6ea;
 }
@@ -159,145 +150,82 @@
 
 /* Zisle Button */
 
-.zisle-button 
-{
+.zisle-button {
     margin-left: auto;
     margin-right: auto;
-    padding-left: 20px;
-    padding-right: 20px;
-}
-
-.zisle-button > .zisle-button-raised
-{
-	position: absolute;
-	bottom: var(--zisle-button-shadow-width);
-	right: 0;
-	left: 0;
-	top: 0;
-	border-width: 1px;
-}
-
-.zisle-button > .zisle-button-shadow
-{
-	position: absolute;
-	bottom: 0;
-	right: 0;
-	left: 0;
-	top: 0;
-	border-width: 1px;
-}
-
-.zisle-button:active > .zisle-button-raised
-{
-	display: none;
-}
-
-.zisle-button > Label
-{
-    margin-top: 2px;
-    margin-bottom: 6px;
-    font-size: 120%;
     padding: 0px;
-	-unity-text-outline: 1px;
-    -unity-text-align: upper-center;
 }
 
-.zisle-button:disabled
-{
+.zisle-button .zisle-button__raised {
+    border-bottom-width: var(--zisle-button-shadow-width);
+    width: 100%;
+    height: 100%;
+    padding: 0;
+
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.zisle-button Label {
+    font-size: 120%;
+    margin: 0px 10px;
+    padding: 0px;
+    -unity-text-align: middle-center;
+}
+
+.zisle-button-border {
+    border-width: var(--zisle-button-border-width);
+    border-radius: var(--zisle-button-border-radius);
+    border-color: var(--zisle-button-border-color);
+}
+
+.zisle-button:disabled {
     opacity: 1;
 }
 
-.zisle-button:disabled .zisle-button-raised
-{
-   background-color: var(--zisle-button-color-disabled);
-   border-color:var(--zisle-button-color-disabled);
+.zisle-button:disabled .zisle-button__raised {
+    background-color: var(--zisle-button-color-disabled);
+    border-color: var(--zisle-button-color-disabled-dk);
 }
-
-.zisle-button:disabled .zisle-button-shadow
-{
-   background-color: var(--zisle-button-color-disabled-dk);
-   border-color:var(--zisle-button-color-disabled-dk);
-}
-
-.zisle-button:disabled Label
-{
-   -unity-text-outline: 0px;
-}
-
 
 /* Zisle Button Red */
 
-.zisle-button-red > Label
-{
-	color: white;
-	-unity-text-outline-color: var(--zisle-button-color-red-dk);
+.zisle-button-red > .zisle-button__raised {
+    background-color: var(--zisle-button-color-red);
+    border-color: var(--zisle-button-color-red-dk);
+    color: white;
 }
 
-.zisle-button-red > .zisle-button-raised
-{
-	background-color: var(--zisle-button-color-red);
-	border-color: var(--zisle-button-color-red);
-}
-
-.zisle-button-red > .zisle-button-shadow
-{
-	background-color: var(--zisle-button-color-red-dk);
-}
-
-.zisle-button-red:focus > .zisle-button-raised
-{
-	background-color: var(--zisle-button-color-red-lt);
-	border-color: var(--zisle-button-color-red-lt);
+.zisle-button-red:focus > .zisle-button__raised {
+    background-color: var(--zisle-button-color-red-lt);
+    border-color: var(--zisle-button-color-red);
 }
 
 /* Zisle Button Orange */
 
-.zisle-button-orange> Label
-{
-	color: white;
-	-unity-text-outline-color: #e67819;
+.zisle-button-orange > .zisle-button__raised {
+    background-color: var(--zisle-button-color-orange);
+    border-color: var(--zisle-button-color-orange-dk);
+    color: white;
 }
 
-.zisle-button-orange > .zisle-button-raised
-{
-	background-color: var(--zisle-button-color-orange);
-	border-color: var(--zisle-button-color-orange);
-}
-
-.zisle-button-orange > .zisle-button-shadow
-{
-	background-color: var(--zisle-button-color-orange-dk);
-}
-
-.zisle-button-orange:focus > .zisle-button-raised
-{
-	background-color: var(--zisle-button-color-orange-lt);
-	border-color: var(--zisle-button-color-orange-lt);
+.zisle-button-orange:focus > .zisle-button__raised {
+    background-color: var(--zisle-button-color-orange-lt);
+    border-color: var(--zisle-button-color-orange);
 }
 
 /* Zisle Button Blue */
 
-.zisle-button-blue > Label
-{
-	color: white;
-	-unity-text-outline-color: var(--zisle-button-color-blue-dk);
+.zisle-button-blue > .zisle-button__raised {
+    background-color: var(--zisle-button-color-blue);
+    border-color: var(--zisle-button-color-blue-dk);
+    color: white;
 }
 
-.zisle-button-blue > .zisle-button-raised
-{
-	background-color: var(--zisle-button-color-blue);
-	border-color: var(--zisle-button-color-blue);
-}
-
-.zisle-button-blue > .zisle-button-shadow
-{
-	background-color: var(--zisle-button-color-blue-dk);
-}
-
-.zisle-button-blue:focus > .zisle-button-raised
-{
-	background-color: var(--zisle-button-color-blue-lt);
-	border-color: var(--zisle-button-color-blue-lt);
+.zisle-button-blue:focus > .zisle-button__raised {
+    background-color: var(--zisle-button-color-blue-lt);
+    border-color: var(--zisle-button-color-blue);
 }
 
 /* Zisle Panel */
@@ -314,34 +242,41 @@
 }
 
 
-.zisle-panel-title
-{
-    margin-top: -55px;
+.zisle-panel__title {
+    margin-top: -50px;
     margin-bottom: auto;
     margin-left: 60px;
     margin-right: 60px;
     background-color: var(--zisle-button-color-red);
     border-color: white;
-    border-radius: 5px;
-    border-width: 10px;
-    color: white;
+    border-radius: var(--zisle-panel-border-radius);
+    border-width: var(--zisle-panel-border-width);
+    color: var(--zisle-panel-border-color);
     padding: 10px 40px;
     font-size: 120%;
 }
 
-.zisle-panel-close
-{
-    font-size: 60%;
+.zisle-panel__close {
     position: absolute;
-    top: -35px;
-    right: -35px;
+    top: -30px;
+    right: -30px;
+    width: 60px;
+    height: 60px;
     border-color: var(--zisle-button-border-color);
     border-radius: var(--zisle-button-border-radius);
     border-width: var(--zisle-button-border-width);
-    padding: 3px 15px;
 }
 
-.zisle-panel-items
+.zisle-panel__close__icon {
+    background-image: url("project://database/Assets/Sprites/Icons/Close.png");
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    right: 5px;
+    left: 5px;    
+}
+
+.zisle-panel__items
 {
     flex-direction: column;
     align-items: center;

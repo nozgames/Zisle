@@ -9,9 +9,9 @@ namespace NoZ.Zisle.UI
         private VisualElement[] _squares;
         private VisualElement _back;
 
-        public override void OnShow ()
+        protected override void Awake ()
         {
-            base.OnShow();
+            base.Awake();
 
             _back = BindClick("back", OnBack);
 

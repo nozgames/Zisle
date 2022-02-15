@@ -1,22 +1,26 @@
-using System;
-using System.Collections;
 using Unity.Netcode;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace NoZ.Zisle.UI
 {
-    public class UIGameMenu : ScreenElement
+    public class UIGameMenu : UIScreen
     {
-        public new class UxmlFactory : UxmlFactory<UIGameMenu, UxmlTraits> { }
+        private VisualElement _resume;
 
-        public override void Initialize()
+        protected override void Awake()
         {
-            base.Initialize();
+            base.Awake();
 
-            this.Q("resume").BindClick(OnResume);
-            this.Q("quit").BindClick(OnQuit);
-            this.Q("options").BindClick(OnOptions);
+            _resume = Q("resume").BindClick(OnResume);
+            Q("quit").BindClick(OnQuit);
+            Q("options").BindClick(OnOptions);
+        }
+
+        protected override void OnLateShow()
+        {
+            base.OnLateShow();
+
+            _resume.Focus();
         }
 
         private void OnOptions()
@@ -36,13 +40,6 @@ namespace NoZ.Zisle.UI
         private void OnResume()
         {
             UIManager.Instance.ShowGame();
-        }
-
-        public override void OnBeforeTransitionIn()
-        {
-            base.OnBeforeTransitionIn();
-
-            this.Q("resume").Focus();
         }
 
         public override void OnNavigationBack()

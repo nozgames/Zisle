@@ -72,7 +72,7 @@
           </VisualElement>
         </VisualElement>
 
-        <zisle:RaisedButton name="ready" class="zisle-button-blue" text="ready"/>
+        <zisle:RaisedButton name="ready" class="zisle-button-blue zisle-button-border" text="ready"/>
       </zisle:Panel>
     </VisualElement>
 </engine:UXML>

@@ -149,6 +149,14 @@ MonoBehaviour:
     m_Localized: Enter IP Address
     m_Metadata:
       m_Items: []
+  - m_Id: 813470011703296
+    m_Localized: Quit Game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 813603092774912
+    m_Localized: Game Menu
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

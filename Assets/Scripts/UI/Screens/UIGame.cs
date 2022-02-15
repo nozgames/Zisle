@@ -6,10 +6,8 @@ using NoZ.Tweening;
 
 namespace NoZ.Zisle.UI
 {
-    public class UIGame : ScreenElement
+    public class UIGame : UIScreen
     {
-        public new class UxmlFactory : UxmlFactory<UIGame, UxmlTraits> { }
-
         public override bool BlurBackground => false;
 
         private class FloatingText
@@ -20,53 +18,31 @@ namespace NoZ.Zisle.UI
             public Tween Tween;
         }
 
-        private Label _joinCode;
         private VisualElement _floatingTextContainer;
         private List<FloatingText> _floatingText = new List<FloatingText>();
         private List<WorldVisualElement> _worldElements = new List<WorldVisualElement>();
 
-        public UIGame ()
+        protected override void Awake()
         {
-            RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
-        }
-
-        private void OnGeometryChanged(GeometryChangedEvent evt)
-        {
+            base.Awake();
             _floatingTextContainer = this.Q("floating-text-container");
-
-            foreach(var ft in _floatingText)
-                ft.Tween.Stop();
-
-            _floatingText.Clear();
-        }
-
-        public override void Initialize()
-        {
-            base.Initialize();
-
-            _joinCode = this.Q<Label>("joincode");
-            _floatingTextContainer = this.Q("floating-text-container");
-
-            UIManager.Instance.StartCoroutine(UpdateFloatingText());
-            UIManager.Instance.StartCoroutine(UpdateWorldElements());
 
             WorldVisualElement.Root = _floatingTextContainer;
         }
-
-        public override void OnBeforeTransitionIn()
+    
+        protected override void OnShow ()
         {
-            base.OnBeforeTransitionIn();
+            base.OnShow();
 
-            _joinCode.text = MultiplayerManager.Instance.JoinCode;
-        }
-
-        public override void OnAfterTransitionIn()
-        {
             GameManager.Instance.Resume();
+
+            UIManager.Instance.StartCoroutine(UpdateFloatingText());
+            UIManager.Instance.StartCoroutine(UpdateWorldElements());
         }
 
-        public override void OnBeforeTransitionOut()
+        protected override void OnHide()
         {
+            base.OnHide();
             GameManager.Instance.Pause();
         }
 

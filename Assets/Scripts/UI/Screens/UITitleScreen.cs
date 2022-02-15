@@ -8,9 +8,9 @@ namespace NoZ.Zisle.UI
     {
         private VisualElement _solo = null;
 
-        public override void OnShow ()
+        protected override void Awake()
         {
-            base.OnShow();
+            base.Awake();
 
             _solo = BindClick("solo", OnSolo);
             BindClick("cooperative", OnMultiplayer);
@@ -41,10 +41,9 @@ namespace NoZ.Zisle.UI
             );
         }
 
-        public override void OnBeforeTransitionIn()
+        protected override void OnLateShow ()
         {
-            base.OnBeforeTransitionIn();
-
+            base.OnLateShow();
             _solo.Focus();
         }
 

@@ -1,13 +1,3 @@
-.screen-title
-{
-	-unity-text-align: middle-center;
-	width: 100%;
-}
-
-.menu-row {
-    width: 400px;
-}
-
 .joincode {
 	-unity-text-align: middle-center;
 	margin-top: auto;
@@ -151,13 +141,11 @@
 	color: #ecfffe;
 }
 
-.zisle-button
+#game-menu .zisle-button
 {
-	border-width: 10px;
-	border-color: white;
-	border-radius: 20px;
-	padding-bottom: 10px;
-	-unity-text-align: lower-center;
-	overflow: hidden;
+	width:300px;
+}
 
+#game-menu .gap {
+	margin-top: 30px;
 }

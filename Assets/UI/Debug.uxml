@@ -8,7 +8,7 @@
     xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
 >
     <Style src="project://database/Assets/UI/Debug.uss" />
-    <zisle:UIDebugController class="screen" pickingMode="ignore">
+    <VisualElement class="root screen" pickingMode="ignore">
         <VisualElement class="panel">
             <Label text="Server" class="row-header"/>
             <VisualElement class="row">
@@ -37,5 +37,5 @@
                 <Label name="player-tile-path" text="0,0" class="row-value"/>
             </VisualElement>
         </VisualElement>
-    </zisle:UIDebugController>
+    </VisualElement>
 </engine:UXML>

@@ -23,9 +23,9 @@ namespace NoZ.Zisle.UI
         public Action OnNo { set => _onNo = value; }
         public Action OnCancel { set => _onCancel = value; }
 
-        protected override void OnEnable()
+        protected override void Awake()
         {
-            base.OnEnable();
+            base.Awake();
 
             _panel = Q<Panel>("panel");
             _message = Q<Label>("message");
@@ -52,15 +52,19 @@ namespace NoZ.Zisle.UI
             action?.Invoke();
         }
 
-        public override void OnBeforeTransitionIn()
+        protected override void OnShow ()
         {
-            base.OnBeforeTransitionIn();
+            base.OnShow();
 
             _message.EnableInClassList("hidden", string.IsNullOrEmpty(_message.text));
             _yes.EnableInClassList("hidden", _onYes == null);
             _no.EnableInClassList("hidden", _onNo == null);
             _cancel.EnableInClassList("hidden", _onCancel == null);
+        }
 
+        protected override void OnLateShow()
+        {
+            base.OnLateShow();
             _yes.Focus();
         }
     }
