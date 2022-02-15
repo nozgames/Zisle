@@ -18,10 +18,10 @@ namespace NoZ.Zisle.UI
             this.Add<VisualElement>(className: "logo");
 
             var panel = this.Add<Panel>().SetTitle("MAIN MENU").AddClass("centered-vertical");
-            _solo = panel.Add<RaisedButton>().SetColor(RaisedButtonColor.Blue).LocalizedText("solo").BindClick(OnSolo);
-            panel.Add<RaisedButton>().SetColor(RaisedButtonColor.Blue).LocalizedText("cooperative").BindClick(OnCooperative);
-            panel.Add<RaisedButton>().SetColor(RaisedButtonColor.Blue).LocalizedText("options").BindClick(OnOptions);
-            panel.Add<RaisedButton>().SetColor(RaisedButtonColor.Orange).LocalizedText("quit").AddClass("gap").BindClick(OnQuit);
+            _solo = panel.AddItem<RaisedButton>().SetColor(RaisedButtonColor.Blue).LocalizedText("solo").BindClick(OnSolo);
+            panel.AddItem<RaisedButton>().SetColor(RaisedButtonColor.Blue).LocalizedText("cooperative").BindClick(OnCooperative);
+            panel.AddItem<RaisedButton>().SetColor(RaisedButtonColor.Blue).LocalizedText("options").BindClick(OnOptions);
+            panel.AddItem<RaisedButton>().SetColor(RaisedButtonColor.Orange).LocalizedText("quit").AddClass("gap").BindClick(OnQuit);
         }
 
         private void OnCooperative() => UIManager.Instance.ShowCooperative();
@@ -35,7 +35,7 @@ namespace NoZ.Zisle.UI
 
         private void OnQuit()
         {
-            UIManager.Instance.ShowConfirmationPopup("Quit to desktop?", onYes: () =>
+            UIManager.Instance.Confirm("Quit to desktop?", onYes: () =>
             {
 #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;

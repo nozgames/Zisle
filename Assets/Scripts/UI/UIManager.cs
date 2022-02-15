@@ -55,7 +55,7 @@ namespace NoZ.Zisle.UI
             ScreenElement<OptionsController>.Bind(_root).Hide();
             ScreenElement<UIKeyboardControls>.Bind(_root).Hide();
             ScreenElement<UIGamepadControls>.Bind(_root).Hide();
-            ScreenElement<ConfirmPopupController>.Bind(_root).Hide();
+            ScreenElement<ConfirmationScreen>.Bind(_root).Hide();
             ScreenElement<CooperativeController>.Bind(_root).Hide();
             ScreenElement<CooperativeJoinController>.Bind(_root).Hide();
             ScreenElement<UILoadingController>.Bind(_root).Hide();
@@ -86,17 +86,18 @@ namespace NoZ.Zisle.UI
         }
 
 
-        public void ShowConfirmationPopup (string message, string yes=null, string no=null, string cancel=null, Action onYes=null, Action onNo=null, Action onCancel=null)
+        public void Confirm (string message, string title=null, string yes=null, string no=null, string cancel=null, Action onYes=null, Action onNo=null, Action onCancel=null)
         {
-            var popup = ScreenElement<ConfirmPopupController>.Instance;
+            var popup = ScreenElement<ConfirmationScreen>.Instance;
             popup.Message = message;
             popup.Yes = yes;
+            popup.Title = title;
             popup.No = no;
             popup.OnYes = onYes;
             popup.OnNo = onNo;
             popup.OnCancel = onCancel;
             popup.Cancel = cancel;
-            TransitionTo(ScreenElement<ConfirmPopupController>.Instance);
+            TransitionTo(ScreenElement<ConfirmationScreen>.Instance);
         }
 
         public void ShowOptions (Action onBack=null)
@@ -130,6 +131,9 @@ namespace NoZ.Zisle.UI
 
         public void ShowGameMenu() =>
             TransitionTo(ScreenElement<UIGameMenu>.Instance);
+
+        public void ShowLobby() =>
+            TransitionTo(ScreenElement<LobbyScreen>.Instance);
 
         private void TransitionTo(ScreenElement controller, WaitForDone wait = null)
         {

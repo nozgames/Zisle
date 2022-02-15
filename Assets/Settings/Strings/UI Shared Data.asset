@@ -71,6 +71,42 @@ MonoBehaviour:
     m_Key: connecting
     m_Metadata:
       m_Items: []
+  - m_Id: 416849633558528
+    m_Key: join-code
+    m_Metadata:
+      m_Items: []
+  - m_Id: 535825973854208
+    m_Key: ok
+    m_Metadata:
+      m_Items: []
+  - m_Id: 539824470966272
+    m_Key: yes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 539839461408768
+    m_Key: no
+    m_Metadata:
+      m_Items: []
+  - m_Id: 553365328445440
+    m_Key: confirm-leave-lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 553476691410944
+    m_Key: confirm-close-lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 554887101628416
+    m_Key: quit?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 554906856800256
+    m_Key: leave?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 555047483424768
+    m_Key: confirm-quit-solo
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

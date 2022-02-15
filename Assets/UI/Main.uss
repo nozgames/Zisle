@@ -25,7 +25,10 @@
 
     --zisle-color-gray: #e9e6ea;
     --zisle-color-gray-dk: #d9d6d9;
+    --zisle-color-gray-darker: #c9c6c9;
     
+    --zisle-button-label-color: white;
+
     --zisle-button-color-orange: #ff9223;
     --zisle-button-color-orange-dk: #d96c13;
     --zisle-button-color-orange-lt: #fdc866;
@@ -68,25 +71,12 @@
     font-size: var(--font-size-normal);
 }
 
-.main-background 
-{
-/*
-    opacity: 0.8;
-    background-color: rgba(20,20,20,0.4);
-*/
-    opacity: 0;
-    background-color: #212b31;
-    background-image: url("project://database/Assets/Sprites/BackgroundLight.psd");
-    -unity-background-image-tint-color: #212b31;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
-
 .screen {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
 }
 
 .popup {
@@ -171,7 +161,6 @@
     margin-right: auto;
     padding-left: 20px;
     padding-right: 20px;
-
 }
 
 .zisle-button > .zisle-button-raised
@@ -202,11 +191,11 @@
 .zisle-button > Label
 {
     margin-top: 2px;
-    margin-bottom: 10px;
-	-unity-text-outline: 1px;
+    margin-bottom: 6px;
     font-size: 120%;
-    -unity-text-align: middle-center;
     padding: 0px;
+	-unity-text-outline: 1px;
+    -unity-text-align: upper-center;
 }
 
 .zisle-button:disabled
@@ -314,18 +303,19 @@
     border-radius: var(--zisle-panel-border-radius);
 	border-width: var(--zisle-panel-border-width);
     border-color: var(--zisle-panel-border-color);
-    padding: 40px 80px;
     background-color: var(--zisle-panel-background-color);
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
+
 .zisle-panel-title
 {
-    margin-top: -80px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-top: -55px;
+    margin-bottom: auto;
+    margin-left: 60px;
+    margin-right: 60px;
     background-color: var(--zisle-button-color-red);
     border-color: white;
     border-radius: 5px;
@@ -333,7 +323,6 @@
     color: white;
     padding: 10px 40px;
     font-size: 120%;
-    margin-bottom: 20px;
 }
 
 .zisle-panel-close
@@ -350,5 +339,8 @@
 
 .zisle-panel-items
 {
-    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
 }

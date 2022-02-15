@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -25,8 +26,9 @@ namespace NoZ.Zisle.UI
 
         private void OnQuit()
         {
-            UIManager.Instance.ShowConfirmationPopup(
-                message: "Are you sure you want to Quit?\nYou can resume your game later.", 
+            UIManager.Instance.Confirm(
+                title: "quit?".Localized(),
+                message: (GameManager.Instance.IsSolo ? "confirm-quit-solo" : (NetworkManager.Singleton.IsHost ? "confirm-close-lobby" : "confirm-leave-lobby")).Localized(), 
                 onNo: () => UIManager.Instance.ShowGame(), 
                 onYes: () => UIManager.Instance.ShowMainMenu());
         }

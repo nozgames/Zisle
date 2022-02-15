@@ -1,3 +1,25 @@
-.menu-row {
-    width: 400px;
+.zisle-panel-items
+{
+}
+
+.gap
+{
+    margin-left: 40px;
+}
+
+.zisle-button
+{
+    width: 300px;
+}
+
+.message
+{
+    color: var(--zisle-color-label-dk);
+    font-size: 80%;
+}
+
+.buttons
+{
+    flex-direction: row;
+    margin-top: 40px;
 }

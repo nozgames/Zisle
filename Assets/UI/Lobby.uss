@@ -1,36 +1,13 @@
 #ready
 {
-	position: absolute;
-	left: 50%;
-	bottom: 30px;
 	width: 360px;
 	height: 80px;
-	margin-left: -180px;
 	font-size: 100%;
-}
-
-.ghost
-{
-	background-image: url("project://database/Assets/Sprites/Icons/Player.png");
-	-unity-background-image-tint-color: var(--zisle-button-color-disabled-dk);
-}
-
-.ready-indicator
-{
-	background-image: url("project://database/Assets/Sprites/Icons/NotReady.png");
-	width: 60px;
-	height: 60px;
-	position: absolute;
-	top: -50px;
-	right: -10px;
-	-unity-background-image-tint-color: var(--color-background);
 }
 
 .ready
 {
 	background-image: url("project://database/Assets/Sprites/Icons/Ready.png");
-	-unity-background-image-tint-color: var(--zisle-button-color-green-dk);
-
 	width: 60px;
 	height: 60px;
 	position: absolute;
@@ -40,55 +17,45 @@
 
 .join-code
 {
-	flex-direction: row;
-	position: absolute;
-	top: 80px;
-	left: 50%;
-	width: 460px;
+	border-width: var(--zisle-button-border-width);
+	border-color: var(--zisle-button-border-color);
+	border-radius: var(--zisle-button-border-radius);
+
+	background-color: var(--zisle-button-color-green);
+
+	width: 300px;
 	height: 60px;
-	margin-left: -230px;
-	-unity-text-align: middle-left;
+	position: absolute;
+	bottom: 15px;
+	left: 50%;
+	margin-left: -150px;
+	flex-direction: row;
+	padding: 0px 20px;
 }
 
-#join-code
+.join-code-text
 {
-	margin-left: auto;
-	color: var(--color-text-dark) !important; 
-}
-
-#join-code-label
-{
-	color: var(--color-text-light) !important; 
-}
-
-
-.ghosted > Label
-{
-	color: var(--color-text-ghosted) !important;
-}
-
-
-
-
-
-
-
-.zisle-panel 
-{
-	width: 1000px;
-	margin-left: auto;
+	font-size: 50%;
+	color: var(--zisle-button-label-color);
+	-unity-text-align: middle-center;
 	margin-right: auto;
-	margin-bottom: auto;
-	margin-top: auto;
-	padding: 20px 10px;
-	padding-left: 0px;
-	padding-right: 0px;
+	margin-bottom: 6px;
 }
 
-.zisle-panel-solo
+.join-code-value
 {
-	width: 700px;
+	font-size: 80%;
+	-unity-font-style: bold;
+	color: var(--zisle-button-label-color);
+	-unity-text-align: middle-center;
+	-unity-font-definition: var(--font-definition-fixed);
 }
+
+.zisle-panel-items
+{
+	padding-top: 30px;
+}
+
 
 #ready
 {
@@ -110,8 +77,8 @@
 
 .preview
 {
-	padding: 20px 10px;
-	background-color: var(--zisle-color-gray-dk);
+	padding: 20px 10px 10px 10px;
+	background-color: var(--zisle-color-gray-darker);
 	margin: 0px 20px;
 	border-color: white;
 	border-width: 8px;
@@ -164,6 +131,7 @@
 
 .preview-footer
 {
+	height: 50px;
 	flex-direction: row;
 	padding: 0px;
 	margin: 0px;
@@ -187,6 +155,8 @@
 	flex-grow: 1;
 	flex-direction: column;
 	margin-top: 0px;
+	margin-left: 40px;
+	margin-right: 40px;
 }
 
 .lanes .lane
@@ -203,6 +173,12 @@
 	rotate: 45deg;
 }
 
+.lane:disabled
+{
+	opacity: 1;
+	background-color: var(--zisle-button-color-disabled-dk);
+}
+
 .lane .raised
 {
 	background-color: var(--zisle-button-color-orange);
@@ -211,6 +187,8 @@
 	margin-right: 5px;
 	padding: 0px;
 }
+
+.lane:disabled .raised { background-color: var(--zisle-button-color-disabled); }
 
 .lane:focus .raised
 {
@@ -224,12 +202,17 @@
 
 .lane:checked
 {
-	background-color: var(--zisle-button-color-green-dk);
+	background-color: var(--zisle-button-color-orange-dk);
+}
+
+.lane:checked:disabled
+{
+	background-color: var(--zisle-button-color-disabled-dk);
 }
 
 .lane:checked:focus
 {
-	background-color: var(--zisle-button-color-green-lt);
+	background-color: var(--zisle-button-color-orange-lt);
 }
 
 .lane Label

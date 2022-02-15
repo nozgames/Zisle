@@ -18,11 +18,13 @@ namespace NoZ.Zisle.UI
         public override bool BlurBackground => true;
 
         private List<ActorDefinition> _playerClasses;
-        private ActorDefinition _playerClassLeft;
+        private ActorDefinition _localPlayerClass;
         private Coroutine _startGameCountdown;
-        private Image _playerLeftPreviewImage;
+        private VisualElement _nextClassButton;
+        private VisualElement _prevClassButton;
+        private Image _localPlayerPreview;
         private Image _remotePlayerPreview;
-        private Label _playerLeftName;
+        private Label _localPlayerName;
         private Label _remotePlayerName;
         private Label _localPlayerHeader;
         private RaisedButton _readyButton;
@@ -31,6 +33,8 @@ namespace NoZ.Zisle.UI
         private VisualElement _remotePlayer;
         private VisualElement _localPlayerReady;
         private VisualElement _remotePlayerReady;
+        private VisualElement _joinCodeContainer;
+        private Label _joinCode;
         private Panel _panel;
 
         public LobbyScreen()
@@ -43,20 +47,19 @@ namespace NoZ.Zisle.UI
             var localPlayer = players.Add<VisualElement>(name: "player-left").AddClass("player");
             _localPlayerHeader = localPlayer.Add<Label>().LocalizedText("local-player").AddClass("header");
             var localPlayerPreview = localPlayer.Add<VisualElement>().AddClass("preview");
-            _playerLeftPreviewImage = localPlayerPreview.Add<VisualElement>().AddClass("preview-box").Add<Image>().AddClass("player-left-preview");
-
+            _localPlayerPreview = localPlayerPreview.Add<VisualElement>().AddClass("preview-box").Add<Image>().AddClass("player-left-preview");
             _localPlayerReady = localPlayerPreview.Add<VisualElement>().AddClass("ready");
             var localPlayerFooter = localPlayerPreview.Add<VisualElement>().AddClass("preview-footer");
-            localPlayerFooter.Add<RaisedButton>()
+            _prevClassButton = localPlayerFooter.Add<RaisedButton>()
                 .AddClass("player-local-class-button")
                 .AddClass("player-local-class-prev")
                 .SetColor(RaisedButtonColor.Orange)
                 .BindClick(OnPrevClass);
 
-            _playerLeftName = localPlayerFooter.Add<Label>().AddClass("preview-name").Text("Name");
+            _localPlayerName = localPlayerFooter.Add<Label>().AddClass("preview-name").Text("Name");
 
             // Next class button
-            localPlayerFooter.Add<RaisedButton>()
+            _nextClassButton = localPlayerFooter.Add<RaisedButton>()
                 .AddClass("player-local-class-button")
                 .AddClass("player-local-class-next")
                 .SetColor(RaisedButtonColor.Orange)
@@ -80,18 +83,24 @@ namespace NoZ.Zisle.UI
                 _lanes[laneIndex].Add<VisualElement>().AddClass("raised").Add<Label>().Text((laneIndex + 1).ToString());
             }
 
+            _lanes[1].SetEnabled(false);
+
             // Remote player
             _remotePlayer = players.Add<VisualElement>(name: "player-right").AddClass("player");
             _remotePlayer.Add<Label>().LocalizedText("remote-player").AddClass("header");
             var remotePlayerPreview = _remotePlayer.Add<VisualElement>().AddClass("preview");
-            _remotePlayerReady = remotePlayerPreview.Add<VisualElement>().AddClass("ready");
             _remotePlayerPreview = remotePlayerPreview.Add<VisualElement>().AddClass("preview-box").Add<Image>().AddClass("player-right-preview");
-
             var remotePlayerFooter = remotePlayerPreview.Add<VisualElement>().AddClass("preview-footer");
             _remotePlayerName = remotePlayerFooter.Add<Label>().AddClass("preview-name").Text("Name");
+            _remotePlayerReady = remotePlayerPreview.Add<VisualElement>().AddClass("ready");
 
             _readyButton = _panel.AddItem<RaisedButton>(name: "ready").SetColor(RaisedButtonColor.Blue).LocalizedText("ready").BindClick(OnReadyPressed);
             _readyButton.SetEnabled(false);
+
+            // Join Code
+            _joinCodeContainer = _remotePlayer.Add<VisualElement>().AddClass("join-code");
+            _joinCodeContainer.Add<Label>().LocalizedText("join-code").AddClass("join-code-text");
+            _joinCode = _joinCodeContainer.Add<Label>().AddClass("join-code-value").Text("X8B973"); 
         }
 
         public override void Initialize()
@@ -99,22 +108,24 @@ namespace NoZ.Zisle.UI
             base.Initialize();
 
             _playerClasses = GameManager.Instance.ActorDefinitions.Where(d => d.ActorType == ActorType.Player).ToList();
-            _playerLeftPreviewImage.image = UIManager.Instance.PreviewLeftTexture;
+            _localPlayerPreview.image = UIManager.Instance.PreviewLeftTexture;
         }
 
         private void OnQuit ()
         {
-            if (GameManager.Instance.MaxPlayers == 1)
-                UIManager.Instance.ShowMainMenu();
+            if (GameManager.Instance.MaxPlayers > 1 && GameManager.Instance.PlayerCount > 1)
+                UIManager.Instance.Confirm(
+                    title: "leave?".Localized(),
+                    message: (NetworkManager.Singleton.IsHost ? "confirm-close-lobby" : "confirm-leave-lobby").Localized(),
+                    onYes: () => UIManager.Instance.ShowMainMenu(),
+                    onNo: () => UIManager.Instance.ShowLobby());
             else
-                UIManager.Instance.ShowConfirmationPopup(
-                    message: "Are you sure you want to leave the lobby?",
-                    onYes: () => UIManager.Instance.ShowMainMenu());
+                UIManager.Instance.ShowMainMenu();    
         }
 
         private void OnPrevClass()
         {
-            var index = _playerClasses.IndexOf(_playerClassLeft);
+            var index = _playerClasses.IndexOf(_localPlayerClass);
             if (index == -1)
                 index = 0;
             else
@@ -127,7 +138,7 @@ namespace NoZ.Zisle.UI
 
         private void OnNextClass()
         {
-            var index = _playerClasses.IndexOf(_playerClassLeft);
+            var index = _playerClasses.IndexOf(_localPlayerClass);
             if (index == -1)
                 index = 0;
             else
@@ -209,10 +220,8 @@ namespace NoZ.Zisle.UI
 
             _readyButton.Focus();
 
-#if false
-            this.Q("join-code-container").EnableInClassList("hidden", GameManager.Instance.JoinCode == null);
-            this.Q<Label>("join-code").text = GameManager.Instance.JoinCode ?? "";
-#endif
+            _joinCodeContainer.EnableInClassList("hidden", GameManager.Instance.JoinCode == null);
+            _joinCode.text = GameManager.Instance.JoinCode ?? "";
         }
 
         private void OnPlayerSpawned(object sender, PlayerSpawned evt)
@@ -262,6 +271,12 @@ namespace NoZ.Zisle.UI
             var localReady = GameManager.Instance.LocalPlayerController.IsReady;
             _readyButton.SetEnabled(GameManager.Instance.PlayerCount == GameManager.Instance.MaxPlayers);
             _readyButton.SetColor(localReady ? RaisedButtonColor.Orange : RaisedButtonColor.Blue);
+
+            _nextClassButton.SetEnabled(!localReady);
+            _prevClassButton.SetEnabled(!localReady);
+
+            for (int i = 0; i < 4; i++)
+                _lanes[i].SetEnabled(!localReady);
 
             var text = "play".Localized();
             if (GameManager.Instance.MaxPlayers > 1)
@@ -323,7 +338,7 @@ namespace NoZ.Zisle.UI
             if (remotePlayer == null || remotePlayer.PlayerClass == null)
             {
                 _remotePlayerName.text = (remotePlayer == null ? "waiting-for-player" : "connecting").Localized();
-                UIManager.Instance.ShowRightPreview(UIManager.Instance.PreviewNoPlayer, playEffect);
+                UIManager.Instance.ShowRightPreview(UIManager.Instance.PreviewNoPlayer, false);
             }
             else
             {
@@ -351,9 +366,9 @@ namespace NoZ.Zisle.UI
 
         private void SetLocalPlayerClass(ActorDefinition def, bool playEffect=true)
         {
-            _playerLeftName.text = def.DisplayName;
+            _localPlayerName.text = def.DisplayName;
             UIManager.Instance.ShowLeftPreview(def,playEffect);
-            _playerClassLeft = def;
+            _localPlayerClass = def;
         }
     }
 }

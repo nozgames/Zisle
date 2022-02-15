@@ -16,21 +16,19 @@
     <ui:Template name="Loading" src="Loading.uxml" />
     <ui:Template name="Game" src="Game.uxml" />
     <ui:Template name="GameMenu" src="GameMenu.uxml" />
-    <ui:Template name="ConfirmPopup" src="ConfirmPopup.uxml" />
     <ui:Template name="Debug" src="Debug.uxml" />
 
     <VisualElement class="root">
-        <VisualElement class="main-background"/>
-
-        <VisualElement class="screen hidden">
+        <VisualElement class="screen">
             <Style src="project://database/Assets/UI/Title.uss" />
             <zisle:TitleScreen class="screen"/>
         </VisualElement>
 
-        <VisualElement class="screen ">
+        <VisualElement class="screen hidden">
             <Style src="project://database/Assets/UI/Lobby.uss" />
-            <zisle:LobbyScreen class="screen"/>
+            <zisle:LobbyScreen class="screen centered-vertical"/>
         </VisualElement>
+
 
         <ui:Instance template="Options" class="screen hidden"/>
         <ui:Instance template="KeyboardControls" class="screen hidden"/>
@@ -40,7 +38,12 @@
         <ui:Instance template="Loading" class="screen hidden"/>
         <ui:Instance template="Game" class="screen hidden"/>
         <ui:Instance template="GameMenu" class="screen hidden"/>
-        <ui:Instance template="ConfirmPopup" class="screen hidden"/>
+
+        <VisualElement class="screen hidden">
+            <Style src="project://database/Assets/UI/ConfirmPopup.uss" />
+            <zisle:ConfirmationScreen class="screen centered-vertical"/>
+        </VisualElement>
+
         <ui:Instance template="Debug" class="screen hidden"  pickingMode="ignore"/>
 
     </VisualElement>

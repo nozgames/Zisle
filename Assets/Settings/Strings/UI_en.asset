@@ -74,6 +74,49 @@ MonoBehaviour:
     m_Localized: Connecting
     m_Metadata:
       m_Items: []
+  - m_Id: 416849633558528
+    m_Localized: Join Code
+    m_Metadata:
+      m_Items: []
+  - m_Id: 535825973854208
+    m_Localized: Ok
+    m_Metadata:
+      m_Items: []
+  - m_Id: 539824470966272
+    m_Localized: Yes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 539839461408768
+    m_Localized: No
+    m_Metadata:
+      m_Items: []
+  - m_Id: 553365328445440
+    m_Localized: Are you sure you want to leave this cooperative game?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 553476691410944
+    m_Localized: 'Are you sure you want to leave this cooperative game?
+
+      This
+      will end the game for the Remote player as well.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 554887101628416
+    m_Localized: Quit?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 554906856800256
+    m_Localized: Leave?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 555047483424768
+    m_Localized: 'Are you sure you want to Quit?
+
+
+      You can resume your game
+      later.'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

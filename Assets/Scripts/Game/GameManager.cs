@@ -166,6 +166,9 @@ namespace NoZ.Zisle
 
             _transport = NetworkManager.Singleton.gameObject.GetComponent<UnityTransport>();
 
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
+            NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
+
             GameEvent<PlayerConnected>.OnRaised += OnPlayerConnected;
             GameEvent<PlayerDisconnected>.OnRaised += OnPlayerDisconnected;
             GameEvent<GameOptionsSpawned>.OnRaised += OnGameOptionsSpawned;
@@ -217,10 +220,7 @@ namespace NoZ.Zisle
                 yield return StopGame();
 
                 if(IsInLobby)
-                {
-                    NetworkManager.Singleton.ConnectionApprovalCallback -= ApprovalCheck;
                     NetworkManager.Singleton.Shutdown();
-                }
 
                 while (NetworkManager.Singleton.ShutdownInProgress)
                     yield return null;
@@ -259,7 +259,8 @@ namespace NoZ.Zisle
 
             if (Game != null)
             {
-                Game.NetworkObject.Despawn();
+                if(NetworkManager.Singleton.IsHost)
+                    Game.NetworkObject.Despawn();
                 Game = null;
             }
 
@@ -285,7 +286,6 @@ namespace NoZ.Zisle
 
                 Debug.Log($"Creating Lobby: {connection}");
 
-                NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
                 NetworkManager.Singleton.StartHost();
 
                 // Wait for the local player to connect
@@ -324,7 +324,7 @@ namespace NoZ.Zisle
 
                 Debug.Log($"Connecting to Lobby: {connection}");
 
-                // Connect
+                // Connect                
                 NetworkManager.Singleton.StartClient();
 
                 // Wait until we see ourself join and the options spawns
@@ -335,6 +335,15 @@ namespace NoZ.Zisle
             }
 
             return StartCoroutine(JoinLobby(connection));
+        }
+
+        private void OnClientDisconnected(ulong clientId)
+        {
+            if (NetworkManager.Singleton.ShutdownInProgress)
+                return;
+
+            if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsHost)
+                UIManager.Instance.Confirm("Connection to host has been lost", yes: "ok".Localized(), onYes: () => UIManager.Instance.ShowMainMenu());
         }
 
         /// <summary>
