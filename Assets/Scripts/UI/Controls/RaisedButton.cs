@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -13,7 +14,25 @@ namespace NoZ.Zisle.UI
 
     public class RaisedButton : BindableElement
     {
-        public new class UxmlFactory : UxmlFactory<RaisedButton, Button.UxmlTraits> { }
+        public new class UxmlFactory : UxmlFactory<RaisedButton, RaisedButtonTraits> 
+        { 
+        }
+
+        public class RaisedButtonTraits : UxmlTraits
+        {
+            UxmlStringAttributeDescription _text = new UxmlStringAttributeDescription { name = "text", defaultValue = "" };
+            UxmlEnumAttributeDescription<RaisedButtonColor> _color = new UxmlEnumAttributeDescription<RaisedButtonColor> { name = "color", defaultValue = RaisedButtonColor.Blue };
+
+            public override IEnumerable<UxmlChildElementDescription> uxmlChildElementsDescription { get { yield break; } }
+
+            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
+            {
+                base.Init(ve, bag, cc);
+                var button = ve as RaisedButton;
+                button._text.text = _text.GetValueFromBag(bag, cc).Localized();
+                button.Color = _color.GetValueFromBag(bag, cc);
+            }
+        }
 
         private Clickable m_Clickable;
         private Label _text;
@@ -64,6 +83,7 @@ namespace NoZ.Zisle.UI
             {
                 _color = value;
 
+#if false
                 RemoveFromClassList("zisle-button-red");
                 RemoveFromClassList("zisle-button-orange");
                 RemoveFromClassList("zisle-button-blue");
@@ -74,6 +94,7 @@ namespace NoZ.Zisle.UI
                     case RaisedButtonColor.Orange: AddToClassList("zisle-button-orange"); break;
                     case RaisedButtonColor.Blue: AddToClassList("zisle-button-blue"); break;
                 }
+#endif
             }
         }
 

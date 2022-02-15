@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="UnityEngine.UIElements"
+    xmlns:engine="UnityEngine.UIElements"
+    xmlns:editor="UnityEditor.UIElements"
+    xmlns:zisle="NoZ.Zisle.UI"
+    xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
+>
+    <Style src="project://database/Assets/UI/Multiplayer.uss" />
+    <VisualElement class="root screen centered-vertical">
+        <zisle:Panel name="panel" title="cooperative">
+          <VisualElement class="buttons">
+            <zisle:RaisedButton name="join" text="Join With Code" class="zisle-button-blue"/>
+            <zisle:RaisedButton name="join-local" text="Join LAN" class="zisle-button-blue gap"/>
+            <zisle:RaisedButton name="host" text="Create Online" class="zisle-button-orange gap"/>
+            <zisle:RaisedButton name="host-local" text="Create LAN" class="zisle-button-orange gap"/>
+            </VisualElement>
+        </zisle:Panel>
+    </VisualElement>
+</engine:UXML>

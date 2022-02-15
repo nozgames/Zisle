@@ -1,38 +1,35 @@
 using UnityEngine.UIElements;
 using NoZ.Tweening;
+using UnityEngine;
 
 namespace NoZ.Zisle.UI
 {
-    public class UILoadingController : ScreenElement
+    public class UILoadingScreen : UIScreen
     {
-        public new class UxmlFactory : UxmlFactory<UILoadingController, UxmlTraits> { }
-
         private VisualElement[] _squares;
+        private VisualElement _back;
 
-        public override void Initialize()
+        public override void OnShow ()
         {
-            base.Initialize();
+            base.OnShow();
 
-            this.Q("back").BindClick(OnBack).Focus();
+            _back = BindClick("back", OnBack);
+
+            _squares = new VisualElement[5]
+            {
+                Q("square1"),
+                Q("square2"),
+                Q("square3"),
+                Q("square4"),
+                Q("square5"),
+            };
         }
 
-        private void OnBack()
-        {
-            UIManager.Instance.ShowCooperative();
-        }
+        private void OnBack() => UIManager.Instance.ShowMultiplayer();
 
         public override void OnBeforeTransitionIn()
         {
             base.OnBeforeTransitionIn();
-
-            _squares = new VisualElement[5]
-            {
-                this.Q("square1"),
-                this.Q("square2"),
-                this.Q("square3"),
-                this.Q("square4"),
-                this.Q("square5"),
-            };
 
             var small = new StyleLength(new Length(26.0f, LengthUnit.Percent));
             var large = new StyleLength(new Length(90.0f, LengthUnit.Percent));
@@ -50,22 +47,16 @@ namespace NoZ.Zisle.UI
                     .Loop()
                     .Play();
             }
+
+            _back.Focus();
         }
 
         public override void OnAfterTransitionOut()
         {
             base.OnBeforeTransitionIn();
 
-            if(_squares != null)
-            {
-                for (int i = 0; i < _squares.Length; i++)
-                {
-                    var square = _squares[i];
-                    square.TweenStop();
-                }
-
-                _squares = null;
-            }
+            for (int i = 0; i < _squares.Length; i++)
+                _squares[i].TweenStop();
         }
     }
 }

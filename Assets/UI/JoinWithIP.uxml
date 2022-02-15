@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="UnityEngine.UIElements"
+    xmlns:engine="UnityEngine.UIElements"
+    xmlns:editor="UnityEditor.UIElements"
+    xmlns:zisle="NoZ.Zisle.UI"
+    xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
+>
+  <Style src="project://database/Assets/UI/JoinWithCode.uss" />
+  <VisualElement class="root screen centered-vertical">
+    <zisle:Panel name="panel" title="enter-ip-address">
+        <TextField name="ip" text="555.555.555.555" class="centered-text"/>
+        <zisle:RaisedButton name="join" text="Join Game" class="zisle-button-blue gap"/>
+    </zisle:Panel>
+  </VisualElement>
+</engine:UXML>

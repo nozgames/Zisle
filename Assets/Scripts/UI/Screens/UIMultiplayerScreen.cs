@@ -2,20 +2,19 @@ using UnityEngine.UIElements;
 
 namespace NoZ.Zisle.UI
 {
-    public class CooperativeController : ScreenElement
+    public class UIMultiplayerScreen : UIScreen
     {
-        public new class UxmlFactory : UxmlFactory<CooperativeController, UxmlTraits> { }
-
-        public override void Initialize()
+        public override void OnShow()
         {
-            base.Initialize();
+            base.OnShow();
 
-            this.Q("back").BindClick(OnBack).Focus();
-            this.Q("join").BindClick(OnJoin);
-            this.Q("host").BindClick(OnHost);
-            this.Q("continue").BindClick(OnContinue);
-            this.Q("host-local").BindClick(OnHostLocal);
-            this.Q("join-local").BindClick(OnJoinLocal);
+            Q<Panel>("panel").OnClose(OnNavigationBack);
+
+            Q("join").BindClick(OnJoin).Focus();
+            Q("host").BindClick(OnHost);
+            Q("continue").BindClick(OnContinue);
+            Q("host-local").BindClick(OnHostLocal);
+            Q("join-local").BindClick(OnJoinLocal);
         }
 
         public override void OnNavigationBack()
@@ -28,7 +27,7 @@ namespace NoZ.Zisle.UI
         private void OnJoin()
         {
             GameManager.Instance.MaxPlayers = 2;
-            UIManager.Instance.ShowCooperativeJoin();
+            UIManager.Instance.ShowJoinWithCode();
         }
 
         private void OnHost()
@@ -40,7 +39,7 @@ namespace NoZ.Zisle.UI
         private void OnJoinLocal()
         {
             GameManager.Instance.MaxPlayers = 2;
-            UIManager.Instance.JoinLobby("127.0.0.1");
+            UIManager.Instance.ShowJoinWithIP();
         }
 
         private void OnHostLocal()

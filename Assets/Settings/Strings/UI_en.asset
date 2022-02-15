@@ -129,6 +129,26 @@ MonoBehaviour:
     m_Localized: Select another character
     m_Metadata:
       m_Items: []
+  - m_Id: 668105543335936
+    m_Localized: Main Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 690081347485696
+    m_Localized: Quit?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 690106500726784
+    m_Localized: Do you want to quit to the desktop?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 722681294307328
+    m_Localized: Enter Join Code
+    m_Metadata:
+      m_Items: []
+  - m_Id: 778014867931136
+    m_Localized: Enter IP Address
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -1,37 +1,25 @@
 .screen
 {
-	background-color: #697382;
+	background-color: #9ab1cf;
 }
 
-.screen-title
+.squares 
 {
-	-unity-text-align: middle-center;
-	width: 100%;
-}
-
-.menu-row {
-    width: 300px !important;
-}
-
-.menu-row-gap {
-	margin-top: 80px;
-}
-
-
-.squares {
 	flex-direction: row;
 	margin-top: 30px;
 }
 
-.square {
+.square 
+{
 	width: 100px;
 	height: 100px;
 	margin-left: 30px;
 }
 
-.square-inner {
+.square-inner 
+{
 	position: absolute;
-	background-color: var(--color-background);
+	background-color: var(--zisle-button-color-blue);
 	width: 26%;
 	height: 26%;
 	top: 50%;
@@ -39,10 +27,12 @@
 	margin: -13%;
 }
 
-.square-outer {
+.square-outer 
+{
 	width: 26%;
 	height: 26%;
 	margin: auto;
-	border-width: 4px;
-	border-color: var(--color-background);
+	border-radius: var(--zisle-button-border-radius);
+	border-width: var(--zisle-button-border-width);
+	border-color: var(--zisle-button-border-color);
 }

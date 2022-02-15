@@ -115,6 +115,26 @@ MonoBehaviour:
     m_Key: select-another-character
     m_Metadata:
       m_Items: []
+  - m_Id: 668105543335936
+    m_Key: main-menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 690081347485696
+    m_Key: qui
+    m_Metadata:
+      m_Items: []
+  - m_Id: 690106500726784
+    m_Key: quit-desktop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 722681294307328
+    m_Key: enter-join-code
+    m_Metadata:
+      m_Items: []
+  - m_Id: 778014867931136
+    m_Key: enter-ip-address
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

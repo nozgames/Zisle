@@ -245,24 +245,23 @@ DropdownField .unity-base-popup-field__text
 
 /* Text Field */
 
-.unity-base-text-field__input
-{
-    background-color: var(--color-background-dark);
-	border-width: var(--width-border);
-    border-color: var(--color-text);
-	font-size: var(--font-size-small);
-	color: var(--color-text-dark);
-	--unity-selection-color: var(--color-title);
-    --unity-cursor-color: var(--color-title);
+.unity-base-text-field__input {
+    background-color: var(--zisle-textfield-color-background);
+    border-width: 0px;
+    border-top-width: var(--zisle-button-shadow-width);
+    border-color: var(--zisle-textfield-color-shadow);
+    font-size: var(--font-size-small);
+    color: var(--zisle-color-label-dk);
+    --unity-selection-color: var(--zisle-button-color-blue-lt);
+    --unity-cursor-color: var(--zisle-button-color-blue-lt);
 }
 
-.unity-text-field__placeholder > .unity-base-text-field__input {    
-    color: var(--color-text-ghosted);
+.unity-text-field__placeholder > .unity-base-text-field__input {
+    color: var(--zisle-color-label-dk);
 }
 
 .unity-base-text-field:focus > .unity-base-text-field__input,
-.unity-base-text-field:hover > .unity-base-text-field__input
-{
-	border-color: var(--color-text);
-	font-size: var(--font-size-small);
+.unity-base-text-field:hover > .unity-base-text-field__input {
+    border-color: var(--zisle-button-color-blue-lt);
+    font-size: var(--font-size-small);
 }

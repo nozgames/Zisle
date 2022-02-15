@@ -24,9 +24,12 @@
     --zisle-color-border: white;
 
     --zisle-color-gray: #e9e6ea;
-    --zisle-color-gray-dk: #d9d6d9;
+    --zisle-color-gray-dk: d9d8db;
     --zisle-color-gray-darker: #c9c6c9;
     
+    --zisle-textfield-color-background: #FFFFFF;
+    --zisle-textfield-color-shadow: #d8d7da;
+
     --zisle-button-label-color: white;
 
     --zisle-button-color-orange: #ff9223;
@@ -44,6 +47,7 @@
     --zisle-button-border-color: white;
     --zisle-button-border-width: 6px;
     --zisle-button-border-radius: 2px;
+    --zisle-button-shadow-width: 4px;
 
     --zisle-button-color-green: #81ca37;
     --zisle-button-color-green-dk: #4b9821;
@@ -166,7 +170,7 @@
 .zisle-button > .zisle-button-raised
 {
 	position: absolute;
-	bottom: 4px;
+	bottom: var(--zisle-button-shadow-width);
 	right: 0;
 	left: 0;
 	top: 0;

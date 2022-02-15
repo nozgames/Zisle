@@ -1,0 +1,21 @@
+.gap
+{
+    margin-top: 40px;
+}
+
+TextField {
+    width: 300px;
+    -unity-font-definition: var(--font-definition-fixed);
+    -unity-font-style: bold;
+}
+
+.centered-text > .unity-base-text-field__input {
+    -unity-text-align: middle-center;
+}
+
+#join {
+    margin-bottom: -80px;
+    border-width: var(--zisle-button-border-width);
+    border-radius: var(--zisle-button-border-radius);
+    border-color: var(--zisle-button-border-color);
+}

@@ -2,29 +2,26 @@ using UnityEngine.UIElements;
 
 namespace NoZ.Zisle.UI
 {
-    public class CooperativeJoinController : ScreenElement
+    public class UIJoinWithCode : UIScreen
     {
-        public new class UxmlFactory : UxmlFactory<CooperativeJoinController, UxmlTraits> { }
-
         private TextField _joinCode;
         private VisualElement _join;
 
-        public override void Initialize()
+        public override void OnShow()
         {
-            base.Initialize();
+            base.OnShow();
 
-            var joinCode = this.Q<TextField>("join-code");
-            joinCode.SetPlaceholderText("Join Code");
-            joinCode.maxLength = 6;
-            joinCode.RegisterValueChangedCallback(OnValueChanged);
-            joinCode.Focus();
-            _joinCode = joinCode;
+            Q<Panel>("panel").OnClose(OnBack);
 
-            _join = this.Q("join");
+            _joinCode = Q<TextField>("join-code");
+            _joinCode.value = "";
+            _joinCode.maxLength = 6;
+            _joinCode.RegisterValueChangedCallback(OnValueChanged);
+            _joinCode.Focus();
+
+            _join = Q("join");
             _join.BindClick(OnJoin);
             _join.SetEnabled(false);
-
-            this.Q("back").BindClick(OnBack);
         }
 
         private void OnValueChanged(ChangeEvent<string> evt)
@@ -43,7 +40,7 @@ namespace NoZ.Zisle.UI
             OnBack();
         }
 
-        private void OnBack() => UIManager.Instance.ShowCooperative();
+        private void OnBack() => UIManager.Instance.ShowMultiplayer();
         private void OnJoin() => UIManager.Instance.JoinLobby(_joinCode.text);
     }
 }

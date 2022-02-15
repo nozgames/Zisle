@@ -9,7 +9,8 @@
 >
 
     <Style src="project://database/Assets/UI/Loading.uss" />
-    <zisle:UILoadingController class="screen centered-vertical">
+  
+    <VisualElement class="root screen centered-vertical">
         <Label text="Loading" class="screen-title hidden"/>
         <VisualElement class="centered-vertical">
             <VisualElement class="squares menu-row-gap">
@@ -36,5 +37,5 @@
             </VisualElement>
             <Button name="back" text="Cancel" class="menu-row menu-row-gap hidden"/>
         </VisualElement>
-    </zisle:UILoadingController>
+    </VisualElement>
 </engine:UXML>

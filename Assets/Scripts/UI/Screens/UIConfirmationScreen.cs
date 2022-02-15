@@ -3,10 +3,8 @@ using UnityEngine.UIElements;
 
 namespace NoZ.Zisle.UI
 {
-    public class ConfirmationScreen : ScreenElement
+    public class UIConfirmationScreen : UIScreen
     {
-        public new class UxmlFactory : UxmlFactory<ConfirmationScreen, UxmlTraits> { }
-
         private Action _onYes;
         private Action _onNo;
         private Action _onCancel;
@@ -16,8 +14,8 @@ namespace NoZ.Zisle.UI
         private Panel _panel;
         private Label _message;
 
-        public string Title { set => _panel.Title = value; }
-        public string Message { set => _message.text = value; }
+        public string Title { set => _panel.Title = value.Localized(); }
+        public string Message { set => _message.text = value.Localized(); }
         public string Yes { set => _yes.text = value ?? "yes".Localized(); }
         public string No { set => _no.text = value ?? "no".Localized(); }
         public string Cancel { set => _cancel.text = value ?? "cancel".Localized(); }
@@ -25,18 +23,15 @@ namespace NoZ.Zisle.UI
         public Action OnNo { set => _onNo = value; }
         public Action OnCancel { set => _onCancel = value; }
 
-        public ConfirmationScreen()
+        protected override void OnEnable()
         {
-            _panel = this.Add<Panel>();
-            _message = _panel.AddItem<Label>().AddClass("message");
-            _message.text = "This is some placeholder message text";
+            base.OnEnable();
 
-            var buttons = _panel.AddItem<VisualElement>().AddClass("buttons");
-            _yes = buttons.Add<RaisedButton>().SetColor(RaisedButtonColor.Blue).BindClick(OnYesButton);
-            _no = buttons.Add<RaisedButton>().SetColor(RaisedButtonColor.Orange).AddClass("gap").BindClick(OnNoButton);
-            _cancel = buttons.Add<RaisedButton>().SetColor(RaisedButtonColor.Orange).AddClass("gap").BindClick(OnCancelButton);
-
-            _panel.Title = "Confirm";
+            _panel = Q<Panel>("panel");
+            _message = Q<Label>("message");
+            _yes = BindClick<RaisedButton>("yes", OnYesButton);
+            _no = BindClick<RaisedButton>("no", OnNoButton);
+            _cancel = BindClick<RaisedButton>("cancel", OnCancelButton);
 
             Yes = null;
             No = null;
@@ -54,7 +49,6 @@ namespace NoZ.Zisle.UI
             _onYes = null;
             _onNo = null;
             _onCancel = null;
-            Hide();
             action?.Invoke();
         }
 

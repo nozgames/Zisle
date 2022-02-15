@@ -33,8 +33,19 @@ namespace NoZ.Zisle.UI
         [SerializeField] private ActorDefinition _previewNoPlayer = null;
         [SerializeField] private GameObject _previewChangeEffect = null;
 
+        [Header("Screens")]
+        [SerializeField] private Transform _screens = null;
+        [SerializeField] private UIConfirmationScreen _confirmationScreen = null;
+        [SerializeField] private UILoadingScreen _loadingScreen = null;
+        [SerializeField] private UIMultiplayerScreen _multiplayerScreen = null;
+        [SerializeField] private UILobbyScreen _lobbyScreen = null;
+        [SerializeField] private UITitleScreen _titleScreen = null;
+        [SerializeField] private UIJoinWithCode _joinWithCode = null;
+        [SerializeField] private UIJoinWithIP _joinWithIP = null;
+
         private VisualElement _root;
         private ScreenElement _activeController;
+        private UIScreen _activeScreen;
         private bool _transitioning;
 
         public Texture PreviewLeftTexture => _previewLeftTexture;
@@ -45,39 +56,14 @@ namespace NoZ.Zisle.UI
         {
             base.OnInitialize();
 
-            var doc = GetComponent<UIDocument>();
-            _root = doc.rootVisualElement;
-            //doc.enabled = true;
-
-            // Initialzie and bind all UIControllers
-            _root.Query<ScreenElement>().ForEach(c => c.Initialize());
-
-            ScreenElement<OptionsController>.Bind(_root).Hide();
-            ScreenElement<UIKeyboardControls>.Bind(_root).Hide();
-            ScreenElement<UIGamepadControls>.Bind(_root).Hide();
-            ScreenElement<ConfirmationScreen>.Bind(_root).Hide();
-            ScreenElement<CooperativeController>.Bind(_root).Hide();
-            ScreenElement<CooperativeJoinController>.Bind(_root).Hide();
-            ScreenElement<UILoadingController>.Bind(_root).Hide();
-            ScreenElement<UI.UIGame>.Bind(_root).Hide();
-            ScreenElement<UIGameMenu>.Bind(_root).Hide();
-            ScreenElement<TitleScreen>.Bind(_root).Hide();
-            ScreenElement<LobbyScreen>.Bind(_root).Hide();
-            ScreenElement<UIDebugController>.Bind(_root).Hide();
-
-            InputManager.Instance.OnUIClose += () => _activeController.OnNavigationBack();
+            InputManager.Instance.OnUIClose += () => _activeScreen.OnNavigationBack();
 
             InputManager.Instance.EnableMenuActions();
 
-            var loading = ScreenElement<UILoadingController>.Bind(_root);
-            loading.Show();
-            loading.OnBeforeTransitionIn();
-            loading.OnAfterTransitionIn();
-            _activeController = loading;
+            for (int i = 0; i < _screens.childCount; i++)
+                _screens.GetChild(i).gameObject.SetActive(false);
 
-            var blur = loading.BlurBackground;
-            _postProcsUI.SetActive(blur);
-            _postProcsGame.SetActive(!blur);
+            _activeScreen = null;
         }
 
         protected override void OnShutdown()
@@ -88,16 +74,16 @@ namespace NoZ.Zisle.UI
 
         public void Confirm (string message, string title=null, string yes=null, string no=null, string cancel=null, Action onYes=null, Action onNo=null, Action onCancel=null)
         {
-            var popup = ScreenElement<ConfirmationScreen>.Instance;
-            popup.Message = message;
-            popup.Yes = yes;
-            popup.Title = title;
-            popup.No = no;
-            popup.OnYes = onYes;
-            popup.OnNo = onNo;
-            popup.OnCancel = onCancel;
-            popup.Cancel = cancel;
-            TransitionTo(ScreenElement<ConfirmationScreen>.Instance);
+            _confirmationScreen.gameObject.SetActive(true);
+            _confirmationScreen.Message = message;
+            _confirmationScreen.Yes = yes;
+            _confirmationScreen.Title = title;
+            _confirmationScreen.No = no;
+            _confirmationScreen.OnYes = onYes;
+            _confirmationScreen.OnNo = onNo;
+            _confirmationScreen.OnCancel = onCancel;
+            _confirmationScreen.Cancel = cancel;
+            TransitionTo(_confirmationScreen);
         }
 
         public void ShowOptions (Action onBack=null)
@@ -115,16 +101,16 @@ namespace NoZ.Zisle.UI
             TransitionTo(ScreenElement<UIGamepadControls>.Instance);
 
         public void ShowTitle () =>
-            TransitionTo(ScreenElement<TitleScreen>.Instance);
+            TransitionTo(_titleScreen);
 
-        public void ShowCooperative () =>
-            TransitionTo(ScreenElement<CooperativeController>.Instance);
+        public void ShowMultiplayer () =>
+            TransitionTo(_multiplayerScreen);
 
-        public void ShowCooperativeJoin () =>
-            TransitionTo(ScreenElement<CooperativeJoinController>.Instance);
+        public void ShowJoinWithCode () => TransitionTo(_joinWithCode);
+        public void ShowJoinWithIP () => TransitionTo(_joinWithIP);
 
         public void ShowLoading (WaitForDone wait = null) =>
-            TransitionTo(ScreenElement<UILoadingController>.Instance, wait);
+            TransitionTo(_loadingScreen, wait);
 
         public void ShowGame() =>
             TransitionTo(ScreenElement<UI.UIGame>.Instance);
@@ -133,7 +119,7 @@ namespace NoZ.Zisle.UI
             TransitionTo(ScreenElement<UIGameMenu>.Instance);
 
         public void ShowLobby() =>
-            TransitionTo(ScreenElement<LobbyScreen>.Instance);
+            TransitionTo(_lobbyScreen);
 
         private void TransitionTo(ScreenElement controller, WaitForDone wait = null)
         {
@@ -171,6 +157,52 @@ namespace NoZ.Zisle.UI
                 .Play();
         }
 
+
+        private void TransitionTo(UIScreen screen, WaitForDone wait = null)
+        {
+            screen.gameObject.SetActive(true);
+
+            var blur = screen.BlurBackground;
+            _postProcsUI.SetActive(blur);
+            _postProcsGame.SetActive(!blur);
+
+            if (_activeScreen == null)
+            {
+                _activeScreen = screen;
+
+                screen.OnShow();
+                screen.OnBeforeTransitionIn();
+                screen.OnAfterTransitionIn();
+
+                if (wait != null)
+                    wait.IsDone = true;
+                return;
+            }
+
+            _activeScreen.OnBeforeTransitionOut();
+            screen.OnShow();
+            screen.OnBeforeTransitionIn();
+
+            _transitioning = true;
+            screen.Root.style.opacity = 0;
+            this.TweenGroup()
+                .Element(_activeScreen.Root.style.TweenFloat("opacity", new StyleFloat(0.0f)).Duration(0.2f).EaseInOutQuadratic())
+                .Element(screen.Root.style.TweenFloat("opacity", new StyleFloat(1.0f)).Duration(0.2f).EaseInOutQuadratic())
+                .OnStop(() =>
+                {
+                    _activeScreen.OnAfterTransitionOut();
+                    _activeScreen.OnHide();
+                    _activeScreen.gameObject.SetActive(false);
+                    _activeScreen = screen;
+                    screen.OnAfterTransitionIn();
+                    _transitioning = false;
+
+                    if (wait != null)
+                        wait.IsDone = true;
+                })
+                .Play();
+        }
+
         public void AddFloatingText(string text, string className, Vector3 position, float duration = 1.0f)
         {
             ScreenElement<UI.UIGame>.Instance.AddFloatingText(text, className, position, duration);
@@ -200,7 +232,7 @@ namespace NoZ.Zisle.UI
                 while (Time.time - startTime < MinLoadingTime)
                     yield return null;
 
-                TransitionTo(ScreenElement<LobbyScreen>.Instance);
+                TransitionTo(_lobbyScreen);
             }
 
             StartCoroutine(JoinLobbyCoroutine(connection,create));

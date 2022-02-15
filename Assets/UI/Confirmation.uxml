@@ -1,0 +1,24 @@
+<ui:UXML 
+    xmlns:ui="UnityEngine.UIElements"
+    xmlns:uie="UnityEditor.UIElements"
+    xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="UnityEngine.UIElements" 
+    engine="UnityEngine.UIElements"
+    editor="UnityEditor.UIElements"
+    xmlns:zisle="NoZ.Zisle.UI"
+    noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
+    editor-extension-mode="False">
+    
+    <Style src="project://database/Assets/UI/Confirmation.uss" />
+  
+    <VisualElement class="root screen centered-vertical">
+      <zisle:Panel name="panel" class="centered-vertical" title="Title">
+        <ui:Label name="message" text="Message" class="message"/>
+        <VisualElement class="buttons">
+          <zisle:RaisedButton name="yes" text="Yes" class="zisle-button-blue"/>
+          <zisle:RaisedButton name="no" text="No" class="zisle-button-orange gap"/>
+          <zisle:RaisedButton name="cancel" text="Cancel" class="zisle-button-orange gap"/>
+        </VisualElement>
+      </zisle:Panel>
+    </VisualElement>
+</ui:UXML>

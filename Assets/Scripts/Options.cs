@@ -11,6 +11,7 @@ namespace NoZ.Zisle
         private const string PlayerPrefsScreenShake = "Options.ScreenShake";
         private const string PlayerPrefsSoundVolume = "Options.SoundVolume";
         private const string PlayerPrefsMusicVolume = "Options.MusicVolume";
+        private const string PlayerPrefsLanIP = "Options.LanIP";
         private const string PlayerPrefsRebinds = "Options.Rebinds";
         private const string PlayerPrefsGamepadZoomSpeed = "Options.Gamepad.ZoomSpeed";
 
@@ -21,11 +22,25 @@ namespace NoZ.Zisle
 
         private static string _playerName;
         private static string _playerClass;
+        private static string _lanIP;
 
         public static event Action<bool> OnScreenShakeChange;
         public static event Action<float> OnSoundVolumeChange;
         public static event Action<float> OnMusicVolumeChange;
         public static event Action<float> OnGamepadZoomSpeedChange;
+
+        public static string LanIP
+        {
+            get => _lanIP;
+            set
+            {
+                if (_lanIP == value)
+                    return;
+
+                _lanIP = value;
+                PlayerPrefs.SetString(PlayerPrefsLanIP, _lanIP);
+            }
+        }
 
         public static string PlayerName
         {
@@ -126,8 +141,8 @@ namespace NoZ.Zisle
             _musicVolume = PlayerPrefs.GetFloat(PlayerPrefsMusicVolume, 1.0f);
             _gamepadZoomSpeed = PlayerPrefs.GetFloat(PlayerPrefsGamepadZoomSpeed, 0.5f);
             _playerClass = PlayerPrefs.GetString(PlayerPrefsPlayerClass, "RandomPlayer");
-
             _playerName = PlayerPrefs.GetString(PlayerPrefsPlayerName, "Player");
+            _lanIP = PlayerPrefs.GetString(PlayerPrefsLanIP, "127.0.0.1");
         }
     }
 }

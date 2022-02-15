@@ -5,43 +5,47 @@ using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UIElements;
-using NoZ.Zisle.UI;
 
 namespace NoZ.Zisle.UI
 {
-    public class LobbyScreen : ScreenElement
+    public class UILobbyScreen : UIScreen
     {
         public const int CountdownSeconds = 5;
-
-        public new class UxmlFactory : UxmlFactory<LobbyScreen, UxmlTraits> { }
 
         public override bool BlurBackground => true;
 
         private List<ActorDefinition> _playerClasses;
-        private ActorDefinition _localPlayerClass;
-        private Coroutine _startGameCountdown;
-        private VisualElement _nextClassButton;
-        private VisualElement _prevClassButton;
-        private Image _localPlayerPreview;
-        private Image _remotePlayerPreview;
-        private Label _localPlayerName;
-        private Label _remotePlayerName;
-        private Label _localPlayerHeader;
-        private RaisedButton _readyButton;
-        private RadioButton[] _lanes;
-        private bool _playLaneClick = true;
-        private VisualElement _remotePlayer;
-        private VisualElement _localPlayerReady;
-        private VisualElement _remotePlayerReady;
-        private VisualElement _joinCodeContainer;
-        private Label _joinCode;
+
         private Panel _panel;
 
-        public LobbyScreen()
+        private Image _localPlayerPreview;
+        private Label _localPlayerName;
+        private Label _localPlayerHeader;
+        private ActorDefinition _localPlayerClass;
+        private VisualElement _localPlayerReady;
+
+        private VisualElement _remotePlayer;
+        private VisualElement _remotePlayerReady;
+        private Image _remotePlayerPreview;
+        private Label _remotePlayerName;
+
+        private VisualElement _localPlayerClassNext;
+        private VisualElement _localPlayerClassPrev;
+        private RaisedButton _readyButton;
+        private RadioButton[] _lanes;
+
+        private VisualElement _joinCodeContainer;
+        private Label _joinCode;
+
+        private bool _playLaneClick = true;
+        private Coroutine _startGameCountdown;
+
+        public UILobbyScreen()
         {
+#if false
             _panel = this.Add<Panel>().SetTitle("lobby".Localized().ToUpper()).OnClose(OnQuit);
 
-            var players = _panel.AddItem<VisualElement>().AddClass("players");
+            var players = _panel.Add<VisualElement>().AddClass("players");
 
             // Local player
             var localPlayer = players.Add<VisualElement>(name: "player-left").AddClass("player");
@@ -94,22 +98,98 @@ namespace NoZ.Zisle.UI
             _remotePlayerName = remotePlayerFooter.Add<Label>().AddClass("preview-name").Text("Name");
             _remotePlayerReady = remotePlayerPreview.Add<VisualElement>().AddClass("ready");
 
-            _readyButton = _panel.AddItem<RaisedButton>(name: "ready").SetColor(RaisedButtonColor.Blue).LocalizedText("ready").BindClick(OnReadyPressed);
+            _readyButton = _panel.Add<RaisedButton>(name: "ready").SetColor(RaisedButtonColor.Blue).LocalizedText("ready").BindClick(OnReadyPressed);
             _readyButton.SetEnabled(false);
 
             // Join Code
             _joinCodeContainer = _remotePlayer.Add<VisualElement>().AddClass("join-code");
             _joinCodeContainer.Add<Label>().LocalizedText("join-code").AddClass("join-code-text");
             _joinCode = _joinCodeContainer.Add<Label>().AddClass("join-code-value").Text("X8B973"); 
+#endif
         }
 
-        public override void Initialize()
+        public override void OnShow ()
         {
-            base.Initialize();
+            base.OnShow();
+
+            //if (GameManager.Instance == null && GameManager.Instance.LocalPlayerController != null)
+              //  return;
+
+            _panel = Q<Panel>("panel");
+            _panel.OnClose(OnQuit);
+            _localPlayerPreview = Q<Image>("local-player-preview");
+            _localPlayerName = Q<Label>("local-player-name");
+            _localPlayerHeader = Q<Label>("local-player-header");
+            _localPlayerClassNext = Q("local-player-class-next").BindClick(OnNextClass);
+            _localPlayerClassPrev = Q("local-player-class-prev").BindClick(OnPrevClass);
+            _localPlayerReady = Q("local-player-ready");
+
+            _remotePlayer = Q("remote-player");
+            _remotePlayerPreview = Q<Image>("remote-player-preview");
+            _remotePlayerName = Q<Label>("remote-player-name");
+            _remotePlayerReady = Q("remote-player-ready");
+
+            _readyButton = BindClick<RaisedButton>("ready", OnReadyPressed);
+            _joinCodeContainer = Q("join-code");
+            _joinCode = Q<Label>("join-code-value");
+
+            _lanes = new RadioButton[4];
+            for (int i = 1; i <= 4; i++)
+            {
+                var laneIndex = i;
+                _lanes[laneIndex - 1] = Q<RadioButton>($"lane-{laneIndex}");
+                _lanes[laneIndex - 1].RegisterValueChangedCallback((evt) =>
+                {
+                    if (!evt.newValue)
+                        return;
+
+                    if(_playLaneClick)
+                        AudioManager.Instance.PlayButtonClick();
+                    GameManager.Instance.Options.StartingLanes = laneIndex;
+                });
+            }
 
             _playerClasses = GameManager.Instance.ActorDefinitions.Where(d => d.ActorType == ActorType.Player).ToList();
             _localPlayerPreview.image = UIManager.Instance.PreviewLeftTexture;
+
+            SetLocalPlayerClass(GameManager.Instance.LocalPlayerController.PlayerClass, false);
+
+            UIManager.Instance.GenerateBackground(GameManager.Instance.Options.StartingLanes);
+
+            _playLaneClick = false;
+            _lanes[GameManager.Instance.Options.StartingLanes - 1].value = true;
+            _playLaneClick = true;
+
+            _remotePlayer.EnableInClassList("hidden", GameManager.Instance.IsSolo);
+            _panel.EnableInClassList("zisle-panel-solo", GameManager.Instance.IsSolo);
+
+            if (GameManager.Instance.IsSolo)
+            {
+                _localPlayerHeader.text = "class".Localized();
+                _panel.SetTitle("solo".Localized());
+            }
+            else
+            {
+                _localPlayerHeader.text = "local-player".Localized();
+                _panel.SetTitle("lobby".Localized());
+            }
+
+            GameEvent<GameOptionStartingLanesChanged>.OnRaised += OnStartingLanesChanged;
+            GameEvent<PlayerClassChanged>.OnRaised += OnPlayerClassChanged;
+            GameEvent<PlayerReadyChanged>.OnRaised += OnPlayerReadyChanged;
+            GameEvent<PlayerConnected>.OnRaised += OnPlayerConnected;
+            GameEvent<PlayerDisconnected>.OnRaised += OnPlayerDisconnected;
+            GameEvent<PlayerSpawned>.OnRaised += OnPlayerSpawned;
+
+            UpdateReadyState();
+            UpdateRemotePlayer(false);
+
+            _readyButton.Focus();
+
+            _joinCodeContainer.EnableInClassList("hidden", GameManager.Instance.JoinCode == null);
+            _joinCode.text = GameManager.Instance.JoinCode ?? "";
         }
+
 
         private void OnQuit ()
         {
@@ -187,47 +267,6 @@ namespace NoZ.Zisle.UI
 
         private bool AreAllPlayersReady => GameManager.Instance.Players.Where(p => p.IsReady).Count() == GameManager.Instance.MaxPlayers;
 
-        public override void OnBeforeTransitionIn()
-        {
-            base.OnBeforeTransitionIn();
-
-            SetLocalPlayerClass(GameManager.Instance.LocalPlayerController.PlayerClass, false);
-
-            UIManager.Instance.GenerateBackground(GameManager.Instance.Options.StartingLanes);
-
-            _playLaneClick = false;
-            _lanes[GameManager.Instance.Options.StartingLanes - 1].value = true;
-            _playLaneClick = true;
-
-            _remotePlayer.EnableInClassList("hidden", GameManager.Instance.IsSolo);
-            _panel.EnableInClassList("zisle-panel-solo", GameManager.Instance.IsSolo);
-
-            if (GameManager.Instance.IsSolo)
-            {
-                _localPlayerHeader.text = "class".Localized();
-                _panel.SetTitle("solo".Localized());
-            }
-            else
-            {
-                _localPlayerHeader.text = "local-player".Localized();
-                _panel.SetTitle("lobby".Localized());
-            }
-
-            GameEvent<GameOptionStartingLanesChanged>.OnRaised += OnStartingLanesChanged;
-            GameEvent<PlayerClassChanged>.OnRaised += OnPlayerClassChanged;
-            GameEvent<PlayerReadyChanged>.OnRaised += OnPlayerReadyChanged;
-            GameEvent<PlayerConnected>.OnRaised += OnPlayerConnected;
-            GameEvent<PlayerDisconnected>.OnRaised += OnPlayerDisconnected;
-            GameEvent<PlayerSpawned>.OnRaised += OnPlayerSpawned;
-
-            UpdateReadyState();
-            UpdateRemotePlayer(false);
-
-            _readyButton.Focus();
-
-            _joinCodeContainer.EnableInClassList("hidden", GameManager.Instance.JoinCode == null);
-            _joinCode.text = GameManager.Instance.JoinCode ?? "";
-        }
 
         private void OnPlayerSpawned(object sender, PlayerSpawned evt)
         {
@@ -235,10 +274,8 @@ namespace NoZ.Zisle.UI
                 UIManager.Instance.StartGame();
         }
 
-        public override void OnBeforeTransitionOut()
+        private void OnDisable()
         {
-            base.OnBeforeTransitionOut();
-
             UIManager.Instance.ShowLeftPreview(null);
             UIManager.Instance.ShowRightPreview(null);
 
@@ -280,8 +317,8 @@ namespace NoZ.Zisle.UI
             _readyButton.SetEnabled(GameManager.Instance.PlayerCount == GameManager.Instance.MaxPlayers);
             _readyButton.SetColor(localReady ? RaisedButtonColor.Orange : RaisedButtonColor.Blue);
 
-            _nextClassButton.SetEnabled(!localReady);
-            _prevClassButton.SetEnabled(!localReady);
+            _localPlayerClassNext.SetEnabled(!localReady);
+            _localPlayerClassPrev.SetEnabled(!localReady);
 
             for (int i = 0; i < 4; i++)
                 _lanes[i].SetEnabled(!localReady);
@@ -379,6 +416,12 @@ namespace NoZ.Zisle.UI
             _localPlayerClass = def;
 
             Options.PlayerClass = def.name;
+        }
+
+        public override void OnNavigationBack()
+        {
+            AudioManager.Instance.PlayButtonClick();
+            OnQuit();
         }
     }
 }

@@ -8,60 +8,71 @@
     xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
 >
     <Style src="project://database/Assets/UI/Lobby.uss" />
-    <zisle:UILobbyController class="screen centered-vertical">
-        <VisualElement name="join-code-container" class="join-code menu-row">   
-            <Label name="join-code-label" text="Join Code"/>
-            <Label name="join-code" text="MWMWMW" class="join-code-text"/>
-        </VisualElement>
-        <VisualElement class="centered-vertical">            
-            <VisualElement class="players"> 
-                <VisualElement name="player-left" class="player">
-                    <Label text="Local" class="header"/>
-                    <VisualElement class="preview">
-                        <VisualElement class="preview-box">
-                        <Image name="player-left-preview">
-                        </Image>
-                        <VisualElement class="footer">
-                            <Button name="player-class-prev" class="player-class-button"/>
-                            <Label name="player-left-name" text="Name"/>
-                            <Button name="player-class-next" class="player-class-button"/>
-                        </VisualElement>
-                        <VisualElement name="player-left-ready" class="ready-indicator"/>
-                        </VisualElement>
-                    </VisualElement>
-                </VisualElement>
+    <VisualElement class="root screen centered-vertical">
+      <zisle:Panel name="panel" title="lobby">
+        <VisualElement class="players">
 
-                <VisualElement class="lanes gap-left">
-                    <Label text="Lanes" class="header"/>
-                    <GroupBox>
-                    <RadioButton name="lane1" class="lane"><Label text="1"/></RadioButton>
-                    <RadioButton name="lane2" class="lane"><Label text="2"/></RadioButton>
-                    <RadioButton name="lane3" class="lane"><Label text="3"/></RadioButton>
-                    <RadioButton name="lane4" class="lane"><Label text="4"/></RadioButton>
-                    </GroupBox>
-                </VisualElement>
+          <VisualElement name="local-player" class="player">
+            <Label name="local-player-header" text="local-player" class="header"/>
+            <VisualElement class="preview">
+              <VisualElement class="preview-box">
+                <Image name="local-player-preview"/>
+              </VisualElement>
+              <VisualElement name="local-player-ready" class="ready"/>
+              <VisualElement class="preview-footer">
+                <zisle:RaisedButton name="local-player-class-prev" class="local-player-class-button local-player-class-prev zisle-button-orange"/>
+                <Label name="local-player-name" class="preview-name" text="Name"/>
+                <zisle:RaisedButton name="local-player-class-next" class="local-player-class-button local-player-class-next zisle-button-orange"/>
+              </VisualElement>
+            </VisualElement>
+          </VisualElement>
 
-                <VisualElement name="player-right" class="player gap-left">
-                    <Label text="Remote" class="header"/>
-                    <VisualElement class="preview">
-                        <VisualElement class="preview-box">
-                        <Image name="player-right-preview"/>
-                            <Image name="not"/>
-                            <Image name="ghost" class="hidden"/>
-                            <VisualElement name="player-right-ready" class="ready-indicator"/>
-                            <VisualElement class="footer">
-                                <Label name="player-right-name" text="Name"/>
-                            </VisualElement>
-                    </VisualElement>
-                    </VisualElement>
+          <VisualElement class="lanes">
+            <Label text="lanes" class="header"/>
+            <GroupBox>
+              <RadioButton name="lane-1" class="lane">
+                <VisualElement class="raised">
+                  <Label text="1"/>
                 </VisualElement>
+              </RadioButton>
+              <RadioButton name="lane-2" class="lane">
+                <VisualElement class="raised">
+                  <Label text="2"/>
+                </VisualElement>
+              </RadioButton>
+              <RadioButton name="lane-3" class="lane">
+                <VisualElement class="raised">
+                  <Label text="3"/>
+                </VisualElement>
+              </RadioButton>
+              <RadioButton name="lane-4" class="lane">
+                <VisualElement class="raised">
+                  <Label text="4"/>
+                </VisualElement>
+              </RadioButton>
+            </GroupBox>
+          </VisualElement>
+          
+          <VisualElement name="remote-player" class="player">
+            <Label text="remote-player" class="header"/>
+            <VisualElement class="preview">
+              <VisualElement class="preview-box">
+                <Image name="remote-player-preview"/>
+              </VisualElement>
+              <VisualElement name="remote-player-ready" class="ready"/>
+              <VisualElement class="preview-footer">
+                <Label name="remote-player-name" class="preview-name" text="Name"/>
+              </VisualElement>
             </VisualElement>
 
+            <VisualElement name="join-code" class="join-code">
+              <Label text="join-code" class="join-code-text"/>
+              <Label name="join-code-value" text="X3483A" class="join-code-value"/>
+            </VisualElement>
+          </VisualElement>
         </VisualElement>
-        <Button name="ready" text="Play" class="menu-row menu-row-gap"/>
-        <Button name="options" text="Options" class="menu-row" enabled="false"/>
-        <Button name="quit" text="Quit" class="menu-row menu-row-gap"/>
 
-        <Label name="countdown" text="" class="hidden"/>
-    </zisle:UILobbyController>
+        <zisle:RaisedButton name="ready" class="zisle-button-blue" text="ready"/>
+      </zisle:Panel>
+    </VisualElement>
 </engine:UXML>

@@ -1,9 +1,0 @@
-.screen-title
-{
-	-unity-text-align: middle-center;
-	width: 100%;
-}
-
-.menu-row {
-    width: 400px;
-}

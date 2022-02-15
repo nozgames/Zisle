@@ -9,7 +9,20 @@ namespace NoZ.Zisle.UI
     public class Panel : VisualElement
     {
         public new class UxmlFactory : UxmlFactory<Panel, PanelTraits> { }
-        public class PanelTraits : UxmlTraits { }
+
+        public class PanelTraits : UxmlTraits
+        {
+            UxmlStringAttributeDescription _title = new UxmlStringAttributeDescription { name = "title", defaultValue = "" };
+
+            public override IEnumerable<UxmlChildElementDescription> uxmlChildElementsDescription { get { yield break; } }
+
+            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
+            {
+                base.Init(ve, bag, cc);
+                var panel = ve as Panel;
+                panel._title.text = _title.GetValueFromBag(bag, cc).Localized();
+            }
+        }
 
         private VisualElement _items;
         private VisualElement _close;
@@ -29,13 +42,8 @@ namespace NoZ.Zisle.UI
             get => _title.text;
             set
             {
-                if (string.IsNullOrEmpty(value))
-                    _title.AddToClassList("hidden");
-                else
-                {
-                    _title.RemoveFromClassList("hidden");
-                    _title.text = value;
-                }                
+                _title.text = value.Localized();
+                UpdateTitle();
             }            
         }
 
@@ -43,15 +51,27 @@ namespace NoZ.Zisle.UI
         {
             AddToClassList("zisle-panel");
 
-            _title = this.Add<Label>().AddClass("zisle-panel-title").AddClass("hidden");
-            _items = this.Add<VisualElement>().AddClass("zisle-panel-items");
-            _close = this.Add<RaisedButton>().Text("X").AddClass("zisle-panel-close").AddClass("hidden").BindClick(() => _onClose?.Invoke());
+            _title = base.hierarchy.Add<Label>().AddClass("zisle-panel-title").AddClass("hidden");
+            _items = base.hierarchy.Add<VisualElement>().AddClass("zisle-panel-items");
+            _close = base.hierarchy.Add<RaisedButton>().Text("X").AddClass("zisle-panel-close").AddClass("hidden").AddClass("zisle-button-red").BindClick(() => _onClose?.Invoke());
+
+            RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
         }
 
-        public void AddItem(VisualElement element) => _items.Add(element);
+        private void OnGeometryChanged(GeometryChangedEvent evt)
+        {
+            UpdateTitle();
+        }
 
-        public TElement AddItem<TElement>(string name=null) where TElement : VisualElement, new() => 
-            _items.Add<TElement>(name);
+        private void UpdateTitle()
+        {
+            if (string.IsNullOrEmpty(_title.text))
+                _title.AddToClassList("hidden");
+            else
+                _title.RemoveFromClassList("hidden");
+        }
+
+        public override VisualElement contentContainer => _items;
 
         public Panel SetTitle (string title)
         {

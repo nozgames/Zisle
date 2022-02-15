@@ -1,14 +1,4 @@
-.screen-title
-{
-	-unity-text-align: middle-center;
-	width: 100%;
-}
-
-.menu-row {
-    width: 400px;
-}
-
-.menu-row-gap {
+.gap {
 	margin-top: 30px;
 }
 
@@ -19,4 +9,9 @@
 
 .unity-text-field__placeholder > .unity-base-text-field__input {    
     color: var(--color-text-ghosted);
+}
+
+.buttons .zisle-button
+{
+	width: 400px;
 }

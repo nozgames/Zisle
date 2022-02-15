@@ -60,7 +60,7 @@
 #ready
 {
 	margin-top: auto;
-	margin-bottom: -100px;
+	margin-bottom: -85px;
 	border-color: var(--zisle-button-border-color);
 	border-width: var(--zisle-button-border-width);
 	border-radius: var(--zisle-button-border-radius)
@@ -103,14 +103,14 @@
 	margin-bottom: 30px;
 }
 
-.player-local-class-button
+.local-player-class-button
 {
 	width: 50px;
 	height: 50px;
 	padding: 0px;
 }
 
-.player-local-class-button Label
+.local-player-class-button Label
 {
 	padding: 0px;
 	width: 35px;
@@ -119,12 +119,12 @@
 	margin-bottom: 10px;
 }
 
-.player-local-class-prev Label
+.local-player-class-prev Label
 {
 	background-image: url("project://database/Assets/Sprites/Icons/ArrowLeft.png");
 }
 
-.player-local-class-next Label
+.local-player-class-next Label
 {
 	background-image: url("project://database/Assets/Sprites/Icons/ArrowRight.png");
 }

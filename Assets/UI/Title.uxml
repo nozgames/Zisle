@@ -1,0 +1,23 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" 
+    xmlns:uie="UnityEditor.UIElements"
+    xsi="http://www.w3.org/2001/XMLSchema-instance"
+    engine="UnityEngine.UIElements" 
+    editor="UnityEditor.UIElements"
+    xmlns="UnityEngine.UIElements"
+    xmlns:zisle="NoZ.Zisle.UI"
+    noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd"
+    editor-extension-mode="False">
+
+    <Style src="project://database/Assets/UI/Title.uss" />
+
+    <VisualElement class="root screen centered-vertical">
+      <VisualElement class="logo"/>
+      <zisle:Panel title="main-menu">
+        <zisle:RaisedButton name="solo" text="solo" class="zisle-button-blue"/>
+        <zisle:RaisedButton name="cooperative" text="cooperative" class="zisle-button-blue"/>
+        <zisle:RaisedButton name="options" text="options" class="zisle-button-blue"/>
+        <zisle:RaisedButton name="quit" text="quit" class="zisle-button-orange"/>
+      </zisle:Panel>
+    </VisualElement>    
+
+</ui:UXML>

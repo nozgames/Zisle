@@ -24,7 +24,7 @@ namespace NoZ.Zisle
             if (null == _stringTable)
                 return key;
 
-            return _stringTable.GetEntry(key).Value;
+            return _stringTable.GetEntry(key)?.Value ?? key;
         }
     }
 
