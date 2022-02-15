@@ -267,7 +267,7 @@ namespace NoZ.Zisle.UI
         }
 
         public void ShowLeftPreview (ActorDefinition def, bool playEffect=true) => ShowPreview(_previewLeft, def, playEffect);
-        public void ShowRightPreview(ActorDefinition def, bool playEffect = true) => ShowPreview(_previewRight, def, playEffect);
+        public void ShowRightPreview(ActorDefinition def, bool playEffect=true) => ShowPreview(_previewRight, def, playEffect);
 
         private void ShowPreview (GameObject preview, ActorDefinition def, bool playEffect)
         {

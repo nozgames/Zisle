@@ -107,6 +107,14 @@ MonoBehaviour:
     m_Key: confirm-quit-solo
     m_Metadata:
       m_Items: []
+  - m_Id: 566660655562752
+    m_Key: same-character
+    m_Metadata:
+      m_Items: []
+  - m_Id: 566713000476672
+    m_Key: select-another-character
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

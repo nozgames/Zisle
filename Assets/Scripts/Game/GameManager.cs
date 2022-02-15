@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using NoZ.Events;
 using System.Collections;
@@ -329,6 +330,18 @@ namespace NoZ.Zisle
 
                 // Wait until we see ourself join and the options spawns
                 while (NetworkManager.Singleton.IsClient && (LocalPlayerController == null || _options == null))
+                    yield return null;
+
+                // Set initial player class
+                var def = Instance.ActorDefinitions.Where(d => d.name == NoZ.Zisle.Options.PlayerClass && d.ActorType == ActorType.Player).FirstOrDefault();
+                if (def == null)
+                    def = Instance.ActorDefinitions.Where(d => d.name == "RandomPlayer" && d.ActorType == ActorType.Player).FirstOrDefault();
+                if (def == null)
+                    def = Instance.ActorDefinitions.Where(d => d.ActorType == ActorType.Player).FirstOrDefault();
+
+                Instance.LocalPlayerController.PlayerClassId = def.NetworkId;
+
+                while (Instance.LocalPlayerController.PlayerClass == null)
                     yield return null;
 
                 Debug.Log("Local Player Connected");

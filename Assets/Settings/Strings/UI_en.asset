@@ -117,6 +117,18 @@ MonoBehaviour:
       later.'
     m_Metadata:
       m_Items: []
+  - m_Id: 566660655562752
+    m_Localized: 'You have chosen the same character as the Remote player.
+
+
+      Each
+      player must choose a unique character'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 566713000476672
+    m_Localized: Select another character
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

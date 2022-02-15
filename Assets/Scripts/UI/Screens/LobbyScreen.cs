@@ -155,8 +155,15 @@ namespace NoZ.Zisle.UI
                 UIManager.Instance.StartGame();
             else
             {
-                GameManager.Instance.LocalPlayerController.IsReady = !GameManager.Instance.LocalPlayerController.IsReady;
-                UpdateReadyState();
+                var localClass = GameManager.Instance.LocalPlayerController.PlayerClass;
+                var isReady = GameManager.Instance.LocalPlayerController.IsReady;
+                if (!isReady && localClass.name != "RandomPlayer" && GameManager.Instance.Players.Count(p => p.IsReady && p.PlayerClassId == localClass.NetworkId) > 0)
+                    UIManager.Instance.Confirm(title: "select-another-character".Localized(), message: "same-character".Localized(), yes: "ok".Localized(), onYes: () => UIManager.Instance.ShowLobby());
+                else
+                {
+                    GameManager.Instance.LocalPlayerController.IsReady = !GameManager.Instance.LocalPlayerController.IsReady;
+                    UpdateReadyState();
+                }
             }
         }
 
@@ -184,11 +191,9 @@ namespace NoZ.Zisle.UI
         {
             base.OnBeforeTransitionIn();
 
-            SetLocalPlayerClass(GameManager.Instance.ActorDefinitions.Where(d => d.ActorType == ActorType.Player).FirstOrDefault(), false);
+            SetLocalPlayerClass(GameManager.Instance.LocalPlayerController.PlayerClass, false);
 
             UIManager.Instance.GenerateBackground(GameManager.Instance.Options.StartingLanes);
-
-            UpdateRemotePlayer(false);
 
             _playLaneClick = false;
             _lanes[GameManager.Instance.Options.StartingLanes - 1].value = true;
@@ -216,7 +221,7 @@ namespace NoZ.Zisle.UI
             GameEvent<PlayerSpawned>.OnRaised += OnPlayerSpawned;
 
             UpdateReadyState();
-            UpdateRemotePlayer();
+            UpdateRemotePlayer(false);
 
             _readyButton.Focus();
 
@@ -268,6 +273,9 @@ namespace NoZ.Zisle.UI
 
         private void UpdateReadyButton (int seconds)
         {
+            if (GameManager.Instance.LocalPlayerController == null)
+                return;
+
             var localReady = GameManager.Instance.LocalPlayerController.IsReady;
             _readyButton.SetEnabled(GameManager.Instance.PlayerCount == GameManager.Instance.MaxPlayers);
             _readyButton.SetColor(localReady ? RaisedButtonColor.Orange : RaisedButtonColor.Blue);
@@ -369,6 +377,8 @@ namespace NoZ.Zisle.UI
             _localPlayerName.text = def.DisplayName;
             UIManager.Instance.ShowLeftPreview(def,playEffect);
             _localPlayerClass = def;
+
+            Options.PlayerClass = def.name;
         }
     }
 }

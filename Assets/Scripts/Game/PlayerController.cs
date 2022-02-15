@@ -109,10 +109,13 @@ namespace NoZ.Zisle
             if (null == actorDef)
                 throw new System.InvalidOperationException($"No ActorDefinition found for player class id [{_playerClassId.Value}]");
 
+            // Make sure the class is unique
+            var duplicateClass = GameManager.Instance.Players.Any(p => p.Player != null && p.PlayerClass == PlayerClass);
+
             // No brain it must be random or an error, pick another random class that isnt one of the other players
-            if(actorDef.Brain == null)
+            if (duplicateClass || actorDef.Brain == null)
             {
-                var defs = GameManager.Instance.ActorDefinitions.Where(d => d.ActorType == ActorType.Player && !GameManager.Instance.Players.Any(p => p.PlayerClass == d)).ToArray();
+                var defs = GameManager.Instance.ActorDefinitions.Where(d => d.ActorType == ActorType.Player && d.Brain != null && !GameManager.Instance.Players.Any(p => p.PlayerClass == d)).ToArray();
                 actorDef = defs[UnityEngine.Random.Range(0, defs.Length)];
                 _playerClassId.Value = actorDef.NetworkId;
             }
