@@ -10,9 +10,9 @@
     <Style src="project://database/Assets/UI/Game.uss" />
     <VisualElement class="root screen centered-vertical">
       <zisle:Panel name="game-menu" title="game-menu">
-        <zisle:RaisedButton name="resume" text="resume" class="zisle-button-blue"/>
-        <zisle:RaisedButton name="options" text="options" class="zisle-button-blue gap"/>
-        <zisle:RaisedButton name="quit" text="quit-game" class="zisle-button-orange gap"/>
+        <zisle:RaisedButton name="resume" text="resume" class="zisle-button-blue zisle-button-fixed-large"/>
+        <zisle:RaisedButton name="options" text="options" class="zisle-button-blue zisle-button-fixed-large zisle-button-fixed-large-gap"/>
+        <zisle:RaisedButton name="quit" text="quit-game" class="zisle-button-orange zisle-button-fixed-large zisle-button-fixed-large-gap"/>
       </zisle:Panel>
     </VisualElement>
 </engine:UXML>

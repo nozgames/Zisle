@@ -13,10 +13,10 @@
     <VisualElement class="root screen centered-vertical">
       <VisualElement class="logo"/>
       <zisle:Panel title="main-menu">
-        <zisle:RaisedButton name="solo" text="solo" class="zisle-button-blue"/>
-        <zisle:RaisedButton name="cooperative" text="cooperative" class="zisle-button-blue"/>
-        <zisle:RaisedButton name="options" text="options" class="zisle-button-blue"/>
-        <zisle:RaisedButton name="quit" text="quit" class="zisle-button-orange"/>
+        <zisle:RaisedButton name="solo" text="solo" class="zisle-button-blue zisle-button-fixed-large"/>
+        <zisle:RaisedButton name="cooperative" text="cooperative" class="zisle-button-blue zisle-button-fixed-large-gap zisle-button-fixed-large"/>
+        <zisle:RaisedButton name="options" text="options" class="zisle-button-blue zisle-button-fixed-large-gap zisle-button-fixed-large"/>
+        <zisle:RaisedButton name="quit" text="quit" class="zisle-button-orange zisle-button-fixed-large-gap zisle-button-fixed-large"/>
       </zisle:Panel>
     </VisualElement>    
 

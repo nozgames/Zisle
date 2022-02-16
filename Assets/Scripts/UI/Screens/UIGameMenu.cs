@@ -33,7 +33,7 @@ namespace NoZ.Zisle.UI
             UIManager.Instance.Confirm(
                 title: "quit?".Localized(),
                 message: (GameManager.Instance.IsSolo ? "confirm-quit-solo" : (NetworkManager.Singleton.IsHost ? "confirm-close-lobby" : "confirm-leave-lobby")).Localized(), 
-                onNo: () => UIManager.Instance.ShowGame(), 
+                onNo: () => UIManager.Instance.ShowGameMenu(), 
                 onYes: () => UIManager.Instance.ShowMainMenu());
         }
 

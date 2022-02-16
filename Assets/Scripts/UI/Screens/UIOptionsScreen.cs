@@ -9,15 +9,18 @@ namespace NoZ.Zisle.UI
     {
         private string ResolutionToString(Resolution r) => $"{r.width} x {r.height} @ {r.refreshRate}Hz";
 
+        private VisualElement _generalContent = null;
+        private VisualElement _gamepadContent = null;
+        private VisualElement _keyboardContent = null;
+        private VisualElement _generalTab = null;
+        private VisualElement _gamepadTab = null;
+        private VisualElement _keyboardTab = null;
+
         public Action OnBack = null;
 
         protected override void Awake ()
         {
             base.Awake();
-
-            BindClick("back",OnBackInternal).Focus();
-            BindClick("keyboard-controls", () => UIManager.Instance.ShowKeyboardControls());
-            BindClick("gamepad-controls", () => UIManager.Instance.ShowGamepadControls());
 
             var resolutions = this.Q<DropdownField>("resolutions");
             resolutions.choices = Screen.resolutions.Select(r => ResolutionToString(r)).ToList();
@@ -47,6 +50,48 @@ namespace NoZ.Zisle.UI
             musicVolume.highValue = 1.0f;
             musicVolume.value = Options.MusicVolume;
             musicVolume.RegisterValueChangedCallback(e => Options.MusicVolume = e.newValue);
+
+            Q<Panel>("panel").OnClose(OnBackInternal);
+
+            _generalContent = Q("general-content");
+            _gamepadContent = Q("gamepad-content");
+            _keyboardContent = Q("keyboard-content");
+
+            _generalTab = BindClick("general-tab", OnGeneralTab);
+            _generalTab.SetEnabled(false);
+
+            _keyboardTab = BindClick("keyboard-tab", OnKeyboardTab);
+            _gamepadTab = BindClick("gamepad-tab", OnGamepadTab);
+        }
+
+        private void OnKeyboardTab()
+        {
+            _generalContent.EnableInClassList(USS.Hidden, true);
+            _gamepadContent.EnableInClassList(USS.Hidden, true);
+            _keyboardContent.EnableInClassList(USS.Hidden, false);
+            _generalTab.SetEnabled(true);
+            _keyboardTab.SetEnabled(false);
+            _gamepadTab.SetEnabled(true);
+        }
+
+        private void OnGamepadTab()
+        {
+            _generalContent.EnableInClassList(USS.Hidden, true);
+            _gamepadContent.EnableInClassList(USS.Hidden, false);
+            _keyboardContent.EnableInClassList(USS.Hidden, true);
+            _generalTab.SetEnabled(true);
+            _keyboardTab.SetEnabled(true);
+            _gamepadTab.SetEnabled(false);
+        }
+
+        private void OnGeneralTab()
+        {
+            _generalContent.EnableInClassList(USS.Hidden, false);
+            _gamepadContent.EnableInClassList(USS.Hidden, true);
+            _keyboardContent.EnableInClassList(USS.Hidden, true);
+            _generalTab.SetEnabled(false);
+            _keyboardTab.SetEnabled(true);
+            _gamepadTab.SetEnabled(true);
         }
 
         private void OnBackInternal()
@@ -61,6 +106,13 @@ namespace NoZ.Zisle.UI
         {
             AudioManager.Instance.PlayButtonClick();
             OnBackInternal();
+        }
+
+        protected override void OnShow()
+        {
+            base.OnShow();
+
+            OnGeneralTab();
         }
     }
 }

@@ -11,10 +11,10 @@
     <VisualElement class="root screen centered-vertical">
         <zisle:Panel name="panel" title="cooperative">
           <VisualElement class="buttons">
-            <zisle:RaisedButton name="join" text="Join With Code" class="zisle-button-blue"/>
-            <zisle:RaisedButton name="join-local" text="Join LAN" class="zisle-button-blue gap"/>
-            <zisle:RaisedButton name="host" text="Create Online" class="zisle-button-orange gap"/>
-            <zisle:RaisedButton name="host-local" text="Create LAN" class="zisle-button-orange gap"/>
+            <zisle:RaisedButton name="join" text="Join With Code" class="zisle-button-blue zisle-button-fixed-large"/>
+            <zisle:RaisedButton name="join-local" text="Join LAN" class="zisle-button-blue zisle-button-fixed-large-gap zisle-button-fixed-large"/>
+            <zisle:RaisedButton name="host" text="Create Online" class="zisle-button-orange zisle-button-fixed-large-gap zisle-button-fixed-large"/>
+            <zisle:RaisedButton name="host-local" text="Create LAN" class="zisle-button-orange zisle-button-fixed-large-gap zisle-button-fixed-large"/>
             </VisualElement>
         </zisle:Panel>
     </VisualElement>

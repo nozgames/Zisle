@@ -21,11 +21,16 @@
     --zisle-color-label-dk: #767376;
     --zisle-color-border: white;
     --zisle-color-gray: #e9e6ea;
-    --zisle-color-gray-dk: d9d8db;
+    --zisle-color-gray-dk: #d9d8db;
     --zisle-color-gray-darker: #c9c6c9;
     /* Zisle TextField */
     --zisle-textfield-color-background: #FFFFFF;
     --zisle-textfield-color-shadow: #d8d7da;
+    /* Zisle Toggle */
+    --zisle-toggle-background-color: #FFFFFF;
+    --zisle-toggle-border-color: #b4afb1;
+    --zisle-toggle-border-width: 2px;
+    --zisle-toggle-border-radius: 2px;
     /* Zisle Button */
     --zisle-button-label-color: white;
     --zisle-button-color-orange: #ff9223;
@@ -51,6 +56,17 @@
     --zisle-panel-border-width: 5px;
     --zisle-panel-border-color: white;
     --zisle-panel-background-color: #e9e6ea;
+    /* Zisle Panel Row*/
+    --zisle-panel-row-background-color: #f5f2f5;
+    --zisle-panel-row-border-color: #FFFFFF;
+    --zisle-panel-row-border-width: 3px;
+    --zisle-panel-row-color: #767376;
+    --zisle-panel-row-content-color: #767376;
+    --zisle-panel-row-content-highlight-color: #3f9af3;
+    --zisle-panel-row-content-background-color: #FFFFFF;
+    --zisle-panel-row-content-border-width: 2px;
+    --zisle-panel-row-content-border-radius: 2px;
+    --zisle-panel-row-content-border-color: #c4bfc1;
 }
 
 .hidden 
@@ -125,28 +141,6 @@
     align-items: flex-start;
 }
 
-.menu-row
-{
-    -unity-background-image-tint-color: var(--color-background);
-    background-image: url("../RoundedBorder.png");
-    padding: 4px 20px;
-    width: 1000px;
-    margin-bottom: 2px;
-    height: 70px;
-}
-
-.menu-row:focus
-{
-    -unity-background-image-tint-color: var(--color-background-highlight);
-}
-
-.menu-row-gap
-{
-    margin-top: 15px;
-}
-
-
-
 
 /* Zisle Button */
 
@@ -156,12 +150,25 @@
     padding: 0px;
 }
 
+.zisle-button-fixed-medium {
+    width: 300px;
+    height: 60px;
+}
+
+.zisle-button-fixed-large {
+    width: 400px;
+    height: 70px;
+}
+
+.zisle-button-fixed-large-gap {
+    margin-top: 30px;
+}
+
 .zisle-button .zisle-button__raised {
     border-bottom-width: var(--zisle-button-shadow-width);
     width: 100%;
     height: 100%;
     padding: 0;
-
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -282,4 +289,23 @@
     align-items: center;
     justify-content: center;
     padding: 40px;
+}
+
+.zisle-panel-row {
+    background-color: var(--zisle-panel-row-background-color);
+    border-color: var(--zisle-panel-row-border-color);
+    border-top-width: var(--zisle-panel-row-border-width);
+    border-bottom-width: var(--zisle-panel-row-border-width);
+    width: 100%;
+    height: 70px;
+    padding: 0px 40px;
+    justify-content: center;
+}
+
+.zisle-panel-row Label {
+    color: var(--zisle-panel-row-color) !important;
+}
+
+.zisle-panel-row-gap {
+    margin-top: 10px !important;
 }

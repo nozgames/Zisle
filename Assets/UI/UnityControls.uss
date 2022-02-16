@@ -13,21 +13,21 @@
 {
     width: 17px;
     height: 15px;
-    -unity-background-image-tint-color: var(--color-text);
+    -unity-background-image-tint-color: var(--zisle-panel-row-content-color);
 }
 
-.unity-base-dropdown__container-inner
-{
-    background-color: var(--color-background-dark) !important;
+.unity-base-dropdown__container-inner {
 }
 
 .unity-base-dropdown__container-outer
 {
     border-width: 0;
+
 }
 
 .unity-base-dropdown__item:hover {
-    background-color: var(--color-background-highlight);
+    background-color: var(--zisle-panel-row-content-highlight-color);
+    color: var(--zisle-panel-row-content-background-color);
 }
 
 .unity-base-dropdown__label
@@ -36,9 +36,8 @@
     padding: 0;
 }
 
-.unity-base-dropdown__item:hover > .unity-base-dropdown__label
-{
-    color: var(--color-text);
+.unity-base-dropdown__item:hover > .unity-base-dropdown__label {
+    color: var(--zisle-panel-row-content-background-color);
 }
 
 .unity-base-dropdown__item
@@ -53,7 +52,7 @@
 .unity-base-dropdown__checkmark 
 {
     background-image: url("project://database/Assets/Sprites/Checkbox.psd");
-    -unity-background-image-tint-color: var(--color-text);
+    -unity-background-image-tint-color: var(--zisle-panel-row-content-highlight-color);
     position: absolute;
     left: 0;
     width: 30px;
@@ -61,29 +60,28 @@
 }
 
 DropdownField .unity-label {
-    color: var(--color-text);
+    color: var(--zisle-panel-row-color);
     -unity-text-align: middle-left;
 }
 
 DropdownField .unity-text-element {
-    color: var(--color-text);
+    color: var(--zisle-panel-row-color);
 }
 
 .unity-base-dropdown__label {
-   -unity-font-definition: var(--font-definition-normal);
-   font-size: var(--font-size-small);
-   color: var(--color-text) !important;
+    -unity-font-definition: var(--font-definition-normal);
+    font-size: var(--font-size-small);
+    color: var(--zisle-panel-row-color);
 }
 
 DropdownField .unity-text-element,
-.unity-base-field__label
-{
-   -unity-font-definition: var(--font-definition-normal);
-   font-size: var(--font-size-normal);
-   color: var(--color-text) !important;
-   margin-top: -4px;
-   margin-bottom: 0px;
-   width: 400px;
+.unity-base-field__label {
+    -unity-font-definition: var(--font-definition-normal);
+    font-size: var(--font-size-normal);
+    color: var(--zisle-panel-row-color);
+    margin-top: -4px;
+    margin-bottom: 0px;
+    width: 400px;
 }
 
 DropdownField .unity-base-popup-field__text
@@ -91,61 +89,62 @@ DropdownField .unity-base-popup-field__text
     font-size: var(--font-size-small);
 }
 
-.unity-base-popup-field__input
-{
+.unity-base-popup-field__input {
     margin-left: -1px;
-    margin-top:4px;
-    margin-bottom:4px;
-    border-width: 0;
-    background-image: var(--image-rounded-border);
-    -unity-background-image-tint-color: var(--color-background-dark);
+    margin-top: 4px;
+    margin-bottom: 4px;
+    background-color: var(--zisle-panel-row-content-background-color);
+    border-width: var(--zisle-panel-row-content-border-width);
+    border-radius: var(--zisle-panel-row-content-border-radius);
+    border-color: var(--zisle-panel-row-content-border-color);
 }
 
 .unity-base-popup-field:active > .unity-base-popup-field__input,
 .unity-base-popup-field:hover > .unity-base-popup-field__input
 {
-    background-color: rgba(0,0,0,0);
-    border-width: 0px;
-    background-image: var(--image-rounded-border);
-    -unity-background-image-tint-color: var(--color-background-dark);
+    background-color: var(--zisle-panel-row-content-background-color);
 }
 
-.unity-base-field:focus > .unity-base-field__label
-{
-   -unity-font-definition: var(--font-definition-normal);
-   font-size: var(--font-size-normal);
-   color: var(--color-text) !important;
+.unity-base-field:focus > .unity-base-field__label {
+    -unity-font-definition: var(--font-definition-normal);
+    font-size: var(--font-size-normal);
+    color: var(--zisle-panel-row-color);
 }
 
 
 /* Slider */
 
+.unity-base-slider {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.unity-base-slider:focus .unity-base-slider__label,
 .unity-base-slider__label {
     -unity-text-align: middle-left;
+    color: var(--zisle-panel-row-color);
 }
 
 .unity-base-slider__drag-container {
     margin-top: 6px;
     margin-bottom: 6px;
-    border-width: 0px; 
-    background-color: rgba(0,0,0,0);
-    background-image: var(--image-rounded-border);
-    -unity-background-image-tint-color: var(--color-background-dark);
+    border-width: var(--zisle-toggle-border-width);
+    border-radius: var(--zisle-toggle-border-radius);
+    border-color: var(--zisle-toggle-border-color);
+    background-color: var(--zisle-textfield-color-background);
 }
 
-.unity-base-slider--horizontal .unity-base-slider__dragger
-{
-    top: 5%;
-    bottom: 0;
-    margin: 0;
-    height: 90%;
-    width: 16px;
-    margin-left: 4px;
-    margin-right: 4px;
-    background-color: rgba(0,0,0,0);
-    border-width: 0;
-    background-image: var(--image-rounded-border);
-    -unity-background-image-tint-color: var(--color-text-dark);
+.unity-base-slider--horizontal .unity-base-slider__dragger {
+    top: 0;
+    margin: -8px 2px;
+    width: 20px;
+    height: 52px;
+    border-width: var(--zisle-toggle-border-width);
+    border-radius: var(--zisle-toggle-border-radius);
+    border-color: var(--zisle-button-color-blue-dk);
+    background-color: var(--zisle-button-color-blue);
 }
 
 .unity-base-slider .unity-base-slider__tracker
@@ -165,6 +164,11 @@ DropdownField .unity-base-popup-field__text
 
 .unity-toggle__label {
     -unity-text-align: middle-left;
+    color: var(--zisle-panel-row-color);
+}
+
+.unity-toggle:focus .unity-toggle__label {
+    color: var(--zisle-panel-row-color);
 }
 
 .unity-toggle__checkmark {
@@ -173,24 +177,32 @@ DropdownField .unity-base-popup-field__text
     margin-bottom: 10px;
     width: 40px;
     height: 40px;
-    background-color: var(--color-background-dark);
-    border-width: 0;
+    background-color: var(--zisle-toggle-background-color);
+    border-width: var(--zisle-toggle-border-width);
+    border-radius: var(--zisle-toggle-border-radius);
+    border-color: var(--zisle-toggle-border-color);
 }
 
 .unity-toggle:focus > .unity-toggle__input:checked > .unity-toggle__checkmark,
+.unity-toggle:hover > .unity-toggle__input > .unity-toggle__checkmark,
 .unity-toggle:focus > .unity-toggle__input > .unity-toggle__checkmark {
-    background-color: var(--color-background-dark);
-    border-width: 0;
+    background-color: var(--zisle-toggle-background-color);
+    border-color: var(--zisle-toggle-border-color);
+    border-width: var(--zisle-toggle-border-width);
+    border-radius: var(--zisle-toggle-border-radius);
+    border-color: var(--zisle-toggle-border-color);
 }
 
 .unity-toggle > .unity-toggle__input:checked > .unity-toggle__checkmark,
 .unity-toggle > .unity-toggle__input:checked:hover > .unity-toggle__checkmark,
-.unity-toggle > .unity-toggle__input:checked:focus > .unity-toggle__checkmark
-{
-    background-color: var(--color-background-dark);
-    border-width: 0;
+.unity-toggle > .unity-toggle__input:checked:focus > .unity-toggle__checkmark {
+    background-color: var(--zisle-toggle-background-color);
+    border-width: var(--zisle-toggle-border-width);
+    border-radius: var(--zisle-toggle-border-radius);
+    border-color: var(--zisle-toggle-border-color);
     background-image: url("project://database/Assets/Sprites/Checkbox.psd");
-    -unity-background-image-tint-color: var(--color-text-dark);
+    -unity-background-image-tint-color: var(--zisle-button-color-blue);
+    border-color: var(--zisle-toggle-border-color);
 }
 
 /* Scroller */
@@ -225,11 +237,8 @@ DropdownField .unity-base-popup-field__text
     -unity-background-image-tint-color: var(--color-background-darker);
 }
 
-.unity-scroller--vertical .unity-base-slider__dragger:hover
-{
-    background-color: rgba(0,0,0,0);
-    background-image: var(--image-rounded-border);
-    -unity-background-image-tint-color: var(--color-background-highlight);
+.unity-scroller--vertical .unity-base-slider__dragger:hover {
+    background-color: var(--zisle-panel-row-highlight-color);
 }
 
 .unity-scroller--vertical .unity-base-slider__drag-container

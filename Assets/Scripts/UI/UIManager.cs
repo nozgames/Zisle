@@ -46,8 +46,6 @@ namespace NoZ.Zisle.UI
         [SerializeField] private UIGame _gameScreen = null;
         [SerializeField] private UIGameMenu _gameMenuScreen = null;
         [SerializeField] private UIOptionsScreen _optionsScreen = null;
-        [SerializeField] private UIKeyboardControls _keyboardControls = null;
-        [SerializeField] private UIGamepadControls _gamepadControls = null;
 
         private UIScreen _activeScreen;
         private bool _transitioning;
@@ -63,6 +61,7 @@ namespace NoZ.Zisle.UI
             InputManager.Instance.OnUIClose += () => _activeScreen.OnNavigationBack();
 
             InputManager.Instance.EnableMenuActions();
+            InputManager.Instance.EnablePlayerActions(false);
 
             // Enable all screens and make them invisible
             for (int i = 0; i < _screens.childCount; i++)
@@ -105,8 +104,6 @@ namespace NoZ.Zisle.UI
             TransitionTo(_optionsScreen);
         }
 
-        public void ShowKeyboardControls() => TransitionTo(_keyboardControls);
-        public void ShowGamepadControls() => TransitionTo(_gamepadControls);
         public void ShowTitle () => TransitionTo(_titleScreen);
         public void ShowMultiplayer () => TransitionTo(_multiplayerScreen);
         public void ShowJoinWithCode () => TransitionTo(_joinWithCodeScreen);

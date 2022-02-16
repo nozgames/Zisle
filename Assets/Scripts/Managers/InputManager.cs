@@ -119,7 +119,6 @@ namespace NoZ.Zisle
 
         private void OnApplicationFocus(bool focus)
         {
-            EnablePlayerActions(focus);
         }
 
         private void Update()

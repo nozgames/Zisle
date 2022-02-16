@@ -9,16 +9,36 @@
 >
     <Style src="project://database/Assets/UI/Options.uss" />
     <VisualElement class="root screen centered-vertical">
-        <VisualElement class="centered-vertical left-align">
-            <Label text="Options" class="screen-title"/>
-            <Slider name="sound-volume" label="Sound Volume" class="menu-row"/>
-            <Slider name="music-volume" label="Music Volume" class="menu-row"/>
-            <DropdownField name="resolutions" label="Resolution" class="menu-row"/>
-            <Toggle name="fullscreen" label="Fullscreen" class="menu-row"/>
-            <Toggle name="screen-shake" label="Screen Shake" class="menu-row"/>
-            <Button name="keyboard-controls" text="Keyboard Controls" class="menu-row menu-row-gap menu-row-button"/>
-            <Button name="gamepad-controls" text="Gamepad Controls" class="menu-row menu-row-button"/>
-            <Button name="back" text="Back" class="menu-row menu-row-gap menu-row-button"/>
-        </VisualElement>
+        <zisle:Panel name="panel" title="options">
+          <VisualElement class="tabs">
+            <zisle:RaisedButton name="general-tab" text="general" class="zisle-button-blue zisle-button-fixed-medium"/>
+            <zisle:RaisedButton name="keyboard-tab" text="keyboard" class="zisle-button-blue zisle-button-fixed-medium"/>
+            <zisle:RaisedButton name="gamepad-tab" text="gamepad" class="zisle-button-blue zisle-button-fixed-medium"/>
+          </VisualElement>
+          <VisualElement name="general-content" class="tab-content">
+            <VisualElement class="zisle-panel-row">
+              <Slider name="sound-volume" label="Sound Volume"/>
+            </VisualElement>
+            <VisualElement class="zisle-panel-row zisle-panel-row-gap">
+              <Slider name="music-volume" label="Music Volume"/>
+            </VisualElement>
+            <DropdownField name="resolutions" label="Resolution" class="zisle-panel-row zisle-panel-row-gap"/>
+            <Toggle name="fullscreen" label="Fullscreen" class="zisle-panel-row zisle-panel-row-gap"/>
+            <Toggle name="screen-shake" label="Screen Shake" class="zisle-panel-row zisle-panel-row-gap"/>
+          </VisualElement>
+          <VisualElement name="keyboard-content"  class="tab-content hidden">
+            <zisle:UIControlBinding action-map="Player" action-name="Move Up" class="zisle-panel-row"/>
+            <zisle:UIControlBinding action-map="Player" action-name="Move Left" class="zisle-panel-row zisle-panel-row-gap"/>
+            <zisle:UIControlBinding action-map="Player" action-name="Move Down" class="zisle-panel-row zisle-panel-row-gap"/>
+            <zisle:UIControlBinding action-map="Player" action-name="Move Right" class="zisle-panel-row zisle-panel-row-gap"/>
+            <zisle:UIControlBinding action-map="Player" action-name="Action" class="zisle-panel-row zisle-panel-row-gap"/>
+          </VisualElement>
+          <VisualElement name="gamepad-content" class="tab-content hidden">
+            <zisle:UIControlBinding action-map="Player" action-name="Action" class="zisle-panel-row" binding-count="1" binding-offset="2" gamepad="true"/>
+            <VisualElement class="zisle-panel-row zisle-panel-row-gap">
+              <Slider name="zoom-speed" label="Zoom Speed" />
+            </VisualElement>
+          </VisualElement>
+        </zisle:Panel>
     </VisualElement>
 </engine:UXML>
