@@ -99,7 +99,7 @@ PrefabInstance:
     - target: {fileID: 1261973430235558940, guid: c626647da39f58f4a9598683d11fcdc9,
         type: 3}
       propertyPath: m_Name
-      value: Orc
+      value: OrcBoss
       objectReference: {fileID: 0}
     - target: {fileID: 1291445172341955205, guid: c626647da39f58f4a9598683d11fcdc9,
         type: 3}
@@ -169,6 +169,16 @@ PrefabInstance:
       objectReference: {fileID: 3747618724928831444}
     - target: {fileID: 8906246932429870938, guid: c626647da39f58f4a9598683d11fcdc9,
         type: 3}
+      propertyPath: _height
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8906246932429870938, guid: c626647da39f58f4a9598683d11fcdc9,
+        type: 3}
+      propertyPath: _runPitch
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8906246932429870938, guid: c626647da39f58f4a9598683d11fcdc9,
+        type: 3}
       propertyPath: _actorDefinition
       value: 
       objectReference: {fileID: 11400000, guid: 50eae47ab1632bd47904d1218e4cd5c0,
@@ -197,6 +207,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
         type: 3}
@@ -248,15 +273,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -4477608946179850914, guid: db787b28e2a5c8740bc91419ad188aec,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6caeecbc852120047987bc1c3e74d1b2, type: 2}
     - target: {fileID: 919132149155446097, guid: db787b28e2a5c8740bc91419ad188aec,
         type: 3}
       propertyPath: m_Name
       value: Orc
-      objectReference: {fileID: 0}
-    - target: {fileID: 6666603822528672967, guid: db787b28e2a5c8740bc91419ad188aec,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db787b28e2a5c8740bc91419ad188aec, type: 3}

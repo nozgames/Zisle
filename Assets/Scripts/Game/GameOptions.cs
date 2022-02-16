@@ -11,7 +11,7 @@ namespace NoZ.Zisle
     public class GameOptions : NetworkBehaviour
     {
         [Header("General")]
-        [SerializeField] private int _maxIslands = 64;
+        [SerializeField] private int _maxIslands = 4;
         [SerializeField] private int _startingLanes = 1;
         
         [Header("Path Weights")]

@@ -125,6 +125,15 @@ namespace NoZ.Zisle
 
             transform.position = IslandGrid.CellToWorld(cell);
             transform.rotation = transform.localRotation = Quaternion.Euler(0, 90.0f * (int)_rotation, 0);
+
+            for(int i=islandMesh.transform.childCount-1; i>=0; i--)
+            {
+                var child = islandMesh.transform.GetChild(i);
+                var spawned = Instantiate(child.gameObject, transform);
+                spawned.transform.localPosition = child.localPosition;
+                spawned.transform.localRotation = child.localRotation;
+                spawned.transform.localScale = child.localScale;
+            }
         }
 
         /// <summary>

@@ -34,6 +34,7 @@ namespace NoZ.Zisle
         }
 
         private NetworkVariable<IslandVisibility> _islandVisibility = new NetworkVariable<IslandVisibility> ();
+        private NetworkVariable<bool> _battleMode = new NetworkVariable<bool> ();
 
         private IslandCell[] _cells = null;
         private List<SpawnPoint> _spawnPoints = new List<SpawnPoint>();
@@ -98,6 +99,7 @@ namespace NoZ.Zisle
             GameEvent<ActorDespawnEvent>.OnRaised += OnActorDespawn;
 
             _islandVisibility.OnValueChanged += OnIslandVisibilityChanged;
+            _battleMode.OnValueChanged += OnBattleModeChanged;
         }
 
         public override void OnNetworkDespawn()
@@ -272,6 +274,17 @@ namespace NoZ.Zisle
             }
         }
 
+        private void OnBattleModeChanged (bool oldValue, bool newValue)
+        {
+            if (newValue)
+            {
+                AudioManager.Instance.PlayBattleStart();
+                AudioManager.Instance.PlayBattleMusic();
+            }
+            else
+                AudioManager.Instance.PlayIdleMusic();
+        }
+
         public void AddSpawnPoint (Biome biome, Vector3 position, Quaternion rotation)
         {
             RemoveSpawnPoint(position);
@@ -312,6 +325,9 @@ namespace NoZ.Zisle
 
             while (IsSpawned)
             {
+                // Enter battle mode
+                _battleMode.Value = true;
+
                 for(int i=0; i< WaveEnemyCount; i++)
                 {
                     SpawnEnemy();
@@ -321,6 +337,7 @@ namespace NoZ.Zisle
                 while (WaveEnemyRemainingCount > 0)
                     yield return null;
 
+                _battleMode.Value = false;
 
                 yield return new WaitForSeconds(WaveDelay);
             }

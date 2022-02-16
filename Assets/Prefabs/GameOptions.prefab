@@ -61,9 +61,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97e5502a72c89ef4b8ba7a0379506e2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxIslands: 64
-  SpawnEnemies: 1
-  PathWeight0: 0.1
-  PathWeight1: 1
-  PathWeight2: 0.4
-  PathWeight3: 0.2
+  _maxIslands: 4
+  _startingLanes: 1
+  _pathWeight0: 0.1
+  _pathWeight1: 1
+  _pathWeight2: 0.4
+  _pathWeight3: 0.2
