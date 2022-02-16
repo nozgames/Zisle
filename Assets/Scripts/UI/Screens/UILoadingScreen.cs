@@ -9,11 +9,13 @@ namespace NoZ.Zisle.UI
         private VisualElement[] _squares;
         private VisualElement _back;
 
+        public System.Action OnBack;
+
         protected override void Awake ()
         {
             base.Awake();
 
-            _back = BindClick("back", OnBack);
+            _back = BindClick("back", OnBackInternal);
 
             _squares = new VisualElement[5]
             {
@@ -25,7 +27,7 @@ namespace NoZ.Zisle.UI
             };
         }
 
-        private void OnBack() => UIManager.Instance.ShowMultiplayer();
+        private void OnBackInternal() => OnBack?.Invoke();
 
         public override void OnBeforeTransitionIn()
         {
@@ -48,6 +50,12 @@ namespace NoZ.Zisle.UI
                     .Play();
             }
 
+            _back.EnableInClassList(USS.Hidden, OnBack == null);
+        }
+
+        public override void OnAfterTransitionIn()
+        {
+            base.OnAfterTransitionIn();
             _back.Focus();
         }
 

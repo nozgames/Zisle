@@ -4,6 +4,8 @@ namespace NoZ.Zisle.UI
 {
     public class UIJoinWithCode : UIScreen
     {
+        public override bool MainMenuOnly => true;
+
         private TextField _joinCode;
         private VisualElement _join;
 
@@ -29,9 +31,9 @@ namespace NoZ.Zisle.UI
             _joinCode.value = "";
         }
 
-        protected override void OnLateShow()
+        public override void OnAfterTransitionIn()
         {
-            base.OnLateShow();
+            base.OnAfterTransitionIn();
             _joinCode.Focus();
         }
 

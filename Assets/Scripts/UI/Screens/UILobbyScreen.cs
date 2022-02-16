@@ -120,14 +120,13 @@ namespace NoZ.Zisle.UI
 
             UpdateReadyState();
             UpdateRemotePlayer(false);
-
-            _joinCodeContainer.EnableInClassList("hidden", GameManager.Instance.JoinCode == null);
+            
             _joinCode.text = GameManager.Instance.JoinCode ?? "";
         }
 
-        protected override void OnLateShow()
+        public override void OnAfterTransitionIn()
         {
-            base.OnLateShow();
+            base.OnAfterTransitionIn();
             _readyButton.Focus();
         }
 
@@ -137,10 +136,10 @@ namespace NoZ.Zisle.UI
                 UIManager.Instance.Confirm(
                     title: "leave?".Localized(),
                     message: (NetworkManager.Singleton.IsHost ? "confirm-close-lobby" : "confirm-leave-lobby").Localized(),
-                    onYes: () => UIManager.Instance.ShowMainMenu(),
+                    onYes: () => UIManager.Instance.ShowTitle(),
                     onNo: () => UIManager.Instance.ShowLobby());
             else
-                UIManager.Instance.ShowMainMenu();    
+                UIManager.Instance.ShowTitle();    
         }
 
         private void OnPrevClass()
@@ -194,12 +193,13 @@ namespace NoZ.Zisle.UI
             {
                 UpdateReadyButton(seconds);
                 yield return wait;
+                AudioManager.Instance.PlayTimerTick();
                 seconds--;
             }
 
             _startGameCountdown = null;
 
-            UpdateReadyButton(CountdownSeconds);
+            UpdateReadyButton(0);
 
             if(NetworkManager.Singleton.IsHost && AreAllPlayersReady)
                 UIManager.Instance.StartGame();
@@ -214,8 +214,10 @@ namespace NoZ.Zisle.UI
                 UIManager.Instance.StartGame();
         }
 
-        private void OnDisable()
+        protected override void OnHide ()
         {
+            base.OnHide();
+
             UIManager.Instance.ShowLeftPreview(null);
             UIManager.Instance.ShowRightPreview(null);
 
@@ -254,7 +256,7 @@ namespace NoZ.Zisle.UI
                 return;
 
             var localReady = GameManager.Instance.LocalPlayerController.IsReady;
-            _readyButton.SetEnabled(GameManager.Instance.PlayerCount == GameManager.Instance.MaxPlayers);
+            _readyButton.SetEnabled(GameManager.Instance.PlayerCount == GameManager.Instance.MaxPlayers && seconds != 0);
             _readyButton.EnableInClassList(USS.ButtonOrange, localReady);
             _readyButton.EnableInClassList(USS.ButtonBlue, !localReady);
 
@@ -323,6 +325,7 @@ namespace NoZ.Zisle.UI
             var remotePlayer = GameManager.Instance.Players.Where(p => !p.IsLocalPlayer && !p.IsDisconnecting).FirstOrDefault();
             if (remotePlayer == null || remotePlayer.PlayerClass == null)
             {
+                _joinCodeContainer.EnableInClassList(USS.Hidden, string.IsNullOrEmpty(GameManager.Instance.JoinCode));
                 _remotePlayerName.text = (remotePlayer == null ? "waiting-for-player" : "connecting").Localized();
                 UIManager.Instance.ShowRightPreview(UIManager.Instance.PreviewNoPlayer, false);
             }
@@ -330,6 +333,7 @@ namespace NoZ.Zisle.UI
             {
                 var remotePlayerClass = remotePlayer.PlayerClass;
                 _remotePlayerName.text = remotePlayerClass.DisplayName;
+                _joinCodeContainer.EnableInClassList(USS.Hidden, true);
                 UIManager.Instance.ShowRightPreview(remotePlayerClass, playEffect);
             }
         }

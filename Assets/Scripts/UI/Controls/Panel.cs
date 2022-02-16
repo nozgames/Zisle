@@ -42,7 +42,7 @@ namespace NoZ.Zisle.UI
             get => _title.text;
             set
             {
-                _title.text = value.Localized();
+                _title.text = value?.Localized();
                 UpdateTitle();
             }            
         }

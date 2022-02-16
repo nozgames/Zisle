@@ -5,6 +5,8 @@ namespace NoZ.Zisle.UI
 {
     public class UIJoinWithIP : UIScreen
     {
+        public override bool MainMenuOnly => true;
+
         private TextField _ip;
         private VisualElement _join;
 
@@ -32,9 +34,9 @@ namespace NoZ.Zisle.UI
             _ip.SelectAll();
         }
 
-        protected override void OnLateShow()
+        public override void OnAfterTransitionIn()
         {
-            base.OnLateShow();
+            base.OnAfterTransitionIn();
             _ip.Focus();
         }
 

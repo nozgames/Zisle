@@ -4,6 +4,8 @@ namespace NoZ.Zisle.UI
 {
     public class UIMultiplayerScreen : UIScreen
     {
+        public override bool MainMenuOnly => true;
+
         protected override void Awake()
         {
             base.Awake();

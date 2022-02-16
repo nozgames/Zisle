@@ -1,14 +1,8 @@
 :root {
     --color-text: #424248;
-    --color-text-light: #828288;
-    --color-text-ghosted: #615951;
     --color-text-dark: #424248;
     --color-background: #bcbcbf;
-    --color-background-highlight: #fcfcff;
-    --color-background-dark: #7c7c7f;
     --color-background-darker: #5c5c5f;
-    --color-title: #ffffff;
-    --width-border: 3px;
     --font-size-tiny: 20px;
     --font-size-small: 30px;
     --font-size-normal: 40px;
@@ -90,36 +84,6 @@
     bottom: 0;
 }
 
-.popup {
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0,0,0,.8);
-}
-
-
-.popup .border {
-    background-image: url("../RoundedBorder.png");
-    -unity-background-image-tint-color: #272324;
-    padding: 4px;
-}
-
-.popup .background {
-    background-image: url("../RoundedBorder.png");
-    -unity-background-image-tint-color: #f4dec9;
-    padding: 16px;
-}
-
-.panel .border {
-    background-image: url("../RoundedBorder.png");
-    -unity-background-image-tint-color: #272324;
-    padding: 4px;
-}
-
-.screen-title {
-    color: var(--color-title);
-    font-size: var(--font-size-title);
-}
-
 .centered {
     align-items: center;
     justify-content: center;
@@ -150,6 +114,8 @@
     padding: 0px;
 }
 
+
+
 .zisle-button-fixed-medium {
     width: 300px;
     height: 60px;
@@ -173,6 +139,11 @@
     align-items: center;
     justify-content: center;
 }
+
+.zisle-button-large .zisle-button__raised {
+    padding: 10px 20px;
+}
+
 
 .zisle-button Label {
     font-size: 120%;

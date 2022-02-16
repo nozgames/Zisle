@@ -276,6 +276,18 @@ namespace NoZ.Zisle
             StartCoroutine(StopGame());
         }
 
+        private void SetInitialPlayerClass()
+        {
+            // Set initial player class
+            var def = Instance.ActorDefinitions.Where(d => d.name == Zisle.Options.PlayerClass && d.ActorType == ActorType.Player).FirstOrDefault();
+            if (def == null)
+                def = Instance.ActorDefinitions.Where(d => d.name == "RandomPlayer" && d.ActorType == ActorType.Player).FirstOrDefault();
+            if (def == null)
+                def = Instance.ActorDefinitions.Where(d => d.ActorType == ActorType.Player).FirstOrDefault();
+
+            Instance.LocalPlayerController.PlayerClassId = def.NetworkId;
+        }
+
         /// <summary>
         /// Create a new lobby with the given connection string, null to use relay
         /// </summary>
@@ -284,6 +296,14 @@ namespace NoZ.Zisle
             IEnumerator CreateLobby (string connection, WaitForDone wait = null)
             {
                 yield return ConfigureTransportAsync(connection);
+                if (_connection == null)
+                {
+                    UIManager.Instance.Confirm(message: "failed-to-create-lobby", title: "error", yes: "ok", onYes: () =>
+                    {
+                        UIManager.Instance.ShowMultiplayer();
+                    });
+                    yield break;
+                }
 
                 Debug.Log($"Creating Lobby: {connection}");
 
@@ -292,6 +312,8 @@ namespace NoZ.Zisle
                 // Wait for the local player to connect
                 while (LocalPlayerController == null)
                     yield return null;
+
+                SetInitialPlayerClass();
 
                 // Spawn the game options and wait for it 
                 Instantiate(_optionsPrefab).GetComponent<NetworkObject>().Spawn();
@@ -322,6 +344,14 @@ namespace NoZ.Zisle
             {
                 // Configure the transport using the connection string and a temporary game options instance
                 yield return ConfigureTransportAsync(connection);
+                if(_connection == null)
+                {
+                    UIManager.Instance.Confirm(message: "failed-to-join-lobby", title: "error", yes: "ok", onYes: () =>
+                      {
+                          UIManager.Instance.ShowMultiplayer();
+                      });
+                    yield break;
+                }
 
                 Debug.Log($"Connecting to Lobby: {connection}");
 
@@ -329,17 +359,13 @@ namespace NoZ.Zisle
                 NetworkManager.Singleton.StartClient();
 
                 // Wait until we see ourself join and the options spawns
-                while (NetworkManager.Singleton.IsClient && (LocalPlayerController == null || _options == null))
+                while (NetworkManager.Singleton.IsClient && (LocalPlayerController == null || _options == null) && !NetworkManager.Singleton.ShutdownInProgress)
                     yield return null;
 
-                // Set initial player class
-                var def = Instance.ActorDefinitions.Where(d => d.name == NoZ.Zisle.Options.PlayerClass && d.ActorType == ActorType.Player).FirstOrDefault();
-                if (def == null)
-                    def = Instance.ActorDefinitions.Where(d => d.name == "RandomPlayer" && d.ActorType == ActorType.Player).FirstOrDefault();
-                if (def == null)
-                    def = Instance.ActorDefinitions.Where(d => d.ActorType == ActorType.Player).FirstOrDefault();
+                if (!IsInLobby)
+                    yield break;
 
-                Instance.LocalPlayerController.PlayerClassId = def.NetworkId;
+                SetInitialPlayerClass();
 
                 while (Instance.LocalPlayerController.PlayerClass == null)
                     yield return null;
@@ -356,7 +382,7 @@ namespace NoZ.Zisle
                 return;
 
             if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsHost)
-                UIManager.Instance.Confirm("Connection to host has been lost", yes: "ok".Localized(), onYes: () => UIManager.Instance.ShowMainMenu());
+                UIManager.Instance.Confirm(message:"Connection to host has been lost", title:"error", yes: "ok".Localized(), onYes: () => UIManager.Instance.ShowTitle());
         }
 
         /// <summary>
@@ -369,9 +395,13 @@ namespace NoZ.Zisle
             {
                 yield return InitializeUnityServices();
 
+                _connection = null;
+
                 // Create an allocation
                 var waitCreate = new WaitForTask<Allocation>(Relay.Instance.CreateAllocationAsync(MaxPlayers));
                 yield return waitCreate;
+                if(!waitCreate.IsSuccessful)
+                    yield break;
 
                 /// Get the join code
                 var allocation = waitCreate.Result;
@@ -412,6 +442,12 @@ namespace NoZ.Zisle
                 // Join the allocation
                 var waitJoin = new WaitForTask<JoinAllocation>(Relay.Instance.JoinAllocationAsync(connection));
                 yield return waitJoin;
+                if (!waitJoin.IsSuccessful)
+                {
+                    JoinCode = null;
+                    _connection = null;
+                    yield break;
+                }
 
                 // Configure the transport
                 var allocation = waitJoin.Result;

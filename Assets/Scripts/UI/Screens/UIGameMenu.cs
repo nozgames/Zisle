@@ -16,9 +16,9 @@ namespace NoZ.Zisle.UI
             Q("options").BindClick(OnOptions);
         }
 
-        protected override void OnLateShow()
+        public override void OnAfterTransitionIn()
         {
-            base.OnLateShow();
+            base.OnAfterTransitionIn();
 
             _resume.Focus();
         }
@@ -34,7 +34,7 @@ namespace NoZ.Zisle.UI
                 title: "quit?".Localized(),
                 message: (GameManager.Instance.IsSolo ? "confirm-quit-solo" : (NetworkManager.Singleton.IsHost ? "confirm-close-lobby" : "confirm-leave-lobby")).Localized(), 
                 onNo: () => UIManager.Instance.ShowGameMenu(), 
-                onYes: () => UIManager.Instance.ShowMainMenu());
+                onYes: () => UIManager.Instance.ShowTitle());
         }
 
         private void OnResume()

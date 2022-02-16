@@ -6,13 +6,16 @@
 .squares 
 {
 	flex-direction: row;
-	margin-top: 30px;
+	margin-top: 90px;
 }
 
 .square 
 {
 	width: 100px;
-	height: 100px;
+	height: 100px;	
+}
+
+.square-gap {
 	margin-left: 30px;
 }
 
@@ -35,4 +38,12 @@
 	border-radius: var(--zisle-button-border-radius);
 	border-width: var(--zisle-button-border-width);
 	border-color: var(--zisle-button-border-color);
+}
+
+#back
+{
+	position: absolute;
+	top: 75%;
+	left: 50%;
+	margin-left: -200px;
 }

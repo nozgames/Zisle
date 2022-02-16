@@ -157,6 +157,22 @@ MonoBehaviour:
     m_Localized: Game Menu
     m_Metadata:
       m_Items: []
+  - m_Id: 933274223722496
+    m_Localized: "Failed to create Online game.  \n\nPlease try again in a few minutes."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 933462300508160
+    m_Localized: 'Failed to join Online game.
+
+
+      Please double check your Join
+      Code and try again.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 947445514452992
+    m_Localized: Error
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

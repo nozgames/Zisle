@@ -14,8 +14,8 @@ namespace NoZ.Zisle.UI
         private Panel _panel;
         private Label _message;
 
-        public string Title { set => _panel.Title = value.Localized(); }
-        public string Message { set => _message.text = value.Localized(); }
+        public string Title { set => _panel.Title = value?.Localized() ?? null; }
+        public string Message { set => _message.text = value?.Localized() ?? null; }
         public string Yes { set => _yes.text = value ?? "yes".Localized(); }
         public string No { set => _no.text = value ?? "no".Localized(); }
         public string Cancel { set => _cancel.text = value ?? "cancel".Localized(); }
@@ -62,9 +62,9 @@ namespace NoZ.Zisle.UI
             _cancel.EnableInClassList("hidden", _onCancel == null);
         }
 
-        protected override void OnLateShow()
+        public override void OnAfterTransitionIn()
         {
-            base.OnLateShow();
+            base.OnAfterTransitionIn();
             _yes.Focus();
         }
     }

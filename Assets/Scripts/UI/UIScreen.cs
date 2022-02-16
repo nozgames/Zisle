@@ -17,6 +17,13 @@ namespace NoZ.Zisle
         public virtual bool BlurBackground => true;
 
         /// <summary>
+        /// Set to true if this screen can only be shown on the main menu.  If true 
+        /// the main menu is not active the loading screen will be shown and any game
+        /// running will be stopped in order to return back to the main menu.
+        /// </summary>
+        public virtual bool MainMenuOnly => false;
+
+        /// <summary>
         /// Root visual element for this screen
         /// </summary>
         public VisualElement Root { get; private set; }
@@ -45,19 +52,10 @@ namespace NoZ.Zisle
                 Root.style.visibility = value ? Visibility.Visible : Visibility.Hidden;
 
                 if (value)
-                {
                     OnShow();
-                    StartCoroutine(LateShow());
-                }
                 else
                     OnHide();
             }
-        }
-
-        private IEnumerator LateShow()
-        {
-            yield return new WaitForEndOfFrame();
-            OnLateShow();
         }
 
         /// <summary>
@@ -69,11 +67,6 @@ namespace NoZ.Zisle
         /// Called when IsVisible is set to true
         /// </summary>
         protected virtual void OnShow() { }
-
-        /// <summary>
-        /// Called at the end of the frame in which IsVisible was set to true
-        /// </summary>
-        protected virtual void OnLateShow() { }
 
         /// <summary>
         /// Called when IsVisible is set to false

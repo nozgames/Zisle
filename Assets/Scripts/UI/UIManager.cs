@@ -35,6 +35,7 @@ namespace NoZ.Zisle.UI
 
         [Header("Screens")]
         [SerializeField] private Transform _screens = null;
+        [SerializeField] private UIClickBlocker _clickBlocker = null;
         [SerializeField] private UIConfirmationScreen _confirmationScreen = null;
         [SerializeField] private UILoadingScreen _loadingScreen = null;
         [SerializeField] private UIMultiplayerScreen _multiplayerScreen = null;
@@ -48,7 +49,7 @@ namespace NoZ.Zisle.UI
         [SerializeField] private UIOptionsScreen _optionsScreen = null;
 
         private UIScreen _activeScreen;
-        private bool _transitioning;
+        private bool _mainMenu;
 
         public Texture PreviewLeftTexture => _previewLeftTexture;
         public Texture PreviewRightTexture => _previewRightTexture;
@@ -109,12 +110,25 @@ namespace NoZ.Zisle.UI
         public void ShowJoinWithCode () => TransitionTo(_joinWithCodeScreen);
         public void ShowJoinWithIP () => TransitionTo(_joinWithIPScreen);
         public void ShowGame() => TransitionTo(_gameScreen);
-        public void ShowLoading (WaitForDone wait = null) => TransitionTo(_loadingScreen, wait);
         public void ShowLobby() => TransitionTo(_lobbyScreen);
         public void ShowGameMenu() => TransitionTo(_gameMenuScreen);
 
-        private void TransitionTo(UIScreen screen, WaitForDone wait = null)
+        public void ShowLoading(WaitForDone wait = null, Action onCancel = null)
         {
+            _loadingScreen.OnBack = onCancel;
+            TransitionTo(_loadingScreen, wait);
+        }
+
+        private void TransitionTo(UIScreen screen, WaitForDone wait = null)
+        {            
+            // If the screen requires the main menu and we are not on the main menu
+            // then show the main menu and then transition to the screen.
+            if (screen.MainMenuOnly && !_mainMenu)
+            {
+                ShowMainMenu(screen);
+                return;
+            }
+
             screen.IsVisible = true;
 
             var blur = screen.BlurBackground;
@@ -134,20 +148,23 @@ namespace NoZ.Zisle.UI
             }
 
             _activeScreen.OnBeforeTransitionOut();
+            _activeScreen.Root.pickingMode = PickingMode.Ignore;
             screen.OnBeforeTransitionIn();
+            screen.Root.pickingMode = PickingMode.Ignore;
+            _activeScreen.GetComponent<UIDocument>().sortingOrder = 0;
+            screen.GetComponent<UIDocument>().sortingOrder = 1;
 
-            _transitioning = true;
             screen.Root.style.opacity = 0;
             this.TweenGroup()
-                .Element(_activeScreen.Root.style.TweenFloat("opacity", new StyleFloat(0.0f)).Duration(0.2f).EaseInOutQuadratic())
-                .Element(screen.Root.style.TweenFloat("opacity", new StyleFloat(1.0f)).Duration(0.2f).EaseInOutQuadratic())
+                .Element(_activeScreen.Root.style.TweenFloat("opacity", new StyleFloat(0.0f)).Duration(0.15f).EaseInOutQuadratic())
+                .Element(screen.Root.style.TweenFloat("opacity", new StyleFloat(1.0f)).Duration(0.15f).EaseInOutQuadratic())
                 .OnStop(() =>
                 {
                     _activeScreen.OnAfterTransitionOut();
                     _activeScreen.IsVisible = false;
                     _activeScreen = screen;
                     screen.OnAfterTransitionIn();
-                    _transitioning = false;
+                    screen.Root.pickingMode = PickingMode.Position;
 
                     if (wait != null)
                         wait.IsDone = true;
@@ -160,7 +177,7 @@ namespace NoZ.Zisle.UI
             _gameScreen.AddFloatingText(text, className, position, duration);
         }
 
-        public void OnAfterSubsystemInitialize() => ShowMainMenu();
+        public void OnAfterSubsystemInitialize() => ShowTitle();
 
         /// <summary>
         /// Join or create a lobby
@@ -171,9 +188,12 @@ namespace NoZ.Zisle.UI
             {
                 var startTime = Time.time;
 
+                // Leaving the main menu when we join a lobby
+                _mainMenu = false;
+
                 // Show loading screen and wait for it to be opaque
                 var waitForLoading = new WaitForDone();
-                ShowLoading(waitForLoading);
+                ShowLoading(waitForLoading, onCancel: () => ShowMultiplayer());
                 yield return waitForLoading;
 
                 if (create)
@@ -183,6 +203,10 @@ namespace NoZ.Zisle.UI
 
                 while (Time.time - startTime < MinLoadingTime)
                     yield return null;
+
+                // If we lost our connection or the returned to the main menu just end the coroutine
+                if (!GameManager.Instance.IsInLobby || _mainMenu)
+                    yield break;
 
                 TransitionTo(_lobbyScreen);
             }
@@ -213,25 +237,33 @@ namespace NoZ.Zisle.UI
                 ShowGame();
             }
 
+            AudioManager.Instance.PlayJoinGame();
+
             StartCoroutine(StartGameCoroutine());
         }
 
-        /// <summary>
-        /// Show the main menu
-        /// </summary>
-        public void ShowMainMenu (WaitForDone wait = null)
+        private void ShowMainMenu (UIScreen nextScreen)
         {
-            IEnumerator ShowMainMenuCoroutine (WaitForDone wait)
+            IEnumerator ShowMainMenuCoroutine(UIScreen nextScreen)
             {
                 var startTime = Time.time;
 
                 // Show loading screen and wait for it to be opaque
-                var waitForLoading = new WaitForDone();
-                ShowLoading(waitForLoading);
-                yield return waitForLoading;
+                if (!_loadingScreen.IsVisible)
+                {
+                    var waitForLoading = new WaitForDone();
+                    ShowLoading(waitForLoading);
+                    yield return waitForLoading;
+                }
+                else
+                {
+                    startTime -= MinLoadingTime;
+                }
 
                 // Leave previous lobby
                 yield return GameManager.Instance.LeaveLobbyAsync();
+
+                _mainMenu = true;
 
                 GenerateBackground();
 
@@ -241,14 +273,16 @@ namespace NoZ.Zisle.UI
                 while (Time.time - startTime < MinLoadingTime)
                     yield return null;
 
-                ShowTitle();
-
-                if (wait != null)
-                    wait.IsDone = true;
+                TransitionTo(nextScreen);
             }
 
-            StartCoroutine(ShowMainMenuCoroutine(wait));
+            StartCoroutine(ShowMainMenuCoroutine(nextScreen));
         }
+
+        /// <summary>
+        /// Show the main menu
+        /// </summary>
+        public void ShowMainMenu() => ShowMainMenu(_titleScreen);
 
         public void ShowLeftPreview (ActorDefinition def, bool playEffect=true) => ShowPreview(_previewLeft, def, playEffect);
         public void ShowRightPreview(ActorDefinition def, bool playEffect=true) => ShowPreview(_previewRight, def, playEffect);
@@ -256,7 +290,11 @@ namespace NoZ.Zisle.UI
         private void ShowPreview (GameObject preview, ActorDefinition def, bool playEffect)
         {
             if (preview.transform.childCount > 0)
-                Destroy(preview.transform.GetChild(0).gameObject);
+            {
+                var old = preview.transform.GetChild(0).gameObject;
+                old.transform.SetParent(null);
+                Destroy(old);
+            }
 
             if (null == def || def.Preview == null)
             {

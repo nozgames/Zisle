@@ -16,40 +16,41 @@ namespace NoZ.Zisle.UI
         private VisualElement _gamepadTab = null;
         private VisualElement _keyboardTab = null;
 
+        private Toggle _fullscreen;
+        private Toggle _screenShake;
+        private Slider _soundVoume;
+        private Slider _musicVolume;
+        private DropdownField _resolutions;
+
         public Action OnBack = null;
 
         protected override void Awake ()
         {
             base.Awake();
 
-            var resolutions = this.Q<DropdownField>("resolutions");
-            resolutions.choices = Screen.resolutions.Select(r => ResolutionToString(r)).ToList();
-            resolutions.value = ResolutionToString(UnityEngine.Screen.currentResolution);
-            resolutions.RegisterValueChangedCallback((e) =>
+            _resolutions = this.Q<DropdownField>("resolutions");
+            _resolutions.choices = Screen.resolutions.Select(r => ResolutionToString(r)).ToList();
+            _resolutions.RegisterValueChangedCallback((e) =>
             {
-                var resolution = UnityEngine.Screen.resolutions[resolutions.choices.IndexOf(e.newValue)];
-                UnityEngine.Screen.SetResolution(resolution.width, resolution.height, UnityEngine.Screen.fullScreenMode, resolution.refreshRate);
+                var resolution = Screen.resolutions[_resolutions.choices.IndexOf(e.newValue)];
+                Screen.SetResolution(resolution.width, resolution.height, UnityEngine.Screen.fullScreenMode, resolution.refreshRate);
             });
 
-            var fullscreen = this.Q<Toggle>("fullscreen");
-            fullscreen.value = UnityEngine.Screen.fullScreenMode == FullScreenMode.FullScreenWindow;
-            fullscreen.RegisterValueChangedCallback((e) => UnityEngine.Screen.fullScreenMode = e.newValue ? FullScreenMode.FullScreenWindow : FullScreenMode.Windowed);
+            _fullscreen = this.Q<Toggle>("fullscreen");
+            _fullscreen.RegisterValueChangedCallback((e) => Screen.fullScreenMode = e.newValue ? FullScreenMode.FullScreenWindow : FullScreenMode.Windowed);
 
-            var screenShake = this.Q<Toggle>("screen-shake");
-            screenShake.value = Options.ScreenShake;
-            screenShake.RegisterValueChangedCallback(e => Options.ScreenShake = e.newValue);
+            _screenShake = this.Q<Toggle>("screen-shake");
+            _screenShake.RegisterValueChangedCallback(e => Options.ScreenShake = e.newValue);
 
-            var soundVoume = this.Q<Slider>("sound-volume");
-            soundVoume.lowValue = 0.0f;
-            soundVoume.highValue = 1.0f;
-            soundVoume.value = Options.SoundVolume;
-            soundVoume.RegisterValueChangedCallback(e => Options.SoundVolume = e.newValue);
+            _soundVoume = this.Q<Slider>("sound-volume");
+            _soundVoume.lowValue = 0.0f;
+            _soundVoume.highValue = 1.0f;
+            _soundVoume.RegisterValueChangedCallback(e => Options.SoundVolume = e.newValue);
 
-            var musicVolume = this.Q<Slider>("music-volume");
-            musicVolume.lowValue = 0.0f;
-            musicVolume.highValue = 1.0f;
-            musicVolume.value = Options.MusicVolume;
-            musicVolume.RegisterValueChangedCallback(e => Options.MusicVolume = e.newValue);
+            _musicVolume = this.Q<Slider>("music-volume");
+            _musicVolume.lowValue = 0.0f;
+            _musicVolume.highValue = 1.0f;
+            _musicVolume.RegisterValueChangedCallback(e => Options.MusicVolume = e.newValue);
 
             Q<Panel>("panel").OnClose(OnBackInternal);
 
@@ -111,6 +112,16 @@ namespace NoZ.Zisle.UI
         protected override void OnShow()
         {
             base.OnShow();
+
+            _fullscreen.value = Screen.fullScreenMode == FullScreenMode.FullScreenWindow;
+            _screenShake.value = Options.ScreenShake;
+            _soundVoume.value = Options.SoundVolume;
+            _musicVolume.value = Options.MusicVolume;
+
+            if (!_fullscreen.value)
+                _resolutions.value = ResolutionToString(new Resolution { width = Screen.width, height = Screen.height, refreshRate = Screen.currentResolution.refreshRate });
+            else
+                _resolutions.value = ResolutionToString(Screen.currentResolution);
 
             OnGeneralTab();
         }

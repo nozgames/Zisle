@@ -8,6 +8,8 @@ namespace NoZ.Zisle.UI
     {
         private VisualElement _solo = null;
 
+        public override bool MainMenuOnly => true;
+
         protected override void Awake()
         {
             base.Awake();
@@ -41,9 +43,9 @@ namespace NoZ.Zisle.UI
             );
         }
 
-        protected override void OnLateShow ()
+        public override void OnAfterTransitionIn()
         {
-            base.OnLateShow();
+            base.OnAfterTransitionIn();
             _solo.Focus();
         }
 

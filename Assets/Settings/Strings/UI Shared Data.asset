@@ -143,6 +143,18 @@ MonoBehaviour:
     m_Key: game-menu
     m_Metadata:
       m_Items: []
+  - m_Id: 933274223722496
+    m_Key: failed-to-create-lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 933462300508160
+    m_Key: failed-to-join-lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 947445514452992
+    m_Key: error
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

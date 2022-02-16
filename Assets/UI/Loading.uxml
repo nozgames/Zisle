@@ -11,31 +11,30 @@
     <Style src="project://database/Assets/UI/Loading.uss" />
   
     <VisualElement class="root screen centered-vertical">
-        <Label text="Loading" class="screen-title hidden"/>
         <VisualElement class="centered-vertical">
             <VisualElement class="squares menu-row-gap">
                 <VisualElement class="square">
                     <VisualElement class="square-inner"/>
                     <VisualElement name="square1" class="square-outer"/>
                 </VisualElement>
-                <VisualElement class="square">
+                <VisualElement class="square square-gap">
                     <VisualElement class="square-inner"/>
                     <VisualElement name="square2" class="square-outer"/>
                 </VisualElement>
-                <VisualElement class="square">
+                <VisualElement class="square square-gap">
                     <VisualElement class="square-inner"/>
                     <VisualElement name="square3" class="square-outer"/>
                 </VisualElement>
-                <VisualElement class="square">
+                <VisualElement class="square square-gap">
                     <VisualElement class="square-inner"/>
                     <VisualElement name="square4" class="square-outer"/>
                 </VisualElement>
-                <VisualElement class="square">
+                <VisualElement class="square square-gap">
                     <VisualElement class="square-inner"/>
                     <VisualElement name="square5" class="square-outer"/>
                 </VisualElement>
             </VisualElement>
-            <Button name="back" text="Cancel" class="menu-row menu-row-gap hidden"/>
         </VisualElement>
+        <zisle:RaisedButton name="back" text="Cancel" class="zisle-button-orange zisle-button-fixed-large zisle-button-border hidden"/>
     </VisualElement>
 </engine:UXML>

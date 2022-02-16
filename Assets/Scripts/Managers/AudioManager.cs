@@ -11,6 +11,8 @@ namespace NoZ.Zisle
 
         [Header("2D Sounds")]
         [SerializeField] private AudioSource _buttonClick = null;
+        [SerializeField] private AudioSource _timerTick = null;
+        [SerializeField] private AudioSource _joinGame = null;        
 
         public AudioMixerGroup SoundMixerGroup => _soundMixerGroup;
 
@@ -34,5 +36,7 @@ namespace NoZ.Zisle
         }
 
         public void PlayButtonClick() => _buttonClick.Play();
+        public void PlayTimerTick() => _timerTick.Play();
+        public void PlayJoinGame() => _joinGame.Play();
     }
 }

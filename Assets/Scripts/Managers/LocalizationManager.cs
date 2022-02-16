@@ -21,6 +21,9 @@ namespace NoZ.Zisle
 
         public static string GetString(string key)
         {
+            if (key == null)
+                return "<null>";
+
             if (null == _stringTable)
                 return key;
 
