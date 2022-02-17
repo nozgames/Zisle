@@ -1,10 +1,20 @@
 .logo {
     background-image : url("project://database/Assets/Sprites/UI/Logo.png");
 
+    position: absolute;
+    top: 30px;
+
     width: 700px;
     height: 190px;
-    margin-bottom: 100px;
-    margin-top: -140px;
     -unity-background-image-tint-color: #FFFFFF;
     -unity-background-scale-mode: scale-and-crop;
+}
+
+#version {
+    position: absolute;
+    right: 10px;
+    bottom: -10px;
+    -unity-font-definition: var(--font-definition-fixed);
+    font-size: 50%;
+    color: white;
 }

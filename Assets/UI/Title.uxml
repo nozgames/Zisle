@@ -11,7 +11,9 @@
     <Style src="project://database/Assets/UI/Title.uss" />
 
     <VisualElement class="root screen centered-vertical">
-      <VisualElement class="logo"/>
+      <VisualElement class="logo">
+        <Label name="version" text="1.0.0"/>
+      </VisualElement>
       <zisle:Panel title="main-menu">
         <zisle:RaisedButton name="solo" text="solo" class="zisle-button-blue zisle-button-fixed-large"/>
         <zisle:RaisedButton name="cooperative" text="cooperative" class="zisle-button-blue zisle-button-fixed-large-gap zisle-button-fixed-large"/>

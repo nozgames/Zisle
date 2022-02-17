@@ -18,6 +18,8 @@ namespace NoZ.Zisle.UI
             BindClick("cooperative", OnMultiplayer);
             BindClick("options", OnOptions);
             BindClick("quit", OnQuit);
+
+            Q<Label>("version").text = Application.version;
         }
 
         private void OnMultiplayer() => UIManager.Instance.ShowMultiplayer();

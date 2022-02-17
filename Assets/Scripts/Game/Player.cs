@@ -32,6 +32,8 @@ namespace NoZ.Zisle
             public bool LastPressedGamepad;
         }
 
+        private Vector3 _clickMovePosition;
+        private bool _clickMove;
         private PlayerButton _lastPressed = PlayerButton.Action;
         private PlayerButtonState[] _buttonStates = new PlayerButtonState[PlayerButtonCount];
         
@@ -51,9 +53,16 @@ namespace NoZ.Zisle
             {
                 InputManager.Instance.OnPlayerZoom += OnPlayerZoom;
                 InputManager.Instance.OnPlayerAction += OnPlayerAction;
+                InputManager.Instance.OnPlayerClickMove += OnPlayerClickMove;
             }
 
             GameEvent.Raise(this, new PlayerSpawned { Player = this });
+        }
+
+        private void OnPlayerClickMove(bool isGamepad)
+        {
+            _clickMove = true;
+            _clickMovePosition = InputManager.Instance.PlayerLook;
         }
 
         private void OnPlayerZoom (float f) => GameManager.Instance.CameraZoom -= 3.0f * f;
@@ -127,7 +136,21 @@ namespace NoZ.Zisle
 
             var y = transform.position.y;
             if(moveSpeed > 0.0f)
-                MoveTo(InputManager.Instance.PlayerMove * Time.deltaTime * GetAttributeValue(ActorAttribute.Speed) * moveSpeed);
+            {
+                if (_clickMove)
+                {
+                    var delta = (_clickMovePosition - transform.position);
+                    if (delta.sqrMagnitude < 0.1f)
+                        _clickMove = false;
+                    else
+                        MoveTo(delta.normalized * Time.deltaTime * GetAttributeValue(ActorAttribute.Speed) * moveSpeed);
+                }
+
+
+                if(!_clickMove)
+                    MoveTo(InputManager.Instance.PlayerMove * Time.deltaTime * GetAttributeValue(ActorAttribute.Speed) * moveSpeed);
+            }
+                
 
             //transform.position = new Vector3(transform.position.x, y, transform.position.z);
             SnapToGround();

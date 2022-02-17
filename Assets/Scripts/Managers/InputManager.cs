@@ -29,6 +29,7 @@ namespace NoZ.Zisle
         [SerializeField] private InputActionReference _playerBuild = null;
         [SerializeField] private InputActionReference _playerZoom = null;
         [SerializeField] private InputActionReference _playerLook = null;
+        [SerializeField] private InputActionReference _playerClickMove = null;
 
         [Header("Gamepad")]
         [SerializeField] private float _gamepadZoomSpeedMin = 0.1f;
@@ -53,6 +54,8 @@ namespace NoZ.Zisle
         public event Action<bool> OnPlayerBuild;
 
         public event Action<float> OnPlayerZoom;
+
+        public event Action<bool> OnPlayerClickMove;
 
         /// <summary>
         /// True if there is an active gamepad
@@ -90,6 +93,8 @@ namespace NoZ.Zisle
             _playerAction.action.started += (ctx) => OnPlayerAction?.Invoke(ctx.action.activeControl.device is Gamepad);
             _playerBuild.action.started += (ctx) => OnPlayerBuild?.Invoke(ctx.action.activeControl.device is Gamepad);
             _playerMenu.action.started += (ctx) => onPlayerMenu?.Invoke();
+            _playerClickMove.action.started += (ctx) => OnPlayerClickMove?.Invoke(ctx.action.activeControl.device is Gamepad);
+
             //_debugMenu.action.started += (ctx) => onDebugMenu?.Invoke();
             _uiClose.action.started += (ctx) => OnUIClose?.Invoke();
             _uiDebug.action.started += (ctx) => UIManager.Instance.ToggleDebug();
@@ -154,6 +159,7 @@ namespace NoZ.Zisle
                 _playerAction.action.Enable();
                 _playerLook.action.Enable();
                 _playerBuild.action.Enable();
+                _playerClickMove.action.Enable();
             }
             else
             {
@@ -167,6 +173,7 @@ namespace NoZ.Zisle
                 _playerAction.action.Disable();
                 _playerLook.action.Disable();
                 _playerBuild.action.Disable();
+                _playerClickMove.action.Disable();
             }
         }
 
