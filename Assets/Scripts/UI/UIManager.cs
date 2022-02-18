@@ -35,7 +35,6 @@ namespace NoZ.Zisle.UI
 
         [Header("Screens")]
         [SerializeField] private Transform _screens = null;
-        [SerializeField] private UIClickBlocker _clickBlocker = null;
         [SerializeField] private UIConfirmationScreen _confirmationScreen = null;
         [SerializeField] private UILoadingScreen _loadingScreen = null;
         [SerializeField] private UIMultiplayerScreen _multiplayerScreen = null;
@@ -237,7 +236,7 @@ namespace NoZ.Zisle.UI
                 ShowGame();
             }
 
-            AudioManager.Instance.PlayJoinGame();
+            AudioManager.Instance.PlayJoinGameSound();
 
             StartCoroutine(StartGameCoroutine());
         }
@@ -312,7 +311,7 @@ namespace NoZ.Zisle.UI
             IEnumerator Test()
             {
                 yield return new WaitForEndOfFrame();
-                blend.Play(def.Prefab.GetComponent<Actor>().IdleAnimation, blendIn: false);
+                blend.Play(def.Prefab.GetComponent<Actor>().Definition.IdleAnimation, blendIn: false);
             }
 
             StartCoroutine(Test());

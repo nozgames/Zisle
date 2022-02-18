@@ -10,6 +10,11 @@ namespace NoZ.Zisle
         private Vector3 _spawnPosition;
 
         /// <summary>
+        /// Bridges can only be built during isle state
+        /// </summary>
+        public override bool CanConstruct => Game.Instance.IsIdle;
+
+        /// <summary>
         /// Bind the bridge to the given island so it can spawn the island when built (Host only)
         /// </summary>
         public void Bind (Island from, Island to)

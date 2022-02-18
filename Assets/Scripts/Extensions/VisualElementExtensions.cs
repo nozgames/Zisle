@@ -16,21 +16,21 @@ namespace NoZ.Zisle
             if (element is Button button)
                 button.clicked += () =>
                 {
-                    AudioManager.Instance.PlayButtonClick();
+                    AudioManager.Instance.PlayButtonClickSound();
                     action?.Invoke();
                 };
             else if (element is RaisedButton raisedButton)
             {
                 raisedButton.clicked += () =>
                 {
-                    AudioManager.Instance.PlayButtonClick();
+                    AudioManager.Instance.PlayButtonClickSound();
                     action?.Invoke();
                 };
             }
             else
                 element.AddManipulator(new Clickable((e) =>
                 {
-                    AudioManager.Instance.PlayButtonClick();
+                    AudioManager.Instance.PlayButtonClickSound();
                     action?.Invoke();
                 }));
 

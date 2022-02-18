@@ -36,6 +36,15 @@
                 <Label text="Path Node" class="row-name"/>
                 <Label name="player-tile-path" text="0,0" class="row-value"/>
             </VisualElement>
+            <Label text="Game" class="row-header"/>
+            <VisualElement class="row">
+                <Label text="State" class="row-name"/>
+                <Label name="game-state" text="" class="row-value"/>
+            </VisualElement>
+            <VisualElement class="row">
+                <Label text="Enemies" class="row-name"/>
+                <Label name="game-enemies" text="" class="row-value"/>
+            </VisualElement>
         </VisualElement>
     </VisualElement>
 </engine:UXML>

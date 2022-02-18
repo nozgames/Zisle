@@ -19,6 +19,9 @@ MonoBehaviour:
   _preview: {fileID: 2491801748512037273, guid: 6f15db5566b30344398e891b4020e0e1,
     type: 3}
   _healthCircleClass: zisle-health-circle-green
+  _idleAnimation: {fileID: 11400000, guid: f9cdcf35f4561b84082829acf74c2026, type: 2}
+  _runAnimation: {fileID: 11400000, guid: 749689bbabc06d54fa8d3db56eb84a7e, type: 2}
+  _deathAnimation: {fileID: 11400000, guid: 3632060de9552e3498aef82567fdb40d, type: 2}
   _baseHealthMax: 100
   _baseHealthRegen: 5
   _baseSpeed: 5

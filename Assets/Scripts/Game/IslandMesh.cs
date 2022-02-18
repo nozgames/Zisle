@@ -15,6 +15,12 @@ namespace NoZ.Zisle
         None = 255
     }
 
+    public enum IslandType
+    {
+        Default,
+        Boss
+    }
+
     /// <summary>
     /// Manages all island related spawning
     /// </summary>
@@ -23,6 +29,10 @@ namespace NoZ.Zisle
     [RequireComponent(typeof(MeshRenderer))]
     public class IslandMesh : NetworkBehaviour, ISerializationCallbackReceiver
     {
+        [SerializeField] private IslandType _type = IslandType.Default;
+        [SerializeField] private float _weight = 1.0f;
+
+        [HideInInspector]
         [SerializeField] private IslandTile[] _tiles = null;
 
         public const int GridSize = 11;
@@ -42,6 +52,16 @@ namespace NoZ.Zisle
         public Biome Biome { get; set; }
 
         /// <summary>
+        /// Return the island type
+        /// </summary>
+        public IslandType Type => _type;
+
+        /// <summary>
+        /// Weight of the island when choosing randomly from within the parent biome
+        /// </summary>
+        public float Weight => _weight;
+
+        /// <summary>
         /// Island tiles
         /// </summary>
         public IslandTile[] Tiles { get => _tiles; set => _tiles = value; }
@@ -50,6 +70,11 @@ namespace NoZ.Zisle
         /// Returns the mask that represents the available connections using cardinal directions 
         /// </summary>
         public uint ConnectionMask { get; private set; }
+
+        /// <summary>
+        /// Number of connections this island has
+        /// </summary>
+        public int ConnectionCount { get; private set; }
 
         /// <summary>
         /// Returns true if the island has a connection in the given cardinal direction
@@ -156,11 +181,18 @@ namespace NoZ.Zisle
 
         public void OnAfterDeserialize()
         {
+            var west = IsTile(new Vector2Int(GridMin, GridCenter), IslandTile.Path);
+            var east = IsTile(new Vector2Int(GridMax, GridCenter), IslandTile.Path);
+            var north = IsTile(new Vector2Int(GridCenter, GridMin), IslandTile.Path);
+            var south = IsTile(new Vector2Int(GridCenter, GridMax), IslandTile.Path);
+
             ConnectionMask =
-                (IsTile(new Vector2Int(GridMin, GridCenter), IslandTile.Path) ? CardinalDirection.West.ToMask() : 0) |
-                (IsTile(new Vector2Int(GridMax, GridCenter), IslandTile.Path) ? CardinalDirection.East.ToMask() : 0) |
-                (IsTile(new Vector2Int(GridCenter, GridMin), IslandTile.Path) ? CardinalDirection.North.ToMask() : 0) |
-                (IsTile(new Vector2Int(GridCenter, GridMax), IslandTile.Path) ? CardinalDirection.South.ToMask() : 0);
+                (west ? CardinalDirection.West.ToMask() : 0) |
+                (east ? CardinalDirection.East.ToMask() : 0) |
+                (north ? CardinalDirection.North.ToMask() : 0) |
+                (south ? CardinalDirection.South.ToMask() : 0);
+            
+            ConnectionCount = (west ? 1 : 0) + (east ? 1 : 0) + (north ? 1 : 0) + (south ? 1 : 0);
         }
 
         public struct IslandRotation

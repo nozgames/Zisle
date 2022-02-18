@@ -54,7 +54,7 @@ namespace NoZ.Zisle.UI
 
         private void OnClicked()
         {
-            AudioManager.Instance.PlayButtonClick();
+            AudioManager.Instance.PlayButtonClickSound();
             clicked?.Invoke();
         }
 
@@ -64,7 +64,7 @@ namespace NoZ.Zisle.UI
             method.Invoke(m_Clickable, new object[] {evt, 100});
             evt.StopPropagation();
 
-            AudioManager.Instance.PlayButtonClick();
+            AudioManager.Instance.PlayButtonClickSound();
         }
 
         private void OnKeyDown(KeyDownEvent evt)
@@ -74,7 +74,7 @@ namespace NoZ.Zisle.UI
             {
                 var method = m_Clickable.GetType().GetMethod("SimulateSingleClick", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
                 method.Invoke(m_Clickable, new object[] { evt, 100 });
-                AudioManager.Instance.PlayButtonClick();
+                AudioManager.Instance.PlayButtonClickSound();
                 evt.StopPropagation();
             }
         }

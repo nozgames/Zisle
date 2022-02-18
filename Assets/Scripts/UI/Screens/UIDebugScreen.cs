@@ -39,8 +39,8 @@ namespace NoZ.Zisle.UI
                 yield return new WaitForFixedUpdate();
 
                 UpdateServer();
-
                 UpdatePlayer();
+                UpdateGame();
             }
             while (_coroutine != null);
         }
@@ -49,6 +49,12 @@ namespace NoZ.Zisle.UI
         {
             Q<Label>("server-connection").text = ValueOrNone(GameManager.Instance.Connection);
             Q<Label>("server-joincode").text = ValueOrNone(GameManager.Instance.JoinCode);
+        }
+
+        public void UpdateGame()
+        {
+            Q<Label>("game-state").text = ValueOrNone(Game.Instance?.State.ToString() ?? null);
+            Q<Label>("game-enemies").text = ValueOrNone(Game.Instance?.GetActorCount(ActorType.Enemy).ToString() ?? null);
         }
 
         private string ValueOrNone (string value, string none = "<None>") => (value == null || string.IsNullOrEmpty(value)) ? none : value;

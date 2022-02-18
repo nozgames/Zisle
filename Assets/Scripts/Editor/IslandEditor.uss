@@ -1,5 +1,9 @@
 
 .root {
+	width: 100%;
+}
+
+.centered {
 	width: 225px;
 	margin-left: auto;
 	margin-right: auto;

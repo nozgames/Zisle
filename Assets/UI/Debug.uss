@@ -9,14 +9,14 @@
 	padding: 20px;
 	padding-top: 10px;
 	padding-bottom: 15px;
-	width: 600px;
+	width: 500px;
 	-unity-font-definition: var(--font-definition-fixed);
-	font-size: 25px;
+	font-size: 20px;
 }
 
 .panel .row
 {
-	margin-bottom: 5px;
+	margin-bottom: 2px;
 	background-color: rgba(0,0,0,.2);
 	flex-direction: row;
 	width: 100%;
@@ -24,16 +24,16 @@
 
 .row-name
 {
-	height: 40px;
+	height: 25px;
 	color: #DDDDEE;
 	-unity-text-align: middle-left;
-	width: 30%;
+	width: 35%;
 }
 
 .row-value
 {
 	color: #9999AA;
-	width: 70%;
+	width: 65%;
 	-unity-text-align: middle-left;
 }
 

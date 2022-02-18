@@ -8,6 +8,16 @@ using UnityEngine;
 
 namespace NoZ.Zisle
 {
+    public enum GameState
+    {
+        Idle,
+        Wave,
+        BossCinematic,
+        BossWave,
+        Defeat,
+        Victory
+    }
+
     /// <summary>
     /// Manages a running game and all if its state
     /// </summary>
@@ -34,7 +44,7 @@ namespace NoZ.Zisle
         }
 
         private NetworkVariable<IslandVisibility> _islandVisibility = new NetworkVariable<IslandVisibility> ();
-        private NetworkVariable<bool> _battleMode = new NetworkVariable<bool> ();
+        private NetworkVariable<GameState> _gameState = new NetworkVariable<GameState> ();
 
         private IslandCell[] _cells = null;
         private List<SpawnPoint> _spawnPoints = new List<SpawnPoint>();
@@ -45,6 +55,11 @@ namespace NoZ.Zisle
         private LinkedList<Actor> _actors = new LinkedList<Actor> ();
 
         public bool HasIslands { get; private set; }
+
+        /// <summary>
+        /// True when the boss has spawned and has died
+        /// </summary>
+        public bool IsBossDead { get; private set; }
 
         public int Level { get; private set; }
 
@@ -57,6 +72,12 @@ namespace NoZ.Zisle
         public int WaveEnemyDelay { get; set; } = 1;
 
         public int WaveInitialDelay { get; set; } = 5;
+
+        public GameState State => _gameState.Value;
+
+        public bool IsWave => State == GameState.Wave;
+
+        public bool IsIdle => State == GameState.Idle;
 
         public static Game Instance => GameManager.Instance.Game;
 
@@ -99,7 +120,7 @@ namespace NoZ.Zisle
             GameEvent<ActorDespawnEvent>.OnRaised += OnActorDespawn;
 
             _islandVisibility.OnValueChanged += OnIslandVisibilityChanged;
-            _battleMode.OnValueChanged += OnBattleModeChanged;
+            _gameState.OnValueChanged += OnGameStateChanged;
         }
 
         public override void OnNetworkDespawn()
@@ -111,10 +132,16 @@ namespace NoZ.Zisle
             GameEvent<ActorDespawnEvent>.OnRaised -= OnActorDespawn;
         }
 
+        /// <summary>
+        /// Return the number of actors for the given actor type
+        /// </summary>
+        public int GetActorCount(ActorType actorType) => _actorsByType[(int)actorType].Count;
+
         private void OnActorDied(object sender, ActorDiedEvent evt)
         {
             var actor = sender as Actor;
-            if(actor.Definition.ActorType == ActorType.Enemy)
+
+            if (actor.Definition.ActorType == ActorType.Enemy)
                 WaveEnemyRemainingCount--;
         }
 
@@ -123,6 +150,11 @@ namespace NoZ.Zisle
             var actor = sender as Actor;
             _actorsByType[(int)actor.Definition.ActorType].Add(actor);
             _actors.AddLast(actor.Node);
+
+            // Boss spawned?
+            var boss = actor.GetComponent<Boss>();
+            if(boss != null)
+                _gameState.Value = GameState.BossWave;
         }
 
         private void OnActorDespawn(object sender, ActorDespawnEvent evt)
@@ -130,6 +162,9 @@ namespace NoZ.Zisle
             var actor = sender as Actor;
             _actorsByType[(int)actor.Definition.ActorType].Remove(actor);
             _actors.Remove(actor.Node);
+
+            if (GetActorCount(ActorType.Enemy) == 0 && State == GameState.BossWave)
+                _gameState.Value = GameState.Victory;
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -218,13 +253,6 @@ namespace NoZ.Zisle
                 if (biome == null)
                     throw new System.InvalidProgramException($"Biome id {cell.BiomeId} not found");
 
-                var island = CellToIsland(cell.Position);
-                var islandPrefab = biome.Islands[cell.IslandIndex];
-
-                foreach (var spawner in islandPrefab.GetComponentsInChildren<ActorSpawner>())
-                    if (spawner.gameObject != islandPrefab)
-                        island.AddSpawner(spawner);
-
                 // Create bridge links 
                 if(cell.Position != IslandGrid.CenterCell)
                 { 
@@ -232,7 +260,7 @@ namespace NoZ.Zisle
                     var to = IslandGrid.CellToWorld(cell.To);
                     var bridgePos = (from + to) * 0.5f;
                     var bridgeRot = Quaternion.LookRotation((to - from).normalized, Vector3.up);
-                    CellToIsland(cell.To).AddBridge(biome.Bridge, bridgePos, bridgeRot, island);
+                    CellToIsland(cell.To).AddBridge(biome.Bridge, bridgePos, bridgeRot, CellToIsland(cell.Position));
                 }
             }            
         }
@@ -274,15 +302,41 @@ namespace NoZ.Zisle
             }
         }
 
-        private void OnBattleModeChanged (bool oldValue, bool newValue)
+        private void OnGameStateChanged (GameState oldValue, GameState newValue)
         {
-            if (newValue)
+            switch(newValue)
             {
-                AudioManager.Instance.PlayBattleStart();
-                AudioManager.Instance.PlayBattleMusic();
+                case GameState.Idle:
+                    AudioManager.Instance.PlayIdleMusic();
+                    break;
+
+                case GameState.Wave:
+                    AudioManager.Instance.DuckMusic();
+                    AudioManager.Instance.PlayBattleStartSound();
+                    AudioManager.Instance.PlayBattleMusic();
+                    break;
+
+                case GameState.BossCinematic:
+                    break;
+
+                case GameState.BossWave:
+                    AudioManager.Instance.DuckMusic();
+                    AudioManager.Instance.PlayBattleStartSound();
+                    AudioManager.Instance.PlayBossMusic();
+                    break;
+
+                case GameState.Victory:
+                    AudioManager.Instance.DuckMusic();
+                    AudioManager.Instance.PlayVictorySound();
+                    AudioManager.Instance.PlayIdleMusic();
+                    break;
+
+                case GameState.Defeat:
+                    AudioManager.Instance.DuckMusic();
+                    AudioManager.Instance.PlayDefeatSound();
+                    AudioManager.Instance.PlayIdleMusic();
+                    break;
             }
-            else
-                AudioManager.Instance.PlayIdleMusic();
         }
 
         public void AddSpawnPoint (Biome biome, Vector3 position, Quaternion rotation)
@@ -323,10 +377,10 @@ namespace NoZ.Zisle
         {
             yield return new WaitForSeconds(WaveInitialDelay);
 
-            while (IsSpawned)
+            while (IsSpawned && IsIdle)
             {
                 // Enter battle mode
-                _battleMode.Value = true;
+                _gameState.Value = GameState.Wave;
 
                 for(int i=0; i< WaveEnemyCount; i++)
                 {
@@ -337,7 +391,7 @@ namespace NoZ.Zisle
                 while (WaveEnemyRemainingCount > 0)
                     yield return null;
 
-                _battleMode.Value = false;
+                _gameState.Value = GameState.Idle;
 
                 yield return new WaitForSeconds(WaveDelay);
             }

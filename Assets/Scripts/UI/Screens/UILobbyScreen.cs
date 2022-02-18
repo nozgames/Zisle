@@ -77,7 +77,7 @@ namespace NoZ.Zisle.UI
                         return;
 
                     if (_playLaneClick)
-                        AudioManager.Instance.PlayButtonClick();
+                        AudioManager.Instance.PlayButtonClickSound();
                     GameManager.Instance.Options.StartingLanes = laneIndex;
                 });
             }
@@ -193,7 +193,7 @@ namespace NoZ.Zisle.UI
             {
                 UpdateReadyButton(seconds);
                 yield return wait;
-                AudioManager.Instance.PlayTimerTick();
+                AudioManager.Instance.PlayTimerTickSound();
                 seconds--;
             }
 
@@ -365,7 +365,7 @@ namespace NoZ.Zisle.UI
 
         public override void OnNavigationBack()
         {
-            AudioManager.Instance.PlayButtonClick();
+            AudioManager.Instance.PlayButtonClickSound();
             OnQuit();
         }
     }

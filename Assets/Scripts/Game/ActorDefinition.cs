@@ -1,3 +1,4 @@
+using NoZ.Animations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,11 @@ namespace NoZ.Zisle
 
         [Header("Visuals")]
         [SerializeField] private string _healthCircleClass = null;
+
+        [Header("Animations")]
+        [SerializeField] private AnimationShader _idleAnimation = null;
+        [SerializeField] private AnimationShader _runAnimation = null;
+        [SerializeField] private AnimationShader _deathAnimation = null;
 
         [Header("Attributes")]
         [SerializeField] private float _baseHealthMax = 100.0f;
@@ -67,6 +73,10 @@ namespace NoZ.Zisle
         /// USS class to use for health circles, if empty no health circle will be displayed for this actor
         /// </summary>
         public string HealthCircleClass => _healthCircleClass;
+
+        public AnimationShader IdleAnimation => _idleAnimation;
+        public AnimationShader RunAnimation => _runAnimation;
+        public AnimationShader DeathAnimation => _deathAnimation;
 
         /// <summary>
         /// Return the base attribute for the given attribute

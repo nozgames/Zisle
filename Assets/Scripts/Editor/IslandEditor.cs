@@ -2,6 +2,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.UIElements;
+using UnityEditor.UIElements;
 
 namespace NoZ.Zisle
 {
@@ -44,13 +45,22 @@ namespace NoZ.Zisle
 
             InitializeIsland();
 
+            // Properties
+            var foldout = new Foldout();
+            foldout.text = "Properties";
+            InspectorElement.FillDefaultInspector(foldout, serializedObject, this);
+            root.Add(foldout);
+
             // Grid
+            var centered = new VisualElement();
             var grid = CreateGrid();
-            root.Add(grid);
+            centered.AddClass("centered");
+            centered.Add(grid);
+            root.Add(centered);
             root.AddToClassList("root");
 
             // Palette
-            root.Add(CreatePalette());
+            centered.Add(CreatePalette());
 
             return root;
         }

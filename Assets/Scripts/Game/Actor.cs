@@ -80,11 +80,6 @@ namespace NoZ.Zisle
         [SerializeField] protected float _runPitch = 20.0f;
         [SerializeField] protected float _height = 0.5f;
 
-        [Header("Animations")]
-        [SerializeField] private AnimationShader _idleAnimation = null;
-        [SerializeField] private AnimationShader _runAnimation = null;
-        [SerializeField] private AnimationShader _deathAnimation = null;
-
         private float[] _abilityUsedTime;
         private float _lastAbilityUsedTime;
         private float _lastAbilityUsedEndTime;
@@ -107,8 +102,6 @@ namespace NoZ.Zisle
         public float Speed => _speed;
         public bool IsMoving => Speed > 0.1f;
         public bool IsDead => _health <= 0.0f;
-
-        public AnimationShader IdleAnimation => _idleAnimation;
 
         public NavMeshAgent NavAgent { get; private set; }
         public NavMeshObstacle NavObstacle { get; private set; }
@@ -295,8 +288,9 @@ namespace NoZ.Zisle
         private void DieClientRpc()
         {
             _health = 0.0f;
-            
-            if (_deathAnimation != null)
+
+            var deathAnimation = _actorDefinition.DeathAnimation;
+            if (deathAnimation != null)
             {
                 if (_ghostMaterial != null)
                 {
@@ -305,7 +299,7 @@ namespace NoZ.Zisle
                         if (renderer.materials.Length == 1)
                         {
                             renderer.material = _ghostMaterial;
-                            renderer.material.TweenFloat(ShaderPropertyID.Opacity, 0.0f).EaseOutSine().Duration(_deathAnimation.length / _deathAnimation.speed).Play();
+                            renderer.material.TweenFloat(ShaderPropertyID.Opacity, 0.0f).EaseOutSine().Duration(deathAnimation.length / deathAnimation.speed).Play();
                         }
                         else
                         {
@@ -317,7 +311,7 @@ namespace NoZ.Zisle
                         }
                     }
                 }
-                PlayAnimation(_deathAnimation, Despawn);
+                PlayAnimation(deathAnimation, Despawn);
             }
             else
                 Despawn();
@@ -597,11 +591,11 @@ namespace NoZ.Zisle
 
             if(!IsMoving)
             {
-                PlayAnimation(_idleAnimation);
+                PlayAnimation(_actorDefinition.IdleAnimation);
                 return;
             }
 
-            PlayAnimation(_runAnimation);
+            PlayAnimation(_actorDefinition.RunAnimation);
         }
 
         private void UpdateRunPitch ()

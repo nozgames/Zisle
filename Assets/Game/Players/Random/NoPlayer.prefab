@@ -45,16 +45,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb4d46d050f8c75468bad053a140f997, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actorDefinition: {fileID: 0}
+  _actorDefinition: {fileID: 11400000, guid: 6537db7074a8ef04ba51e7d11adc36d1, type: 2}
   _hitCollider: {fileID: 0}
   _ghostMaterial: {fileID: 0}
   _spawnVFXPrefab: {fileID: 0}
   _runPitchTransform: {fileID: 0}
   _runPitch: 20
   _height: 0.5
-  _idleAnimation: {fileID: 11400000, guid: 89960311c9cd71d40a46dd72ae52f247, type: 2}
-  _runAnimation: {fileID: 0}
-  _deathAnimation: {fileID: 0}
 --- !u!1001 &785488047769707882
 PrefabInstance:
   m_ObjectHideFlags: 0

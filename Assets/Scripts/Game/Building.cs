@@ -6,11 +6,13 @@ namespace NoZ.Zisle
 {
     public class Building : Actor
     {
+        public virtual bool CanConstruct => true;
+
         public bool IsConstructed => !IsDamaged;
 
         public override void Heal(Actor source, float heal)
         {
-            if (IsConstructed)
+            if (IsConstructed || !CanConstruct)
                 return;
 
             base.Heal(source, heal);

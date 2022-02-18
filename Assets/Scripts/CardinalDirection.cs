@@ -10,6 +10,15 @@ namespace NoZ.Zisle
         West            // -X
     }
 
+    [System.Flags]
+    public enum CardinalDirectionMask : uint
+    {
+        North = 1 << CardinalDirection.North,
+        East = 1 << CardinalDirection.East,
+        South = 1 << CardinalDirection.South,
+        West = 1 << CardinalDirection.West
+    }
+
     public static class CardinalDirectionHelpers
     {
         private static readonly Vector2Int[] OffsetTable = new Vector2Int[]

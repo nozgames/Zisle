@@ -19,6 +19,9 @@ MonoBehaviour:
   _preview: {fileID: 5979792487354804065, guid: 8abc1f8e61af8e04cb0ad4e2023d9d79,
     type: 3}
   _healthCircleClass: 
+  _idleAnimation: {fileID: 11400000, guid: f9cdcf35f4561b84082829acf74c2026, type: 2}
+  _runAnimation: {fileID: 0}
+  _deathAnimation: {fileID: 0}
   _baseHealthMax: 100
   _baseHealthRegen: 5
   _baseSpeed: 10

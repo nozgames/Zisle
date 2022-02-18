@@ -65,7 +65,7 @@ namespace NoZ.Zisle
             /// <summary>
             /// Connection mask used to determine which islands can be placed in this cell
             /// </summary>
-            public uint ConnectionMask; 
+            public uint ConnectionMask;
 
             /// <summary>
             /// Biome of the island that should be spawned in this cell
@@ -81,6 +81,8 @@ namespace NoZ.Zisle
             /// Cell the path came from
             /// </summary>
             public Cell From;
+
+            public CardinalDirection Rotation;
         }
 
         /// <summary>
@@ -92,17 +94,36 @@ namespace NoZ.Zisle
             _cellGrid = new Cell[IslandGrid.IndexMax];
 
             GenerateCells(options);
-    
-            var result = _cells.Where(c => c.ConnectionMask != 0).Select(c =>
+
+            // Choose random islands for all cells
+            foreach(var c in _cells)
             {
-                var rotations = c.Biome.Islands.SelectMany(i => i.GetRotations()).Where(r => r.Mask == c.ConnectionMask).ToArray();
-                if (rotations.Length == 0)
-                    return new IslandCell { IslandIndex = -1 };
+                var rotations = c.Biome.Islands
+                    .Where(i => i.Type == IslandType.Default)
+                    .SelectMany(i => i.GetRotations())
+                    .Where(r => r.Mask == c.ConnectionMask)
+                    .ToArray();
 
                 // Choose a random island
-                var rotation = rotations[Random.Range(0, rotations.Length)];
-                var islandIndex = c.Biome.IndexOf(rotation.Island);
-                if (islandIndex == -1)
+                var rot = rotations[Random.Range(0, rotations.Length)];
+                c.Island = rot.Island;
+                c.Rotation = rot.Rotation;
+            }
+
+            // Find the cell to place to boss island
+            var bossCells = _cells.Where(c => c.Island.ConnectionCount == 1).ToArray();
+            var bossCellIndex = WeightedRandom.RandomWeightedIndex(bossCells, 0, bossCells.Length, (c) => c.Level);
+            var bossCell = bossCells[WeightedRandom.RandomWeightedIndex(bossCells, 0, bossCells.Length, (c) => c.Level)];
+
+            // Now replace the island in the boss cell with a boss island from the same biome
+            var bossIslands = bossCell.Biome.Islands.Where(i => i.Type == IslandType.Boss && i.ConnectionCount == 1).ToArray();
+            var bossIsland = bossIslands[WeightedRandom.RandomWeightedIndex(bossIslands, 0, bossIslands.Length, (i) => i.Weight)];
+            bossCell.Island = bossIsland;
+
+            // Generate results
+            var result = _cells.Where(c => c.ConnectionMask != 0).Select(c =>
+            {
+                if (c.Island == null)
                     return new IslandCell { IslandIndex = -1 };
 
                 // Return the generated island cell
@@ -112,10 +133,10 @@ namespace NoZ.Zisle
                     To = c.From?.Position ?? IslandGrid.CenterCell,
                     Level = c.Level,
                     BiomeId = c.Biome.NetworkId,
-                    IslandIndex = islandIndex,
-                    Rotation = rotation.Rotation
+                    IslandIndex = c.Biome.IndexOf(c.Island),
+                    Rotation = c.Rotation
                 };
-            }).Where(nc => nc.IslandIndex != -1).ToArray();
+            }).Where(nc => nc.IslandIndex != -1).ToArray();          
 
             _cells.Clear();
             _cells = null;

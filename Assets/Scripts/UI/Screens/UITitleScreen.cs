@@ -53,7 +53,7 @@ namespace NoZ.Zisle.UI
 
         public override void OnNavigationBack()
         {
-            AudioManager.Instance.PlayButtonClick();
+            AudioManager.Instance.PlayButtonClickSound();
             OnQuit();
         }
     }

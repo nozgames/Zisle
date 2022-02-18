@@ -18,6 +18,7 @@ MonoBehaviour:
   _maxLevel: 100000
   _weight: 1
   _islands:
+  - {fileID: 8273873446664352057, guid: f8875750806ac2a40be365a90a49e128, type: 3}
   - {fileID: 8273873446664352057, guid: 9b7d363be7ce7414d8b75580d4d977b7, type: 3}
   - {fileID: 4838592508693768679, guid: 22384932d89fb854a992e776b9bf3f85, type: 3}
   - {fileID: 8273873446664352057, guid: d59f8d08e582a2d43939966bc6177cbe, type: 3}
@@ -25,4 +26,3 @@ MonoBehaviour:
   - {fileID: 8273873446664352057, guid: 32587f530ac54ff41a5adcf595442b44, type: 3}
   _enemies:
   - {fileID: 11400000, guid: 50eae47ab1632bd47904d1218e4cd5c0, type: 2}
-  - {fileID: 11400000, guid: abfe52e75c5d9c144a65460641f1c8cf, type: 2}

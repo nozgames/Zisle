@@ -15,7 +15,6 @@ namespace NoZ.Zisle
         }
 
         private List<BridgeDef> _bridges = new List<BridgeDef>();
-        private List<ActorSpawner> _spawners = new List<ActorSpawner>();
         private IslandMesh _mesh;
         private Biome _biome;
         private Vector2Int _cell;
@@ -69,28 +68,30 @@ namespace NoZ.Zisle
             _bridges.Add(new BridgeDef { Prefab = prefab, Position = position, Rotation = rotation, To = to });
         }
 
-        public void AddSpawner (ActorSpawner spawner)
-        {
-            var spawned = Instantiate(spawner.gameObject, spawner.transform.localPosition, spawner.transform.localRotation, transform).GetComponent<ActorSpawner>();
-            if (null == spawned)
-                return;
-
-            _spawners.Add(spawned);
-        }
-
         public void RiseFromTheDeep()
         {
             gameObject.SetActive(true);
-            SpawnActors();
+
             SpawnBridges();
 
-            GeneratePathMap();
-        }
+            // Spawn child objects
+            for (int i = Mesh.transform.childCount - 1; i >= 0; i--)
+            {
+                var child = Mesh.transform.GetChild(i);
+                var isNetworkObject = child.GetComponent<NetworkObject>() != null;
+                if (!isNetworkObject || (NetworkManager.Singleton.IsHost && isNetworkObject))
+                {
+                    var spawned = Instantiate(child.gameObject, transform);
+                    spawned.transform.localPosition = child.localPosition;
+                    spawned.transform.localRotation = child.localRotation;
+                    spawned.transform.localScale = child.localScale;
 
-        private void SpawnActors ()
-        {
-            foreach (var spawner in _spawners)
-                spawner.Spawn();
+                    if (isNetworkObject)
+                        spawned.GetComponent<NetworkObject>().Spawn();
+                }
+            }
+
+            GeneratePathMap();
         }
 
         private void SpawnBridges()
@@ -125,15 +126,6 @@ namespace NoZ.Zisle
 
             transform.position = IslandGrid.CellToWorld(cell);
             transform.rotation = transform.localRotation = Quaternion.Euler(0, 90.0f * (int)_rotation, 0);
-
-            for(int i=islandMesh.transform.childCount-1; i>=0; i--)
-            {
-                var child = islandMesh.transform.GetChild(i);
-                var spawned = Instantiate(child.gameObject, transform);
-                spawned.transform.localPosition = child.localPosition;
-                spawned.transform.localRotation = child.localRotation;
-                spawned.transform.localScale = child.localScale;
-            }
         }
 
         /// <summary>
