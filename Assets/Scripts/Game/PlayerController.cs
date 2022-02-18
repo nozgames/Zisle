@@ -121,7 +121,7 @@ namespace NoZ.Zisle
             }
 
             // TODO: orientation
-            _player = Instantiate(actorDef.Prefab).GetComponent<Player>();
+            _player = Instantiate(actorDef.Prefab, Game.Instance.transform).GetComponent<Player>();
             _player.NetworkObject.SpawnWithOwnership(this.OwnerClientId);
         }
 

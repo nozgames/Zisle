@@ -752,6 +752,7 @@ Transform:
   - {fileID: 2103585415}
   - {fileID: 332559764}
   - {fileID: 255861361}
+  - {fileID: 529570558}
   m_Father: {fileID: 612517313}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1052,6 +1053,68 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &529570555
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 529570558}
+  - component: {fileID: 529570557}
+  - component: {fileID: 529570556}
+  m_Layer: 0
+  m_Name: GameOver
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &529570556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 529570555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9870b1894f32fa24ea3a51bc4d3f0a06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &529570557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 529570555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: d97a48fbf76fc924183782d40172e827, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: e05e5b5519ae29b478619e14e8709e87,
+    type: 3}
+  m_SortingOrder: 0
+--- !u!4 &529570558
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 529570555}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 395404212}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &579029603
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1192,7 +1255,6 @@ MonoBehaviour:
   _previewChangeEffect: {fileID: 3214235347064349228, guid: 87cba78abdf3bbd4cb890eac4efbdcda,
     type: 3}
   _screens: {fileID: 395404212}
-  _clickBlocker: {fileID: 0}
   _confirmationScreen: {fileID: 2019993065}
   _loadingScreen: {fileID: 332559765}
   _multiplayerScreen: {fileID: 1292220605}
@@ -1203,6 +1265,7 @@ MonoBehaviour:
   _debugScreen: {fileID: 255861362}
   _gameScreen: {fileID: 1927026999}
   _gameMenuScreen: {fileID: 1496648451}
+  _gameOverScreen: {fileID: 529570556}
   _optionsScreen: {fileID: 2103585416}
 --- !u!1 &653729767
 GameObject:
@@ -2688,7 +2751,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1699394945
 Transform:
   m_ObjectHideFlags: 0

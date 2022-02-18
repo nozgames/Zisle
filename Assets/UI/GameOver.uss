@@ -1,0 +1,16 @@
+.victory .zisle-panel__title {
+    background-color: var(--zisle-button-color-blue);
+    font-size: 200%;
+}
+
+#ok {
+    width: 360px;
+    height: 80px;
+    font-size: 100%;
+    margin-top: auto;
+    margin-bottom: -85px;
+}
+
+#stats {
+height: 400px;
+}

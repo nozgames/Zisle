@@ -45,6 +45,7 @@ namespace NoZ.Zisle.UI
         [SerializeField] private UIDebugScreen _debugScreen = null;
         [SerializeField] private UIGame _gameScreen = null;
         [SerializeField] private UIGameMenu _gameMenuScreen = null;
+        [SerializeField] private UIGameOverScreen _gameOverScreen = null;
         [SerializeField] private UIOptionsScreen _optionsScreen = null;
 
         private UIScreen _activeScreen;
@@ -111,6 +112,7 @@ namespace NoZ.Zisle.UI
         public void ShowGame() => TransitionTo(_gameScreen);
         public void ShowLobby() => TransitionTo(_lobbyScreen);
         public void ShowGameMenu() => TransitionTo(_gameMenuScreen);
+        public void ShowGameOver() => TransitionTo(_gameOverScreen);
 
         public void ShowLoading(WaitForDone wait = null, Action onCancel = null)
         {
@@ -266,9 +268,6 @@ namespace NoZ.Zisle.UI
 
                 GenerateBackground();
 
-                GameManager.Instance.CameraOffset = new Vector3(6f, 0, 0);
-                GameManager.Instance.FrameCamera(_backgroundIslands.position);
-
                 while (Time.time - startTime < MinLoadingTime)
                     yield return null;
 
@@ -368,6 +367,9 @@ namespace NoZ.Zisle.UI
             }
 
             _background.gameObject.SetActive(true);
+
+            GameManager.Instance.CameraOffset = new Vector3(6f, 0, 0);
+            GameManager.Instance.FrameCamera(_backgroundIslands.position);
         }
 
         private void ClearBackground()

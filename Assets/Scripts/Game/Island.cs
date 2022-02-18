@@ -78,16 +78,18 @@ namespace NoZ.Zisle
             for (int i = Mesh.transform.childCount - 1; i >= 0; i--)
             {
                 var child = Mesh.transform.GetChild(i);
-                var isNetworkObject = child.GetComponent<NetworkObject>() != null;
-                if (!isNetworkObject || (NetworkManager.Singleton.IsHost && isNetworkObject))
+                var actor = child.GetComponent<Actor>();
+                if(actor != null)
+                {
+                    if(NetworkManager.Singleton.IsHost)
+                        actor.Definition.Spawn(transform.TransformPoint(child.localPosition), transform.rotation * child.localRotation);
+                }
+                else
                 {
                     var spawned = Instantiate(child.gameObject, transform);
-                    spawned.transform.localPosition = child.localPosition;
-                    spawned.transform.localRotation = child.localRotation;
+                    spawned.transform.position = transform.TransformPoint(child.localPosition);
+                    spawned.transform.rotation = transform.rotation * child.localRotation;
                     spawned.transform.localScale = child.localScale;
-
-                    if (isNetworkObject)
-                        spawned.GetComponent<NetworkObject>().Spawn();
                 }
             }
 
@@ -98,7 +100,7 @@ namespace NoZ.Zisle
         {
             foreach (var def in _bridges)
             {
-                var bridge = Instantiate(def.Prefab, def.Position, def.Rotation).GetComponent<Bridge>();
+                var bridge = Instantiate(def.Prefab, def.Position, def.Rotation, Game.Instance.transform).GetComponent<Bridge>();
                 bridge.Bind(from: this, to: def.To);
                 bridge.GetComponent<NetworkObject>().Spawn();
             }

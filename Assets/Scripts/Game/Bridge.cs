@@ -37,7 +37,7 @@ namespace NoZ.Zisle
         {
             base.OnNetworkDespawn();
 
-            if (IsHost)
+            if (IsHost && Game.Instance != null)
                 Game.Instance.RemoveSpawnPoint (_spawnPosition);
         }
 

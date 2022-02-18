@@ -1,4 +1,5 @@
 using NoZ.Events;
+using NoZ.Zisle.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,7 +60,7 @@ namespace NoZ.Zisle
         /// <summary>
         /// True when the boss has spawned and has died
         /// </summary>
-        public bool IsBossDead { get; private set; }
+        public bool IsVictory { get; private set; }
 
         public int Level { get; private set; }
 
@@ -127,6 +128,8 @@ namespace NoZ.Zisle
         {
             base.OnNetworkDespawn();
 
+            DespawnActors();
+
             GameEvent<ActorDiedEvent>.OnRaised -= OnActorDied;
             GameEvent<ActorSpawnEvent>.OnRaised -= OnActorSpawn;
             GameEvent<ActorDespawnEvent>.OnRaised -= OnActorDespawn;
@@ -152,9 +155,12 @@ namespace NoZ.Zisle
             _actors.AddLast(actor.Node);
 
             // Boss spawned?
-            var boss = actor.GetComponent<Boss>();
-            if(boss != null)
-                _gameState.Value = GameState.BossWave;
+            if(IsHost)
+            {
+                var boss = actor.GetComponent<Boss>();
+                if (boss != null)
+                    _gameState.Value = GameState.BossWave;
+            }
         }
 
         private void OnActorDespawn(object sender, ActorDespawnEvent evt)
@@ -163,7 +169,7 @@ namespace NoZ.Zisle
             _actorsByType[(int)actor.Definition.ActorType].Remove(actor);
             _actors.Remove(actor.Node);
 
-            if (GetActorCount(ActorType.Enemy) == 0 && State == GameState.BossWave)
+            if (IsHost && GetActorCount(ActorType.Enemy) == 0 && State == GameState.BossWave)
                 _gameState.Value = GameState.Victory;
         }
 
@@ -326,15 +332,19 @@ namespace NoZ.Zisle
                     break;
 
                 case GameState.Victory:
+                    IsVictory = true;
                     AudioManager.Instance.DuckMusic();
                     AudioManager.Instance.PlayVictorySound();
                     AudioManager.Instance.PlayIdleMusic();
+                    UIManager.Instance.ShowGameOver();
                     break;
 
                 case GameState.Defeat:
+                    IsVictory = false;
                     AudioManager.Instance.DuckMusic();
                     AudioManager.Instance.PlayDefeatSound();
                     AudioManager.Instance.PlayIdleMusic();
+                    UIManager.Instance.ShowGameOver();
                     break;
             }
         }
@@ -479,6 +489,16 @@ namespace NoZ.Zisle
             }
 
             return bestActor;
+        }
+
+        private void DespawnActors ()
+        {
+            if (!IsHost)
+                return;
+
+            var actors = _actors.ToArray();
+            foreach (var actor in actors)
+                actor.NetworkObject.Despawn();
         }
     }
 }

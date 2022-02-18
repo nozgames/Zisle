@@ -181,7 +181,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _actorDefinition
       value: 
-      objectReference: {fileID: 11400000, guid: 50eae47ab1632bd47904d1218e4cd5c0,
+      objectReference: {fileID: 11400000, guid: abfe52e75c5d9c144a65460641f1c8cf,
         type: 2}
     - target: {fileID: 8906246932429870938, guid: c626647da39f58f4a9598683d11fcdc9,
         type: 3}

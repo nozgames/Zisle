@@ -119,7 +119,7 @@ namespace NoZ.Zisle
         /// </summary>
         public Actor Spawn (Vector3 position, Quaternion rotation)
         {
-            var actor = Instantiate(Prefab, position, rotation).GetComponent<Actor>();
+            var actor = Instantiate(Prefab, position, rotation, Game.Instance.transform).GetComponent<Actor>();
             actor.NetworkObject.Spawn();
             return actor;
         }
