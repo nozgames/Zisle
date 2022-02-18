@@ -18,6 +18,10 @@ namespace NoZ.Zisle
         [Header("Visuals")]
         [SerializeField] private string _healthCircleClass = null;
 
+        [Header("Sounds")]
+        [SerializeField] private AudioShader _deathSound = null;
+        [SerializeField] private AudioShader _hitSound = null;
+
         [Header("Animations")]
         [SerializeField] private AnimationShader _idleAnimation = null;
         [SerializeField] private AnimationShader _runAnimation = null;
@@ -123,5 +127,14 @@ namespace NoZ.Zisle
             actor.NetworkObject.Spawn();
             return actor;
         }
+
+        private void PlaySound (AudioSource source, AudioShader sound)
+        {
+            if (source != null)
+                source.PlayOneShot(sound);
+        }
+
+        public void PlayDeathSound(AudioSource source) => PlaySound(source, _deathSound);
+        public void PlayHitSound(AudioSource source) => PlaySound(source, _hitSound);
     }
 }

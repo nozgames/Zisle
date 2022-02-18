@@ -10,7 +10,7 @@ namespace NoZ.Zisle
         [SerializeField] private float _duration = 0.5f;
 
         [Header("Color")]
-        [SerializeField] private Renderer _renderer = null;
+        [SerializeField] private Renderer[] _renderers = null;
         [SerializeField] private Color _color = Color.white;
 
         [Header("Scale")]
@@ -25,16 +25,16 @@ namespace NoZ.Zisle
 
         public void Play(Color color, float strength)
         {
-            if (_renderer == null)
-                return;
-
             _tween.Stop();
             _tween = this.TweenGroup();
 
-            if (color != Color.clear)
+            if (_renderers != null && color != Color.clear)
             {
-                _renderer.material.SetColor(ShaderPropertyID.HitColor, Color.clear);
-                _tween.Element(_renderer.material.TweenColor(ShaderPropertyID.HitColor, color).Duration(_duration).EaseOutCubic().PingPong());
+                foreach (var renderer in _renderers)
+                {
+                    renderer.material.SetColor(ShaderPropertyID.HitColor, Color.clear);
+                    _tween.Element(renderer.material.TweenColor(ShaderPropertyID.HitColor, color).Duration(_duration).EaseOutCubic().PingPong());
+                }
             }
 
             if (_scaleTransform != null)

@@ -18,13 +18,15 @@ MonoBehaviour:
   _prefab: {fileID: 6060163351921082379, guid: 8d0fbad20decb9840a9f9ea1e15803cd, type: 3}
   _preview: {fileID: 0}
   _healthCircleClass: zisle-health-circle-red
+  _deathSound: {fileID: 11400000, guid: 80749b1e6298ba54fbeddfedbc6a4363, type: 2}
+  _hitSound: {fileID: 11400000, guid: 251fd97eab5c0dd49b689c22dae21be2, type: 2}
   _idleAnimation: {fileID: 11400000, guid: f9cdcf35f4561b84082829acf74c2026, type: 2}
   _runAnimation: {fileID: 11400000, guid: 749689bbabc06d54fa8d3db56eb84a7e, type: 2}
   _deathAnimation: {fileID: 11400000, guid: 3632060de9552e3498aef82567fdb40d, type: 2}
   _baseHealthMax: 100
   _baseHealthRegen: 5
   _baseSpeed: 2
-  _baseAttack: 60
+  _baseAttack: 200
   _baseAttackSpeed: 1
   _baseDefense: 40
   _baseHarvest: 1

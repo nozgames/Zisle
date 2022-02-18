@@ -9,7 +9,7 @@
 >
   <Style src="project://database/Assets/UI/GameOver.uss" />
   <VisualElement class="root screen centered-vertical">
-    <zisle:Panel name="panel" title="Victory!" class="victory">
+    <zisle:Panel name="panel" title="Victory!">
       <VisualElement name="stats"/>
       <zisle:RaisedButton name="ok" text="quit" class="zisle-button-blue zisle-button-large zisle-button-border"/>
     </zisle:Panel>

@@ -146,6 +146,9 @@ namespace NoZ.Zisle
 
             if (actor.Definition.ActorType == ActorType.Enemy)
                 WaveEnemyRemainingCount--;
+
+            if (IsHost && actor.Type == ActorType.Base)
+                _gameState.Value = GameState.Defeat;
         }
 
         private void OnActorSpawn(object sender, ActorSpawnEvent evt)

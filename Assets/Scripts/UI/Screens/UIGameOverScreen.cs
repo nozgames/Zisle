@@ -24,7 +24,9 @@ namespace NoZ.Zisle.UI
         {
             base.OnShow();
 
-            Q<Panel>("panel").Title = Game.Instance.IsVictory ? "victory" : "defeat";
+            var panel = Q<Panel>("panel");
+            panel.Title = Game.Instance.IsVictory ? "victory" : "defeat";
+            panel.EnableInClassList("victory", Game.Instance.IsVictory);
         }
     }
 }

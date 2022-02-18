@@ -38,7 +38,7 @@ namespace NoZ.Zisle
                 for (int j = 0; j < count; j++)
                 {
                     var target = _colliders[j].GetComponentInParent<Actor>();
-                    if (target == null || target == source)
+                    if (target == null || target == source || target.IsDead)
                         continue;
 
                     var delta = (target.transform.position - source.transform.position).ZeroY();

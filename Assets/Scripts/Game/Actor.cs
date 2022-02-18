@@ -72,6 +72,7 @@ namespace NoZ.Zisle
         [Header("General")]
         [SerializeField] private ActorDefinition _actorDefinition = null;
         [SerializeField] private Collider _hitCollider = null;
+        [SerializeField] private AudioSource _audioSource = null;
 
         [Header("Visuals")]
         [SerializeField] protected Material _ghostMaterial = null;
@@ -97,7 +98,7 @@ namespace NoZ.Zisle
         private float _busyTime;
         private Vector3 _lastPosition;
         private float _speed = 0.0f;
-
+        
         public ActorDefinition Definition => _actorDefinition;
         public float Speed => _speed;
         public bool IsMoving => Speed > 0.1f;
@@ -264,6 +265,8 @@ namespace NoZ.Zisle
             // Only show damage numbers on the local client
             if(sourceId == NetworkManager.LocalClientId)
                 UIManager.Instance.AddFloatingText(((int)Mathf.Ceil(damage)).ToString(), null, transform.position + Vector3.up * (_height * 2.0f));
+
+            _actorDefinition.PlayHitSound(_audioSource);
         }
 
         public virtual void Die (Actor source)
@@ -271,7 +274,8 @@ namespace NoZ.Zisle
             RemoveHealthCircle();
 
             CanHit = false;
-            NavAgent.enabled = false;
+            if(NavAgent != null)
+                NavAgent.enabled = false;
             GameEvent.Raise(this, new ActorDiedEvent { });
             DieClientRpc();
         }
@@ -288,6 +292,8 @@ namespace NoZ.Zisle
         private void DieClientRpc()
         {
             _health = 0.0f;
+
+            _actorDefinition.PlayDeathSound(_audioSource);
 
             var deathAnimation = _actorDefinition.DeathAnimation;
             if (deathAnimation != null)

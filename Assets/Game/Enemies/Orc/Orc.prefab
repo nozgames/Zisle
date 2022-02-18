@@ -167,6 +167,26 @@ PrefabInstance:
       propertyPath: _animator
       value: 
       objectReference: {fileID: 3747618724928831444}
+    - target: {fileID: 5645462275788983784, guid: c626647da39f58f4a9598683d11fcdc9,
+        type: 3}
+      propertyPath: _renderers.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5645462275788983784, guid: c626647da39f58f4a9598683d11fcdc9,
+        type: 3}
+      propertyPath: _renderers.Array.data[0]
+      value: 
+      objectReference: {fileID: 6546083906498729975}
+    - target: {fileID: 5907281522901925113, guid: c626647da39f58f4a9598683d11fcdc9,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6085324528788541688, guid: c626647da39f58f4a9598683d11fcdc9,
+        type: 3}
+      propertyPath: m_Name
+      value: Hit Collider
+      objectReference: {fileID: 0}
     - target: {fileID: 8906246932429870938, guid: c626647da39f58f4a9598683d11fcdc9,
         type: 3}
       propertyPath: _actorDefinition
@@ -180,9 +200,9 @@ PrefabInstance:
       objectReference: {fileID: 7631088235439773423}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c626647da39f58f4a9598683d11fcdc9, type: 3}
---- !u!4 &6085852768695152274 stripped
+--- !u!4 &1469169003925539054 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 1291445172341955205, guid: c626647da39f58f4a9598683d11fcdc9,
+  m_CorrespondingSourceObject: {fileID: 5907281522901925113, guid: c626647da39f58f4a9598683d11fcdc9,
     type: 3}
   m_PrefabInstance: {fileID: 5015154369657779223}
   m_PrefabAsset: {fileID: 0}
@@ -191,12 +211,12 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 6085852768695152274}
+    m_TransformParent: {fileID: 1469169003925539054}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
         type: 3}
@@ -221,17 +241,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
         type: 3}
@@ -263,6 +283,12 @@ PrefabInstance:
 --- !u!4 &3244416569057241705 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4365166153488802963, guid: db787b28e2a5c8740bc91419ad188aec,
+    type: 3}
+  m_PrefabInstance: {fileID: 7957204325819855108}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &6546083906498729975 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 3798214047891171059, guid: db787b28e2a5c8740bc91419ad188aec,
     type: 3}
   m_PrefabInstance: {fileID: 7957204325819855108}
   m_PrefabAsset: {fileID: 0}

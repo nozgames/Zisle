@@ -18,7 +18,10 @@ MonoBehaviour:
   _prefab: {fileID: 7506981431210532055, guid: 6ff7ec3e87930e24e9b25f7a1a8df697, type: 3}
   _preview: {fileID: 0}
   _healthCircleClass: zisle-health-circle-green
-  _baseHealthMax: 10000
+  _idleAnimation: {fileID: 0}
+  _runAnimation: {fileID: 0}
+  _deathAnimation: {fileID: 0}
+  _baseHealthMax: 1000
   _baseHealthRegen: 5
   _baseSpeed: 10
   _baseAttack: 60
