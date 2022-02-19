@@ -22,9 +22,13 @@ namespace NoZ.Zisle
         [SerializeField] private GameOptions _optionsPrefab = null;
         [SerializeField] private LayerMask _groundLayer = 0;
         [SerializeField] private GlobalShaderProperties _globalShaderProperties = null;
+        [SerializeField] private WaterMesh _waterMesh;
+        [SerializeField] private AudioListener _audioListener = null;
 
         [Header("Camera")]
         [SerializeField] private Camera _camera = null;
+        [SerializeField] private Transform _cameraTransform = null;
+        [SerializeField] private CameraShake _cameraShake = null;
         [SerializeField] private float _cameraYaw = 45.0f;
         [SerializeField] private float _cameraPitch = 45.0f;
         [SerializeField] private float _cameraZoom = 10.0f;
@@ -220,7 +224,9 @@ namespace NoZ.Zisle
                 // Stop the game first
                 yield return StopGame();
 
-                if(IsInLobby)
+                ListenAt(transform);
+
+                if (IsInLobby)
                     NetworkManager.Singleton.Shutdown();
 
                 while (NetworkManager.Singleton.ShutdownInProgress)
@@ -514,11 +520,24 @@ namespace NoZ.Zisle
 
         public void FrameCamera (Vector3 target)
         {
-            _cameraTarget = target;
+            _cameraTarget = target.ZeroY();
             _cameraTarget += Quaternion.Euler(0, _cameraYaw, 0) * _cameraOffset;
-            _camera.transform.position = _cameraTarget + Quaternion.Euler(_cameraPitch, _cameraYaw, 0) * new Vector3(0, 0, 1) * _cameraZoom;
-            _camera.transform.LookAt(_cameraTarget, Vector3.up);
-            CameraDistance = (_camera.transform.position - _cameraTarget).magnitude;
+            _cameraTransform.position = _cameraTarget + Quaternion.Euler(_cameraPitch, _cameraYaw, 0) * new Vector3(0, 0, 1) * _cameraZoom;
+            _cameraTransform.LookAt(_cameraTarget, Vector3.up);
+            CameraDistance = (_cameraTransform.transform.position - _cameraTarget).magnitude;
+        }
+
+        public void GenerateWater (Transform islandTransform)
+        {
+            _waterMesh.Generate(islandTransform);
+        }
+
+        public void ShakeCamera(float intensity, float duration) => _cameraShake.Shake(intensity, duration);
+
+        public void ListenAt (Transform transform)
+        {
+            _audioListener.transform.position = transform.position;
+            _audioListener.transform.rotation = transform.rotation;
         }
     }
 }

@@ -16,7 +16,13 @@ namespace NoZ.Zisle
         North = 1 << CardinalDirection.North,
         East = 1 << CardinalDirection.East,
         South = 1 << CardinalDirection.South,
-        West = 1 << CardinalDirection.West
+        West = 1 << CardinalDirection.West,
+
+        NorthWest = North | West,
+        NorthEast = North | East,
+        SouthWest = South | West,
+        SouthEast = South | East,
+        All = North | East | South | West
     }
 
     public static class CardinalDirectionHelpers
@@ -56,8 +62,8 @@ namespace NoZ.Zisle
 
         public static Vector3 ToWorld(this CardinalDirection dir) => WorldTable[(int)dir];
 
-        public static uint ToMask(this CardinalDirection dir) =>
-            (uint)(1 << (int)dir);
+        public static CardinalDirectionMask ToMask(this CardinalDirection dir) =>
+            (CardinalDirectionMask)(1 << (int)dir);
 
         /// <summary>
         /// Convert an offset to a direction
@@ -68,6 +74,16 @@ namespace NoZ.Zisle
                 if(offset == OffsetTable[i]) return (CardinalDirection)i;
 
             throw new System.NotSupportedException(offset.ToString());
+        }
+
+        /// <summary>
+        /// Rotate a connection mask by 90 * <paramref name="count"/> degrees counter clockwise 
+        /// </summary>
+        public static CardinalDirectionMask Rotate (this CardinalDirectionMask mask, int count)
+        {
+            var umask = (uint)mask;
+            umask = umask << (count % 4);
+            return (CardinalDirectionMask)((umask & 0x0000000F) | ((umask & 0xFFFFFFF0) >> 4));
         }
     }
 }

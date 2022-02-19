@@ -21,14 +21,14 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Water
-  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
-  m_ShaderKeywords: _SPECULAR_SETUP
+  m_Shader: {fileID: -6465566751694194690, guid: 5ad4ad56593dce743851cfe2d8f2741a,
+    type: 3}
+  m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
-  stringTagMap:
-    RenderType: Opaque
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -38,6 +38,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Depth:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -77,12 +81,20 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_079b98ee887a415b899a6d271226837b_Texture_1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_50216e258def4c8f8b03509748d16b5d_Texture_1:
         m_Texture: {fileID: 2800000, guid: 9afc0c9ac290fa047b56e0c1df15dba0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_7227bb20cdc242d1b0ca4d6375765156_Texture_1:
         m_Texture: {fileID: 2800000, guid: c2d2bf35c073ba04bae6d3040d9f4d70, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_77716e518dc948d68a9b6cd858e53e53_Texture_1:
+        m_Texture: {fileID: 2800000, guid: 9a1ea48025d38be4c995cea6e2feffa0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_96a0be384cb546c582ea607a2a23fb80_Texture_1:
@@ -160,7 +172,8 @@ Material:
     - FoamDarkColor: {r: 1, g: 1, b: 1, a: 1}
     - WaterColor: {r: 0.22947071, g: 0.42133915, b: 0.6132076, a: 1}
     - _BaseColor: {r: 0.32262355, g: 0.5767448, b: 0.8207547, a: 1}
-    - _Color: {r: 0.32262352, g: 0.5767448, b: 0.8207547, a: 1}
+    - _Color: {r: 0.46855342, g: 0.76315963, b: 1, a: 1}
+    - _DeepColor: {r: 0.42035198, g: 0.5043588, b: 0.821, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _SurfaceFoamColor: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 1}

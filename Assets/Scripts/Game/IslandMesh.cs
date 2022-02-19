@@ -69,7 +69,7 @@ namespace NoZ.Zisle
         /// <summary>
         /// Returns the mask that represents the available connections using cardinal directions 
         /// </summary>
-        public uint ConnectionMask { get; private set; }
+        public CardinalDirectionMask ConnectionMask { get; private set; }
 
         /// <summary>
         /// Number of connections this island has
@@ -163,17 +163,6 @@ namespace NoZ.Zisle
         public static Vector2Int LocalToCell (Vector3 local) =>
             new Vector2Int(Mathf.RoundToInt(local.x + GridCenter), Mathf.RoundToInt(GridCenter - local.z));
 
-        /// <summary>
-        /// Rotate a connection mask by 90 * <paramref name="count"/> degrees counter clockwise 
-        /// </summary>
-        /// <param name="mask">Mask to rotate</param>
-        /// <param name="count">Number of times to rotate</param>
-        /// <returns>New mask</returns>
-        public static uint RotateMask (uint mask, int count)
-        {
-            mask = mask << (count % 4);
-            return (mask & 0x0000000F) | ((mask & 0xFFFFFFF0) >> 4);
-        }
 
         public void OnBeforeSerialize()
         {
@@ -198,7 +187,7 @@ namespace NoZ.Zisle
         public struct IslandRotation
         {
             public IslandMesh Island;
-            public uint Mask;
+            public CardinalDirectionMask Mask;
             public CardinalDirection Rotation;
         }
 
@@ -209,7 +198,7 @@ namespace NoZ.Zisle
                 yield return new IslandRotation
                 {
                     Island = this,
-                    Mask = RotateMask(ConnectionMask, i),
+                    Mask = ConnectionMask.Rotate(i),
                     Rotation = (CardinalDirection)i
                 };
             }

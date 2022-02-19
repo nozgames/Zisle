@@ -65,7 +65,7 @@ namespace NoZ.Zisle
             /// <summary>
             /// Connection mask used to determine which islands can be placed in this cell
             /// </summary>
-            public uint ConnectionMask;
+            public CardinalDirectionMask ConnectionMask;
 
             /// <summary>
             /// Biome of the island that should be spawned in this cell

@@ -123,6 +123,8 @@ namespace NoZ.Zisle
             if (!IsOwner)
                 return;
 
+            GameManager.Instance.ListenAt(transform);
+
             if (!NavAgent.enabled && GameManager.Instance.Game.HasIslands)
                 NavAgent.enabled = true;
 

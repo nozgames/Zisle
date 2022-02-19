@@ -291,8 +291,17 @@ namespace NoZ.Zisle
                 builder.AddVertex(new Vector3(world.x - 0.5f, height, world.z - 0.5f), uv, Vector3.up);
                 builder.EndConvex();
 
+                height = TileToHeight[(int)IslandTile.Water];
+                uv = new Vector2(0, ColorEdge + colorOffset);
+                builder.BeginConvex();
+                builder.AddVertex(new Vector3(world.x - 0.5f, height, world.z - 0.5f), uv, Vector3.up);
+                builder.AddVertex(new Vector3(world.x + 0.5f, height, world.z - 0.5f), uv, Vector3.up);
+                builder.AddVertex(new Vector3(world.x + 0.5f, height, world.z + 0.5f), uv, Vector3.up);
+                builder.AddVertex(new Vector3(world.x - 0.5f, height, world.z + 0.5f), uv, Vector3.up);
+                builder.EndConvex();
+
                 // Add edges on all 4 sides
-                for(var dir=0; dir<4; dir++)
+                for (var dir=0; dir<4; dir++)
                     AddEdge(island, builder, cell, (CardinalDirection)dir, ColorEdge + colorOffset);
             }
 

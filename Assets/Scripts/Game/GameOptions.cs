@@ -13,7 +13,8 @@ namespace NoZ.Zisle
         [Header("General")]
         [SerializeField] private int _maxIslands = 4;
         [SerializeField] private int _startingLanes = 1;
-        
+        [SerializeField] private bool _spawnWaves = true;
+
         [Header("Path Weights")]
         [SerializeField] public float _pathWeight0 = 0.1f;
         [SerializeField] public float _pathWeight1 = 1.0f;
@@ -22,6 +23,8 @@ namespace NoZ.Zisle
 
 
         private NetworkVariable<int> _startingLanesSync = new NetworkVariable<int>(1);
+
+        public bool ShouldSpawnWaves => _spawnWaves;
 
         public int StartingLanes
         {

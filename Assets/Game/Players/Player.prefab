@@ -51,16 +51,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actorDefinition: {fileID: 0}
   _hitCollider: {fileID: 2916313137891568418}
+  _audioSource: {fileID: 0}
   _ghostMaterial: {fileID: 2100000, guid: 58569cdaf9efd4745a5edd42d3e95b81, type: 2}
+  _spawnVFXPrefab: {fileID: 0}
   _runPitchTransform: {fileID: 0}
   _runPitch: 20
   _height: 0.5
-  _idleAnimation: {fileID: 11400000, guid: f9cdcf35f4561b84082829acf74c2026, type: 2}
-  _runAnimation: {fileID: 11400000, guid: 749689bbabc06d54fa8d3db56eb84a7e, type: 2}
-  _deathAnimation: {fileID: 11400000, guid: 3632060de9552e3498aef82567fdb40d, type: 2}
   _rotationSpeed: 90
-  _moveYaw: 180
-  _actionSlop: 0.2
+  _buttonSlop: 0.4
 --- !u!114 &1328862059496653531
 MonoBehaviour:
   m_ObjectHideFlags: 0

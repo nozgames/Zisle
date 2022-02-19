@@ -61,8 +61,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97e5502a72c89ef4b8ba7a0379506e2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxIslands: 2
+  _maxIslands: 16
   _startingLanes: 1
+  _spawnWaves: 0
   _pathWeight0: 0.1
   _pathWeight1: 1
   _pathWeight2: 0.4

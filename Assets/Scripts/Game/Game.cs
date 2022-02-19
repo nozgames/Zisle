@@ -102,7 +102,8 @@ namespace NoZ.Zisle
                 Debug.Log("Islands Generated as Host");
                 HasIslands = true;
 
-                StartCoroutine(SpawnWaves());
+                if(GameManager.Instance.Options.ShouldSpawnWaves)
+                    StartCoroutine(SpawnWaves());
             }
             else
             {
@@ -229,6 +230,7 @@ namespace NoZ.Zisle
                 var island = Instantiate(_clientIslandPrefab, transform).GetComponent<Island>();
                 _islands[IslandGrid.CellToIndex(cell.Position)] = island;
                 island.Bind(biome.Islands[cell.IslandIndex], cell.Position, biome, cell.Rotation, cell.Position != IslandGrid.CenterCell ? CellToIsland(cell.To) : null);
+                island.gameObject.AddComponent<IslandMesh>().Position = cell.Position;
 
                 // Spawn client bridge for navmesh
                 if (cell.Position != IslandGrid.CenterCell && biome.Bridge != null)
@@ -271,7 +273,9 @@ namespace NoZ.Zisle
                     var bridgeRot = Quaternion.LookRotation((to - from).normalized, Vector3.up);
                     CellToIsland(cell.To).AddBridge(biome.Bridge, bridgePos, bridgeRot, CellToIsland(cell.Position));
                 }
-            }            
+            }
+
+            GameManager.Instance.GenerateWater(transform);
         }
 
         public void Play()

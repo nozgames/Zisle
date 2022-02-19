@@ -1,11 +1,20 @@
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using NoZ.Tweening;
+using System.Collections;
+using UnityEngine.VFX;
 
 namespace NoZ.Zisle
 {
     public class Island : MonoBehaviour
     {
+        [SerializeField] private CameraShakeDefinition _fallShake = null;
+        [SerializeField] private AudioSource _audioSource = null;
+        [SerializeField] private AudioShader _splashSound = null;
+        [SerializeField] private AudioShader _fallSound = null;
+        [SerializeField] private GameObject _splashFX = null;
+
         private struct BridgeDef
         {
             public Bridge Prefab;
@@ -68,6 +77,47 @@ namespace NoZ.Zisle
             _bridges.Add(new BridgeDef { Prefab = prefab, Position = position, Rotation = rotation, To = to });
         }
 
+        private float _fallVelocity = 0.0f;
+        private const float _fallGravity = -90.8f;
+
+        IEnumerator Fall ()
+        {
+            _fallVelocity = 0.0f;
+
+            _audioSource.PlayOneShot(_fallSound);
+
+            var shake = false;
+            while (Mathf.Abs(_fallVelocity) > 0.5f || Mathf.Abs(transform.position.y) > 0.01f)
+            {
+                _fallVelocity += _fallGravity * Time.deltaTime;
+                transform.position += (Vector3.up * _fallVelocity * Time.deltaTime);
+
+                if (transform.position.y < 0.0f)
+                {
+                    transform.position += (Vector3.up * -transform.position.y * 2);
+                    _fallVelocity = -_fallVelocity * 0.25f;
+
+                    if (!shake && _fallShake != null)
+                    {
+                        if (!shake && _splashSound != null)
+                            _audioSource.PlayOneShot(_splashSound);
+
+                        // TODO: only need to update this island.
+                        GameManager.Instance.GenerateWater(Game.Instance.transform);
+
+                        SpawnSplash();
+
+                        _fallShake.Shake(); //  Mathf.Abs(Mathf.Lerp(0.1f, 1.0f, _fallVelocity / 1.0f)));
+                        shake = true;
+                    }
+                }
+
+                yield return null;
+            }
+
+            transform.position = transform.position.ZeroY();
+        }
+
         public void RiseFromTheDeep()
         {
             gameObject.SetActive(true);
@@ -93,6 +143,21 @@ namespace NoZ.Zisle
                 }
             }
 
+            transform.position += Vector3.up * 20.0f;
+            StartCoroutine(Fall());
+
+            //var position = transform.position;
+            //transform.position = position + Vector3.up * 10.0f;
+            //transform.localScale = Vector3.zero;
+            //transform.TweenLocalScale(Vector3.one).Duration(0.5f).EaseOutBack(0.5f).Play();
+            //transform.TweenSequence()
+            //    .Element(transform.TweenPosition(position + Vector3.up * 2.0f).Duration(0.5f))
+            //    .Element(transform.TweenPosition(position).Duration(0.2f).EaseOutBounce())
+            //    .Play();
+
+//            if (transform.position != Vector3.zero)
+//                transform.TweenLocalRotation(Quaternion.Euler(0, 90.0f * (int)_rotation, 0)).Duration(1.0f).EaseInQuadratic().EaseOutElastic(1, 2).Play();
+
             GeneratePathMap();
         }
 
@@ -103,6 +168,11 @@ namespace NoZ.Zisle
                 var bridge = Instantiate(def.Prefab, def.Position, def.Rotation, Game.Instance.transform).GetComponent<Bridge>();
                 bridge.Bind(from: this, to: def.To);
                 bridge.GetComponent<NetworkObject>().Spawn();
+
+//                def.To.transform.localRotation *= Quaternion.Euler(180, 0, 0);
+//                def.To.gameObject.SetActive(true);
+//                def.To.transform.localScale = Vector3.zero;
+                //def.To.transform.TweenLocalScale(Vector3.one).Duration(1.0f).EaseInQuadratic().EaseOutElastic(1, 2).Play();
             }
         }
 
@@ -216,5 +286,38 @@ namespace NoZ.Zisle
         {
             Game.Instance.SetPathMap(TileGrid.WorldToCell(CellToWorld(from)), TileGrid.WorldToCell(CellToWorld(to)));
         }
+
+
+        private void SpawnSplash ()
+        {
+            for(int y = -1; y < IslandMesh.GridSize + 2; y++)
+                for (int x = -1; x < IslandMesh.GridSize + 2; x++)
+                {
+                    var cell = new Vector2Int(x, y);
+                    var tile = Mesh.GetTile(cell);
+                    if (tile != IslandTile.Water && tile != IslandTile.None)
+                        continue;
+
+                    var center = IslandMesh.CellToLocal(cell);
+
+                    for (int j=0; j<4; j++)
+                    {
+                        var offset = ((CardinalDirection)j).ToOffset();
+                        var neighbor = cell + offset;
+                        var neighborTile = Mesh.GetTile(neighbor);
+                        if (neighborTile == IslandTile.Water || neighborTile == IslandTile.None)
+                            continue;
+
+                        var n = new Vector3(offset.x, 0, -offset.y);
+                        var pos = center + n * 0.5f;
+                        var fx = Instantiate(_splashFX, Game.Instance.transform);
+                        fx.transform.position = transform.TransformPoint(pos);
+                        fx.transform.rotation = transform.rotation * Quaternion.LookRotation(n, Vector3.up);
+                        fx.GetComponent<VisualEffect>().Play();
+                    }
+                }
+        }
     }
 }
+
+

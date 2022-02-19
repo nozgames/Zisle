@@ -347,6 +347,7 @@ namespace NoZ.Zisle.UI
                     Quaternion.Euler(0, 90 * (int)cell.Rotation, 0), 
                     _backgroundIslands);
                 island.GetComponent<MeshFilter>().sharedMesh = islandPrefab.GetComponent<MeshFilter>().sharedMesh;
+                island.AddComponent<IslandMesh>().Position = cell.Position;
 
                 var meshRenderer = island.GetComponent<MeshRenderer>();
                 meshRenderer.sharedMaterials = new Material[] { biome.Material, meshRenderer.sharedMaterials[1] };
@@ -370,6 +371,8 @@ namespace NoZ.Zisle.UI
 
             GameManager.Instance.CameraOffset = new Vector3(6f, 0, 0);
             GameManager.Instance.FrameCamera(_backgroundIslands.position);
+
+            GameManager.Instance.GenerateWater(_backgroundIslands.transform);
         }
 
         private void ClearBackground()
