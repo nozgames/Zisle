@@ -13,7 +13,7 @@ namespace NoZ.Zisle
         [SerializeField] private AudioSource _audioSource = null;
         [SerializeField] private AudioShader _splashSound = null;
         [SerializeField] private AudioShader _fallSound = null;
-        [SerializeField] private GameObject _splashFX = null;
+        [SerializeField] private VisualEffectAsset _splashFX = null;
 
         private struct BridgeDef
         {
@@ -146,18 +146,6 @@ namespace NoZ.Zisle
             transform.position += Vector3.up * 20.0f;
             StartCoroutine(Fall());
 
-            //var position = transform.position;
-            //transform.position = position + Vector3.up * 10.0f;
-            //transform.localScale = Vector3.zero;
-            //transform.TweenLocalScale(Vector3.one).Duration(0.5f).EaseOutBack(0.5f).Play();
-            //transform.TweenSequence()
-            //    .Element(transform.TweenPosition(position + Vector3.up * 2.0f).Duration(0.5f))
-            //    .Element(transform.TweenPosition(position).Duration(0.2f).EaseOutBounce())
-            //    .Play();
-
-//            if (transform.position != Vector3.zero)
-//                transform.TweenLocalRotation(Quaternion.Euler(0, 90.0f * (int)_rotation, 0)).Duration(1.0f).EaseInQuadratic().EaseOutElastic(1, 2).Play();
-
             GeneratePathMap();
         }
 
@@ -168,11 +156,6 @@ namespace NoZ.Zisle
                 var bridge = Instantiate(def.Prefab, def.Position, def.Rotation, Game.Instance.transform).GetComponent<Bridge>();
                 bridge.Bind(from: this, to: def.To);
                 bridge.GetComponent<NetworkObject>().Spawn();
-
-//                def.To.transform.localRotation *= Quaternion.Euler(180, 0, 0);
-//                def.To.gameObject.SetActive(true);
-//                def.To.transform.localScale = Vector3.zero;
-                //def.To.transform.TweenLocalScale(Vector3.one).Duration(1.0f).EaseInQuadratic().EaseOutElastic(1, 2).Play();
             }
         }
 
@@ -274,9 +257,8 @@ namespace NoZ.Zisle
                     SetPathMap(node.Cell, node.Parent);
             }
 
-            var bridgeCellWorld = transform.position + nextIslandDir * (IslandMesh.GridCenter + 1);
+            // Add paths from the island to the bridge and from the bridge to the next island
             var bridgeCell = WorldToCell(transform.position + nextIslandDir * (IslandMesh.GridCenter + 1));
-            var nextIslandCellWorld = transform.position + nextIslandDir * (IslandMesh.GridCenter + 2);
             var nextIslandCell = WorldToCell(transform.position + nextIslandDir * (IslandMesh.GridCenter + 2));
             SetPathMap(cell, bridgeCell);
             SetPathMap(bridgeCell, nextIslandCell);
@@ -286,7 +268,6 @@ namespace NoZ.Zisle
         {
             Game.Instance.SetPathMap(TileGrid.WorldToCell(CellToWorld(from)), TileGrid.WorldToCell(CellToWorld(to)));
         }
-
 
         private void SpawnSplash ()
         {
@@ -310,10 +291,9 @@ namespace NoZ.Zisle
 
                         var n = new Vector3(offset.x, 0, -offset.y);
                         var pos = center + n * 0.5f;
-                        var fx = Instantiate(_splashFX, Game.Instance.transform);
-                        fx.transform.position = transform.TransformPoint(pos);
-                        fx.transform.rotation = transform.rotation * Quaternion.LookRotation(n, Vector3.up);
-                        fx.GetComponent<VisualEffect>().Play();
+
+                        // Play the effect
+                        VFXManager.Instance.Play(_splashFX, transform.TransformPoint(pos), transform.rotation * Quaternion.LookRotation(n, Vector3.up));
                     }
                 }
         }

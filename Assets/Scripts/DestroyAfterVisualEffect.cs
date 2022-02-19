@@ -8,22 +8,33 @@ namespace NoZ.Zisle
     {
         [SerializeField] private VisualEffect _visualEffect = null;
 
+        private void Awake()
+        {
+            if(null == _visualEffect)
+                _visualEffect = GetComponent<VisualEffect>();
+        }
+
         private void OnEnable()
         {
-            _visualEffect.Play();
-            _visualEffect.AdvanceOneFrame();
-
             StartCoroutine(AutoDestroy());
+        }
+
+        private void OnDisable()
+        {
+            StopAllCoroutines();
         }
 
         private IEnumerator AutoDestroy()
         {
-            yield return new WaitForSeconds(0.1f);
+            // Wait for it to start
+            while (!_visualEffect.HasAnySystemAwake())
+                yield return null;
 
+            // Wait for it to finishe
             while (_visualEffect.HasAnySystemAwake())
                 yield return null;
 
-            Destroy(gameObject);
+            VFXManager.Instance.Release(_visualEffect);
         }
     }
 }

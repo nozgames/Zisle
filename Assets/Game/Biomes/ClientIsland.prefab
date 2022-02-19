@@ -117,7 +117,7 @@ MonoBehaviour:
   _audioSource: {fileID: 8643146271111242272}
   _splashSound: {fileID: 11400000, guid: a6697945f7d5f5d429bddc0e1f719571, type: 2}
   _fallSound: {fileID: 11400000, guid: 38d68de53e6e8ff4387499185a04fb07, type: 2}
-  _splashFX: {fileID: 833992922567597031, guid: 7a991d6ae30134b429957aef9aa8ef54,
+  _splashFX: {fileID: 8926484042661614526, guid: 78f550be1242d414b90c6fd8ef058ef9,
     type: 3}
 --- !u!82 &8643146271111242272
 AudioSource:
