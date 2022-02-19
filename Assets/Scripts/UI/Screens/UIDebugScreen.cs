@@ -74,6 +74,7 @@ namespace NoZ.Zisle.UI
             var island = game.WorldToIsland(player.transform.position);
             var islandCell = IslandGrid.WorldToCell(player.transform.position);
 
+            this.Q<Label>("player-state").text = player.State.ToString();
             this.Q<Label>("player-tile").text = $"{tile} {tileCell}";
             this.Q<Label>("player-island").text = $"{IslandToString(island)} {islandCell}";
 

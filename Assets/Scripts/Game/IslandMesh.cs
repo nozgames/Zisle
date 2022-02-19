@@ -170,6 +170,9 @@ namespace NoZ.Zisle
 
         public void OnAfterDeserialize()
         {
+            if (_tiles == null)
+                return;
+
             var west = IsTile(new Vector2Int(GridMin, GridCenter), IslandTile.Path);
             var east = IsTile(new Vector2Int(GridMax, GridCenter), IslandTile.Path);
             var north = IsTile(new Vector2Int(GridCenter, GridMin), IslandTile.Path);

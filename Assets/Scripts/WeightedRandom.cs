@@ -27,7 +27,7 @@ namespace NoZ.Zisle
                 _weights.Add(weight);
                 totalWeight += weight;
 
-                if (--count == 0)
+                if (count > 0 && --count == 0)
                     break;
             }
 

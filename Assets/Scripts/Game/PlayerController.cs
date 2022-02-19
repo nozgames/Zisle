@@ -1,7 +1,6 @@
 using System.Linq;
 using NoZ.Events;
 using System;
-using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -17,8 +16,14 @@ namespace NoZ.Zisle
 
         private Player _player = null;
 
+        /// <summary>
+        /// True if the player is disconnecting
+        /// </summary>
         public bool IsDisconnecting { get; private set; }
 
+        /// <summary>
+        /// Player actor that was spawned for the player controller
+        /// </summary>
         public Player Player => _player;
 
         /// <summary>
@@ -100,14 +105,14 @@ namespace NoZ.Zisle
             }
         }
 
-        public void SpawnPlayer ()
+        public void SpawnPlayer (Vector3 position, Quaternion rotation, Transform parent)
         {
             if (!IsHost)
-                throw new System.InvalidOperationException("Only host can spawn the player");
+                throw new InvalidOperationException("Only host can spawn the player");
 
             var actorDef = NetworkScriptableObject.Get<ActorDefinition>(_playerClassId.Value);
             if (null == actorDef)
-                throw new System.InvalidOperationException($"No ActorDefinition found for player class id [{_playerClassId.Value}]");
+                throw new InvalidOperationException($"No ActorDefinition found for player class id [{_playerClassId.Value}]");
 
             // Make sure the class is unique
             var duplicateClass = GameManager.Instance.Players.Any(p => p.Player != null && p.PlayerClass == PlayerClass);
@@ -120,9 +125,9 @@ namespace NoZ.Zisle
                 _playerClassId.Value = actorDef.NetworkId;
             }
 
-            // TODO: orientation
-            _player = Instantiate(actorDef.Prefab, Game.Instance.transform).GetComponent<Player>();
-            _player.NetworkObject.SpawnWithOwnership(this.OwnerClientId);
+            // TODO: position and orientation (find a free spot on home island)
+            _player = (Player)actorDef.Spawn(position, rotation, parent, OwnerClientId);
+            _player.State = ActorState.Intro;
         }
 
         #region Server RPC

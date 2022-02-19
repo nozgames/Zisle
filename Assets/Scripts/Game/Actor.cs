@@ -49,6 +49,37 @@ namespace NoZ.Zisle
         Enemy = 1 << ActorType.Enemy
     }
 
+    /// <summary>
+    /// Current high level state of the actor
+    /// </summary>
+    public enum ActorState
+    {
+        /// <summary>
+        /// Actor has no current state
+        /// </summary>
+        None,
+
+        /// <summary>
+        /// Actor is spawning
+        /// </summary>
+        Spawn,
+
+        /// <summary>
+        /// Actor is playing an intro sequence
+        /// </summary>
+        Intro,
+
+        /// <summary>
+        /// Actor is active and thinking
+        /// </summary>
+        Active,
+
+        /// <summary>
+        /// Actor is dead
+        /// </summary>
+        Dead
+    }
+
     public static class ActorTypeMaskExtensions
     {
         private static readonly int _shift = LayerMask.NameToLayer("Player");
@@ -98,6 +129,7 @@ namespace NoZ.Zisle
         private float _busyTime;
         private Vector3 _lastPosition;
         private float _speed = 0.0f;
+        private ActorState _state = ActorState.None;
         
         public ActorDefinition Definition => _actorDefinition;
         public float Speed => _speed;
@@ -117,6 +149,20 @@ namespace NoZ.Zisle
         public ActorTypeMask TypeMask => (ActorTypeMask)(1 << (int)_actorDefinition.ActorType);
 
         public Vector3 Position => transform.position.ZeroY();
+
+        public ActorState State
+        {
+            get => _state;
+            set
+            {
+                if (_state == value)
+                    return;
+
+                var old = _state;
+                _state = value;
+                OnStateChanged(old, _state);
+            }
+        }
 
         /// <summary>
         /// True if the actor is in a busy state, preventing movement or controls
@@ -551,7 +597,7 @@ namespace NoZ.Zisle
 
         protected virtual void OnBusyChanged() { }
 
-        protected virtual void Update ()
+        protected virtual void Update()
         {
             if (!IsSpawned || Game.Instance == null)
                 return;
@@ -559,6 +605,9 @@ namespace NoZ.Zisle
             // Just to make sure actors never get stuck in the busy state
             if (IsBusy && (Time.time - _busyTime) > MaxBusyTime)
                 IsBusy = false;
+
+            if (State != ActorState.Active)
+                return;
 
             if (IsDead)
                 return;
@@ -620,5 +669,21 @@ namespace NoZ.Zisle
         public float DistanceToSqr (Vector3 position) => (transform.position - position).sqrMagnitude;
 
         public float DistanceToSqr (Actor actor) => (Position - actor.Position).sqrMagnitude;
+
+        protected virtual void OnStateChanged(ActorState oldState, ActorState newState)
+        {
+            switch(newState)
+            {
+                case ActorState.Intro:
+                    // TODO: check for intro animation
+                    State = ActorState.Active;
+                    break;
+
+                case ActorState.Active:
+                    if (NavAgent != null) NavAgent.enabled = true;
+                    if (NavObstacle != null) NavObstacle.enabled = true;
+                    break;
+            }
+        }
     }
 }

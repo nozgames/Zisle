@@ -58,6 +58,11 @@ namespace NoZ.Zisle
         public bool HasIslands { get; private set; }
 
         /// <summary>
+        /// Island that contains the base
+        /// </summary>
+        public Island HomeIsland { get; private set; }
+
+        /// <summary>
         /// True when the boss has spawned and has died
         /// </summary>
         public bool IsVictory { get; private set; }
@@ -230,6 +235,8 @@ namespace NoZ.Zisle
                 var island = Instantiate(_clientIslandPrefab, transform).GetComponent<Island>();
                 _islands[IslandGrid.CellToIndex(cell.Position)] = island;
                 island.Bind(biome.Islands[cell.IslandIndex], cell.Position, biome, cell.Rotation, cell.Position != IslandGrid.CenterCell ? CellToIsland(cell.To) : null);
+
+                // TODO: lets not do this just to generate the deep water, find a better way
                 island.gameObject.AddComponent<IslandMesh>().Position = cell.Position;
 
                 // Spawn client bridge for navmesh
@@ -243,6 +250,7 @@ namespace NoZ.Zisle
 
             GetComponent<NavMeshSurface>().BuildNavMesh();
 
+            // Hide all of the islands now that the navmesh has been built
             foreach(var island in _islands.Where(i => i != null))
                 island.gameObject.SetActive(false);
         }
@@ -280,19 +288,30 @@ namespace NoZ.Zisle
 
         public void Play()
         {
-            CellToIsland(IslandGrid.CenterCell).RiseFromTheDeep();
+            HomeIsland = CellToIsland(IslandGrid.CenterCell);
+            HomeIsland.Spawn();
 
-            if(IsHost)
+            // Focus on the home island until the player spawns
+            CameraManager.Instance.IsometricTarget = HomeIsland.transform.position;
+            CameraManager.Instance.StartCinematic(HomeIsland.transform.position, 20.0f);
+
+            // Spawn all of the players on host after the island spawns
+            IEnumerator SpawnPlayersAfterIslandSpawns ()
             {
-                // Spawn all of the players
-                if (NetworkManager.Singleton.IsHost)
-                {
-                    foreach (var player in GameManager.Instance.Players)
-                    {
-                        player.SpawnPlayer();
-                    }
-                }
+                while (HomeIsland.State == IslandState.Spawn)
+                    yield return null;
+
+                var position = HomeIsland.FindFreeTile();
+                var rotation = Quaternion.LookRotation((HomeIsland.FindClosestExitPosition(position) - position).ZeroY(), Vector3.up);
+
+                foreach (var player in GameManager.Instance.Players)
+                    player.SpawnPlayer(position, rotation, transform);
+
+                CameraManager.Instance.StopCinematic();
             }
+
+            if (IsHost)
+                StartCoroutine(SpawnPlayersAfterIslandSpawns());
         }
 
         public void BuildNavMesh()
@@ -311,7 +330,7 @@ namespace NoZ.Zisle
             for(int i=0; i<IslandGrid.IndexMax; i++)
             {
                 if(oldValue.IsVisible(i) != newValue.IsVisible(i))
-                    _islands[i].RiseFromTheDeep();
+                    _islands[i].Spawn();
             }
         }
 

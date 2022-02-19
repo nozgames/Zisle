@@ -121,10 +121,17 @@ namespace NoZ.Zisle
         /// <summary>
         /// Spawn an actor from this definition
         /// </summary>
-        public Actor Spawn (Vector3 position, Quaternion rotation)
+        public Actor Spawn (Vector3 position, Quaternion rotation, Transform parent = null, ulong ownerClientId = 0xFFFFFFFFFFFFFFFF)
         {
-            var actor = Instantiate(Prefab, position, rotation, Game.Instance.transform).GetComponent<Actor>();
-            actor.NetworkObject.Spawn();
+            var actor = Instantiate(Prefab, parent == null ? Game.Instance.transform : parent).GetComponent<Actor>();
+            actor.transform.position = position.ZeroY() + Vector3.up * parent.position.y;
+            actor.transform.rotation = rotation;
+            actor.State = ActorState.Spawn;
+
+            if (ownerClientId == 0xFFFFFFFFFFFFFFFF)
+                actor.NetworkObject.Spawn();
+            else
+                actor.NetworkObject.SpawnWithOwnership(ownerClientId);
             return actor;
         }
 

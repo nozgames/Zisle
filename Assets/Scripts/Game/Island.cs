@@ -1,12 +1,23 @@
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using NoZ.Tweening;
 using System.Collections;
 using UnityEngine.VFX;
+using System.Linq;
 
 namespace NoZ.Zisle
 {
+    public enum IslandState
+    {
+        None,
+
+        Hidden,
+
+        Spawn,
+
+        Active
+    }
+
     public class Island : MonoBehaviour
     {
         [SerializeField] private CameraShakeDefinition _fallShake = null;
@@ -28,6 +39,9 @@ namespace NoZ.Zisle
         private Biome _biome;
         private Vector2Int _cell;
         private CardinalDirection _rotation;
+        private IslandState _state = IslandState.None;
+
+        public IslandState State => _state;
 
         /// <summary>
         /// Position within the world grid
@@ -80,8 +94,13 @@ namespace NoZ.Zisle
         private float _fallVelocity = 0.0f;
         private const float _fallGravity = -90.8f;
 
-        IEnumerator Fall ()
+        IEnumerator Fall (List<Actor> spawnedActors)
         {
+            CameraManager.Instance.StartCinematic(transform.position, 20.0f);
+
+            yield return new WaitForSeconds(0.5f);
+
+            _state = IslandState.Spawn;
             _fallVelocity = 0.0f;
 
             _audioSource.PlayOneShot(_fallSound);
@@ -116,15 +135,33 @@ namespace NoZ.Zisle
             }
 
             transform.position = transform.position.ZeroY();
+
+            // Now that the island has spawned in move all actors spawned by the island to the intro state
+            foreach (var actor in spawnedActors)
+                actor.State = ActorState.Intro;
+
+            _state = IslandState.Active;
+
+            CameraManager.Instance.StopCinematic();
         }
 
-        public void RiseFromTheDeep()
+        /// <summary>
+        /// Spawn the island.  Technically the island is already spawned but this will cause it to 
+        /// fall from the sky and be traversable.
+        /// </summary>
+        public void Spawn()
         {
+            if (_state != IslandState.Hidden)
+                return;
+
+            _state = IslandState.Spawn;
+
             gameObject.SetActive(true);
 
             SpawnBridges();
 
             // Spawn child objects
+            var spawnedActors = new List<Actor>();
             for (int i = Mesh.transform.childCount - 1; i >= 0; i--)
             {
                 var child = Mesh.transform.GetChild(i);
@@ -132,7 +169,7 @@ namespace NoZ.Zisle
                 if(actor != null)
                 {
                     if(NetworkManager.Singleton.IsHost)
-                        actor.Definition.Spawn(transform.TransformPoint(child.localPosition), transform.rotation * child.localRotation);
+                        spawnedActors.Add(actor.Definition.Spawn(transform.TransformPoint(child.localPosition), transform.rotation * child.localRotation, transform));
                 }
                 else
                 {
@@ -144,7 +181,7 @@ namespace NoZ.Zisle
             }
 
             transform.position += Vector3.up * 20.0f;
-            StartCoroutine(Fall());
+            StartCoroutine(Fall(spawnedActors));
 
             GeneratePathMap();
         }
@@ -157,6 +194,11 @@ namespace NoZ.Zisle
                 bridge.Bind(from: this, to: def.To);
                 bridge.GetComponent<NetworkObject>().Spawn();
             }
+        }
+
+        private void OnDisable()
+        {
+            _state = IslandState.Hidden;
         }
 
         /// <summary>
@@ -296,6 +338,51 @@ namespace NoZ.Zisle
                         VFXManager.Instance.Play(_splashFX, transform.TransformPoint(pos), transform.rotation * Quaternion.LookRotation(n, Vector3.up));
                     }
                 }
+        }
+
+        private static Collider[] _results = new Collider[1];
+
+        private IEnumerable<Vector2Int> FindFreeTiles (IslandTile filter)
+        {
+            for (int i = 0; i < IslandMesh.GridIndexMax; i++)
+            {
+                var tile = Mesh.GetTile(i);
+                if (tile == IslandTile.None)
+                    continue;
+                if (filter != IslandTile.None && filter != tile)
+                    continue;
+
+                var cell = IslandMesh.IndexToCell(i);
+
+                if (0 != Physics.OverlapBoxNonAlloc(CellToWorld(cell) + Vector3.up * 0.5f, new Vector3(0.5f, 0.4f, 0.5f), _results))
+                    continue;
+
+                yield return cell;
+            }
+        }
+
+        public Vector3 FindFreeTile (IslandTile filter = IslandTile.None)
+        {
+            var cells = FindFreeTiles(filter).ToArray();
+            var cell = cells[ WeightedRandom.RandomWeightedIndex(FindFreeTiles(filter), 0, -1, (cell) => 1.0f - Mathf.Clamp(IslandMesh.CellToLocal(cell).magnitude / IslandMesh.GridCenter, 0.1f, 1.0f))];
+            return CellToWorld(cell);
+        }
+
+        public Vector3 FindClosestExitPosition (Vector3 position)
+        {
+            var bestDist = float.MaxValue;
+            var bestPosition = Vector3.zero;
+            foreach(var bridge in _bridges)
+            {
+                var dist = (bridge.Position - position).sqrMagnitude;
+                if(dist < bestDist)
+                {
+                    bestDist = dist;
+                    bestPosition = bridge.Position;
+                }
+            }
+
+            return bestPosition;
         }
     }
 }

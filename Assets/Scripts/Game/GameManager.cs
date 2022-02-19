@@ -25,16 +25,6 @@ namespace NoZ.Zisle
         [SerializeField] private WaterMesh _waterMesh;
         [SerializeField] private AudioListener _audioListener = null;
 
-        [Header("Camera")]
-        [SerializeField] private Camera _camera = null;
-        [SerializeField] private Transform _cameraTransform = null;
-        [SerializeField] private CameraShake _cameraShake = null;
-        [SerializeField] private float _cameraYaw = 45.0f;
-        [SerializeField] private float _cameraPitch = 45.0f;
-        [SerializeField] private float _cameraZoom = 10.0f;
-        [SerializeField] private float _cameraZoomMin = 10.0f;
-        [SerializeField] private float _cameraZoomMax = 40.0f;
-
         [Space]
         [SerializeField] private Biome[] _biomes = null;
 
@@ -42,8 +32,6 @@ namespace NoZ.Zisle
         [SerializeField] private ActorDefinition[] _actorDefinitions = null;
 
         private UnityTransport _transport;
-        private Vector3 _cameraTarget;
-        private Vector3 _cameraOffset;
         private List<PlayerController> _players = new List<PlayerController>();
         private GameOptions _options = null;
         private string _connection;
@@ -76,11 +64,6 @@ namespace NoZ.Zisle
         public GlobalShaderProperties GlobalShaderProperties => _globalShaderProperties;
 
         /// <summary>
-        /// Get the game camera
-        /// </summary>
-        public Camera Camera => _camera;
-
-        /// <summary>
         /// Maximum number of players allowed on the server
         /// </summary>
         public int MaxPlayers { get; set; }
@@ -89,11 +72,6 @@ namespace NoZ.Zisle
         /// True if max playes is set to 1
         /// </summary>
         public bool IsSolo => MaxPlayers == 1;
-
-        /// <summary>
-        /// Yaw value of camera rotation
-        /// </summary>
-        public float CameraYaw => _cameraYaw;
 
         /// <summary>
         /// Get the current options object.  Will be null until joining a lobby
@@ -114,36 +92,6 @@ namespace NoZ.Zisle
         /// Return the available biomes
         /// </summary>
         public IEnumerable<Biome> Biomes => _biomes;
-
-        public Vector2 CameraOffset
-        {
-            get => _cameraOffset;
-            set
-            {
-                _cameraOffset = value;
-                FrameCamera(_cameraTarget);
-            }
-        }
-
-        /// <summary>
-        /// Current camera zoom
-        /// </summary>
-        public float CameraZoom
-        {
-            get => _cameraZoom;
-            set
-            {
-                _cameraZoom = Mathf.Clamp(value, _cameraZoomMin, _cameraZoomMax);
-                FrameCamera(_cameraTarget);
-            }
-        }
-
-        /// <summary>
-        /// Returns the camera zoom as a ratio of 0-1 where 0 is maximum zoom and 1 is minimum zoom
-        /// </summary>
-        public float CameraZoomRatio => (_cameraZoom - _cameraZoomMin) / (_cameraZoomMax - _cameraZoomMin);
-
-        public float CameraDistance { get; private set; }
 
         /// <summary>
         /// Return the actor definitions
@@ -518,21 +466,12 @@ namespace NoZ.Zisle
             InputManager.Instance.EnablePlayerActions(false);
         }
 
-        public void FrameCamera (Vector3 target)
-        {
-            _cameraTarget = target.ZeroY();
-            _cameraTarget += Quaternion.Euler(0, _cameraYaw, 0) * _cameraOffset;
-            _cameraTransform.position = _cameraTarget + Quaternion.Euler(_cameraPitch, _cameraYaw, 0) * new Vector3(0, 0, 1) * _cameraZoom;
-            _cameraTransform.LookAt(_cameraTarget, Vector3.up);
-            CameraDistance = (_cameraTransform.transform.position - _cameraTarget).magnitude;
-        }
-
         public void GenerateWater (Transform islandTransform)
         {
             _waterMesh.Generate(islandTransform);
         }
 
-        public void ShakeCamera(float intensity, float duration) => _cameraShake.Shake(intensity, duration);
+        public void ShakeCamera(float intensity, float duration) { }// => _cameraShake.Shake(intensity, duration);
 
         public void ListenAt (Transform transform)
         {

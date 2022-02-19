@@ -65,7 +65,7 @@ namespace NoZ.Zisle
             _clickMovePosition = InputManager.Instance.PlayerLook;
         }
 
-        private void OnPlayerZoom (float f) => GameManager.Instance.CameraZoom -= 3.0f * f;
+        private void OnPlayerZoom (float f) => CameraManager.Instance.IsometricZoom -= 3.0f * f;
         
         private void OnPlayerAction (bool gamepad)
         {
@@ -120,13 +120,10 @@ namespace NoZ.Zisle
         {
             base.Update();
 
-            if (!IsOwner)
+            if (!IsOwner || State != ActorState.Active)
                 return;
 
             GameManager.Instance.ListenAt(transform);
-
-            if (!NavAgent.enabled && GameManager.Instance.Game.HasIslands)
-                NavAgent.enabled = true;
 
             var moveSpeed = 1.0f;
             if (!NavAgent.isOnNavMesh)
@@ -157,7 +154,7 @@ namespace NoZ.Zisle
             //transform.position = new Vector3(transform.position.x, y, transform.position.z);
             SnapToGround();
 
-            GameManager.Instance.FrameCamera(transform.position);
+            CameraManager.Instance.IsometricTarget = transform.position;
         }
 
         private void MoveTo (Vector3 offset)

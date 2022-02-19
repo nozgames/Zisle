@@ -191,7 +191,7 @@ namespace NoZ.Zisle
                 var gamepadMove = _playerMove.action.ReadValue<Vector2>();
                 var move = gamepadMove.sqrMagnitude > keyboardMove.sqrMagnitude ? gamepadMove : keyboardMove;
 
-                return Quaternion.Euler(0.0f, GameManager.Instance.CameraYaw + _playerYaw, 0.0f) * move.ToVector3XZ();
+                return Quaternion.Euler(0.0f, CameraManager.Instance.IsometricYaw + _playerYaw, 0.0f) * move.ToVector3XZ();
             }
         }
 

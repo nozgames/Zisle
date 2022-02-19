@@ -228,8 +228,6 @@ namespace NoZ.Zisle.UI
 
                 ClearBackground();
 
-                GameManager.Instance.CameraOffset = Vector3.zero;
-
                 yield return GameManager.Instance.StartGameAsync();
 
                 while (Time.time - startTime < MinLoadingTime)
@@ -369,8 +367,7 @@ namespace NoZ.Zisle.UI
 
             _background.gameObject.SetActive(true);
 
-            GameManager.Instance.CameraOffset = new Vector3(6f, 0, 0);
-            GameManager.Instance.FrameCamera(_backgroundIslands.position);
+            CameraManager.Instance.IsometricTarget = new Vector3(-6f, 0, 0);
 
             GameManager.Instance.GenerateWater(_backgroundIslands.transform);
         }

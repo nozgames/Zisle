@@ -59,12 +59,12 @@ namespace NoZ.Zisle.UI
         public static void UpdateElements ()
         {
             // Cache the FOV correction for scale
-            var camera = GameManager.Instance.Camera;
+            var camera = CameraManager.Instance.Camera;
             var fov = 1.0f / (2.0f * Mathf.Tan(camera.fieldOfView / 2.0f * Mathf.Deg2Rad));
             var pixelsToScale = 1.0f / 10000.0f;
 
             // Calculate the fov corrected scale using the camera distance
-            var scale = 1.0f / ((GameManager.Instance.CameraDistance * fov * camera.pixelHeight) * pixelsToScale);
+            var scale = 1.0f / ((CameraManager.Instance.IsometricDistance * fov * camera.pixelHeight) * pixelsToScale);
             var styleScale = new StyleScale(new Scale(Vector3.one * scale));
 
             // Update all world elements

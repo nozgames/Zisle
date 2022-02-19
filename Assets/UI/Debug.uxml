@@ -21,6 +21,10 @@
             </VisualElement>
             <Label text="Player" class="row-header"/>
             <VisualElement class="row">
+                <Label text="State" class="row-name"/>
+                <Label name="player-state" text="" class="row-value"/>
+            </VisualElement>
+            <VisualElement class="row">
                 <Label text="Island" class="row-name"/>
                 <Label name="player-island" text="0,0" class="row-value"/>
             </VisualElement>
