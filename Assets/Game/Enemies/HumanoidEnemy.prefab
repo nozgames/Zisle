@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 1245122302073704610}
   - component: {fileID: 5429814614147593989}
   - component: {fileID: 3857350800885879390}
-  - component: {fileID: 3330815303110672048}
   - component: {fileID: 4178392576394687884}
   m_Layer: 0
   m_Name: HumanoidEnemy
@@ -55,7 +54,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actorDefinition: {fileID: 0}
   _hitCollider: {fileID: 5285709882748307645}
-  _audioSource: {fileID: 3330815303110672048}
   _ghostMaterial: {fileID: 2100000, guid: 58569cdaf9efd4745a5edd42d3e95b81, type: 2}
   _spawnVFXPrefab: {fileID: 3214235347064349228, guid: b4a28c8597f55e5408e3eb3f6292381f,
     type: 3}
@@ -74,13 +72,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09da4e928d62cc84493e2e035bab6cce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _duration: 0.15
   _renderers: []
-  _color: {r: 1, g: 1, b: 1, a: 1}
   _scaleTransform: {fileID: 5907281522901925113}
   _scale: {x: 0.8, y: 1.2, z: 0.8}
   _rotateTransform: {fileID: 5907281522901925113}
   _rotate: {x: -20, y: 0, z: 0}
+  _sound: []
 --- !u!114 &435549470166300269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,139 +156,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 1
   m_ObstacleAvoidanceType: 2
---- !u!82 &3330815303110672048
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1261973430235558940}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 2984182745452386601, guid: 4440a39ab7caa4b468d92a1321c44a0d,
-    type: 2}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 2
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0.041666668
-      value: 1
-      inSlope: -24.009596
-      outSlope: -24.009596
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.083333336
-      value: 0.5
-      inSlope: -6.002399
-      outSlope: -6.002399
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.16666667
-      value: 0.25
-      inSlope: -1.5005997
-      outSlope: -1.5005997
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.33333334
-      value: 0.125
-      inSlope: -0.37514994
-      outSlope: -0.37514994
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.6691691
-      value: 0.033081055
-      inSlope: -0.093787484
-      outSlope: -0.093787484
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: -0.041683298
-      outSlope: -0.041683298
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &4178392576394687884
 MonoBehaviour:
   m_ObjectHideFlags: 0

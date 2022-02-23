@@ -8,7 +8,6 @@ namespace NoZ.Zisle
     {
         [Header("Color")]
         [SerializeField] private Renderer[] _renderers = null;
-        [SerializeField] private Color _color = Color.white;
 
         [Header("Scale")]
         [SerializeField] private Transform _scaleTransform = null;
@@ -17,6 +16,9 @@ namespace NoZ.Zisle
         [Header("Rotate")]
         [SerializeField] private Transform _rotateTransform = null;
         [SerializeField] private Vector3 _rotate = Vector3.zero;
+
+        [Header("Sound")]
+        [SerializeField] private AudioShader[] _sound = null;
 
         private Tween _tween;
 
@@ -29,8 +31,7 @@ namespace NoZ.Zisle
             {
                 foreach (var renderer in _renderers)
                 {
-                    //renderer.material.SetColor(ShaderPropertyID.HitColor, Color.clear);
-                    _tween.Element(renderer.material.TweenColor(ShaderPropertyID.HitColor, color).Duration(duration).EaseOutCubic().PingPong());
+                    //_tween.Element(renderer.material.TweenColor(ShaderPropertyID.HitColor, color).Duration(duration).EaseOutCubic().PingPong());
                 }
             }
 

@@ -21,7 +21,6 @@ namespace NoZ.Zisle
     public class Island : MonoBehaviour
     {
         [SerializeField] private CameraShakeDefinition _fallShake = null;
-        [SerializeField] private AudioSource _audioSource = null;
         [SerializeField] private AudioShader _splashSound = null;
         [SerializeField] private AudioShader _fallSound = null;
         [SerializeField] private VisualEffectAsset _splashFX = null;
@@ -103,7 +102,7 @@ namespace NoZ.Zisle
             _state = IslandState.Spawn;
             _fallVelocity = 0.0f;
 
-            _audioSource.PlayOneShot(_fallSound);
+            AudioManager.Instance.PlaySound(_fallSound, gameObject);
 
             var shake = false;
             while (Mathf.Abs(_fallVelocity) > 0.5f || Mathf.Abs(transform.position.y) > 0.01f)
@@ -119,7 +118,7 @@ namespace NoZ.Zisle
                     if (!shake && _fallShake != null)
                     {
                         if (!shake && _splashSound != null)
-                            _audioSource.PlayOneShot(_splashSound);
+                            AudioManager.Instance.PlaySound(_splashSound, gameObject);
 
                         // TODO: only need to update this island.
                         GameManager.Instance.GenerateWater(Game.Instance.transform);

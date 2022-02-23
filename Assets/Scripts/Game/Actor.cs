@@ -109,7 +109,6 @@ namespace NoZ.Zisle
         [Header("General")]
         [SerializeField] private ActorDefinition _actorDefinition = null;
         [SerializeField] private Collider _hitCollider = null;
-        [SerializeField] private AudioSource _audioSource = null;
 
         [Header("Visuals")]
         [SerializeField] protected Material _ghostMaterial = null;
@@ -328,7 +327,7 @@ namespace NoZ.Zisle
             if(sourceId == NetworkManager.LocalClientId)
                 UIManager.Instance.AddFloatingText(((int)Mathf.Ceil(damage)).ToString(), null, transform.position + Vector3.up * (_height * 2.0f));
 
-            _actorDefinition.PlayHitSound(_audioSource);
+            _actorDefinition.PlayHitSound(this);
         }
 
         public virtual void Die (Actor source)
@@ -366,7 +365,7 @@ namespace NoZ.Zisle
         {
             _health = 0.0f;
 
-            _actorDefinition.PlayDeathSound(_audioSource);
+            _actorDefinition.PlayDeathSound(this);
 
             var deathAnimation = _actorDefinition.DeathAnimation;
             if (deathAnimation != null)

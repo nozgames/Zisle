@@ -1,4 +1,6 @@
 using NoZ.Tweening;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -18,6 +20,11 @@ namespace NoZ.Zisle
         [SerializeField] private AudioSource _victorySound = null;
         [SerializeField] private AudioSource _defeatSound = null;
 
+        [Header("3D Sounds")]
+        [SerializeField] private AudioSource _spatialPrefab = null;
+        [SerializeField] private Transform _spatialPoolTransform = null;
+        [SerializeField] private int _maxSpatialPoolSize = 32;
+
         [Header("Music")]
         [SerializeField] private float _musicCrossFadeDuration = 1.0f;
         [SerializeField] private AudioSource _idleMusic = null;
@@ -26,6 +33,8 @@ namespace NoZ.Zisle
 
         private AudioSource _currentMusic = null;
         private float _musicDuckVolume = 1.0f;
+        private UnityEngine.Pool.LinkedPool<AudioSource> _spatialPool;
+        private List<AudioSource> _activeAudioSources;
 
         public float MusicDuckVolume
         {
@@ -51,6 +60,31 @@ namespace NoZ.Zisle
             Options.OnSoundVolumeChange += (v) => _mixer.SetFloat("SoundVolume", LinearToDB(v));
 
             PlayIdleMusic();
+
+            _activeAudioSources = new List<AudioSource>();
+            _spatialPool = new UnityEngine.Pool.LinkedPool<AudioSource>(
+                createFunc: SpatialPoolCreate,
+                actionOnGet: SpatialPoolGet,
+                actionOnRelease: SpatialPoolRelease,
+                actionOnDestroy: SpatialPoolDestroy,
+                maxSize: _maxSpatialPoolSize
+                );
+        }
+
+        private void SpatialPoolDestroy(AudioSource source) => Destroy(source.gameObject);
+        private void SpatialPoolGet(AudioSource source) { }
+        private void SpatialPoolRelease(AudioSource source)
+        {
+            source.clip = null;
+            source.transform.SetParent(_spatialPoolTransform);
+        }
+
+        private AudioSource SpatialPoolCreate()
+        {
+            var source = Instantiate(_spatialPrefab, _spatialPoolTransform).GetComponent<AudioSource>();
+            source.transform.SetParent(transform);
+            source.name = "SpatialAudioSource";
+            return source;
         }
 
         private float LinearToDB(float v)
@@ -112,5 +146,40 @@ namespace NoZ.Zisle
         public void PlayBattleMusic() => SetMusic(_battleMusic);
         public void PlayBossMusic() => SetMusic(_bossMusic);
         public void PlayIdleMusic() => SetMusic(_idleMusic);
+
+        /// <summary>
+        /// Play a sound relative to the given game object
+        /// </summary>
+        public AudioSource PlaySound (AudioShader shader, GameObject gameObject)
+        {
+            if (shader == null)
+                return null;
+
+            if (!gameObject.activeInHierarchy)
+                return null;
+
+            var source = _spatialPool.Get();
+            source.transform.SetParent(gameObject.transform,false);
+            source.transform.localPosition = Vector3.zero;
+            source.transform.localRotation = Quaternion.identity;
+            source.enabled = true;
+            source.PlayOneShot(shader);
+            _activeAudioSources.Add(source);
+            return source;
+        }
+
+        private void LateUpdate()
+        {
+            // Check for any audio sources that have finished playing and return them to the pool
+            for(int i= _activeAudioSources.Count-1; i>=0; i--)
+            {
+                if(!_activeAudioSources[i].isPlaying)
+                {
+                    var source = _activeAudioSources[i];
+                    _activeAudioSources.RemoveAt(i);
+                    _spatialPool.Release(source);
+                }
+            }
+        }
     }
 }

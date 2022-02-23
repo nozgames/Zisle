@@ -12,5 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ac1701c6e243924eb1ed29293d00c51, type: 3}
   m_Name: KnightSwordAttackHitSound
   m_EditorClassIdentifier: 
-  _clips:
-  - {fileID: 8300000, guid: daddf6b8707e9ba429bd858a85fd4f34, type: 3}
+  _shader: {fileID: 11400000, guid: 2a6b2a48cc18c724492380de8c1e3bbf, type: 2}

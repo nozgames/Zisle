@@ -135,13 +135,7 @@ namespace NoZ.Zisle
             return actor;
         }
 
-        private void PlaySound (AudioSource source, AudioShader sound)
-        {
-            if (source != null)
-                source.PlayOneShot(sound);
-        }
-
-        public void PlayDeathSound(AudioSource source) => PlaySound(source, _deathSound);
-        public void PlayHitSound(AudioSource source) => PlaySound(source, _hitSound);
+        public void PlayDeathSound(Actor actor) => AudioManager.Instance.PlaySound(_deathSound, actor.gameObject);
+        public void PlayHitSound(Actor actor) => AudioManager.Instance.PlaySound(_hitSound, actor.gameObject);
     }
 }

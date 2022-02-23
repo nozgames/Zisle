@@ -16,5 +16,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: b9215190147b8924d93671f4780dc8a1, type: 3}
   volume: 1
   pitch: 1
+  _spatialRange: 20
   channel: {fileID: 0}
   hapticFeedback: 0
