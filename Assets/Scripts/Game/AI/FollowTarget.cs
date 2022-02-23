@@ -23,6 +23,9 @@ namespace NoZ.Zisle
 
         public override float CalculateScore(Actor actor, IThinkState istate)
         {
+            if (actor.State != ActorState.Active)
+                return 0.0f;
+
             var follow = Game.Instance.FindClosestActor(actor.transform.position, _followRange, _followType);
             if (null == follow)
                 return 0.0f;

@@ -132,6 +132,8 @@ Material:
     - _DstBlend: 0
     - _EnvironmentReflections: 0
     - _GLOW: 0
+    - _GhostBlend: 0
+    - _GhostRimStrength: -1.2
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
@@ -156,5 +158,7 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _GhostColor: {r: 0, g: 0.6516599, b: 1.5114093, a: 0.4745098}
+    - _GhostRimColor: {r: 4, g: 0, b: 3.2627451, a: 0.75686276}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []

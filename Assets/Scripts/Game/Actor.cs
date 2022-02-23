@@ -117,6 +117,7 @@ namespace NoZ.Zisle
         private float _lastAbilityUsedEndTime;
         private ActorAbility _lastAbilityUsed;
         private AnimationShader _currentAnimation;
+        private AnimationShader _oneShotAnimation;
         private LinkedListNode<Actor> _node;
         private WorldVisualElement<HealthCircle> _healthCircle;
 
@@ -181,6 +182,9 @@ namespace NoZ.Zisle
                     _busyTime = Time.time;
 
                 OnBusyChanged();
+
+                if (_busy == false && State == ActorState.Dead && IsHost)
+                    Despawn();
             }
         }
 
@@ -250,16 +254,22 @@ namespace NoZ.Zisle
             if (shader == null || shader == _currentAnimation)
                 return;
 
+            // If a one shot animation is already being played, stop it first
+            if(_oneShotAnimation != null)
+                _animator.StopAll(0.0f);
+
             IsBusy = true;
 
+            _oneShotAnimation = shader;
             _currentAnimation = shader;
             _animator.Play(shader, onComplete: OnOneShotAnimationComplete);
         }
 
         private void OnOneShotAnimationComplete ()
         {
-            _lastAbilityUsedEndTime = Time.time;
+            _oneShotAnimation = null;
             _currentAnimation = null;
+            _lastAbilityUsedEndTime = Time.time;
             IsBusy = false;
             UpdateAnimation();
         }
@@ -317,13 +327,24 @@ namespace NoZ.Zisle
 
         public virtual void Die (Actor source)
         {
+            // Move to the dead state and run one more brain think 
+            // to allow any death abilities to fire
+            State = ActorState.Dead;
+
             RemoveHealthCircle();
 
             CanHit = false;
             if(NavAgent != null)
                 NavAgent.enabled = false;
             GameEvent.Raise(this, new ActorDiedEvent { });
-            DieClientRpc();
+
+            if (_actorDefinition.Brain != null)
+                _actorDefinition.Brain.Think(this, _thinkState);
+
+            if (!IsBusy && IsHost)
+                Despawn();
+
+//            DieClientRpc();
         }
 
         private void Despawn()

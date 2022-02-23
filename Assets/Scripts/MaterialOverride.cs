@@ -1,29 +1,54 @@
+using System.Linq;
 using UnityEngine;
 
 namespace NoZ.Zisle
 {
     public class MaterialOverride : MonoBehaviour
     {
-        private Renderer _renderer;
-        private Material _restore;
-        private Material _override;
-
-        private void Awake()
+        private struct CachedRenderer
         {
-            _renderer = GetComponent<Renderer>();
-            _restore = _renderer.sharedMaterial;
+            public Renderer Renderer;
+            public Material[] Materials;
+            public Material[] Overrides;
         }
 
-        public Material Override
+        private CachedRenderer[] _renderers;
+
+        public void Clear ()
         {
-            get => _override;
-            set
+            if (_renderers != null)
+                return;
+
+            for (int i = 0; i < _renderers.Length; i++)
             {
-                _override = value;
-                if(_override != null)
-                    _renderer.sharedMaterial = _override;
-                else
-                    _renderer.sharedMaterial = _restore;
+                var renderer = _renderers[i];
+                renderer.Renderer.sharedMaterials = renderer.Materials;
+            }
+        }
+
+        public void Override (Material original, Material replace, MaterialPropertyBlock properties = null)
+        {
+            if(null == _renderers)
+            {
+                _renderers = GetComponentsInChildren<Renderer>().Select(r => new CachedRenderer
+                {
+                    Renderer = r,
+                    Materials = r.sharedMaterials,
+                    Overrides = r.sharedMaterials.ToArray()
+                }).ToArray();
+            }
+
+            for(int rendererIndex = 0; rendererIndex < _renderers.Length; rendererIndex++)
+            {
+                var renderer = _renderers[rendererIndex];
+                for (int materialIndex = 0; materialIndex < renderer.Materials.Length; materialIndex++)
+                    if (original == null || renderer.Materials[materialIndex] == original)
+                    {
+                        renderer.Overrides[materialIndex] = replace;
+                        renderer.Renderer.SetPropertyBlock(properties, materialIndex);
+                    }
+
+                renderer.Renderer.sharedMaterials = renderer.Overrides;
             }
         }
     }

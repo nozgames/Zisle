@@ -22,7 +22,8 @@ namespace NoZ.Zisle
             public void OnRelease() { }
         }
 
-        public override float CalculateScore(Actor actor, IThinkState state) => 1.0f;
+        public override float CalculateScore(Actor actor, IThinkState state) =>
+            actor.State == ActorState.Active ? 1.0f : 0.0f;
 
         public override void Think (Actor actor, IThinkState istate)
         {

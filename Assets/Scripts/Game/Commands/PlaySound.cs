@@ -6,27 +6,23 @@ namespace NoZ.Zisle.Commands
     [CreateAssetMenu(menuName = "Zisle/Commands/Play Sound")]
     public class PlaySound : ActorCommand, IExecuteOnClient
     {
-        [SerializeField] private AudioClip[] _clips = null;
-
-        private int _next = 0;
+        [SerializeField] private AudioShader _shader = null;
 
         public void ExecuteOnClient(Actor source, Actor target)
         {
-            if (_clips == null || _clips.Length == 0)
+            if (_shader == null)
                 return;
 
-            target.StartCoroutine(PlaySoundCoroutine(target, _clips[_next]));
-
-            _next = (_next + 1) % _clips.Length;
+            target.StartCoroutine(PlaySoundCoroutine(target, _shader));
         }
 
-        static IEnumerator PlaySoundCoroutine(Actor target, AudioClip clip)
+        // TODO: reuse
+        static IEnumerator PlaySoundCoroutine(Actor target, AudioShader shader)
         {
             var audioSource = target.gameObject.AddComponent<AudioSource>();
             audioSource.spatialBlend = 1.0f;
-            audioSource.clip = clip;
             audioSource.outputAudioMixerGroup = AudioManager.Instance.SoundMixerGroup;
-            audioSource.Play();
+            audioSource.PlayOneShot(shader);
 
             while (audioSource.isPlaying)
                 yield return null;

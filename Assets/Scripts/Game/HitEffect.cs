@@ -32,7 +32,7 @@ namespace NoZ.Zisle
             {
                 foreach (var renderer in _renderers)
                 {
-                    renderer.material.SetColor(ShaderPropertyID.HitColor, Color.clear);
+                    //renderer.material.SetColor(ShaderPropertyID.HitColor, Color.clear);
                     _tween.Element(renderer.material.TweenColor(ShaderPropertyID.HitColor, color).Duration(_duration).EaseOutCubic().PingPong());
                 }
             }

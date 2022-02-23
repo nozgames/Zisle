@@ -31,8 +31,8 @@ namespace NoZ.Zisle
         {
             GameEvent.Raise(this, new BuildingConstructed { });
 
-            foreach (var renderer in GetComponentsInChildren<Renderer>())
-                renderer.gameObject.GetOrAddComponent<MaterialOverride>().Override = null;
+            //foreach (var renderer in GetComponentsInChildren<Renderer>())
+              //  renderer.gameObject.GetOrAddComponent<MaterialOverride>().Override = null;
 
             OnConstructedClient();
         }
@@ -48,9 +48,9 @@ namespace NoZ.Zisle
             // Start health at 1 because building will heal 
             Health = 1.0f;
 
-            if (IsDamaged)
-                foreach (var renderer in GetComponentsInChildren<Renderer>())
-                    renderer.gameObject.GetOrAddComponent<MaterialOverride>().Override = GhostMaterial;
+//            if (IsDamaged)
+  //              foreach (var renderer in GetComponentsInChildren<Renderer>())
+    //                renderer.gameObject.GetOrAddComponent<MaterialOverride>().Override = GhostMaterial;
         }
     }
 }

@@ -10,6 +10,7 @@ namespace NoZ.Zisle
     public class ActorAbility : NetworkScriptableObject<ActorAbility>
     {
         [Header("General")]
+        [SerializeField] private ActorState _actorState = ActorState.Active;
         [SerializeField] private TargetFinder _targetFinder = null;
         [SerializeField] private float _moveSpeed = 0.0f;
 
@@ -70,6 +71,10 @@ namespace NoZ.Zisle
 
         public float CalculateScore (Actor source, List<Actor> targetCache)
         {
+            // Make sure the actor is in the correct state.
+            if (source.State != _actorState)
+                return 0.0f;
+
             // Check pre-target conditions
             var score = 1.0f;
             foreach (var condition in _conditions)

@@ -406,7 +406,7 @@ namespace NoZ.Zisle
 
             WaveEnemyRemainingCount++;
 
-            enemyDef.Spawn(TileCellToWorld(spawnPoint.Cell), spawnPoint.Rotation);
+            enemyDef.Spawn(TileCellToWorld(spawnPoint.Cell), spawnPoint.Rotation, transform).State = ActorState.Active;
         }
 
         private IEnumerator SpawnWaves ()
