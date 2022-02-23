@@ -23,4 +23,6 @@ MonoBehaviour:
   - {fileID: 2598226603739545213, guid: a4f0df5e26e5a2b4e801a3bbc78f65da, type: 3}
   - {fileID: 2598226603739545213, guid: dcb909d193d5fc64294e4f719fa5928c, type: 3}
   - {fileID: 2598226603739545213, guid: 1455d42f368afab4085e6660c9666115, type: 3}
-  _enemies: []
+  _actors:
+  - {fileID: 11400000, guid: 1d9f30700673fe548b90df037c9e8805, type: 2}
+  - {fileID: 11400000, guid: 50eae47ab1632bd47904d1218e4cd5c0, type: 2}

@@ -142,6 +142,8 @@ namespace NoZ.Zisle
 
             _state = IslandState.Active;
 
+            SpawnHarvestables();
+
             CameraManager.Instance.StopCinematic();
         }
 
@@ -361,11 +363,32 @@ namespace NoZ.Zisle
             }
         }
 
-        public Vector3 FindFreeTile (IslandTile filter = IslandTile.None)
+        public bool TryFindFreeTileNearCenter (IslandTile filter, out Vector3 position)
         {
             var cells = FindFreeTiles(filter).ToArray();
+            if (null == cells || cells.Length == 0)
+            {
+                position = Vector3.zero;
+                return false;
+            }
+                
             var cell = cells[ WeightedRandom.RandomWeightedIndex(FindFreeTiles(filter), 0, -1, (cell) => 1.0f - Mathf.Clamp(IslandMesh.CellToLocal(cell).magnitude / IslandMesh.GridCenter, 0.1f, 1.0f))];
-            return CellToWorld(cell);
+            position = CellToWorld(cell);
+            return true;
+        }
+
+        public bool TryFindFreeTile (IslandTile filter, out Vector3 position)
+        {
+            var cells = FindFreeTiles(filter).ToArray();
+            if (null == cells || cells.Length == 0)
+            {
+                position = Vector3.zero;
+                return false;
+            }
+
+            var cell = cells[WeightedRandom.RandomWeightedIndex(FindFreeTiles(filter), 0, -1, (cell) => 1.0f)];
+            position = CellToWorld(cell);
+            return true;
         }
 
         public Vector3 FindClosestExitPosition (Vector3 position)
@@ -383,6 +406,19 @@ namespace NoZ.Zisle
             }
 
             return bestPosition;
+        }
+
+        public void SpawnHarvestables ()
+        {
+            for(int i=0; i<5; i++)
+            {                
+                if(TryFindFreeTile(IslandTile.Grass, out var position))
+                {
+                    var def = _biome.ChooseRandomHarvestable();
+                    if (null != def)
+                        def.Spawn(position, Quaternion.identity, transform);
+                }
+            }
         }
     }
 }

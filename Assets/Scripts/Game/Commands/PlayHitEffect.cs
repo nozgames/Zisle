@@ -8,12 +8,13 @@ namespace NoZ.Zisle.Commands
     {
         [SerializeField] private Color _color = Color.white;
         [SerializeField] [Range(0, 1)] private float _strength = 1.0f;
+        [SerializeField][Range(0, 1)] private float _duration = 0.2f;
 
         public void ExecuteOnClient(Actor source, Actor target)
         {
             var hiteffect = target.GetComponent<HitEffect>();
             if (hiteffect != null)
-                hiteffect.Play(_color, _strength);
+                hiteffect.Play(_color, _strength, _duration);
         }
     }
 }

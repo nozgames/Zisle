@@ -301,9 +301,11 @@ namespace NoZ.Zisle
                 while (HomeIsland.State == IslandState.Spawn)
                     yield return null;
 
-                var position = HomeIsland.FindFreeTile();
-                var rotation = Quaternion.LookRotation((HomeIsland.FindClosestExitPosition(position) - position).ZeroY(), Vector3.up);
+                if (!HomeIsland.TryFindFreeTileNearCenter(IslandTile.None, out var position))
+                    // TODO: this bad
+                    yield break;
 
+                var rotation = Quaternion.LookRotation((HomeIsland.FindClosestExitPosition(position) - position).ZeroY(), Vector3.up);
                 foreach (var player in GameManager.Instance.Players)
                     player.SpawnPlayer(position, rotation, transform);
 

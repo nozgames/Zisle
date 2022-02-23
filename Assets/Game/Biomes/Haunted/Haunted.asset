@@ -12,8 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bafc8cfa5cc5a244f87ca9b37c91295c, type: 3}
   m_Name: Haunted
   m_EditorClassIdentifier: 
+  _material: {fileID: 0}
+  _bridge: {fileID: 0}
   _minLevel: 8
   _maxLevel: 100000
   _weight: 1
   _islands:
   - {fileID: 4838592508693768679, guid: c4cfdf9406883cc4486ebb17deec0487, type: 3}
+  _actors:
+  - {fileID: 11400000, guid: 1d9f30700673fe548b90df037c9e8805, type: 2}
+  - {fileID: 11400000, guid: 50eae47ab1632bd47904d1218e4cd5c0, type: 2}

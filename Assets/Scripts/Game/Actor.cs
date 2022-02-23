@@ -36,7 +36,12 @@ namespace NoZ.Zisle
         /// <summary>
         /// Enemy that tries to attack player and the base
         /// </summary>
-        Enemy
+        Enemy,
+
+        /// <summary>
+        /// Harvestable actor such as a tree
+        /// </summary>
+        Harvestable
     }
 
     [System.Flags]
@@ -46,7 +51,8 @@ namespace NoZ.Zisle
         Player = 1 << ActorType.Player,
         Base = 1 << ActorType.Base,
         Building = 1 << ActorType.Building,
-        Enemy = 1 << ActorType.Enemy
+        Enemy = 1 << ActorType.Enemy,
+        Harvestable = 1 << ActorType.Harvestable
     }
 
     /// <summary>

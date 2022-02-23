@@ -24,5 +24,6 @@ MonoBehaviour:
   - {fileID: 8273873446664352057, guid: d59f8d08e582a2d43939966bc6177cbe, type: 3}
   - {fileID: 8273873446664352057, guid: 4ddbda8bbe0479749940dec739e94310, type: 3}
   - {fileID: 8273873446664352057, guid: 32587f530ac54ff41a5adcf595442b44, type: 3}
-  _enemies:
+  _actors:
+  - {fileID: 11400000, guid: 1d9f30700673fe548b90df037c9e8805, type: 2}
   - {fileID: 11400000, guid: 50eae47ab1632bd47904d1218e4cd5c0, type: 2}

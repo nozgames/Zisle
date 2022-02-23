@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 namespace NoZ.Zisle
@@ -17,7 +18,10 @@ namespace NoZ.Zisle
         [SerializeField] private IslandMesh[] _islands = null;
 
         [Space]
-        [SerializeField] private ActorDefinition[] _enemies = null;
+        [SerializeField] private ActorDefinition[] _actors = null;
+
+        private ActorDefinition[] _enemies = null;
+        private ActorDefinition[] _harvestables = null;
 
         public Material Material => _material;
         public Bridge Bridge => _bridge;
@@ -32,6 +36,19 @@ namespace NoZ.Zisle
         {
             foreach (var island in _islands)
                 island.Biome = this;
+
+            if(_actors == null)
+                _actors = new ActorDefinition[0];
+        }
+
+        public void OnEnable()
+        {
+            foreach (var actor in _actors)
+                Debug.Log(actor.ActorType);
+
+            _enemies = _actors.Where(a => a != null && a.ActorType == ActorType.Enemy).ToArray();
+            _harvestables = _actors.Where(a => a != null && a.ActorType == ActorType.Harvestable).ToArray();
+
         }
 
         public void OnBeforeSerialize()
@@ -58,9 +75,20 @@ namespace NoZ.Zisle
             if (_enemies.Length == 0)
                 return null;
 
-            return _enemies[WeightedRandom.RandomWeightedIndex(_enemies, 0, _enemies.Length, GetEnemyWeight)];
+            return _enemies[WeightedRandom.RandomWeightedIndex(_enemies, 0, _enemies.Length, GetActorWeight)];
         }
 
-        private float GetEnemyWeight(ActorDefinition def) => def.GetSpawnWeight();
+        /// <summary>
+        /// Choose a weighted random harvestable to spawn from the list of available harvestables.  
+        /// </summary>
+        public ActorDefinition ChooseRandomHarvestable()
+        {
+            if (_harvestables.Length == 0)
+                return null;
+
+            return _harvestables[WeightedRandom.RandomWeightedIndex(_harvestables, 0, _harvestables.Length, GetActorWeight)];
+        }
+
+        private float GetActorWeight(ActorDefinition def) => def.GetSpawnWeight();
     }
 }
