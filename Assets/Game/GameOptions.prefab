@@ -63,7 +63,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxIslands: 16
   _startingLanes: 1
-  _spawnWaves: 1
+  _spawnWaves: 0
   _pathWeight0: 0.1
   _pathWeight1: 1
   _pathWeight2: 0.4

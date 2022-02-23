@@ -43,10 +43,19 @@ namespace NoZ.Zisle
         [Space]
         [SerializeField] private SpawnWeight[] _spawnWeights = null;
 
+        [Space]
+        [Tooltip("Starting effects for the actor")]
+        [SerializeField] private ActorEffect[] _effects = null;
+
         /// <summary>
         /// Get the available abilities for this actor
         /// </summary>
         public ActorAbility[] Abilities => _abilities;
+
+        /// <summary>
+        /// Return the list of starting effects
+        /// </summary>
+        public ActorEffect[] Effects => _effects;
 
         /// <summary>
         /// Get the actor brains

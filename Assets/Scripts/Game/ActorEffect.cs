@@ -1,34 +1,54 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace NoZ.Zisle
 {
-    public enum ActorEffectTarget
+    public enum ActorEffectLifetime
     {
-        Self,
-        Target
+        /// <summary>
+        /// Single frame
+        /// </summary>
+        Frame,
+
+        /// <summary>
+        /// Duration of an ability
+        /// </summary>
+        Ability,
+
+        /// <summary>
+        /// Leave the effect on until another ability is used
+        /// </summary>
+        NextAbility,
+
+        /// <summary>
+        /// Specific amount of time
+        /// </summary>
+        Time,
+
+        /// <summary>
+        /// Never remove the effect
+        /// </summary>
+        Forever
     }
 
     public abstract class ActorEffect : NetworkScriptableObject
     {
-        public class Context
-        {
-            public ActorEffect Effect;
-            public Actor Target;
-            public Actor Source;
-            public double Time;
-            public object UserData;
-        }
+        [Header("General")]
+        [SerializeField] private ActorEffectLifetime _lifetime = ActorEffectLifetime.Frame;
+        [SerializeField] private float _duration = 1.0f;
 
-        public abstract void Apply(Context context);
-        public abstract void Remove(Context context);
+        public ActorEffectLifetime Lifetime => _lifetime;
 
-        [Tooltip("Target of the effect when applied")]
-        [SerializeField] private ActorEffectTarget _target = ActorEffectTarget.Target;
+        public virtual bool DoesOverride(ActorEffect effect) => false;
 
-        public ActorEffectTarget Target => _target;
+        public abstract void Apply(ActorEffectContext context);
+
+        public abstract void Remove(ActorEffectContext context);
+
+        public virtual void Release(ActorEffectContext context) { }
+
+        public virtual void ExecuteOnServer (Actor source, Actor target) => throw new System.NotImplementedException();
 
         public virtual void ExecuteOnClent(Actor source, Actor target) => throw new System.NotImplementedException();
-
-        // TODO: visuals, names, etc?
     }
 }

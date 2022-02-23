@@ -21,6 +21,7 @@ MonoBehaviour:
   _commandsOnUse:
   - {fileID: 11400000, guid: 9f2f588e6b4e5fb4e9a9f50eb068be21, type: 2}
   - {fileID: 11400000, guid: 905e6a2b8852b8d41915f1fca7f4c667, type: 2}
+  - {fileID: 11400000, guid: 3b542d8d8003c8f49b3e180cb839a5cb, type: 2}
   _commandsOnHit:
   - {fileID: 11400000, guid: 75dd08569c890ef4aad4e7d6e3f27a70, type: 2}
   - {fileID: 11400000, guid: 08221277cea7bd14eacaf1493a67d5c9, type: 2}

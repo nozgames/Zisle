@@ -52,14 +52,12 @@ namespace NoZ.Zisle
 #endif
         }
 #endif
-        public override void Apply(Context context)
+        public override void Apply(ActorEffectContext context)
         {
-            throw new System.NotImplementedException();
         }
 
-        public override void Remove(Context context)
+        public override void Remove(ActorEffectContext context)
         {
-            throw new System.NotImplementedException();
         }
     }
 }

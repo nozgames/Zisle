@@ -37,3 +37,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 923b6fe6b0623144eb1b4659e3cd4b27, type: 2}
   - {fileID: 11400000, guid: 406824669e16e984c994d92b98b772fd, type: 2}
   _spawnWeights: []
+  _effects:
+  - {fileID: 11400000, guid: 3f1964d0f05b1eb4c8b562a07afcbb07, type: 2}

@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.AI;
 using Unity.Netcode;
 using NoZ.Animations;
-using NoZ.Tweening;
 using NoZ.Events;
 using NoZ.Zisle.UI;
 
@@ -111,11 +110,14 @@ namespace NoZ.Zisle
         [SerializeField] private Collider _hitCollider = null;
 
         [Header("Visuals")]
-        [SerializeField] protected Material _ghostMaterial = null;
         [SerializeField] protected GameObject _spawnVFXPrefab = null;
         [SerializeField] protected Transform _runPitchTransform = null;
         [SerializeField] protected float _runPitch = 20.0f;
         [SerializeField] protected float _height = 0.5f;
+
+        [Header("Slots")]
+        [SerializeField] protected ActorSlot _slotRightWeapon = null;
+        [SerializeField] protected ActorSlot _slotLeftWeapon = null;
 
         private float[] _abilityUsedTime;
         private float _lastAbilityUsedTime;
@@ -126,7 +128,7 @@ namespace NoZ.Zisle
         private LinkedListNode<Actor> _node;
         private WorldVisualElement<HealthCircle> _healthCircle;
 
-        private List<ActorEffect.Context> _effects = new List<ActorEffect.Context>();
+        private LinkedList<ActorEffectContext> _effects = new LinkedList<ActorEffectContext>();
         private ActorAttributeValue[] _attributeTable;
         private IThinkState _thinkState;
         private float _health = 100.0f;
@@ -144,11 +146,12 @@ namespace NoZ.Zisle
 
         public NavMeshAgent NavAgent { get; private set; }
         public NavMeshObstacle NavObstacle { get; private set; }
-        public Material GhostMaterial => _ghostMaterial;
 
         public ActorAbility LastAbilityUsed => _lastAbilityUsed;
         public float LastAbilityUsedEndTime => _lastAbilityUsedEndTime;
         public float LastAbilityUsedTime => _lastAbilityUsedTime;
+
+        public ActorAbility[] Abilities => _actorDefinition.Abilities;
 
         public ActorType Type => _actorDefinition.ActorType;
 
@@ -254,13 +257,26 @@ namespace NoZ.Zisle
             _animator.Play(shader, onComplete: onComplete);
         }
 
+        private void RemoveEffects (ActorEffectLifetime lifetime)
+        {
+            // Remove any effects that should only last for the duration of an ability
+            LinkedListNode<ActorEffectContext> next;
+            for (var node = _effects.First; node != null; node = next)
+            {
+                next = node.Next;
+
+                if (node.Value.Effect.Lifetime == lifetime)
+                    RemoveEffect(node.Value);
+            }
+        }
+
         public void PlayOneShotAnimation(AnimationShader shader)
         {
             if (shader == null || shader == _currentAnimation)
                 return;
 
             // If a one shot animation is already being played, stop it first
-            if(_oneShotAnimation != null)
+            if (_oneShotAnimation != null)
                 _animator.StopAll(0.0f);
 
             IsBusy = true;
@@ -272,6 +288,9 @@ namespace NoZ.Zisle
 
         private void OnOneShotAnimationComplete ()
         {
+            // Remove any effects that should only last for the duration of an ability
+            RemoveEffects(ActorEffectLifetime.Ability);
+
             _oneShotAnimation = null;
             _currentAnimation = null;
             _lastAbilityUsedEndTime = Time.time;
@@ -360,41 +379,6 @@ namespace NoZ.Zisle
                 gameObject.SetActive(false);
         }
 
-        [ClientRpc]
-        private void DieClientRpc()
-        {
-            _health = 0.0f;
-
-            _actorDefinition.PlayDeathSound(this);
-
-            var deathAnimation = _actorDefinition.DeathAnimation;
-            if (deathAnimation != null)
-            {
-                if (_ghostMaterial != null)
-                {
-                    foreach (var renderer in GetComponentsInChildren<Renderer>())
-                    {
-                        if (renderer.materials.Length == 1)
-                        {
-                            renderer.material = _ghostMaterial;
-                            renderer.material.TweenFloat(ShaderPropertyID.Opacity, 0.0f).EaseOutSine().Duration(deathAnimation.length / deathAnimation.speed).Play();
-                        }
-                        else
-                        {
-                            var materials = new Material[renderer.materials.Length];
-                            for (int i = 0; i < renderer.materials.Length; i++)
-                                materials[i] = _ghostMaterial;
-
-                            renderer.materials = materials;
-                        }
-                    }
-                }
-                PlayAnimation(deathAnimation, Despawn);
-            }
-            else
-                Despawn();
-        }
-
         /// <summary>
         /// Add an effect to the actor
         /// </summary>
@@ -404,22 +388,41 @@ namespace NoZ.Zisle
             if (effect == null || source == null)
                 return;
 
-            var context = new ActorEffect.Context { Effect = effect, Target = this, Source = source, Time = Time.timeAsDouble };
-            _effects.Add(context);
-            effect.Apply(context);
+            foreach(var existingEffect in _effects)
+            {
+                // Handle overrides
+                if(effect.DoesOverride(existingEffect.Effect))
+                    existingEffect.Enabled = false;
+            }
+
+            var context = ActorEffectContext.Get(effect, source, this);
+            _effects.AddLast(context.Node);
+            context.Enabled = true;
         }
 
-        public List<ActorEffect.Context> Effects => _effects;
-        public ActorAbility[] Abilities => _actorDefinition.Abilities;
+        private void RemoveEffect (ActorEffectContext effectContext)
+        {
+            // Search to see if this effect was overriding another effect and if so re-enable that effect
+            for(var node = effectContext.Node.Previous; node != null; node = node.Previous)
+            {
+                if(!node.Value.Enabled && effectContext.Effect.DoesOverride(node.Value.Effect))
+                {
+                    node.Value.Enabled = true;
+                    break;
+                }
+            }
 
-
-        //public ActorAttributeValue GetAttribute(ActorAttribute attribute) => _attributeTable[(int)attribute];
+            effectContext.Release();
+        }
 
         /// <summary>
         /// Return the current modified value for the given attribute
         /// </summary>
         public float GetAttributeValue(ActorAttribute attribute) => _attributeTable[(int)attribute].Value;
 
+        /// <summary>
+        /// Reset all attributes back to their base values
+        /// </summary>
         public void ResetAttributes()
         {
             // Allocate a new attribute data and set it to base values
@@ -461,6 +464,9 @@ namespace NoZ.Zisle
 
             if (_spawnVFXPrefab != null)
                 Instantiate(_spawnVFXPrefab, transform.position, transform.rotation);
+
+            foreach (var effect in _actorDefinition.Effects)
+                AddEffect(this, effect);
 
             ResetAttributes();
 
@@ -525,6 +531,9 @@ namespace NoZ.Zisle
 
         public virtual bool ExecuteAbility(ActorAbility ability, List<Actor> targets)
         {
+            // Remove any effects that should only last for the duration of an ability
+            RemoveEffects(ActorEffectLifetime.NextAbility);
+
             if (ability == null)
                 return false;
 
@@ -711,5 +720,16 @@ namespace NoZ.Zisle
                     break;
             }
         }
+
+        /// <summary>
+        /// Return the slot for the given slot type
+        /// </summary>
+        public ActorSlot GetSlot (ActorSlotType slotType) => slotType switch
+        {
+            ActorSlotType.None => null,
+            ActorSlotType.RightWeapon => _slotRightWeapon,
+            ActorSlotType.LeftWeapon => _slotLeftWeapon,
+            _ => throw new System.NotImplementedException()
+        };
     }
 }

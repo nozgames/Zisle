@@ -18,7 +18,7 @@ namespace NoZ.Zisle
         [SerializeField] private Vector3 _rotate = Vector3.zero;
 
         [Header("Sound")]
-        [SerializeField] private AudioShader[] _sound = null;
+        [SerializeField] private AudioShader _sound = null;
 
         private Tween _tween;
 
@@ -46,6 +46,9 @@ namespace NoZ.Zisle
                 _rotateTransform.localRotation = Quaternion.identity;
                 _tween.Element(_rotateTransform.TweenLocalRotation(Quaternion.Euler(_rotate * strength)).Duration(duration).EaseOutCubic().PingPong());
             }
+
+            if (_sound != null)
+                AudioManager.Instance.PlaySound(_sound, gameObject);
 
             _tween.Play();
         }
