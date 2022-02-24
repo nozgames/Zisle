@@ -12,5 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ac1701c6e243924eb1ed29293d00c51, type: 3}
   m_Name: HarvestSwingSound
   m_EditorClassIdentifier: 
-  _clips:
-  - {fileID: 8300000, guid: cbe5ecc3ec73f8748970f5594b921c04, type: 3}
+  _shader: {fileID: 11400000, guid: 3114daadd62f7de47ad08a0af3bdbdc2, type: 2}

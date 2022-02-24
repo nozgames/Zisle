@@ -39,6 +39,8 @@ namespace NoZ.Zisle
 
         public ActorEffectLifetime Lifetime => _lifetime;
 
+        public float Duration => _duration;
+
         public virtual bool DoesOverride(ActorEffect effect) => false;
 
         public abstract void Apply(ActorEffectContext context);

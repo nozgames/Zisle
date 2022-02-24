@@ -4,6 +4,7 @@ namespace NoZ.Zisle
 {
     public static class ShaderPropertyID
     {
+        public static int _Color { get; private set; }
         public static int HitColor { get; private set; }
         public static int Opacity { get; private set; }
 

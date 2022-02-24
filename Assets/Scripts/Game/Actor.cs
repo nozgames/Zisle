@@ -127,6 +127,7 @@ namespace NoZ.Zisle
         private AnimationShader _oneShotAnimation;
         private LinkedListNode<Actor> _node;
         private WorldVisualElement<HealthCircle> _healthCircle;
+        private MaterialPropertyBlock _materialProperties;
 
         private LinkedList<ActorEffectContext> _effects = new LinkedList<ActorEffectContext>();
         private ActorAttributeValue[] _attributeTable;
@@ -138,7 +139,7 @@ namespace NoZ.Zisle
         private Vector3 _lastPosition;
         private float _speed = 0.0f;
         private ActorState _state = ActorState.None;
-        
+
         public ActorDefinition Definition => _actorDefinition;
         public float Speed => _speed;
         public bool IsMoving => Speed > 0.1f;
@@ -158,6 +159,10 @@ namespace NoZ.Zisle
         public ActorTypeMask TypeMask => (ActorTypeMask)(1 << (int)_actorDefinition.ActorType);
 
         public Vector3 Position => transform.position.ZeroY();
+
+        public MaterialPropertyBlock MaterialProperties => _materialProperties;
+
+        public event System.Action<MaterialPropertyBlock> OnMaterialPropertiesChanged;
 
         public ActorState State
         {
@@ -230,6 +235,8 @@ namespace NoZ.Zisle
 
         protected virtual void Awake()
         {
+            _materialProperties = new MaterialPropertyBlock();            
+
             _node = new LinkedListNode<Actor>(this);
 
             _animator = GetComponent<BlendedAnimationController>();
@@ -398,10 +405,14 @@ namespace NoZ.Zisle
             var context = ActorEffectContext.Get(effect, source, this);
             _effects.AddLast(context.Node);
             context.Enabled = true;
+
+            OnMaterialPropertiesChanged?.Invoke(_materialProperties);
         }
 
         private void RemoveEffect (ActorEffectContext effectContext)
         {
+            effectContext.Enabled = false;
+
             // Search to see if this effect was overriding another effect and if so re-enable that effect
             for(var node = effectContext.Node.Previous; node != null; node = node.Previous)
             {
@@ -413,6 +424,8 @@ namespace NoZ.Zisle
             }
 
             effectContext.Release();
+
+            OnMaterialPropertiesChanged?.Invoke(_materialProperties);
         }
 
         /// <summary>
@@ -460,15 +473,19 @@ namespace NoZ.Zisle
         {
             base.OnNetworkSpawn();
 
+            _materialProperties.SetColor("_Color", Color.blue);
+
             _lastPosition = transform.position;
 
             if (_spawnVFXPrefab != null)
                 Instantiate(_spawnVFXPrefab, transform.position, transform.rotation);
 
-            foreach (var effect in _actorDefinition.Effects)
-                AddEffect(this, effect);
+            ResetMaterialProperties();
 
             ResetAttributes();
+
+            foreach (var effect in _actorDefinition.Effects)
+                AddEffect(this, effect);
 
             UpdateAttributes();
 
@@ -637,6 +654,15 @@ namespace NoZ.Zisle
             if (!IsSpawned || Game.Instance == null)
                 return;
 
+            // Look for effects ending due to time
+            LinkedListNode<ActorEffectContext> next;
+            for(var node = _effects.First; node != null; node =next)
+            {
+                next = node.Next;
+                if(node.Value.Lifetime == ActorEffectLifetime.Time && (Time.timeAsDouble - node.Value.StartTime) >= node.Value.Duration)
+                    RemoveEffect(node.Value);
+            }
+
             // Just to make sure actors never get stuck in the busy state
             if (IsBusy && (Time.time - _busyTime) > MaxBusyTime)
                 IsBusy = false;
@@ -731,5 +757,20 @@ namespace NoZ.Zisle
             ActorSlotType.LeftWeapon => _slotLeftWeapon,
             _ => throw new System.NotImplementedException()
         };
+
+        public void ResetMaterialProperties ()
+        {
+            ResetMaterialProperty(ShaderPropertyID._Color);
+        }
+
+        public void ResetMaterialProperty (int nameId)
+        {
+            if (nameId == ShaderPropertyID._Color)
+            {
+                // TODO: Quick fade from current to new
+                _materialProperties.SetColor(nameId, Color.clear);
+                return;
+            }
+        }
     }
 }

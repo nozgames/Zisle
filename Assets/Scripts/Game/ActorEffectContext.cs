@@ -12,6 +12,8 @@ namespace NoZ.Zisle
         public Actor Target { get; private set; }
         public Actor Source { get; private set; }
         public double StartTime { get; private set; }
+        public double Duration { get; private set; }
+        public ActorEffectLifetime Lifetime { get; private set; }
         public object UserData { get; set; }
 
         public LinkedListNode<ActorEffectContext> Node { get; private set; }
@@ -56,6 +58,8 @@ namespace NoZ.Zisle
             context.Effect = effect;
             context.Target = target;
             context.Source = source;
+            context.Lifetime = effect.Lifetime;
+            context.Duration = effect.Duration;
             context.StartTime = Time.timeAsDouble;
 
             return context;

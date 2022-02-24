@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a111a77b9767d749b9109277d442046, type: 3}
-  m_Name: FireWandPool
+  m_Script: {fileID: 11500000, guid: 8b9d78a6df247cd498f26d07b8d7bdd6, type: 3}
+  m_Name: FireWizzardAttackEffect
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 539783729354571859, guid: 9068c1e8df80bec47b7986558a1b992f, type: 3}
+  _effect: {fileID: 11400000, guid: b9663d671c02cc949931b00f8d5d17ff, type: 2}

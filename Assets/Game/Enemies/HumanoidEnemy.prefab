@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 1245122302073704610}
   - component: {fileID: 5429814614147593989}
   - component: {fileID: 3857350800885879390}
-  - component: {fileID: 4178392576394687884}
   m_Layer: 0
   m_Name: HumanoidEnemy
   m_TagString: Untagged
@@ -54,12 +53,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actorDefinition: {fileID: 0}
   _hitCollider: {fileID: 5285709882748307645}
-  _ghostMaterial: {fileID: 2100000, guid: 58569cdaf9efd4745a5edd42d3e95b81, type: 2}
   _spawnVFXPrefab: {fileID: 3214235347064349228, guid: b4a28c8597f55e5408e3eb3f6292381f,
     type: 3}
   _runPitchTransform: {fileID: 0}
   _runPitch: 20
   _height: 0.5
+  _slotRightWeapon: {fileID: 0}
+  _slotLeftWeapon: {fileID: 0}
 --- !u!114 &5645462275788983784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,7 +77,7 @@ MonoBehaviour:
   _scale: {x: 0.8, y: 1.2, z: 0.8}
   _rotateTransform: {fileID: 5907281522901925113}
   _rotate: {x: -20, y: 0, z: 0}
-  _sound: []
+  _sound: {fileID: 0}
 --- !u!114 &435549470166300269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,18 +156,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 1
   m_ObstacleAvoidanceType: 2
---- !u!114 &4178392576394687884
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1261973430235558940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 054f20651be0b5048b07881657d5520b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &6085324528788541688
 GameObject:
   m_ObjectHideFlags: 0
