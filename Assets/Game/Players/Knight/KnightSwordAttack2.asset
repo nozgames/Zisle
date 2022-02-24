@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34452f75e1a36f64988e322fb32d9d27, type: 3}
   m_Name: KnightSwordAttack2
   m_EditorClassIdentifier: 
+  _actorState: 3
   _targetFinder: {fileID: 11400000, guid: 6cc71e8184019114f84446dc2f521cea, type: 2}
   _moveSpeed: 0.1
   _conditions:

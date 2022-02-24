@@ -61,6 +61,7 @@ namespace NoZ.Zisle
             context.Lifetime = effect.Lifetime;
             context.Duration = effect.Duration;
             context.StartTime = Time.timeAsDouble;
+            context.UserData = null;
 
             return context;
         }

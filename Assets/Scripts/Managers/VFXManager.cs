@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.VFX;
@@ -10,6 +11,8 @@ namespace NoZ.Zisle
         [SerializeField] private int _maxPoolSize = 128;
 
         private LinkedPool<VisualEffect> _pool;
+
+        private List<VisualEffect> _playing = new List<VisualEffect>();
 
         public override void Initialize()
         {
@@ -38,7 +41,7 @@ namespace NoZ.Zisle
 
         private void PoolRelease(VisualEffect ve)
         {
-            ve.gameObject.SetActive(false);
+            //ve.gameObject.SetActive(false);
             ve.visualEffectAsset = null;
             ve.transform.SetParent(transform);
         }
@@ -52,7 +55,7 @@ namespace NoZ.Zisle
             var go = new GameObject();
             var ve = go.AddComponent<VisualEffect>();
             ve.initialEventName = "";
-            go.AddComponent<DestroyAfterVisualEffect>();
+            //go.AddComponent<DestroyAfterVisualEffect>();
             go.transform.SetParent(transform);
             go.name = "VisualEffect";
             return ve;
@@ -64,10 +67,12 @@ namespace NoZ.Zisle
         public VisualEffect Play(VisualEffectAsset asset, Transform transform)
         {
             var ve = _pool.Get();
+            //ve.gameObject.SetActive(true);
             ve.transform.SetParent(transform);
+            ve.transform.localPosition = Vector3.zero;
+            ve.transform.localRotation = Quaternion.identity;
             ve.visualEffectAsset = asset;
             ve.Play();
-            ve.gameObject.SetActive(true);
             return ve;
         }
 
@@ -81,7 +86,8 @@ namespace NoZ.Zisle
             ve.transform.rotation = rotation;
             ve.visualEffectAsset = asset;
             ve.Play();
-            ve.gameObject.SetActive(true);
+
+            _playing.Add(ve);
             return ve;
         }
 
@@ -90,7 +96,22 @@ namespace NoZ.Zisle
         /// </summary>
         public void Release (VisualEffect ve)
         {
-            _pool.Release(ve);
+            ve.Stop();
+
+            if (!ve.HasAnySystemAwake())
+                _pool.Release(ve);
+        }
+
+        private void LateUpdate()
+        {
+            for (int i = _playing.Count - 1; i >= 0; i--)
+            {
+                if (!_playing[i].HasAnySystemAwake())
+                {
+                    _pool.Release(_playing[i]);
+                    _playing.RemoveAt(i);
+                }
+            }
         }
     }
 }

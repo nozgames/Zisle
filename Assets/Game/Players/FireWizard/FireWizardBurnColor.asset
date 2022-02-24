@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d0f727b2c4d2b141b03d797891e89fc, type: 3}
-  m_Name: FireWizzardAttackBurnColor
+  m_Name: FireWizardBurnColor
   m_EditorClassIdentifier: 
   _lifetime: 3
   _duration: 1

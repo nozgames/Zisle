@@ -28,7 +28,14 @@ namespace NoZ.Zisle
         /// <summary>
         /// Never remove the effect
         /// </summary>
-        Forever
+        Forever,
+
+        /// <summary>
+        /// Automatically determine the lifetime based on the effect.  For example
+        /// an effect that plays a non looping visual effect would be removed when the
+        /// effect stops.
+        /// </summary>
+        Auto
     }
 
     public abstract class ActorEffect : NetworkScriptableObject

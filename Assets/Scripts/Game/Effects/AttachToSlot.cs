@@ -6,7 +6,7 @@ namespace NoZ.Zisle
     public class AttachToSlot : ActorEffect
     {
         [Header("Attach To Slot")]
-        [SerializeField] private ActorSlotType _slot = ActorSlotType.None;
+        [SerializeField] private ActorSlot _slot = ActorSlot.None;
         [SerializeField] private PrefabPool _prefab = null;
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace NoZ.Zisle
             if (null == _prefab)
                 return;
 
-            var slot = context.Target.GetSlot(_slot);
+            var slot = context.Target.GetSlotTransform(_slot);
             if (slot == null)
                 return;
 

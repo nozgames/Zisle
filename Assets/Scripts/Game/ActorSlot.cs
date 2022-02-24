@@ -2,15 +2,11 @@ using UnityEngine;
 
 namespace NoZ.Zisle
 {
-    public enum ActorSlotType 
+    public enum ActorSlot 
     {
         None,
         LeftWeapon,
-        RightWeapon
-    }
-
-    public class ActorSlot : MonoBehaviour
-    {
-        
+        RightWeapon,
+        Body
     }
 }

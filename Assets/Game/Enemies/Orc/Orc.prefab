@@ -105,10 +105,25 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8906246932429870938, guid: c626647da39f58f4a9598683d11fcdc9,
         type: 3}
+      propertyPath: _slotBody
+      value: 
+      objectReference: {fileID: 301540513149619704}
+    - target: {fileID: 8906246932429870938, guid: c626647da39f58f4a9598683d11fcdc9,
+        type: 3}
+      propertyPath: _slotLeftWeapon
+      value: 
+      objectReference: {fileID: 9057515798848108988}
+    - target: {fileID: 8906246932429870938, guid: c626647da39f58f4a9598683d11fcdc9,
+        type: 3}
       propertyPath: _actorDefinition
       value: 
       objectReference: {fileID: 11400000, guid: 50eae47ab1632bd47904d1218e4cd5c0,
         type: 2}
+    - target: {fileID: 8906246932429870938, guid: c626647da39f58f4a9598683d11fcdc9,
+        type: 3}
+      propertyPath: _slotRightWeapon
+      value: 
+      objectReference: {fileID: 3244416569057241705}
     - target: {fileID: 8906246932429870938, guid: c626647da39f58f4a9598683d11fcdc9,
         type: 3}
       propertyPath: _runPitchTransform
@@ -196,6 +211,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db787b28e2a5c8740bc91419ad188aec, type: 3}
+--- !u!4 &301540513149619704 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -1566440873756082948, guid: db787b28e2a5c8740bc91419ad188aec,
+    type: 3}
+  m_PrefabInstance: {fileID: 7957204325819855108}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &745025610907694574 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7222498318801765610, guid: db787b28e2a5c8740bc91419ad188aec,
@@ -255,6 +276,12 @@ Animator:
 --- !u!4 &7631088235439773423 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: db787b28e2a5c8740bc91419ad188aec,
+    type: 3}
+  m_PrefabInstance: {fileID: 7957204325819855108}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &9057515798848108988 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1431979263059675320, guid: db787b28e2a5c8740bc91419ad188aec,
     type: 3}
   m_PrefabInstance: {fileID: 7957204325819855108}
   m_PrefabAsset: {fileID: 0}

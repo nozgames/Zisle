@@ -116,8 +116,9 @@ namespace NoZ.Zisle
         [SerializeField] protected float _height = 0.5f;
 
         [Header("Slots")]
-        [SerializeField] protected ActorSlot _slotRightWeapon = null;
-        [SerializeField] protected ActorSlot _slotLeftWeapon = null;
+        [SerializeField] protected Transform _slotRightWeapon = null;
+        [SerializeField] protected Transform _slotLeftWeapon = null;
+        [SerializeField] protected Transform _slotBody = null;
 
         private float[] _abilityUsedTime;
         private float _lastAbilityUsedTime;
@@ -750,11 +751,12 @@ namespace NoZ.Zisle
         /// <summary>
         /// Return the slot for the given slot type
         /// </summary>
-        public ActorSlot GetSlot (ActorSlotType slotType) => slotType switch
+        public Transform GetSlotTransform (ActorSlot slot) => slot switch
         {
-            ActorSlotType.None => null,
-            ActorSlotType.RightWeapon => _slotRightWeapon,
-            ActorSlotType.LeftWeapon => _slotLeftWeapon,
+            ActorSlot.None => transform,
+            ActorSlot.RightWeapon => _slotRightWeapon,
+            ActorSlot.LeftWeapon => _slotLeftWeapon,
+            ActorSlot.Body => _slotBody,
             _ => throw new System.NotImplementedException()
         };
 

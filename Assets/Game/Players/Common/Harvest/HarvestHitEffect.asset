@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b9d78a6df247cd498f26d07b8d7bdd6, type: 3}
-  m_Name: ApplyHarvestPickaxe
+  m_Name: HarvestHitEffect
   m_EditorClassIdentifier: 
   _effects:
-  - {fileID: 11400000, guid: 41fd659cce85abe4b84a0484c5587f83, type: 2}
+  - {fileID: 11400000, guid: d4067f7b36dacec44840beceb77c082d, type: 2}

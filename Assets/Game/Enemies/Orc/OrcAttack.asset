@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34452f75e1a36f64988e322fb32d9d27, type: 3}
   m_Name: OrcAttack
   m_EditorClassIdentifier: 
+  _actorState: 3
   _targetFinder: {fileID: 11400000, guid: 6756eb52851087247a68dd89d3028b0d, type: 2}
   _moveSpeed: 0
   _conditions:

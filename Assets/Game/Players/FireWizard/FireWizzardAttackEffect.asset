@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b9d78a6df247cd498f26d07b8d7bdd6, type: 3}
   m_Name: FireWizzardAttackEffect
   m_EditorClassIdentifier: 
-  _effect: {fileID: 11400000, guid: b9663d671c02cc949931b00f8d5d17ff, type: 2}
+  _effects:
+  - {fileID: 11400000, guid: b9663d671c02cc949931b00f8d5d17ff, type: 2}
+  - {fileID: 11400000, guid: b523e9fca0d05b8438b93a0a3058be4f, type: 2}

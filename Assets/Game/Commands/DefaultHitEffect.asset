@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6783a15e74e89447991f830b5b36302, type: 3}
+  m_Script: {fileID: 11500000, guid: 8b9d78a6df247cd498f26d07b8d7bdd6, type: 3}
   m_Name: DefaultHitEffect
   m_EditorClassIdentifier: 
-  _color: {r: 1, g: 1, b: 1, a: 1}
-  _strength: 1
+  _effects:
+  - {fileID: 11400000, guid: e71ff49bc3e16304cb9b3d288b02d20f, type: 2}

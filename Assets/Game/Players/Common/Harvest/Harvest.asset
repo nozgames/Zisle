@@ -23,6 +23,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bf91f084eae689046ab90e7adfb6eb5a, type: 2}
   - {fileID: 11400000, guid: 3b542d8d8003c8f49b3e180cb839a5cb, type: 2}
   _commandsOnHit:
-  - {fileID: 11400000, guid: 75dd08569c890ef4aad4e7d6e3f27a70, type: 2}
-  - {fileID: 11400000, guid: 08221277cea7bd14eacaf1493a67d5c9, type: 2}
+  - {fileID: 11400000, guid: 5618f1157a2243a4185d8e6427d78fee, type: 2}
+  - {fileID: 11400000, guid: 558a9e7d35edf25409b46f97a7368dd1, type: 2}
   _commandsOnMiss: []

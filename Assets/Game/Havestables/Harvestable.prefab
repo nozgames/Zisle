@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1079640630744779570}
   - component: {fileID: 52086549434073406}
-  - component: {fileID: 4969236613600824397}
   - component: {fileID: 7482653488076541637}
   - component: {fileID: 7979965059499589058}
   - component: {fileID: 6704202616820255627}
@@ -58,24 +57,7 @@ MonoBehaviour:
   _height: 0.5
   _slotRightWeapon: {fileID: 0}
   _slotLeftWeapon: {fileID: 0}
---- !u!114 &4969236613600824397
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3047520152812583308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09da4e928d62cc84493e2e035bab6cce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _renderers: []
-  _scaleTransform: {fileID: 3664717365206953883}
-  _scale: {x: 0.8, y: 1.2, z: 0.8}
-  _rotateTransform: {fileID: 0}
-  _rotate: {x: 0, y: 0, z: 0}
-  _sound: {fileID: 0}
+  _slotBody: {fileID: 0}
 --- !u!208 &7482653488076541637
 NavMeshObstacle:
   m_ObjectHideFlags: 0
