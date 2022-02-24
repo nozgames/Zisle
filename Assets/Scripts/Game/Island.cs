@@ -191,7 +191,7 @@ namespace NoZ.Zisle
         {
             foreach (var def in _bridges)
             {
-                var bridge = Instantiate(def.Prefab, def.Position, def.Rotation, Game.Instance.transform).GetComponent<Bridge>();
+                var bridge = Instantiate(def.Prefab, def.Position, def.Rotation, transform).GetComponent<Bridge>();
                 bridge.Bind(from: this, to: def.To);
                 bridge.GetComponent<NetworkObject>().Spawn();
             }
