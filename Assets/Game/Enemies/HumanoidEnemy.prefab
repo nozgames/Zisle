@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1291445172341955205}
   - component: {fileID: 8906246932429870938}
-  - component: {fileID: 5645462275788983784}
   - component: {fileID: 435549470166300269}
   - component: {fileID: 1245122302073704610}
   - component: {fileID: 5429814614147593989}
@@ -53,31 +52,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actorDefinition: {fileID: 0}
   _hitCollider: {fileID: 5285709882748307645}
+  _scaleTransform: {fileID: 5907281522901925113}
+  _pitchTransform: {fileID: 5907281522901925113}
   _spawnVFXPrefab: {fileID: 3214235347064349228, guid: b4a28c8597f55e5408e3eb3f6292381f,
     type: 3}
-  _runPitchTransform: {fileID: 0}
   _runPitch: 20
   _height: 0.5
   _slotRightWeapon: {fileID: 0}
   _slotLeftWeapon: {fileID: 0}
---- !u!114 &5645462275788983784
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1261973430235558940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09da4e928d62cc84493e2e035bab6cce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _renderers: []
-  _scaleTransform: {fileID: 5907281522901925113}
-  _scale: {x: 0.8, y: 1.2, z: 0.8}
-  _rotateTransform: {fileID: 5907281522901925113}
-  _rotate: {x: -20, y: 0, z: 0}
-  _sound: {fileID: 0}
+  _slotBody: {fileID: 0}
 --- !u!114 &435549470166300269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -212,7 +195,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5907281522901925113}
   m_Layer: 0
-  m_Name: HitTransform
+  m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3480282839449756582
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 177772551704840563}
+  m_Layer: 0
+  m_Name: Visuals
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &177772551704840563
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3480282839449756582}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5628615265353977025}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4008948028134112274
 GameObject:
   m_ObjectHideFlags: 0
@@ -34,6 +65,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7292624850206374645}
+  - {fileID: 177772551704840563}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -51,12 +83,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actorDefinition: {fileID: 0}
   _hitCollider: {fileID: 2916313137891568418}
-  _audioSource: {fileID: 0}
-  _ghostMaterial: {fileID: 2100000, guid: 58569cdaf9efd4745a5edd42d3e95b81, type: 2}
+  _scaleTransform: {fileID: 177772551704840563}
+  _pitchTransform: {fileID: 177772551704840563}
   _spawnVFXPrefab: {fileID: 0}
-  _runPitchTransform: {fileID: 0}
   _runPitch: 20
   _height: 0.5
+  _slotRightWeapon: {fileID: 0}
+  _slotLeftWeapon: {fileID: 0}
+  _slotBody: {fileID: 0}
   _rotationSpeed: 90
   _buttonSlop: 0.4
 --- !u!114 &1328862059496653531

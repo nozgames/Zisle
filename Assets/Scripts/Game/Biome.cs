@@ -43,12 +43,8 @@ namespace NoZ.Zisle
 
         public void OnEnable()
         {
-            foreach (var actor in _actors)
-                Debug.Log(actor.ActorType);
-
             _enemies = _actors.Where(a => a != null && a.ActorType == ActorType.Enemy).ToArray();
             _harvestables = _actors.Where(a => a != null && a.ActorType == ActorType.Harvestable).ToArray();
-
         }
 
         public void OnBeforeSerialize()

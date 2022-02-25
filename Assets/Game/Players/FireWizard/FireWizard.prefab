@@ -5,12 +5,27 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 4565750836685494013}
+    m_TransformParent: {fileID: 8302252600199844687}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 8133a3f119034dd49880a9968561261b,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8133a3f119034dd49880a9968561261b,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8133a3f119034dd49880a9968561261b,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8133a3f119034dd49880a9968561261b,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8133a3f119034dd49880a9968561261b,
         type: 3}
@@ -113,6 +128,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 177772551704840563, guid: 5772fed2575e7b04880554dbd73328e1,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1328862059496653531, guid: 5772fed2575e7b04880554dbd73328e1,
         type: 3}
       propertyPath: GlobalObjectIdHash
@@ -169,6 +189,11 @@ PrefabInstance:
       propertyPath: _slotRightWeapon
       value: 
       objectReference: {fileID: 7896188974776439636}
+    - target: {fileID: 4347410703468825447, guid: 5772fed2575e7b04880554dbd73328e1,
+        type: 3}
+      propertyPath: _visualTransform
+      value: 
+      objectReference: {fileID: 8302252600199844687}
     - target: {fileID: 4347410703468825447, guid: 5772fed2575e7b04880554dbd73328e1,
         type: 3}
       propertyPath: _runPitchTransform
@@ -253,9 +278,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5772fed2575e7b04880554dbd73328e1, type: 3}
---- !u!4 &4565750836685494013 stripped
+--- !u!4 &8302252600199844687 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 5628615265353977025, guid: 5772fed2575e7b04880554dbd73328e1,
+  m_CorrespondingSourceObject: {fileID: 177772551704840563, guid: 5772fed2575e7b04880554dbd73328e1,
     type: 3}
   m_PrefabInstance: {fileID: 8160546649850452540}
   m_PrefabAsset: {fileID: 0}

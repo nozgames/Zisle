@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d0f727b2c4d2b141b03d797891e89fc, type: 3}
-  m_Name: DefaultHitEffectColor
+  m_Script: {fileID: 11500000, guid: 9b8bed7d5230851439a3f13259289d6c, type: 3}
+  m_Name: HarvestHitEffectScale
   m_EditorClassIdentifier: 
   _lifetime: 3
-  _duration: 0.05
-  _name: _Color
-  _value: {r: 1.9999998, g: 1.9999998, b: 1.9999998, a: 1}
-  _blendTime: 0
+  _duration: 0.1
+  _value: {x: 0.7, y: 1.2, z: 0.7}
+  _blendTime: 0.1

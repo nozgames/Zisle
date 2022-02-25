@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6cbdde8b1f2d1c445b95d08e7a6f2e54, type: 3}
-  m_Name: KnightSwordSlashAttackChain
+  m_Script: {fileID: 11500000, guid: d5b981476debd134998cdc95326df576, type: 3}
+  m_Name: KnightAttackTargets
   m_EditorClassIdentifier: 
-  _previousAbility:
-  - {fileID: 11400000, guid: 00ec81f7db5b499448bbaafdcbecaddf, type: 2}
-  _time: 0.5
+  _targetCount: 1
+  _targetRange: 0.9
+  _targetArc: 45
+  _targetMask: 8

@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5b981476debd134998cdc95326df576, type: 3}
-  m_Name: KnightSwordAttackTargets
+  m_Script: {fileID: 11500000, guid: 2d0f727b2c4d2b141b03d797891e89fc, type: 3}
+  m_Name: HarvestHitEffectColor
   m_EditorClassIdentifier: 
-  _targetCount: 1
-  _targetRange: 0.9
-  _targetArc: 45
-  _targetMask: 8
+  _lifetime: 3
+  _duration: 0.05
+  _name: _Color
+  _value: {r: 2, g: 1.9058824, b: 0.3529412, a: 1}

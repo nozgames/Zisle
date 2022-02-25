@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f939f221027276b4da72692935edfe85, type: 3}
-  m_Name: KnightSwordAttackHitSoundShader
+  m_Name: KnightAttackSwingSoundShader
   m_EditorClassIdentifier: 
   clips:
-  - {fileID: 8300000, guid: daddf6b8707e9ba429bd858a85fd4f34, type: 3}
-  volume: 1
+  - {fileID: 8300000, guid: e740ff675b9241345a8190aadd445017, type: 3}
+  volume: 0.25
   pitch: 1
   _spatialRange: 10
   channel: {fileID: 0}

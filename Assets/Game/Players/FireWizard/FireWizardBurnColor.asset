@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: FireWizardBurnColor
   m_EditorClassIdentifier: 
   _lifetime: 3
-  _duration: 1
+  _duration: 1.2
   _name: _Color
   _value: {r: 4, g: 0.29803923, b: 0, a: 0.7019608}
+  _blendTime: 0.05

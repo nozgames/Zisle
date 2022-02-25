@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d0f727b2c4d2b141b03d797891e89fc, type: 3}
-  m_Name: DefaultHitEffectColor
+  m_Script: {fileID: 11500000, guid: d5b981476debd134998cdc95326df576, type: 3}
+  m_Name: KnightSlashAttackTargets
   m_EditorClassIdentifier: 
-  _lifetime: 3
-  _duration: 0.05
-  _name: _Color
-  _value: {r: 1.9999998, g: 1.9999998, b: 1.9999998, a: 1}
-  _blendTime: 0
+  _targetCount: 8
+  _targetRange: 1.5
+  _targetArc: 210
+  _targetMask: 8

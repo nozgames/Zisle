@@ -51,6 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actorDefinition: {fileID: 0}
   _hitCollider: {fileID: 613794986344810249}
+  _visualTransform: {fileID: 3664717365206953883}
   _spawnVFXPrefab: {fileID: 0}
   _runPitchTransform: {fileID: 0}
   _runPitch: 20
@@ -173,7 +174,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3664717365206953883}
   m_Layer: 0
-  m_Name: HitTransform
+  m_Name: Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -102,6 +102,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 52086549434073406, guid: 1e02b640d44836f4bae5dd5f31fc7b27,
         type: 3}
+      propertyPath: _scaleTransform
+      value: 
+      objectReference: {fileID: 6573315986957084111}
+    - target: {fileID: 52086549434073406, guid: 1e02b640d44836f4bae5dd5f31fc7b27,
+        type: 3}
       propertyPath: _actorDefinition
       value: 
       objectReference: {fileID: 11400000, guid: 1d9f30700673fe548b90df037c9e8805,

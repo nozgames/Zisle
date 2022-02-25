@@ -103,6 +103,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Hit Collider
       objectReference: {fileID: 0}
+    - target: {fileID: 6160750495389736192, guid: c626647da39f58f4a9598683d11fcdc9,
+        type: 3}
+      propertyPath: m_Name
+      value: Visual
+      objectReference: {fileID: 0}
     - target: {fileID: 8906246932429870938, guid: c626647da39f58f4a9598683d11fcdc9,
         type: 3}
       propertyPath: _slotBody

@@ -110,8 +110,9 @@ namespace NoZ.Zisle
         [SerializeField] private Collider _hitCollider = null;
 
         [Header("Visuals")]
+        [SerializeField] protected Transform _scaleTransform = null;
+        [SerializeField] protected Transform _pitchTransform = null;
         [SerializeField] protected GameObject _spawnVFXPrefab = null;
-        [SerializeField] protected Transform _runPitchTransform = null;
         [SerializeField] protected float _runPitch = 20.0f;
         [SerializeField] protected float _height = 0.5f;
 
@@ -129,6 +130,8 @@ namespace NoZ.Zisle
         private LinkedListNode<Actor> _node;
         private WorldVisualElement<HealthCircle> _healthCircle;
         private MaterialPropertyBlock _materialProperties;
+        private bool _materialPropertiesDirty;
+        private float _visualPitch;
 
         private LinkedList<ActorEffectContext> _effects = new LinkedList<ActorEffectContext>();
         private ActorAttributeValue[] _attributeTable;
@@ -160,6 +163,36 @@ namespace NoZ.Zisle
         public ActorTypeMask TypeMask => (ActorTypeMask)(1 << (int)_actorDefinition.ActorType);
 
         public Vector3 Position => transform.position.ZeroY();
+
+        public Color GetMaterialColor (int nameId) => _materialProperties.GetColor(nameId);
+        public void SetMaterialColor (int nameId, Color value)
+        {
+            _materialProperties.SetColor(nameId, value);
+            _materialPropertiesDirty = true;
+        }
+
+        public Vector3 VisualScale
+        {
+            get => _scaleTransform == null ? Vector3.one : _scaleTransform.localScale;
+            set
+            {
+                if (_scaleTransform == null)
+                    return;
+
+                _scaleTransform.localScale = value;
+            }
+            
+        }
+
+        public float VisualPitch
+        {
+            get => _visualPitch;
+            set
+            {
+                _visualPitch = value;
+                UpdateVisualPitch();
+            }
+        }
 
         public MaterialPropertyBlock MaterialProperties => _materialProperties;
 
@@ -485,8 +518,7 @@ namespace NoZ.Zisle
 
             ResetAttributes();
 
-            foreach (var effect in _actorDefinition.Effects)
-                AddEffect(this, effect);
+            AddDefaultEffects();
 
             UpdateAttributes();
 
@@ -679,11 +711,20 @@ namespace NoZ.Zisle
 
             SnapToGround();
             UpdateAnimation();
-            UpdateRunPitch();
+            UpdateVisualPitch();
 
             // TODO: think rate?
             if (_actorDefinition.Brain != null)
                 _actorDefinition.Brain.Think(this, _thinkState);
+        }
+
+        private void LateUpdate()
+        {
+            if (_materialPropertiesDirty)
+            {
+                _materialPropertiesDirty = false;
+                OnMaterialPropertiesChanged?.Invoke(_materialProperties);
+            }
         }
 
         public void SnapToGround()
@@ -715,13 +756,13 @@ namespace NoZ.Zisle
             PlayAnimation(_actorDefinition.RunAnimation);
         }
 
-        private void UpdateRunPitch ()
+        private void UpdateVisualPitch ()
         {
-            if (_runPitchTransform != null)
-            {
-                var normalizedSpeed = Mathf.Clamp01(_speed / GetAttributeValue(ActorAttribute.Speed));
-                _runPitchTransform.localRotation = Quaternion.Euler(_runPitch * normalizedSpeed, 0, 0);
-            }
+            if (_pitchTransform == null)
+                return;
+
+            var normalizedSpeed = Mathf.Clamp01(_speed / GetAttributeValue(ActorAttribute.Speed));
+            _pitchTransform.localRotation = Quaternion.Euler(_runPitch * normalizedSpeed + _visualPitch, 0, 0);
         }
 
         public float DistanceTo(Vector3 position) => (transform.position - position).magnitude;
@@ -773,6 +814,37 @@ namespace NoZ.Zisle
                 _materialProperties.SetColor(nameId, Color.clear);
                 return;
             }
+        }
+
+        private void AddDefaultEffects()
+        {
+            var defaultMaterialColor = ScriptableObject.CreateInstance<SetMaterialColor>();
+            defaultMaterialColor.Value = Color.clear;
+            defaultMaterialColor.Lifetime = ActorEffectLifetime.Forever;
+            defaultMaterialColor.NameId = ShaderPropertyID._Color;
+            defaultMaterialColor.BlendTime = 0.1f;
+            AddEffect(this, defaultMaterialColor);
+
+            if (_scaleTransform != null)
+            {
+                var defaultScale = ScriptableObject.CreateInstance<SetScale>();
+                defaultScale.Value = Vector3.one;
+                defaultScale.Lifetime = ActorEffectLifetime.Forever;
+                defaultScale.BlendTime = 0.1f;
+                AddEffect(this, defaultScale);
+            }
+
+            if(_pitchTransform != null)
+            { 
+                var defaultPitch = ScriptableObject.CreateInstance<SetPitch>();
+                defaultPitch.Value = 0.0f;
+                defaultPitch.Lifetime = ActorEffectLifetime.Forever;
+                defaultPitch.BlendTime = 0.1f;
+                AddEffect(this, defaultPitch);
+            }
+
+            foreach (var effect in _actorDefinition.Effects)
+                AddEffect(this, effect);
         }
     }
 }

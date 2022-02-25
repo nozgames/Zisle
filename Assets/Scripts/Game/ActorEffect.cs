@@ -44,7 +44,11 @@ namespace NoZ.Zisle
         [SerializeField] private ActorEffectLifetime _lifetime = ActorEffectLifetime.Frame;
         [SerializeField] private float _duration = 1.0f;
 
-        public ActorEffectLifetime Lifetime => _lifetime;
+        public ActorEffectLifetime Lifetime
+        {
+            get => _lifetime;
+            set => _lifetime = value;
+        }
 
         public float Duration => _duration;
 

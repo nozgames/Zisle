@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 34452f75e1a36f64988e322fb32d9d27, type: 3}
-  m_Name: KnightSwordSlashAttack
+  m_Name: KnightAttack2
   m_EditorClassIdentifier: 
   _actorState: 3
-  _targetFinder: {fileID: 11400000, guid: 18c10586b1cda65499e428688ff139d3, type: 2}
-  _moveSpeed: 0
+  _targetFinder: {fileID: 11400000, guid: 6cc71e8184019114f84446dc2f521cea, type: 2}
+  _moveSpeed: 0.1
   _conditions:
   - {fileID: 11400000, guid: 7a6eb5984851642459787074d571563a, type: 2}
-  - {fileID: 11400000, guid: 6b64f3db4032ebe41a97f195d454e067, type: 2}
+  - {fileID: 11400000, guid: 1f7faad1a928e68419b17824b301451b, type: 2}
   _commandsOnUse:
   - {fileID: 11400000, guid: f3a0a085e5c96d24e9b4315ee676d279, type: 2}
-  - {fileID: 11400000, guid: 7d163fd25250f534aa312e08bc0aad76, type: 2}
+  - {fileID: 11400000, guid: 9f2f588e6b4e5fb4e9a9f50eb068be21, type: 2}
   _commandsOnHit:
   - {fileID: 11400000, guid: 08221277cea7bd14eacaf1493a67d5c9, type: 2}
   - {fileID: 11400000, guid: b4c9bd1b9243fd34690abceb00b19573, type: 2}

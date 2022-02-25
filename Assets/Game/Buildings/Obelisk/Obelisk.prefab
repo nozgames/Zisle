@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7457722228445880957}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1977208671167925589
 BoxCollider:
@@ -77,8 +77,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6570268311033404621}
   - {fileID: 2675568438167149780}
+  - {fileID: 6570268311033404621}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -112,12 +112,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actorDefinition: {fileID: 11400000, guid: cd5645f568fe9994db47bdd28f69db06, type: 2}
   _hitCollider: {fileID: 1977208671167925589}
-  _audioSource: {fileID: 0}
-  _ghostMaterial: {fileID: 0}
+  _visualTransform: {fileID: 0}
   _spawnVFXPrefab: {fileID: 0}
-  _runPitchTransform: {fileID: 0}
   _runPitch: 20
   _height: 3
+  _slotRightWeapon: {fileID: 0}
+  _slotLeftWeapon: {fileID: 0}
+  _slotBody: {fileID: 0}
 --- !u!114 &828693400773729145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,12 +172,12 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 4b99bbba5f163a24e8c06ab856a03625,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4b99bbba5f163a24e8c06ab856a03625,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4b99bbba5f163a24e8c06ab856a03625,
         type: 3}
@@ -201,7 +202,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 4b99bbba5f163a24e8c06ab856a03625,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4b99bbba5f163a24e8c06ab856a03625,
         type: 3}
