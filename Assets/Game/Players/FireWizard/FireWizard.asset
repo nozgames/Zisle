@@ -33,6 +33,7 @@ MonoBehaviour:
   _baseHarvest: 1
   _baseBuild: 1
   _abilities:
+  - {fileID: 11400000, guid: b941ed9298a177c478aa097d18572b51, type: 2}
   - {fileID: 11400000, guid: 3bfd5e80e6ba1a94f9b986a5ffb1510a, type: 2}
   - {fileID: 11400000, guid: 6ddc91115f8077e48b5f2a5dfe896b5b, type: 2}
   _spawnWeights: []

@@ -168,6 +168,28 @@ namespace NoZ.Zisle
             return source;
         }
 
+        public AudioSource PlaySound(GameObject gameObject, AudioClip clip, float volume=1.0f, float pitch=1.0f, float spatialRange=10.0f)
+        {
+            if (clip == null)
+                return null;
+
+            if (!gameObject.activeInHierarchy)
+                return null;
+
+            var source = _spatialPool.Get();
+            source.spatialize = true;
+            source.maxDistance = spatialRange;
+            source.pitch = pitch;
+            source.volume = volume;
+            source.transform.SetParent(gameObject.transform, false);
+            source.transform.localPosition = Vector3.zero;
+            source.transform.localRotation = Quaternion.identity;
+            source.enabled = true;
+            source.PlayOneShot(clip);
+            _activeAudioSources.Add(source);
+            return source;
+        }
+
         private void LateUpdate()
         {
             // Check for any audio sources that have finished playing and return them to the pool

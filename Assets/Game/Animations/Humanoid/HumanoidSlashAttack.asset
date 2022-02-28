@@ -15,4 +15,6 @@ MonoBehaviour:
   _clip: {fileID: 4723146814002874508, guid: 1bae3ca40606fc8439d512becd510c96, type: 3}
   _speed: 12
   _blendTime: 0.1
-  _events: []
+  _events:
+  - time: 0.25
+    raise: {fileID: 11400000, guid: 39fb1d30936dfc546a16744806ee8649, type: 2}

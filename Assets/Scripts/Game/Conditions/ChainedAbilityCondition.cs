@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace NoZ.Zisle
@@ -6,7 +5,7 @@ namespace NoZ.Zisle
     public class ChainedAbilityCondition : AbilityCondition
     {
         [Tooltip("List of abilities that qualify for chaining from")] 
-        [SerializeField] private ActorAbility[] _previousAbility = null;
+        [SerializeField] private Ability[] _previousAbility = null;
 
         [Tooltip("Time before the previous ability no longer qualifies")]
         [SerializeField] private float _time = 0.0f;

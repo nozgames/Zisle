@@ -4,7 +4,7 @@ using UnityEngine.VFX;
 namespace NoZ.Zisle
 {
     [CreateAssetMenu(menuName = "Zisle/Effects/Play VFX")]
-    public class VFXEffect : ActorEffect
+    public class PlayVFX : ActorEffect
     {
         [SerializeField] private VisualEffectAsset _vfx = null;
         [SerializeField] private ActorSlot _slot = ActorSlot.None;

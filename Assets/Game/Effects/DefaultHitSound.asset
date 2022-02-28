@@ -16,4 +16,10 @@ MonoBehaviour:
   _duration: 1
   _target: 2
   _targetFinder: {fileID: 0}
-  _shader: {fileID: 11400000, guid: 2a6b2a48cc18c724492380de8c1e3bbf, type: 2}
+  _clips:
+  - {fileID: 8300000, guid: daddf6b8707e9ba429bd858a85fd4f34, type: 3}
+  _volume: 0.5
+  _pitch: 1
+  _randomPitch: 0.125
+  _randomVolume: 0.1
+  _spatialRange: 10

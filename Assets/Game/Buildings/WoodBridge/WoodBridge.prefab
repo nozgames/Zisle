@@ -112,7 +112,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actorDefinition: {fileID: 11400000, guid: f9fac8c8277b48f4990d8f0a001949a9, type: 2}
   _hitCollider: {fileID: 1407335746068066591}
-  _visualTransform: {fileID: 0}
+  _scaleTransform: {fileID: 0}
+  _pitchTransform: {fileID: 0}
   _spawnVFXPrefab: {fileID: 0}
   _runPitch: 20
   _height: 0.5
@@ -193,6 +194,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.2976735, y: 0.8437978, z: 1.2320344}
   m_Center: {x: 0, y: 0.019938052, z: 0}
+--- !u!114 &7545658140144334873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2378915661756933861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c18608d3479bfd4289b7812e8a4ecc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &3046768281891568735 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6c0822d97997bea43956d2cc99474e00,

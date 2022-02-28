@@ -9,8 +9,6 @@ namespace NoZ.Zisle
     public class CameraManager : Singleton<CameraManager>
     {
         [SerializeField] private Camera _camera = null;
-        [SerializeField] private CinemachineBrain _brain = null;
-        [SerializeField] private CameraShake _cameraShake = null;
 
         [Header("Isometric")]
         [SerializeField] private CinemachineVirtualCamera _isometricCamera = null;

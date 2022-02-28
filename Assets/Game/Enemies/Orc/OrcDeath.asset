@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-1305592323429382569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7d478cfd055dd4aafded299465168a, type: 3}
+  m_Name: ActorStateCondition
+  m_EditorClassIdentifier: 
+  _state: 4
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9,16 +22,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34452f75e1a36f64988e322fb32d9d27, type: 3}
+  m_Script: {fileID: 11500000, guid: 55bcebfb8856cdd478a388d30fb8b332, type: 3}
   m_Name: OrcDeath
   m_EditorClassIdentifier: 
-  _actorState: 4
-  _targetFinder: {fileID: 0}
+  _animation: {fileID: 11400000, guid: 3632060de9552e3498aef82567fdb40d, type: 2}
   _moveSpeed: 0
-  _conditions: []
-  _commandsOnUse:
-  - {fileID: 11400000, guid: 6fc9ea438762d88498ac0b27991db39f, type: 2}
-  - {fileID: 11400000, guid: ff86b23cec8b78747ad8482d68ab60ce, type: 2}
-  - {fileID: 11400000, guid: 5b01ed82add7d384397fe788a69d261e, type: 2}
-  _commandsOnHit: []
-  _commandsOnMiss: []
+  _target: 0
+  _targetFinder: {fileID: 0}
+  _events:
+  - {fileID: 2300529879258789792}
+  _conditions:
+  - {fileID: -1305592323429382569}
+--- !u!114 &2300529879258789792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7eadb1d63cb7e54fb678376ede3b2d1, type: 3}
+  m_Name: AbilityBegin
+  m_EditorClassIdentifier: 
+  _event: {fileID: 11400000, guid: 5da03270f53918f46a21ac33ff7f3e5b, type: 2}
+  _target: 2
+  _targetFinder: {fileID: 0}
+  _effects:
+  - {fileID: 11400000, guid: 15f8a0ed7631a5145830ebbc51f313b1, type: 2}

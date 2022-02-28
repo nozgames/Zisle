@@ -10,7 +10,13 @@ namespace NoZ.Zisle
             protected override void AddTargets(Actor source) => Add(source);
         }
 
+        private class EmptyTargetFinder : TargetFinder
+        {
+            protected override void AddTargets(Actor source) { }
+        }
+
         private static SelfTargetFinder _selfTarget;
+        private static EmptyTargetFinder _emptyTarget;
 
         private Actor _source = null;
         private int _frame = 0;
@@ -39,6 +45,25 @@ namespace NoZ.Zisle
             _frame = 0;
             _source = null;
             _targets.Clear();
+        }
+
+        private static TargetFinder GetSelfTargetFinder(Actor source)
+        {
+            if (_selfTarget == null)
+                _selfTarget = CreateInstance<SelfTargetFinder>();
+
+            _selfTarget.Clear();
+            _selfTarget.FindTargets(source);
+
+            return _selfTarget;
+        }
+
+        private static TargetFinder GetEmptyTargetFinder()
+        {
+            if(_emptyTarget == null)
+                _emptyTarget = CreateInstance<EmptyTargetFinder>();
+
+            return _emptyTarget;
         }
 
         /// <summary>
@@ -83,17 +108,17 @@ namespace NoZ.Zisle
                         custom.FindTargets(source);
                         return custom;
                     }
-                    return null;
+
+                    if (_emptyTarget != null)
+                        _emptyTarget = new EmptyTargetFinder();
+                    return _emptyTarget;
 
                 default:
                 case TargetType.Inherit:
-                    return inherit;
+                    return inherit != null ? inherit : GetEmptyTargetFinder();
 
                 case TargetType.Self:
-                    if (_selfTarget == null)
-                        _selfTarget = CreateInstance<SelfTargetFinder>();
-                    _selfTarget.FindTargets(source);
-                    return _selfTarget;
+                    return GetSelfTargetFinder(source);
             }
         }
     }

@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8212571907209798139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7d478cfd055dd4aafded299465168a, type: 3}
+  m_Name: ActorStateCondition
+  m_EditorClassIdentifier: 
+  _state: 3
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9,20 +22,82 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34452f75e1a36f64988e322fb32d9d27, type: 3}
+  m_Script: {fileID: 11500000, guid: 55bcebfb8856cdd478a388d30fb8b332, type: 3}
   m_Name: OrcBossAttack
   m_EditorClassIdentifier: 
-  _actorState: 3
-  _targetFinder: {fileID: 11400000, guid: 6756eb52851087247a68dd89d3028b0d, type: 2}
+  _animation: {fileID: 11400000, guid: 1ac23c1caca318d46976e1911e66485f, type: 2}
   _moveSpeed: 0
+  _target: 1
+  _targetFinder: {fileID: 11400000, guid: 6756eb52851087247a68dd89d3028b0d, type: 2}
+  _events:
+  - {fileID: 5464800109395909511}
+  - {fileID: 5598493733857734124}
   _conditions:
-  - {fileID: 11400000, guid: 87506c1e90fa8034cbbd9d9a5ea89b62, type: 2}
-  - {fileID: 11400000, guid: d3c43e6864cff464fa2a25ee20290978, type: 2}
-  _commandsOnUse:
-  - {fileID: 11400000, guid: 7d163fd25250f534aa312e08bc0aad76, type: 2}
-  - {fileID: 11400000, guid: f3a0a085e5c96d24e9b4315ee676d279, type: 2}
-  _commandsOnHit:
-  - {fileID: 11400000, guid: 1fa98e47851eaa84d8337c19a54fe104, type: 2}
-  - {fileID: 11400000, guid: 08221277cea7bd14eacaf1493a67d5c9, type: 2}
-  - {fileID: 11400000, guid: 7bfb66ed311842649806e517b10ebc4c, type: 2}
-  _commandsOnMiss: []
+  - {fileID: -8212571907209798139}
+  - {fileID: 4779010064822755021}
+  - {fileID: 4611482954845064401}
+--- !u!114 &4611482954845064401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5383858d9ce6814180c50d380d93af5, type: 3}
+  m_Name: TargetCountCondition
+  m_EditorClassIdentifier: 
+  _target: 2
+  _targetFinder: {fileID: 0}
+  _minTargetCount: 1
+  _maxTargetCount: 128
+--- !u!114 &4779010064822755021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ac3cb697498c03489517cf150d133aa, type: 3}
+  m_Name: CooldownCondition
+  m_EditorClassIdentifier: 
+  _duration: 1
+--- !u!114 &5464800109395909511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7eadb1d63cb7e54fb678376ede3b2d1, type: 3}
+  m_Name: AbilityBegin
+  m_EditorClassIdentifier: 
+  _event: {fileID: 11400000, guid: 5da03270f53918f46a21ac33ff7f3e5b, type: 2}
+  _target: 2
+  _targetFinder: {fileID: 0}
+  _effects:
+  - {fileID: 11400000, guid: 5ce11276384eef149b04eb1729f91e42, type: 2}
+--- !u!114 &5598493733857734124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7eadb1d63cb7e54fb678376ede3b2d1, type: 3}
+  m_Name: AbilityAction
+  m_EditorClassIdentifier: 
+  _event: {fileID: 11400000, guid: 39fb1d30936dfc546a16744806ee8649, type: 2}
+  _target: 2
+  _targetFinder: {fileID: 0}
+  _effects:
+  - {fileID: 11400000, guid: c2a5e128761e06e4c93d1b41448d4fbd, type: 2}
+  - {fileID: 11400000, guid: 931ab6ce4e67a274e8dddaf3daf86272, type: 2}
+  - {fileID: 11400000, guid: 8bcb814695326594ab054a4f065410d0, type: 2}

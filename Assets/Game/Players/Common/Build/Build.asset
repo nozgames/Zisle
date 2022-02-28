@@ -1,5 +1,64 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8794739306515917115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7d478cfd055dd4aafded299465168a, type: 3}
+  m_Name: ActorStateCondition
+  m_EditorClassIdentifier: 
+  _state: 3
+--- !u!114 &-8527147290230959849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7eadb1d63cb7e54fb678376ede3b2d1, type: 3}
+  m_Name: AbilityBegin
+  m_EditorClassIdentifier: 
+  _event: {fileID: 11400000, guid: 5da03270f53918f46a21ac33ff7f3e5b, type: 2}
+  _target: 2
+  _targetFinder: {fileID: 0}
+  _effects:
+  - {fileID: 11400000, guid: 5ce11276384eef149b04eb1729f91e42, type: 2}
+--- !u!114 &-4776745303268546128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08050e425259c1841ab2d44f928145df, type: 3}
+  m_Name: ButtonPressCondition
+  m_EditorClassIdentifier: 
+  _button: 0
+--- !u!114 &-1943603301712533966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5383858d9ce6814180c50d380d93af5, type: 3}
+  m_Name: TargetCountCondition
+  m_EditorClassIdentifier: 
+  _target: 2
+  _targetFinder: {fileID: 0}
+  _minTargetCount: 1
+  _maxTargetCount: 128
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9,18 +68,36 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34452f75e1a36f64988e322fb32d9d27, type: 3}
+  m_Script: {fileID: 11500000, guid: 55bcebfb8856cdd478a388d30fb8b332, type: 3}
   m_Name: Build
   m_EditorClassIdentifier: 
+  _animation: {fileID: 11400000, guid: 2103f1563fdbe364a9362221058bd79d, type: 2}
+  _moveSpeed: 0.1
+  _target: 1
   _targetFinder: {fileID: 11400000, guid: d2450a0808240ce4e945ea6be6dde0ed, type: 2}
-  _moveSpeed: 0
+  _events:
+  - {fileID: -8527147290230959849}
+  - {fileID: 3857699624854712343}
   _conditions:
-  - {fileID: 11400000, guid: 7a6eb5984851642459787074d571563a, type: 2}
-  - {fileID: 11400000, guid: d3c43e6864cff464fa2a25ee20290978, type: 2}
-  _commandsOnUse:
-  - {fileID: 11400000, guid: 9f2f588e6b4e5fb4e9a9f50eb068be21, type: 2}
-  - {fileID: 11400000, guid: 905e6a2b8852b8d41915f1fca7f4c667, type: 2}
-  _commandsOnHit:
+  - {fileID: -8794739306515917115}
+  - {fileID: -4776745303268546128}
+  - {fileID: -1943603301712533966}
+--- !u!114 &3857699624854712343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7eadb1d63cb7e54fb678376ede3b2d1, type: 3}
+  m_Name: AbilityAction
+  m_EditorClassIdentifier: 
+  _event: {fileID: 11400000, guid: 39fb1d30936dfc546a16744806ee8649, type: 2}
+  _target: 2
+  _targetFinder: {fileID: 0}
+  _effects:
   - {fileID: 11400000, guid: 75dd08569c890ef4aad4e7d6e3f27a70, type: 2}
+  - {fileID: 11400000, guid: 5618f1157a2243a4185d8e6427d78fee, type: 2}
   - {fileID: 11400000, guid: 2d8c4cc8745d4fa4cb5461596667a3e1, type: 2}
-  _commandsOnMiss: []

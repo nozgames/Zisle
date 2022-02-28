@@ -11,8 +11,10 @@ namespace NoZ.Zisle
     [CustomEditor(typeof(Ability))]
     public class AbilityEditor : Editor
     {
+        private VisualElement _root = null;
         private VisualElement _eventsContent = null;
         private VisualElement _conditionsContent = null;
+        private VisualElement _inspector = null;
         private Ability _ability = null;
 
         public void OnEnable()
@@ -23,6 +25,7 @@ namespace NoZ.Zisle
 
         public void OnDisable()
         {
+            EditorApplication.update -= OnNextUpdate;
             Undo.undoRedoPerformed -= OnUndoRedo;
         }
 
@@ -40,9 +43,9 @@ namespace NoZ.Zisle
             root.styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/Editor/AbilityEditor.uss"));
 
             // Create the inspector for the ability properties
-            var inspector = EditorHelpers.CreateInspector(serializedObject, (p) => p.name != "_conditions" && p.name != "_events");
-            EditorHelpers.HandleTargetType(serializedObject, inspector);
-            root.Add(inspector);
+            _inspector = EditorHelpers.CreateInspector(serializedObject, (p) => p.name != "_conditions" && p.name != "_events");
+            EditorHelpers.HandleTargetType(serializedObject, _inspector);
+            root.Add(_inspector);
 
             // Create tabs
             var tabs = new TabbedView();
@@ -51,11 +54,22 @@ namespace NoZ.Zisle
             tabs.Add(new TabButton("Events", CreateEventsTab()));
             root.Add(tabs);
 
-            // Populate initial values in events and conditions
-            UpdateEvents();
-            UpdateConditions();
+            EditorApplication.update += OnNextUpdate;
+
+            _root = root;
 
             return root;
+        }
+
+        private void OnNextUpdate()
+        {
+            EditorApplication.update -= OnNextUpdate;
+
+            _root.Unbind();
+            _inspector.Bind(serializedObject);
+
+            UpdateEvents();
+            UpdateConditions();
         }
 
         private VisualElement CreateConditionsTab()
@@ -99,6 +113,7 @@ namespace NoZ.Zisle
         private void UpdateConditions()
         {
             _conditionsContent.Clear();
+            _conditionsContent.Unbind();
 
             var conditionsProperty = serializedObject.FindProperty("_conditions");
             for (int i = 0; i < conditionsProperty.arraySize; i++)
@@ -221,6 +236,7 @@ namespace NoZ.Zisle
         private void UpdateEvents()
         {
             _eventsContent.Clear();
+            _eventsContent.Unbind();
 
             var abilityEventsProperty = serializedObject.FindProperty("_events");
             for(int i=0; i<abilityEventsProperty.arraySize; i++)

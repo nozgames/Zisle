@@ -12,4 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ac1701c6e243924eb1ed29293d00c51, type: 3}
   m_Name: HarvestHitSound
   m_EditorClassIdentifier: 
-  _shader: {fileID: 11400000, guid: b4a293014c53f6f4c8acfce174ba52d8, type: 2}
+  _lifetime: 6
+  _duration: 1
+  _target: 2
+  _targetFinder: {fileID: 0}
+  _clips:
+  - {fileID: 8300000, guid: 8e4bb16ad61c6954791ae6594786ee91, type: 3}
+  - {fileID: 8300000, guid: b025705f852a63c42b487eebfbf8189a, type: 3}
+  - {fileID: 8300000, guid: 42ef68e26e8dc9e42a729c6b0d11a433, type: 3}
+  - {fileID: 8300000, guid: 57b496418ad9f0748b116920bc3bc5ed, type: 3}
+  - {fileID: 8300000, guid: 82f43f540988db54197251f9ed5b059f, type: 3}
+  _volume: 0.5
+  _pitch: 1
+  _randomPitch: 0.1
+  _randomVolume: 0.1
+  _spatialRange: 10

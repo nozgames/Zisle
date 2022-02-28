@@ -12,3 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5aa804b50635234a8b81d89e20d1a1e, type: 3}
   m_Name: DefaultBuild
   m_EditorClassIdentifier: 
+  _lifetime: 6
+  _duration: 1
+  _target: 2
+  _targetFinder: {fileID: 0}
