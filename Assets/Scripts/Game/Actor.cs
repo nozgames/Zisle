@@ -621,8 +621,9 @@ namespace NoZ.Zisle
             }
 
             return true;
-        }        
+        }
 
+#if false
         public void ExecuteCommand(ActorCommand command, Actor source)
         {
             // Client command?
@@ -672,6 +673,7 @@ namespace NoZ.Zisle
             if (command is IExecuteOnClient clientCommand)
                 clientCommand.ExecuteOnClient(source, this);
         }
+#endif
 
         /// <summary>
         /// Return the actor for the given network id

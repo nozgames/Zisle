@@ -3,35 +3,54 @@ using UnityEngine;
 
 namespace NoZ.Zisle
 {
-    [CreateAssetMenu(menuName = "Zisle/Commands/Instantiate Prefab")]
-    public class InstantiatePrefab : ActorCommand, IExecuteOnClient, IExecuteOnServer
+    [CreateAssetMenu(menuName = "Zisle/Effects/Instantiate Prefab")]
+    public class InstantiatePrefab : ActorEffect
     {
-        [SerializeField] private GameObject _prefab;
-        [SerializeField] private bool _parentToTarget = false;
+        [SerializeField] private PrefabPool _prefab = null;
+        [SerializeField] private ActorSlot _slot = ActorSlot.None;
+        [SerializeField] private bool _parentToSlot = true;
 
-        public void ExecuteOnClient(Actor source, Actor target)
+        /// <summary>
+        /// Override any effects in the same slot
+        /// </summary>
+        public override bool DoesOverride(ActorEffect effect) =>
+            effect is InstantiatePrefab slot && slot._slot == _slot;
+
+        public override void Apply(ActorEffectContext context)
         {
-            if (_prefab.TryGetComponent<NetworkObject>(out var netobj))
+            // If the prefab was already instantiated then just enable it
+            if (context.UserData != null)
+            {
+                (context.UserData as GameObject).SetActive(true);
+                return;
+            }
+
+            if (null == _prefab)
                 return;
 
-            Instantiate(_prefab, _parentToTarget ? target.transform : null, false);
+            var slot = context.Target.GetSlotTransform(_slot);
+            if (slot == null)
+                return;
+
+            var go = _prefab.Instantiate(_parentToSlot ? slot.transform : Game.Instance.transform);
+            go.transform.position = slot.transform.position;
+            go.transform.rotation = slot.transform.rotation;
+            go.SetActive(true);
+            context.UserData = go;            
         }
 
-        public void ExecuteOnServer(Actor source, Actor target)
+        public override void Remove(ActorEffectContext context)
         {
-            if (!_prefab.TryGetComponent<NetworkObject>(out var netobj))
-                return;
+            if (context.UserData != null)
+                (context.UserData as GameObject).SetActive(false);
+        }
 
-            var obj = Instantiate(_prefab, null, false);
-            if (obj == null)
-                return;
-
-            if (obj.TryGetComponent<NetworkObject>(out netobj))
+        public override void Release(ActorEffectContext context)
+        {
+            if (context.UserData != null)
             {
-                netobj.Spawn();
-
-                if(_parentToTarget)
-                    netobj.TrySetParent(target.NetworkObject);
+                (context.UserData as GameObject).PooledDestroy();
+                context.UserData = null;
             }
         }
     }

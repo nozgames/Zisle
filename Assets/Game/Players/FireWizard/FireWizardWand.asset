@@ -9,12 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f11a58fd80ac0b841b7c413fb583a5fa, type: 3}
+  m_Script: {fileID: 11500000, guid: 5a1012c1c5ca54a49ae8d0344e2b7f18, type: 3}
   m_Name: FireWizardWand
   m_EditorClassIdentifier: 
   _lifetime: 4
   _duration: 1
-  _target: 0
+  _target: 2
   _targetFinder: {fileID: 0}
-  _slot: 2
   _prefab: {fileID: 11400000, guid: 820c9f62fd9009e4ca0c9e967d8cf427, type: 2}
+  _slot: 2
+  _parentToSlot: 1

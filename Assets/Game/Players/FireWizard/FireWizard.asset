@@ -38,4 +38,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6ddc91115f8077e48b5f2a5dfe896b5b, type: 2}
   _spawnWeights: []
   _effects:
-  - {fileID: 11400000, guid: 3f1964d0f05b1eb4c8b562a07afcbb07, type: 2}
+  - {fileID: 11400000, guid: ca0c703de60a7dd4ba2a7a6330d0fbbb, type: 2}
