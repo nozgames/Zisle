@@ -30,7 +30,7 @@ MonoBehaviour:
   _targetFinder: {fileID: 0}
   _effects:
   - {fileID: 11400000, guid: 5ce11276384eef149b04eb1729f91e42, type: 2}
-  - {fileID: 11400000, guid: cfc0a4f0cdfced04aa0afc8d9d283176, type: 2}
+  - {fileID: 11400000, guid: 20ddf0948b464e74ca1ce88f24babdf9, type: 2}
 --- !u!114 &-4776745303268546128
 MonoBehaviour:
   m_ObjectHideFlags: 0
