@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _lifetime: 4
   _duration: 1
+  _target: 0
+  _targetFinder: {fileID: 0}
   _slot: 2
   _prefab: {fileID: 11400000, guid: 820c9f62fd9009e4ca0c9e967d8cf427, type: 2}

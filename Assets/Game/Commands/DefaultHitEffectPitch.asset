@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b12165d047e5a94d97c483731d08121, type: 3}
   m_Name: DefaultHitEffectPitch
   m_EditorClassIdentifier: 
-  _lifetime: 3
+  _targets: {fileID: 0}
+  _lifetime: 1
   _duration: 0.05
   _value: -25
   _blendTime: 0.05

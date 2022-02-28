@@ -38,7 +38,7 @@ namespace NoZ.Zisle
         [SerializeField] private float _baseBuild = 1.0f;
 
         [Space]
-        [SerializeField] private ActorAbility[] _abilities = null;
+        [SerializeField] private Ability[] _abilities = null;
 
         [Space]
         [SerializeField] private SpawnWeight[] _spawnWeights = null;
@@ -50,7 +50,7 @@ namespace NoZ.Zisle
         /// <summary>
         /// Get the available abilities for this actor
         /// </summary>
-        public ActorAbility[] Abilities => _abilities;
+        public Ability[] Abilities => _abilities;
 
         /// <summary>
         /// Return the list of starting effects
@@ -112,7 +112,8 @@ namespace NoZ.Zisle
         {
             base.RegisterNetworkId();
 
-            _abilities.RegisterNetworkIds();
+            if(_abilities != null)
+                _abilities.RegisterNetworkIds();
         }
 
         /// <summary>

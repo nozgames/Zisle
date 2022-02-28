@@ -124,7 +124,7 @@ namespace NoZ.Zisle
         private float[] _abilityUsedTime;
         private float _lastAbilityUsedTime;
         private float _lastAbilityUsedEndTime;
-        private ActorAbility _lastAbilityUsed;
+        private Ability _lastAbilityUsed;
         private AnimationShader _currentAnimation;
         private AnimationShader _oneShotAnimation;
         private LinkedListNode<Actor> _node;
@@ -152,11 +152,11 @@ namespace NoZ.Zisle
         public NavMeshAgent NavAgent { get; private set; }
         public NavMeshObstacle NavObstacle { get; private set; }
 
-        public ActorAbility LastAbilityUsed => _lastAbilityUsed;
+        public Ability LastAbilityUsed => _lastAbilityUsed;
         public float LastAbilityUsedEndTime => _lastAbilityUsedEndTime;
         public float LastAbilityUsedTime => _lastAbilityUsedTime;
 
-        public ActorAbility[] Abilities => _actorDefinition.Abilities;
+        public Ability[] Abilities => _actorDefinition.Abilities;
 
         public ActorType Type => _actorDefinition.ActorType;
 
@@ -324,8 +324,11 @@ namespace NoZ.Zisle
 
             _oneShotAnimation = shader;
             _currentAnimation = shader;
-            _animator.Play(shader, onComplete: OnOneShotAnimationComplete);
+            _animator.Play(shader, onComplete: OnOneShotAnimationComplete, onEvent: OnOneShotAnimationEvent);
         }
+
+        private void OnOneShotAnimationEvent(Animations.AnimationEvent evt) =>
+            _lastAbilityUsed.OnEvent(this, evt, _lastAbilityUsed.FindTargets(this));
 
         private void OnOneShotAnimationComplete ()
         {
@@ -424,10 +427,10 @@ namespace NoZ.Zisle
         /// Add an effect to the actor
         /// </summary>
         /// <param name="effect"></param>
-        public void AddEffect (Actor source, ActorEffect effect)
+        public ActorEffectContext AddEffect (Actor source, ActorEffect effect, ActorEffectContext inherit=null)
         {
             if (effect == null || source == null)
-                return;
+                return null;
 
             foreach(var existingEffect in _effects)
             {
@@ -436,15 +439,26 @@ namespace NoZ.Zisle
                     existingEffect.Enabled = false;
             }
 
-            var context = ActorEffectContext.Get(effect, source, this);
+            var context = ActorEffectContext.Get(effect, source, this, inherit);
             _effects.AddLast(context.Node);
             context.Enabled = true;
 
             OnMaterialPropertiesChanged?.Invoke(_materialProperties);
+
+            if (effect.Lifetime == ActorEffectLifetime.Instant)
+            {
+                RemoveEffect(context);
+                return null;
+            }
+
+            return context;
         }
 
-        private void RemoveEffect (ActorEffectContext effectContext)
+        public void RemoveEffect (ActorEffectContext effectContext)
         {
+            if (effectContext.Node.List == null)
+                return;
+
             effectContext.Enabled = false;
 
             // Search to see if this effect was overriding another effect and if so re-enable that effect
@@ -579,7 +593,7 @@ namespace NoZ.Zisle
             NavAgent.SetDestination(destination);
         }
 
-        public virtual bool ExecuteAbility(ActorAbility ability, List<Actor> targets)
+        public virtual bool ExecuteAbility(Ability ability, List<Actor> targets)
         {
             // Remove any effects that should only last for the duration of an ability
             RemoveEffects(ActorEffectLifetime.NextAbility);
@@ -587,11 +601,15 @@ namespace NoZ.Zisle
             if (ability == null)
                 return false;
 
-            if (!ability.Execute(this, targets))
+            if (ability.Animation == null)
                 return false;
 
             _lastAbilityUsedTime = Time.time;
             _lastAbilityUsed = ability;
+
+            ability.OnEvent(this, GameManager.Instance.AbilityBeginEvent, ability.FindTargets(this));
+            PlayOneShotAnimation(ability.Animation);
+
 
             for (int i = 0, c = _actorDefinition.Abilities.Length; i < c; i++)
             {
@@ -668,7 +686,7 @@ namespace NoZ.Zisle
             return sourceObj.GetComponent<Actor>();
         }
 
-        public float GetAbilityLastUsedTime (ActorAbility actorAbility)
+        public float GetAbilityLastUsedTime (Ability actorAbility)
         {
             for (int i = 0, c = _actorDefinition.Abilities.Length; i < c; i++)
             {
@@ -816,12 +834,14 @@ namespace NoZ.Zisle
             }
         }
 
+        NetworkList<byte> a;
+
         private void AddDefaultEffects()
         {
             var defaultMaterialColor = ScriptableObject.CreateInstance<SetMaterialColor>();
             defaultMaterialColor.Value = Color.clear;
             defaultMaterialColor.Lifetime = ActorEffectLifetime.Forever;
-            defaultMaterialColor.NameId = ShaderPropertyID._Color;
+            defaultMaterialColor.PropertyNameId = ShaderPropertyID._Color;
             defaultMaterialColor.BlendTime = 0.1f;
             AddEffect(this, defaultMaterialColor);
 

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace NoZ.Zisle
 {
-    [CreateAssetMenu(menuName = "Zisle/Actor Effects/Attach To Slot")]
+    [CreateAssetMenu(menuName = "Zisle/Effects/Attach To Slot")]
     public class AttachToSlot : ActorEffect
     {
         [Header("Attach To Slot")]

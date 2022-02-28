@@ -23,10 +23,8 @@ namespace NoZ.Zisle
             _targetArcScore = 1.0f / (1.0f - _targetArcCos);
         }
 
-        public override void FindTargets(Actor source, List<Actor> targets)
+        protected override void AddTargets (Actor source)
         {
-            targets.Clear();
-
             var count = Physics.OverlapSphereNonAlloc(source.transform.position, _targetRange, _colliders, _targetMask.ToLayerMask());
             var forward = source.transform.forward.ZeroY();
             for (int i = 0; i < _targetCount && count> 0; i++)
@@ -57,7 +55,7 @@ namespace NoZ.Zisle
 
                 if (bestTarget != null)
                 {
-                    targets.Add(bestTarget);
+                    Add(bestTarget);
                     _colliders[bestIndex] = _colliders[count - 1];
                     count--;
                 }

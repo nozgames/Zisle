@@ -9,6 +9,7 @@ namespace NoZ.Zisle
     [CreateAssetMenu(menuName = "Zisle/Actor Ability")]
     public class ActorAbility : NetworkScriptableObject<ActorAbility>
     {
+#if false
         [Header("General")]
         [SerializeField] private ActorState _actorState = ActorState.Active;
         [SerializeField] private TargetFinder _targetFinder = null;
@@ -16,7 +17,7 @@ namespace NoZ.Zisle
 
         [Space]
         [Space]
-        [SerializeField] private ActorAbilityCondition[] _conditions = null;
+        [SerializeField] private AbilityCondition[] _conditions = null;
 
         [Space]
         [SerializeField] private ActorCommand[] _commandsOnUse = null;
@@ -99,5 +100,6 @@ namespace NoZ.Zisle
 
             return score;
         }
+#endif
     }
 }

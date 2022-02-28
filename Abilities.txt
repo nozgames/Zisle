@@ -1,0 +1,34 @@
+ActorAbility
+
+- play animation
+- handle animation events
+	- built in start / end animation
+	- events coming from the animation itself
+
+- target finder that can be used for conditions
+	- each condition could specifiy a target finder and if the same target
+	  finder is used just reuse the targets?
+
+- events can also find targets, or effects can specify targets
+	- apply to, self or targets with target finder
+
+
+
+ActorAbility
+
+	Animation
+
+	Conditions
+
+	Events
+		Apply effect
+			
+
+
+
+How to handle upgrades?
+	Examples
+		- AOE effect on projectile explosion
+		- Add burn effect on hit
+		- Add bleed
+		- Add stun

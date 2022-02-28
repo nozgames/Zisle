@@ -24,6 +24,8 @@ namespace NoZ.Zisle
         [SerializeField] private GlobalShaderProperties _globalShaderProperties = null;
         [SerializeField] private WaterMesh _waterMesh;
         [SerializeField] private AudioListener _audioListener = null;
+        [SerializeField] private NoZ.Animations.AnimationEvent _abilityBeginEvent = null;
+        [SerializeField] private NoZ.Animations.AnimationEvent _abilityEndEvent = null;
 
         [Space]
         [SerializeField] private Biome[] _biomes = null;
@@ -35,6 +37,9 @@ namespace NoZ.Zisle
         private List<PlayerController> _players = new List<PlayerController>();
         private GameOptions _options = null;
         private string _connection;
+
+        public NoZ.Animations.AnimationEvent AbilityBeginEvent => _abilityBeginEvent;
+        public NoZ.Animations.AnimationEvent AbilityEndEvent => _abilityEndEvent;
 
         /// <summary>
         /// Optional join code if the connection was to a relay server

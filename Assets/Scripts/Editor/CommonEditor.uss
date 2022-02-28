@@ -1,0 +1,37 @@
+.hidden {
+	display: none;
+}
+
+.elements__item > Foldout > #unity-content {
+	margin: 0px;
+	margin-right: 2px;
+}
+
+.elements__item {
+	margin-left: -4px;
+	border-bottom-width: 1px;
+	border-bottom-color: var(--unity-colors-inspector_titlebar-border);
+}
+
+.elements__item .unity-toggle__input {
+	background-color: var(--unity-colors-inspector_titlebar-background);
+	height: var(--unity-metrics-inspector_titlebar-height);
+}
+
+.elements__item .unity-toggle__checkmark {
+	margin-bottom: auto;
+	margin-top: auto;
+}
+
+.elements__item .unity-base-field__inspector-field {
+	padding: 0px;
+	margin: 0px;
+}
+
+.elements__item__content {
+	padding: 4px 4px 8px 16px;
+}
+
+.elements__item__content PropertyField {
+	margin-top: 4px;
+}

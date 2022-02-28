@@ -35,6 +35,9 @@ namespace NoZ.Zisle
             var bestScore = float.MinValue;
             for (int i = 0; i < actor.Abilities.Length; i++)
             {
+                if (actor.Abilities[i] == null)
+                    continue;
+
                 var score = actor.Abilities[i].CalculateScore(actor, state.Targets[i]);
                 if (score > bestScore)
                 {

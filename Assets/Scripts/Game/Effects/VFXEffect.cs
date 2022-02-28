@@ -3,7 +3,7 @@ using UnityEngine.VFX;
 
 namespace NoZ.Zisle
 {
-    [CreateAssetMenu(menuName = "Zisle/Actor Effects/Play VFX")]
+    [CreateAssetMenu(menuName = "Zisle/Effects/Play VFX")]
     public class VFXEffect : ActorEffect
     {
         [SerializeField] private VisualEffectAsset _vfx = null;

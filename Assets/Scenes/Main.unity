@@ -286,6 +286,8 @@ MonoBehaviour:
     type: 2}
   _waterMesh: {fileID: 208307587}
   _audioListener: {fileID: 153247184}
+  _abilityBeginEvent: {fileID: 11400000, guid: 5da03270f53918f46a21ac33ff7f3e5b, type: 2}
+  _abilityEndEvent: {fileID: 11400000, guid: cd1950cde9fd98f4a93fbd0446b9620f, type: 2}
   _biomes:
   - {fileID: 11400000, guid: d4295230db603754abc66fd715f68b2f, type: 2}
   - {fileID: 11400000, guid: 5d43f93ff9d9eef4eaf625ec1b05db25, type: 2}

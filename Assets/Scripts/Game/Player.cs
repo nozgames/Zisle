@@ -170,7 +170,7 @@ namespace NoZ.Zisle
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(offset, Vector3.up), Time.deltaTime * _rotationSpeed);
         }
 
-        public override bool ExecuteAbility(ActorAbility ability, List<Actor> targets)
+        public override bool ExecuteAbility(Ability ability, List<Actor> targets)
         {
             ClearLastPressed();
             return base.ExecuteAbility(ability, targets);

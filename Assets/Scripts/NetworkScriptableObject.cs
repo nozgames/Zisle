@@ -30,10 +30,8 @@ namespace NoZ.Zisle
         public static void RegisterNetworkIds<T>(this T[] objects) where T : NetworkScriptableObject<T>
         {
             foreach (var def in objects)
-            {
-                Debug.Log(def.name);
-                def.RegisterNetworkId();
-            }
+                if(def != null)
+                    def.RegisterNetworkId();
         }
     }
 }

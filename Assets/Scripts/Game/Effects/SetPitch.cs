@@ -3,7 +3,7 @@ using NoZ.Tweening;
 
 namespace NoZ.Zisle
 {
-    [CreateAssetMenu(menuName = "Zisle/Actor Effects/Set Pitch")]
+    [CreateAssetMenu(menuName = "Zisle/Effects/Set Pitch")]
     public class SetPitch : ActorEffect
     {
         private const int TweenId = int.MaxValue - 1;

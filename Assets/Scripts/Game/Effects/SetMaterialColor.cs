@@ -3,23 +3,17 @@ using NoZ.Tweening;
 
 namespace NoZ.Zisle
 {
-    [CreateAssetMenu(menuName = "Zisle/Actor Effects/Set Material Color")]
+    [CreateAssetMenu(menuName = "Zisle/Effects/Set Material Color")]
     public class SetMaterialColor : ActorEffect
     {
-        [SerializeField] private string _name = null;
+        [SerializeField] private string _propertyName = "_Color";
         
         [ColorUsage(true, true)]
         [SerializeField] private Color _value = Color.white;
 
         [SerializeField] private float _blendTime = 0.05f;
 
-        private int _nameId = -1;
-
-        public int NameId
-        {
-            get => _nameId;
-            set => _nameId = value;
-        }
+        public int PropertyNameId { get; set; }
 
         public Color Value
         {
@@ -35,16 +29,15 @@ namespace NoZ.Zisle
 
         private void OnEnable()
         {
-            _nameId = Shader.PropertyToID(_name);
+            PropertyNameId = Shader.PropertyToID(_propertyName);
         }
 
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            _nameId = Shader.PropertyToID(_name);
+            PropertyNameId = Shader.PropertyToID(_propertyName);
         }
 #endif
-
 
         internal class ActorMaterialColorProvider : ColorProvider<Actor>
         {
@@ -61,20 +54,20 @@ namespace NoZ.Zisle
             if (_blendTime > 0.0f)
             {
                 if (null == _tweenProvider)
-                    _tweenProvider = new ActorMaterialColorProvider(_nameId);
+                    _tweenProvider = new ActorMaterialColorProvider(PropertyNameId);
 
-                Tween.To(_tweenProvider, context.Target, _value).Duration(_blendTime).Id(_nameId).EaseInCubic().Play();
+                Tween.To(_tweenProvider, context.Target, _value).Duration(_blendTime).Id(PropertyNameId).EaseInCubic().Play();
             }
             else
-                context.Target.SetMaterialColor(_nameId, _value);
+                context.Target.SetMaterialColor(PropertyNameId, _value);
         }
 
         public override void Remove(ActorEffectContext context)
         {
-            Tween.Stop(context.Target, _nameId);
+            Tween.Stop(context.Target, PropertyNameId);
         }
 
         public override bool DoesOverride(ActorEffect effect) =>
-            (effect is SetMaterialColor set && set._nameId == _nameId);
+            (effect is SetMaterialColor set && set.PropertyNameId == PropertyNameId);
     }
 }

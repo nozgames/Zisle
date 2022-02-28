@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace NoZ.Zisle
 {
-    [CreateAssetMenu(menuName = "Zisle/Actor Effects/Modify Attribute")]
+    [CreateAssetMenu(menuName = "Zisle/Effects/Modify Attribute")]
     public class ModifyAttributeEffect : ActorEffect
     {
 #if false

@@ -3,7 +3,7 @@ using NoZ.Tweening;
 
 namespace NoZ.Zisle
 {
-    [CreateAssetMenu(menuName = "Zisle/Actor Effects/Set Scale")]
+    [CreateAssetMenu(menuName = "Zisle/Effects/Set Scale")]
     public class SetScale : ActorEffect
     {
         [SerializeField] private Vector3 _value = Vector3.one;
