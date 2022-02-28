@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ac1701c6e243924eb1ed29293d00c51, type: 3}
-  m_Name: KnightAttackSwingSound
+  m_Script: {fileID: 11500000, guid: 3a111a77b9767d749b9109277d442046, type: 3}
+  m_Name: WeaponHammerPool
   m_EditorClassIdentifier: 
-  _shader: {fileID: 11400000, guid: 5f8713fa9d359d9449d9069efe3c8610, type: 2}
+  _prefab: {fileID: 919132149155446097, guid: cea6e9a110dcd5846b28d325a370e6f8, type: 3}

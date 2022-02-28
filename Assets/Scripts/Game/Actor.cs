@@ -845,6 +845,16 @@ namespace NoZ.Zisle
             defaultMaterialColor.BlendTime = 0.1f;
             AddEffect(this, defaultMaterialColor);
 
+            if (_slotRightWeapon != null)
+            {
+                var defaultScale = ScriptableObject.CreateInstance<SetScale>();
+                defaultScale.Slot = ActorSlot.RightWeapon;
+                defaultScale.Value = Vector3.one;
+                defaultScale.Lifetime = ActorEffectLifetime.Forever;
+                defaultScale.BlendTime = 0.1f;
+                AddEffect(this, defaultScale);
+            }
+
             if (_scaleTransform != null)
             {
                 var defaultScale = ScriptableObject.CreateInstance<SetScale>();

@@ -9,9 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6cbdde8b1f2d1c445b95d08e7a6f2e54, type: 3}
-  m_Name: KnightAttack2Chain
+  m_Script: {fileID: 11500000, guid: f11a58fd80ac0b841b7c413fb583a5fa, type: 3}
+  m_Name: BuildHammer
   m_EditorClassIdentifier: 
-  _previousAbility:
-  - {fileID: 11400000, guid: 406824669e16e984c994d92b98b772fd, type: 2}
-  _time: 0.5
+  _lifetime: 2
+  _duration: 1
+  _target: 0
+  _targetFinder: {fileID: 0}
+  _slot: 2
+  _prefab: {fileID: 11400000, guid: c74c681838d253f4496872e7a24d5de2, type: 2}

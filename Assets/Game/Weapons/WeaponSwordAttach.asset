@@ -9,13 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f939f221027276b4da72692935edfe85, type: 3}
-  m_Name: KnightAttackSwingSoundShader
+  m_Script: {fileID: 11500000, guid: f11a58fd80ac0b841b7c413fb583a5fa, type: 3}
+  m_Name: WeaponSwordAttach
   m_EditorClassIdentifier: 
-  clips:
-  - {fileID: 8300000, guid: e740ff675b9241345a8190aadd445017, type: 3}
-  volume: 0.25
-  pitch: 1
-  _spatialRange: 10
-  channel: {fileID: 0}
-  hapticFeedback: 0
+  _lifetime: 4
+  _duration: 1
+  _target: 0
+  _targetFinder: {fileID: 0}
+  _slot: 2
+  _prefab: {fileID: 11400000, guid: 32a6670991e2dc34b995e984ce010199, type: 2}
