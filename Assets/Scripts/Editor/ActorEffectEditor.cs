@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 namespace NoZ.Zisle
 {
-    [CustomEditor(typeof(ActorEffect), true, isFallback = true)]
+    [CustomEditor(typeof(Effect), true, isFallback = true)]
     public class ActorEffectEditor : Editor
     {
         public override VisualElement CreateInspectorGUI()
@@ -26,7 +26,7 @@ namespace NoZ.Zisle
             void UpdateDuration()
             {
                 var lifetimeProperty = effectObject.FindProperty("_lifetime");
-                var hidden = lifetimeProperty.enumValueIndex != (int)ActorEffectLifetime.Time;
+                var hidden = lifetimeProperty.enumValueIndex != (int)EffectLifetime.Time;
                 durationField.EnableInClassList("hidden", hidden);
             }
 

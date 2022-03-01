@@ -84,7 +84,7 @@ namespace NoZ.Zisle
             {
                 var genericMenu = new GenericDropdownMenu();
 
-                foreach (var type in TypeCache.GetTypesDerivedFrom<ActorEffect>())
+                foreach (var type in TypeCache.GetTypesDerivedFrom<Effect>())
                 {
                     genericMenu.AddItem(NicifyEffectName(type.Name), false, () =>
                     {
@@ -92,7 +92,7 @@ namespace NoZ.Zisle
                         prop.InsertArrayElementAtIndex(prop.arraySize);
                         var eprop = prop.GetArrayElementAtIndex(prop.arraySize - 1);
                         var i = CreateInstance(type);
-                        (i as ActorEffect).Lifetime = ActorEffectLifetime.Inherit;
+//                        (i as Effect).Lifetime = EffectLifetime.Inherit;
                         i.name = type.Name;
                         AssetDatabase.AddObjectToAsset(i, target);
                         eprop.objectReferenceValue = i;
@@ -124,7 +124,7 @@ namespace NoZ.Zisle
             for (int i = 0; i < effectsPropety.arraySize; i++)
             {
                 var effectProperty = effectsPropety.GetArrayElementAtIndex(i);
-                var effect = (ActorEffect)effectProperty.objectReferenceValue;
+                var effect = (Effect)effectProperty.objectReferenceValue;
                 var effectIndex = i;
 
                 var effectItem = new VisualElement();

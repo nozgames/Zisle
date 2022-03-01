@@ -26,12 +26,9 @@ MonoBehaviour:
   m_Name: AbilityBegin
   m_EditorClassIdentifier: 
   _event: {fileID: 11400000, guid: 5da03270f53918f46a21ac33ff7f3e5b, type: 2}
-  _target: 2
-  _targetFinder: {fileID: 0}
   _effects:
-  - {fileID: 11400000, guid: 5ce11276384eef149b04eb1729f91e42, type: 2}
-  - {fileID: 11400000, guid: 20ddf0948b464e74ca1ce88f24babdf9, type: 2}
-  - {fileID: 11400000, guid: cfc0a4f0cdfced04aa0afc8d9d283176, type: 2}
+  - {fileID: 11400000, guid: 28ad4bf36961e85499218f7102b746a7, type: 2}
+  - {fileID: 11400000, guid: 4928cc803739c9544bdb63f36b1f96a6, type: 2}
 --- !u!114 &-4776745303268546128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,9 +94,6 @@ MonoBehaviour:
   m_Name: AbilityAction
   m_EditorClassIdentifier: 
   _event: {fileID: 11400000, guid: 39fb1d30936dfc546a16744806ee8649, type: 2}
-  _target: 2
-  _targetFinder: {fileID: 0}
   _effects:
-  - {fileID: 11400000, guid: 75dd08569c890ef4aad4e7d6e3f27a70, type: 2}
-  - {fileID: 11400000, guid: 5618f1157a2243a4185d8e6427d78fee, type: 2}
-  - {fileID: 11400000, guid: 2d8c4cc8745d4fa4cb5461596667a3e1, type: 2}
+  - {fileID: 11400000, guid: f4ff554540666574a8e0af2d80aa3af4, type: 2}
+  - {fileID: 11400000, guid: a4954e504568f4741a1878744f3ce9e6, type: 2}

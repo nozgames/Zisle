@@ -2,20 +2,26 @@ using UnityEngine;
 
 namespace NoZ.Zisle
 {
-    public class AbilityEvent : ScriptableObject
+    public class AbilityEvent : NetworkScriptableObject<AbilityEvent>
     {
         [SerializeField] private NoZ.Animations.AnimationEvent _event;
-        [SerializeField] private TargetType _target = TargetType.Inherit;
-        [SerializeField] private TargetFinder _targetFinder = null;
-        [SerializeField] private ActorEffect[] _effects = null;
+        [SerializeField] private Effect[] _effects = null;
 
         public Animations.AnimationEvent Event
         {
             get => _event;
             set => _event = value;
         }
-        public ActorEffect[] Effects => _effects;
-        public TargetType Target => _target;
-        public TargetFinder TargetFinder => _targetFinder;
+        public Effect[] Effects => _effects;
+        
+        public override void RegisterNetworkId()
+        {
+            base.RegisterNetworkId();
+
+            if (_effects != null)
+                foreach (var effect in _effects)
+                    if(effect != null)
+                        effect.RegisterNetworkId();
+        }
     }
 }

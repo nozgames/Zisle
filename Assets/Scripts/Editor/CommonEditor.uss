@@ -1,37 +1,82 @@
+.root {
+	padding-top: 10px;
+}
+
+.inspector
+{
+	margin-top: 0px;
+}
+
 .hidden {
 	display: none;
 }
 
-.elements__item > Foldout > #unity-content {
+#tabs {
 	margin: 0px;
-	margin-right: 2px;
+	margin-top: 16px;
+}
+
+#tabs > #unity-tabs-container {
+	margin-left: -16px;
+	margin-right: -8px;
+}
+
+.elements__item > Foldout > Toggle {
+	margin-top: 0px;
+	margin-bottom: 0px;
 }
 
 .elements__item {
-	margin-left: -4px;
-	border-bottom-width: 1px;
-	border-bottom-color: var(--unity-colors-inspector_titlebar-border);
+	margin-top: -2px;
+	margin-bottom: 0px;
 }
 
-.elements__item .unity-toggle__input {
+.elements__item > Foldout > Toggle > .unity-toggle__input {
 	background-color: var(--unity-colors-inspector_titlebar-background);
 	height: var(--unity-metrics-inspector_titlebar-height);
+	border-bottom-width: 1px;
+	border-top-width: 1px;
+	border-color: var(--unity-colors-inspector_titlebar-border_accent);
+	border-top-color: var(--unity-colors-inspector_titlebar-border);
 }
 
-.elements__item .unity-toggle__checkmark {
+.elements__item > Foldout .unity-toggle__checkmark {
 	margin-bottom: auto;
 	margin-top: auto;
 }
 
-.elements__item .unity-base-field__inspector-field {
-	padding: 0px;
-	margin: 0px;
-}
-
 .elements__item__content {
-	padding: 4px 4px 8px 16px;
+	margin-left: -15px;
+	margin-right: 0px;
+	margin-bottom: 10px;
 }
 
-.elements__item__content PropertyField {
-	margin-top: 4px;
+.elements__item__content PropertyField ListView {
+	margin-top: 8px;
+	margin-bottom: 8px;
+}
+
+#buttons {
+	margin-top: -2px;
+	margin-left: -16px;
+	border-top-width: 1px;
+	border-top-color: var(--unity-colors-inspector_titlebar-border);
+	padding-left: 16px;
+	padding-top: 10px;
+}
+
+.add-button {
+	margin-left: 20%;
+	margin-right: 20%;
+	height: 24px;
+}
+
+.options-button {
+	background-image: var(--unity-icons-pane_options);
+	margin-top: auto;
+	margin-bottom: auto;
+	margin-left: auto;
+	margin-right: 0px;
+	width: 16px;
+	height: 16px;
 }

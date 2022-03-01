@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
+--- !u!114 &-3873421489754472411
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10,16 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1ac1701c6e243924eb1ed29293d00c51, type: 3}
-  m_Name: DefaultHitSound
+  m_Name: PlaySound
   m_EditorClassIdentifier: 
-  _lifetime: 6
-  _duration: 1
-  _target: 2
-  _targetFinder: {fileID: 0}
   _clips:
   - {fileID: 8300000, guid: daddf6b8707e9ba429bd858a85fd4f34, type: 3}
   _volume: 0.5
   _pitch: 1
-  _randomPitch: 0.125
-  _randomVolume: 0.1
+  _randomPitch: 0.104
+  _randomVolume: 0
   _spatialRange: 10
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2a9d5575ae3e22478b943aa78ed916b, type: 3}
+  m_Name: DefaultHitSound
+  m_EditorClassIdentifier: 
+  _target: 2
+  _targetFinder: {fileID: 0}
+  _lifetime: 1
+  _duration: 1
+  _maximumStacks: 10000
+  _priority: 0
+  _components:
+  - {fileID: -3873421489754472411}

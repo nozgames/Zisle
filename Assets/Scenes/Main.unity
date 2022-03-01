@@ -288,6 +288,8 @@ MonoBehaviour:
   _audioListener: {fileID: 153247184}
   _abilityBeginEvent: {fileID: 11400000, guid: 5da03270f53918f46a21ac33ff7f3e5b, type: 2}
   _abilityEndEvent: {fileID: 11400000, guid: cd1950cde9fd98f4a93fbd0446b9620f, type: 2}
+  _defaultActorEffect: {fileID: 11400000, guid: a62e291fe13975749aaeb42ab906d074,
+    type: 2}
   _biomes:
   - {fileID: 11400000, guid: d4295230db603754abc66fd715f68b2f, type: 2}
   - {fileID: 11400000, guid: 5d43f93ff9d9eef4eaf625ec1b05db25, type: 2}
@@ -1072,6 +1074,7 @@ Transform:
   - {fileID: 1308683717}
   - {fileID: 351594225}
   - {fileID: 60873048}
+  - {fileID: 1509631133}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1088,6 +1091,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   singletons:
+  - {fileID: 1509631132}
   - {fileID: 351594224}
   - {fileID: 1308683718}
   - {fileID: 60873047}
@@ -3170,6 +3174,57 @@ MonoBehaviour:
   sourceAsset: {fileID: 9197481963319205126, guid: 7e551cb8775f5614abd0420675ce0d84,
     type: 3}
   m_SortingOrder: 0
+--- !u!1 &1509631131
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1509631133}
+  - component: {fileID: 1509631132}
+  m_Layer: 0
+  m_Name: Tag
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1509631132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1509631131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69db6821b3f49644faab0e84f25930c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _setPitch: {fileID: 11400000, guid: d507e04fce5e5514b802d68ab97ee76c, type: 2}
+  _setScaleRoot: {fileID: 11400000, guid: 10baf67e758edc24e802e47adab342ee, type: 2}
+  _setScaleBody: {fileID: 11400000, guid: a60b253f45bdb134bbb2372a5813ae22, type: 2}
+  _setScaleRightWeapon: {fileID: 11400000, guid: ffc67405d6d0a2d429a6a44b8d9df167,
+    type: 2}
+  _setScaleLeftWeapon: {fileID: 11400000, guid: b519e7b8844c3d2429580d0ae4404e23,
+    type: 2}
+--- !u!4 &1509631133
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1509631131}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 515661216}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1528406221
 GameObject:
   m_ObjectHideFlags: 0
@@ -3697,8 +3752,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _camera: {fileID: 1403908677}
-  _brain: {fileID: 1403908679}
-  _cameraShake: {fileID: 116199639}
   _isometricCamera: {fileID: 1070165023}
   _isometricTarget: {fileID: 104590174}
   _isometricYaw: 45

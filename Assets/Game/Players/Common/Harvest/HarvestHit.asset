@@ -1,25 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ecd07b35c5ab514ab95b56eae742ac9, type: 3}
-  m_Name: HarvestHitEffect
-  m_EditorClassIdentifier: 
-  _lifetime: 3
-  _duration: 0.1
-  _target: 2
-  _targetFinder: {fileID: 0}
-  _effects:
-  - {fileID: 3001546817870422929}
-  - {fileID: 8098072326802267926}
---- !u!114 &3001546817870422929
+--- !u!114 &-6325223077149146788
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -31,14 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d0f727b2c4d2b141b03d797891e89fc, type: 3}
   m_Name: SetMaterialColor
   m_EditorClassIdentifier: 
-  _lifetime: 7
-  _duration: 1
+  _property: {fileID: 11400000, guid: 2056c5e6076221d40863c7e5b8929e92, type: 2}
+  _value: {r: 2.670157, g: 1.5016769, b: 0, a: 1}
+  _blendTime: 0.01
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2a9d5575ae3e22478b943aa78ed916b, type: 3}
+  m_Name: HarvestHit
+  m_EditorClassIdentifier: 
   _target: 2
   _targetFinder: {fileID: 0}
-  _propertyName: _Color
-  _value: {r: 1, g: 0.85462177, b: 0, a: 1}
-  _blendTime: 0.1
---- !u!114 &8098072326802267926
+  _lifetime: 0
+  _duration: 0.1
+  _maximumStacks: 1
+  _priority: 0
+  _components:
+  - {fileID: -6325223077149146788}
+  - {fileID: 2766018190994167869}
+--- !u!114 &2766018190994167869
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -50,9 +48,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b8bed7d5230851439a3f13259289d6c, type: 3}
   m_Name: SetScale
   m_EditorClassIdentifier: 
-  _lifetime: 7
-  _duration: 1
-  _target: 2
-  _targetFinder: {fileID: 0}
-  _value: {x: 0.7, y: 1.2, z: 0.7}
-  _blendTime: 0.1
+  _slot: 0
+  _value: {x: 0.8, y: 1.2, z: 0.8}
+  _blendTime: 0.01

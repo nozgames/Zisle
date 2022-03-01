@@ -64,28 +64,5 @@
 }
 
 
-.add-button {
-	margin-top: 10px;
-	margin-left: 20%;
-	margin-right: 20%;
-}
 
-#tabs
-{
-	margin: 0px;
-	margin-top: 20px;
-}
 
-.options-button {
-	background-image: var(--unity-icons-pane_options);
-	margin-top: auto;
-	margin-bottom: auto;
-	margin-left: auto;
-	margin-right: 0px;
-	width: 16px;
-	height: 16px;
-}
-
-#inspector {
-	width: 100%;
-}

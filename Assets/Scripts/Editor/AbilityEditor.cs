@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -105,7 +106,11 @@ namespace NoZ.Zisle
                 }
                 genericMenu.DropDown(addCondition.worldBound, addCondition, anchored: true);
             };
-            conditions.Add(addCondition);
+
+            var buttons = new VisualElement();
+            buttons.name = "buttons";
+            buttons.Add(addCondition);
+            conditions.Add(buttons);
 
             return conditions;
         }
@@ -228,7 +233,10 @@ namespace NoZ.Zisle
             _eventsContent.name = "events__content";
             events.Add(_eventsContent);
 
-            events.Add(addEvent);
+            var buttons = new VisualElement();
+            buttons.name = "buttons";
+            buttons.Add(addEvent);
+            events.Add(buttons);
 
             return events;
         }

@@ -1,7 +1,8 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+
+[assembly: InternalsVisibleTo("com.noz.zisle.editor")]
 
 namespace NoZ.Zisle
 {
@@ -45,12 +46,12 @@ namespace NoZ.Zisle
         {
             // TODO: inherit targets?  The only way that would be possible is to them in the actor
 
-            // Update the targets as requested.
-            var eventTargetFinder = TargetFinder.FindTargets(source, abilityEvent.Target, abilityEvent.TargetFinder, abilityTargetFinder);
-
             foreach(var effect in abilityEvent.Effects)
             {
-                var effectTargetFinder = TargetFinder.FindTargets(source, effect.Target, effect.TargetFinder, eventTargetFinder);
+                if (effect == null)
+                    continue;
+
+                var effectTargetFinder = TargetFinder.FindTargets(source, effect.Target, effect.TargetFinder, abilityTargetFinder);
                 if (effectTargetFinder == null)
                     continue;
 
@@ -74,6 +75,16 @@ namespace NoZ.Zisle
             }
 
             return score;
+        }
+
+        public override void RegisterNetworkId()
+        {
+            base.RegisterNetworkId();
+
+            if (_events != null)
+                foreach(var evt in _events)
+                    if(evt != null)
+                        evt.RegisterNetworkId();
         }
     }
 }

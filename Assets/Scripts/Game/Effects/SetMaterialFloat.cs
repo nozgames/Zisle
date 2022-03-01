@@ -3,7 +3,7 @@ using UnityEngine;
 namespace NoZ.Zisle
 {
     [CreateAssetMenu(menuName = "Zisle/Effects/Set Material Float")]
-    public class SetMaterialFloat : ActorEffect
+    public class SetMaterialFloat : Effect
     {
         [SerializeField] private string _propertyName = null;
 
@@ -24,17 +24,14 @@ namespace NoZ.Zisle
         }
 #endif
 
-        public override void Apply(ActorEffectContext context)
+        public override void Apply(EffectContext context)
         {
             context.Target.MaterialProperties.SetColor(PropertyNameId, _value);
         }
 
-        public override void Remove(ActorEffectContext context)
+        public override void Remove(EffectContext context)
         {
             context.Target.ResetMaterialProperty(PropertyNameId);
         }
-
-        public override bool DoesOverride(ActorEffect effect) =>
-            (effect is SetMaterialFloat set && set.PropertyNameId == PropertyNameId);
     }
 }

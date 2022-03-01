@@ -26,6 +26,7 @@ namespace NoZ.Zisle
         [SerializeField] private AudioListener _audioListener = null;
         [SerializeField] private NoZ.Animations.AnimationEvent _abilityBeginEvent = null;
         [SerializeField] private NoZ.Animations.AnimationEvent _abilityEndEvent = null;
+        [SerializeField] private Effect _defaultActorEffect = null;
 
         [Space]
         [SerializeField] private Biome[] _biomes = null;
@@ -40,6 +41,7 @@ namespace NoZ.Zisle
 
         public NoZ.Animations.AnimationEvent AbilityBeginEvent => _abilityBeginEvent;
         public NoZ.Animations.AnimationEvent AbilityEndEvent => _abilityEndEvent;
+        public Effect DefaultActorEffect => _defaultActorEffect;
 
         /// <summary>
         /// Optional join code if the connection was to a relay server
@@ -119,6 +121,7 @@ namespace NoZ.Zisle
 
             _actorDefinitions.RegisterNetworkIds();
             _biomes.RegisterNetworkIds();
+            _defaultActorEffect.RegisterNetworkId();
 
             InputManager.Instance.onPlayerMenu += OnPlayerMenu;
 

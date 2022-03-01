@@ -9,13 +9,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a1012c1c5ca54a49ae8d0344e2b7f18, type: 3}
+  m_Script: {fileID: 11500000, guid: c2a9d5575ae3e22478b943aa78ed916b, type: 3}
   m_Name: FireWizardWand
   m_EditorClassIdentifier: 
+  _target: 0
+  _targetFinder: {fileID: 0}
   _lifetime: 4
   _duration: 1
-  _target: 2
-  _targetFinder: {fileID: 0}
+  _maximumStacks: 1
+  _priority: 0
+  _components:
+  - {fileID: 5987688432653529504}
+--- !u!114 &5987688432653529504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a1012c1c5ca54a49ae8d0344e2b7f18, type: 3}
+  m_Name: InstantiatePrefab
+  m_EditorClassIdentifier: 
   _prefab: {fileID: 11400000, guid: 820c9f62fd9009e4ca0c9e967d8cf427, type: 2}
   _slot: 2
   _parentToSlot: 1

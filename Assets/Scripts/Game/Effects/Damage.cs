@@ -2,10 +2,11 @@ using UnityEngine;
 
 namespace NoZ.Zisle.Commands
 {
-    [CreateAssetMenu(menuName = "Zisle/Effects/Damage")]
-    public class Damage : ActorEffect
+    // TODO: damage over time
+
+    public class Damage : EffectComponent
     {
-        public override void Apply(ActorEffectContext context)
+        public override void Apply(EffectComponentContext context)
         {
             var source = context.Source;
             var target = context.Target;
@@ -17,7 +18,11 @@ namespace NoZ.Zisle.Commands
             target.Damage(source, damage);
         }
 
-        public override void Remove(ActorEffectContext context)
+        public override void Release(EffectComponentContext context)
+        {
+        }
+
+        public override void Remove(EffectComponentContext context)
         {
         }
     }

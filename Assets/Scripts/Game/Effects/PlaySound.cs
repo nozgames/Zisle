@@ -2,8 +2,7 @@ using UnityEngine;
 
 namespace NoZ.Zisle.Commands
 {
-    [CreateAssetMenu(menuName = "Zisle/Effects/Play Sound")]
-    public class PlaySound : ActorEffect
+    public class PlaySound : EffectComponent
     {
         [SerializeField] private AudioClip[] _clips = null;
 
@@ -22,7 +21,7 @@ namespace NoZ.Zisle.Commands
         [Tooltip("Range the clip can be heard from when playing spatially")]
         [SerializeField] private float _spatialRange = 10f;
 
-        public override void Apply(ActorEffectContext context)
+        public override void Apply(EffectComponentContext context)
         {
             if (_clips == null || _clips.Length == 0)
                 return;
@@ -35,7 +34,11 @@ namespace NoZ.Zisle.Commands
                 _spatialRange);
         }
 
-        public override void Remove(ActorEffectContext context)
+        public override void Remove(EffectComponentContext context)
+        {
+        }
+
+        public override void Release(EffectComponentContext context)
         {
         }
     }

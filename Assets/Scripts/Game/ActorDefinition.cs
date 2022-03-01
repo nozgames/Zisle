@@ -45,7 +45,7 @@ namespace NoZ.Zisle
 
         [Space]
         [Tooltip("Starting effects for the actor")]
-        [SerializeField] private ActorEffect[] _effects = null;
+        [SerializeField] private Effect[] _effects = null;
 
         /// <summary>
         /// Get the available abilities for this actor
@@ -55,7 +55,7 @@ namespace NoZ.Zisle
         /// <summary>
         /// Return the list of starting effects
         /// </summary>
-        public ActorEffect[] Effects => _effects;
+        public Effect[] Effects => _effects;
 
         /// <summary>
         /// Get the actor brains
@@ -114,6 +114,9 @@ namespace NoZ.Zisle
 
             if(_abilities != null)
                 _abilities.RegisterNetworkIds();
+
+            if (_effects != null)
+                _effects.RegisterNetworkIds();
         }
 
         /// <summary>

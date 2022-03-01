@@ -1,0 +1,23 @@
+{
+    "name": "com.noz.zisle.editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:971e25a7087391e40b0d15d9199153ec",
+        "GUID:be0903cd8e1546f498710afdc59db5eb",
+        "GUID:62df718ac03a170469ca41fa4505deb0",
+        "GUID:e3d4f851f580f4348b3d5f541a367d80",
+        "GUID:3b8ed52f1b5c64994af4c4e0aa4b6c4b",
+        "GUID:1491147abca9d7d4bb7105af628b223e"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

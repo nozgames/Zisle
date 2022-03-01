@@ -3,13 +3,13 @@ using UnityEngine;
 namespace NoZ.Zisle
 {
     [CreateAssetMenu(menuName = "Zisle/Effects/Heal")]
-    public class Heal : ActorEffect
+    public class Heal : Effect
     {
-        public override void Apply(ActorEffectContext context)
+        public override void Apply(EffectContext context)
         {
         }
 
-        public override void Remove(ActorEffectContext context)
+        public override void Remove(EffectContext context)
         {
         }
     }

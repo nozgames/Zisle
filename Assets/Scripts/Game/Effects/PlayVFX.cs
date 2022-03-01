@@ -3,24 +3,25 @@ using UnityEngine.VFX;
 
 namespace NoZ.Zisle
 {
-    [CreateAssetMenu(menuName = "Zisle/Effects/Play VFX")]
-    public class PlayVFX : ActorEffect
+    public class PlayVFX : EffectComponent
     {
         [SerializeField] private VisualEffectAsset _vfx = null;
         [SerializeField] private ActorSlot _slot = ActorSlot.None;
+        [SerializeField] private Tag _tag = null;
 
-        public override void Apply(ActorEffectContext context)
+        public override Tag Tag => _tag;
+
+        public override void Apply(EffectComponentContext context)
         {
             context.UserData = VFXManager.Instance.Play(_vfx, context.Target.GetSlotTransform(_slot));
         }
 
-        public override void Remove(ActorEffectContext context)
+        public override void Remove(EffectComponentContext context)
         {
-            // TODO: should we let it finish first?
             Release(context);
         }
 
-        public override void Release(ActorEffectContext context)
+        public override void Release(EffectComponentContext context)
         {
             if(context.UserData != null)
             {

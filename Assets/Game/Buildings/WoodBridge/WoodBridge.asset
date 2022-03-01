@@ -17,6 +17,12 @@ MonoBehaviour:
   _brain: {fileID: 0}
   _prefab: {fileID: 7645202214170706019, guid: 15391079271f8b84798d5e7ff9427fbc, type: 3}
   _preview: {fileID: 0}
+  _healthCircleClass: 
+  _deathSound: {fileID: 0}
+  _hitSound: {fileID: 0}
+  _idleAnimation: {fileID: 0}
+  _runAnimation: {fileID: 0}
+  _deathAnimation: {fileID: 0}
   _baseHealthMax: 4
   _baseHealthRegen: 5
   _baseSpeed: 10
@@ -27,3 +33,5 @@ MonoBehaviour:
   _baseBuild: 1
   _abilities: []
   _spawnWeights: []
+  _effects:
+  - {fileID: 11400000, guid: a62e291fe13975749aaeb42ab906d074, type: 2}

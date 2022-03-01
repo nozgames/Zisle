@@ -3,12 +3,20 @@ using NoZ.Tweening;
 
 namespace NoZ.Zisle
 {
-    [CreateAssetMenu(menuName = "Zisle/Effects/Set Scale")]
-    public class SetScale : ActorEffect
+    public class SetScale : EffectComponent
     {
         [SerializeField] private ActorSlot _slot = ActorSlot.None;
         [SerializeField] private Vector3 _value = Vector3.one;
         [SerializeField] private float _blendTime = 0.05f;
+
+        public override Tag Tag => _slot switch
+        {
+            ActorSlot.None => TagManager.Instance.SetScaleRoot,
+            ActorSlot.RightWeapon => TagManager.Instance.SetScaleRightWeapon,
+            ActorSlot.LeftWeapon => TagManager.Instance.SetScaleLeftWeapon,
+            ActorSlot.Body => TagManager.Instance.SetScaleBody,
+            _ => throw new System.NotImplementedException()
+        };
 
         public ActorSlot Slot
         {
@@ -28,7 +36,7 @@ namespace NoZ.Zisle
             set => _blendTime = value;
         }
 
-        public override void Apply(ActorEffectContext context)
+        public override void Apply(EffectComponentContext context)
         {
             if(_slot == ActorSlot.None)
             {
@@ -47,11 +55,12 @@ namespace NoZ.Zisle
             }
         }
 
-        public override void Remove(ActorEffectContext context)
+        public override void Remove(EffectComponentContext context)
         {
         }
 
-        public override bool DoesOverride(ActorEffect effect) =>
-            (effect is SetScale setScale) && setScale._slot == _slot;
+        public override void Release(EffectComponentContext context)
+        {
+        }
     }
 }

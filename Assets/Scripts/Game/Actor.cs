@@ -121,6 +121,8 @@ namespace NoZ.Zisle
         [SerializeField] protected Transform _slotLeftWeapon = null;
         [SerializeField] protected Transform _slotBody = null;
 
+        private EffectList _effects;
+
         private float[] _abilityUsedTime;
         private float _lastAbilityUsedTime;
         private float _lastAbilityUsedEndTime;
@@ -133,7 +135,6 @@ namespace NoZ.Zisle
         private bool _materialPropertiesDirty;
         private float _visualPitch;
 
-        private LinkedList<ActorEffectContext> _effects = new LinkedList<ActorEffectContext>();
         private ActorAttributeValue[] _attributeTable;
         private IThinkState _thinkState;
         private float _health = 100.0f;
@@ -157,6 +158,8 @@ namespace NoZ.Zisle
         public float LastAbilityUsedTime => _lastAbilityUsedTime;
 
         public Ability[] Abilities => _actorDefinition.Abilities;
+
+        public EffectList Effects => _effects;
 
         public ActorType Type => _actorDefinition.ActorType;
 
@@ -267,6 +270,11 @@ namespace NoZ.Zisle
 
         public LinkedListNode<Actor> Node => _node;
 
+        public Actor()
+        {
+            _effects = new EffectList(this);
+        }
+
         protected virtual void Awake()
         {
             _materialProperties = new MaterialPropertyBlock();            
@@ -298,19 +306,6 @@ namespace NoZ.Zisle
             _animator.Play(shader, onComplete: onComplete);
         }
 
-        private void RemoveEffects (ActorEffectLifetime lifetime)
-        {
-            // Remove any effects that should only last for the duration of an ability
-            LinkedListNode<ActorEffectContext> next;
-            for (var node = _effects.First; node != null; node = next)
-            {
-                next = node.Next;
-
-                if (node.Value.Effect.Lifetime == lifetime)
-                    RemoveEffect(node.Value);
-            }
-        }
-
         public void PlayOneShotAnimation(AnimationShader shader)
         {
             if (shader == null || shader == _currentAnimation)
@@ -333,7 +328,7 @@ namespace NoZ.Zisle
         private void OnOneShotAnimationComplete ()
         {
             // Remove any effects that should only last for the duration of an ability
-            RemoveEffects(ActorEffectLifetime.Ability);
+            _effects.RemoveEffects(EffectLifetime.Ability);
 
             _oneShotAnimation = null;
             _currentAnimation = null;
@@ -427,8 +422,11 @@ namespace NoZ.Zisle
         /// Add an effect to the actor
         /// </summary>
         /// <param name="effect"></param>
-        public ActorEffectContext AddEffect (Actor source, ActorEffect effect, ActorEffectContext inherit=null)
+        public EffectContext AddEffect (Actor source, Effect effect, EffectContext inherit=null)
         {
+            _effects.Add(source, effect);
+
+#if false
             if (effect == null || source == null)
                 return null;
 
@@ -439,7 +437,7 @@ namespace NoZ.Zisle
                     existingEffect.Enabled = false;
             }
 
-            var context = ActorEffectContext.Get(effect, source, this, inherit);
+            var context = EffectContext.Get(effect, source, this, inherit);
             _effects.AddLast(context.Node);
             context.Enabled = true;
 
@@ -452,28 +450,31 @@ namespace NoZ.Zisle
             }
 
             return context;
+#else
+            return null;
+#endif
         }
 
-        public void RemoveEffect (ActorEffectContext effectContext)
+        public void RemoveEffect (EffectContext effectContext)
         {
-            if (effectContext.Node.List == null)
-                return;
+            //if (effectContext.Node.List == null)
+            //    return;
 
-            effectContext.Enabled = false;
+            //effectContext.Enabled = false;
 
-            // Search to see if this effect was overriding another effect and if so re-enable that effect
-            for(var node = effectContext.Node.Previous; node != null; node = node.Previous)
-            {
-                if(!node.Value.Enabled && effectContext.Effect.DoesOverride(node.Value.Effect))
-                {
-                    node.Value.Enabled = true;
-                    break;
-                }
-            }
+            //// Search to see if this effect was overriding another effect and if so re-enable that effect
+            //for(var node = effectContext.Node.Previous; node != null; node = node.Previous)
+            //{
+            //    if(!node.Value.Enabled && effectContext.Effect.DoesOverride(node.Value.Effect))
+            //    {
+            //        node.Value.Enabled = true;
+            //        break;
+            //    }
+            //}
 
-            effectContext.Release();
+            //effectContext.Release();
 
-            OnMaterialPropertiesChanged?.Invoke(_materialProperties);
+            //OnMaterialPropertiesChanged?.Invoke(_materialProperties);
         }
 
         /// <summary>
@@ -596,7 +597,7 @@ namespace NoZ.Zisle
         public virtual bool ExecuteAbility(Ability ability, List<Actor> targets)
         {
             // Remove any effects that should only last for the duration of an ability
-            RemoveEffects(ActorEffectLifetime.NextAbility);
+            _effects.RemoveEffects(EffectLifetime.NextAbility);
 
             if (ability == null)
                 return false;
@@ -708,13 +709,7 @@ namespace NoZ.Zisle
                 return;
 
             // Look for effects ending due to time
-            LinkedListNode<ActorEffectContext> next;
-            for(var node = _effects.First; node != null; node =next)
-            {
-                next = node.Next;
-                if(node.Value.Lifetime == ActorEffectLifetime.Time && (Time.timeAsDouble - node.Value.StartTime) >= node.Value.Duration)
-                    RemoveEffect(node.Value);
-            }
+            _effects.RemoveEffects(EffectLifetime.Time);
 
             // Just to make sure actors never get stuck in the busy state
             if (IsBusy && (Time.time - _busyTime) > MaxBusyTime)
@@ -836,44 +831,9 @@ namespace NoZ.Zisle
             }
         }
 
-        NetworkList<byte> a;
-
         private void AddDefaultEffects()
         {
-            var defaultMaterialColor = ScriptableObject.CreateInstance<SetMaterialColor>();
-            defaultMaterialColor.Value = Color.clear;
-            defaultMaterialColor.Lifetime = ActorEffectLifetime.Forever;
-            defaultMaterialColor.PropertyNameId = ShaderPropertyID._Color;
-            defaultMaterialColor.BlendTime = 0.1f;
-            AddEffect(this, defaultMaterialColor);
-
-            if (_slotRightWeapon != null)
-            {
-                var defaultScale = ScriptableObject.CreateInstance<SetScale>();
-                defaultScale.Slot = ActorSlot.RightWeapon;
-                defaultScale.Value = Vector3.one;
-                defaultScale.Lifetime = ActorEffectLifetime.Forever;
-                defaultScale.BlendTime = 0.1f;
-                AddEffect(this, defaultScale);
-            }
-
-            if (_scaleTransform != null)
-            {
-                var defaultScale = ScriptableObject.CreateInstance<SetScale>();
-                defaultScale.Value = Vector3.one;
-                defaultScale.Lifetime = ActorEffectLifetime.Forever;
-                defaultScale.BlendTime = 0.1f;
-                AddEffect(this, defaultScale);
-            }
-
-            if(_pitchTransform != null)
-            { 
-                var defaultPitch = ScriptableObject.CreateInstance<SetPitch>();
-                defaultPitch.Value = 0.0f;
-                defaultPitch.Lifetime = ActorEffectLifetime.Forever;
-                defaultPitch.BlendTime = 0.1f;
-                AddEffect(this, defaultPitch);
-            }
+            AddEffect(this, GameManager.Instance.DefaultActorEffect);
 
             foreach (var effect in _actorDefinition.Effects)
                 AddEffect(this, effect);
