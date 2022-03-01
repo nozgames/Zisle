@@ -48,12 +48,17 @@ namespace NoZ.Zisle
             EditorHelpers.HandleTargetType(serializedObject, _inspector);
             root.Add(_inspector);
 
-            // Create tabs
-            var tabs = new TabbedView();
-            tabs.name = "tabs";
-            tabs.Add(new TabButton("Conditions", CreateConditionsTab()));
-            tabs.Add(new TabButton("Events", CreateEventsTab()));
-            root.Add(tabs);
+            var conditions = new Foldout();
+            conditions.text = "Conditions";
+            conditions.AddToClassList("elements");
+            conditions.Add(CreateConditionsTab());
+            root.Add(conditions);
+
+            var events = new Foldout();
+            events.text = "Events";
+            events.AddToClassList("elements");
+            events.Add(CreateEventsTab());
+            root.Add(events);
 
             EditorApplication.update += OnNextUpdate;
 
@@ -131,6 +136,7 @@ namespace NoZ.Zisle
                 conditionItem.AddToClassList("elements__item");
                 var foldout = new Foldout();
                 foldout.text = EditorHelpers.NicifyConditionName(condition.GetType().Name);
+                foldout.value = false;
 
                 var content = new VisualElement();
                 content.AddToClassList("elements__item__content");
@@ -264,6 +270,11 @@ namespace NoZ.Zisle
                 element.AddToClassList("elements__item");
                 var foldout = new Foldout();
                 foldout.text = EditorHelpers.NicifyEventName(animationEvent.name);
+                foldout.value = false;
+                foldout.RegisterValueChangedCallback((v) =>
+                {
+                    foldout.Q<ListView>().Rebuild();
+                });
 
                 var content = new VisualElement();
                 content.AddToClassList("elements__item__content");

@@ -10,7 +10,7 @@ namespace NoZ.Zisle
     {
         private VisualElement _root;
         private VisualElement _inspector;
-        private VisualElement _effects;
+        private VisualElement _components;
         private VisualElement _componentsContent;
 
         public void OnEnable()
@@ -20,7 +20,7 @@ namespace NoZ.Zisle
 
         public void OnDisable()
         {
-            _effects = null;
+            _components = null;
             _componentsContent = null;
             Undo.undoRedoPerformed -= OnUndoRedo;
             EditorApplication.update -= OnNextEditorFrame;
@@ -35,7 +35,6 @@ namespace NoZ.Zisle
             var root = new VisualElement();
             root.AddToClassList("root");
             root.styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/Editor/CommonEditor.uss"));
-            root.styleSheets.Add(AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/Editor/GroupEffectEditor.uss"));
 
             _inspector = EditorHelpers.CreateInspector(serializedObject, (f) => f.propertyPath != "_components");
             root.Add(_inspector);
@@ -56,12 +55,13 @@ namespace NoZ.Zisle
 
             EditorHelpers.HandleTargetType(serializedObject, _inspector);
 
-            _effects = CreateComponentsTab ();
-            var eventsTab = new TabButton("Components", _effects);
-            var tabs = new TabbedView();
-            tabs.name = "tabs";
-            tabs.Add(eventsTab);
-            root.Add(tabs);
+            _components = CreateComponentsTab ();
+
+            var componentsFoldout = new Foldout();
+            componentsFoldout.text = "Components";
+            componentsFoldout.AddToClassList("elements");
+            componentsFoldout.Add(_components);
+            root.Add(componentsFoldout);
 
             UpdateComponents();
 
@@ -96,7 +96,7 @@ namespace NoZ.Zisle
             {
                 var genericMenu = new GenericDropdownMenu();
 
-                foreach (var type in TypeCache.GetTypesDerivedFrom<EffectComponent>().Where(t => !t.IsAbstract))
+                foreach (var type in TypeCache.GetTypesDerivedFrom<EffectComponent>().Where(t => !t.IsAbstract).OrderBy(t => t.Name))
                 {
                     genericMenu.AddItem(NicifyComponentName(type.Name), false, () =>
                     {
@@ -148,6 +148,7 @@ namespace NoZ.Zisle
 
                 var foldout = new Foldout();
                 foldout.text = NicifyComponentName(component.GetType().Name);
+                foldout.value = false;
 
                 var content = EffectComponentEditor.CreateEditor(new SerializedObject(component));
                 content.AddToClassList("elements__item__content");

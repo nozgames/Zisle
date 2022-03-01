@@ -115,6 +115,16 @@ PrefabInstance:
       objectReference: {fileID: 301540513149619704}
     - target: {fileID: 8906246932429870938, guid: c626647da39f58f4a9598683d11fcdc9,
         type: 3}
+      propertyPath: _slotLeftHand
+      value: 
+      objectReference: {fileID: 9057515798848108988}
+    - target: {fileID: 8906246932429870938, guid: c626647da39f58f4a9598683d11fcdc9,
+        type: 3}
+      propertyPath: _slotRightHand
+      value: 
+      objectReference: {fileID: 3244416569057241705}
+    - target: {fileID: 8906246932429870938, guid: c626647da39f58f4a9598683d11fcdc9,
+        type: 3}
       propertyPath: _slotLeftWeapon
       value: 
       objectReference: {fileID: 9057515798848108988}

@@ -35,3 +35,4 @@ MonoBehaviour:
   _prefab: {fileID: 11400000, guid: c74c681838d253f4496872e7a24d5de2, type: 2}
   _slot: 2
   _parentToSlot: 1
+  _tag: {fileID: 11400000, guid: 9d1d518ee02b46347b0c3f0cd04a68aa, type: 2}

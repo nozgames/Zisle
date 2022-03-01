@@ -12,8 +12,8 @@ namespace NoZ.Zisle
         public override Tag Tag => _slot switch
         {
             ActorSlot.None => TagManager.Instance.SetScaleRoot,
-            ActorSlot.RightWeapon => TagManager.Instance.SetScaleRightWeapon,
-            ActorSlot.LeftWeapon => TagManager.Instance.SetScaleLeftWeapon,
+            ActorSlot.RightHand => TagManager.Instance.SetScaleRightHand,
+            ActorSlot.LeftHand => TagManager.Instance.SetScaleLeftHand,
             ActorSlot.Body => TagManager.Instance.SetScaleBody,
             _ => throw new System.NotImplementedException()
         };

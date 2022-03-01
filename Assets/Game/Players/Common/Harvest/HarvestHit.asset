@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SetMaterialColor
   m_EditorClassIdentifier: 
   _property: {fileID: 11400000, guid: 2056c5e6076221d40863c7e5b8929e92, type: 2}
-  _value: {r: 2.670157, g: 1.5016769, b: 0, a: 1}
+  _value: {r: 1.6055588, g: 0.9078552, b: 0, a: 0.23529412}
   _blendTime: 0.01
 --- !u!114 &11400000
 MonoBehaviour:

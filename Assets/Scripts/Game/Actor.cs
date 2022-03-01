@@ -117,8 +117,8 @@ namespace NoZ.Zisle
         [SerializeField] protected float _height = 0.5f;
 
         [Header("Slots")]
-        [SerializeField] protected Transform _slotRightWeapon = null;
-        [SerializeField] protected Transform _slotLeftWeapon = null;
+        [SerializeField] protected Transform _slotRightHand = null;
+        [SerializeField] protected Transform _slotLeftHand = null;
         [SerializeField] protected Transform _slotBody = null;
 
         private EffectList _effects;
@@ -810,8 +810,8 @@ namespace NoZ.Zisle
         public Transform GetSlotTransform (ActorSlot slot) => slot switch
         {
             ActorSlot.None => transform,
-            ActorSlot.RightWeapon => _slotRightWeapon,
-            ActorSlot.LeftWeapon => _slotLeftWeapon,
+            ActorSlot.RightHand => _slotRightHand,
+            ActorSlot.LeftHand => _slotLeftHand,
             ActorSlot.Body => _slotBody,
             _ => throw new System.NotImplementedException()
         };

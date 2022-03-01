@@ -2,36 +2,27 @@ using UnityEngine;
 
 namespace NoZ.Zisle
 {
-    [CreateAssetMenu(menuName = "Zisle/Effects/Set Material Float")]
-    public class SetMaterialFloat : Effect
+    public class SetMaterialFloat : EffectComponent
     {
-        [SerializeField] private string _propertyName = null;
+        [SerializeField] private Tag _property = null;
 
         [ColorUsage(true, true)]
         [SerializeField] private Color _value = Color.white;
 
-        public int PropertyNameId { get; private set; } = -1;
+        public override Tag Tag => _property;
 
-        private void OnEnable()
+        public override void Apply(EffectComponentContext context)
         {
-            PropertyNameId = Shader.PropertyToID(_propertyName);
+            context.Target.MaterialProperties.SetColor(_property.ShaderPropertyId, _value);
         }
 
-#if UNITY_EDITOR
-        private void OnValidate()
+        public override void Remove(EffectComponentContext context)
         {
-            PropertyNameId = Shader.PropertyToID(_propertyName);
-        }
-#endif
-
-        public override void Apply(EffectContext context)
-        {
-            context.Target.MaterialProperties.SetColor(PropertyNameId, _value);
+            context.Target.ResetMaterialProperty(_property.ShaderPropertyId);
         }
 
-        public override void Remove(EffectContext context)
+        public override void Release(EffectComponentContext context)
         {
-            context.Target.ResetMaterialProperty(PropertyNameId);
         }
     }
 }

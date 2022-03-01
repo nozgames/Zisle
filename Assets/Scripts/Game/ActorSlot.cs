@@ -5,8 +5,8 @@ namespace NoZ.Zisle
     public enum ActorSlot 
     {
         None,
-        LeftWeapon,
-        RightWeapon,
+        LeftHand,
+        RightHand,
         Body
     }
 }

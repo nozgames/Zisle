@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
+--- !u!114 &-8211546104190165905
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10,12 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5a1012c1c5ca54a49ae8d0344e2b7f18, type: 3}
-  m_Name: HarvestPickaxe
+  m_Name: InstantiatePrefab
   m_EditorClassIdentifier: 
-  _lifetime: 2
-  _duration: 1
-  _target: 0
-  _targetFinder: {fileID: 0}
   _prefab: {fileID: 11400000, guid: efcda56e31b1df74bbae6ab3813cee8a, type: 2}
   _slot: 2
   _parentToSlot: 1
+  _tag: {fileID: 11400000, guid: 9d1d518ee02b46347b0c3f0cd04a68aa, type: 2}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2a9d5575ae3e22478b943aa78ed916b, type: 3}
+  m_Name: HarvestPickaxe
+  m_EditorClassIdentifier: 
+  _target: 0
+  _targetFinder: {fileID: 0}
+  _lifetime: 3
+  _duration: 1
+  _maximumStacks: 1
+  _priority: 0
+  _components:
+  - {fileID: -8211546104190165905}

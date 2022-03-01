@@ -5,25 +5,32 @@
 .inspector
 {
 	margin-top: 0px;
+	padding-top: 8px;
+	padding-bottom: 8px;
 }
 
 .hidden {
 	display: none;
 }
 
-#tabs {
-	margin: 0px;
-	margin-top: 16px;
+.elements > Toggle > .unity-toggle__input {
+	background-color: var(--unity-colors-inspector_titlebar-background);
+	height: var(--unity-metrics-inspector_titlebar-height);
+	border-top-color: var(--unity-colors-inspector_titlebar-border);
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+	border-bottom-color: var(--unity-colors-inspector_titlebar-border_accent);
 }
 
-#tabs > #unity-tabs-container {
-	margin-left: -16px;
-	margin-right: -8px;
+.elements > Toggle {
+	margin-bottom: 0px;
 }
 
 .elements__item > Foldout > Toggle {
 	margin-top: 0px;
 	margin-bottom: 0px;
+	border-top-width: 1px;
+	border-top-color: var(--unity-colors-inspector_titlebar-border);
 }
 
 .elements__item {
@@ -31,13 +38,16 @@
 	margin-bottom: 0px;
 }
 
+.elements__item .inspector {
+	margin-left: 16px;
+}
+
+.elements__item > Foldout > Toggle {
+	background-color: #323232;
+}
+
 .elements__item > Foldout > Toggle > .unity-toggle__input {
-	background-color: var(--unity-colors-inspector_titlebar-background);
-	height: var(--unity-metrics-inspector_titlebar-height);
-	border-bottom-width: 1px;
-	border-top-width: 1px;
-	border-color: var(--unity-colors-inspector_titlebar-border_accent);
-	border-top-color: var(--unity-colors-inspector_titlebar-border);
+	background-color: #323232;
 }
 
 .elements__item > Foldout .unity-toggle__checkmark {
@@ -52,8 +62,6 @@
 }
 
 .elements__item__content PropertyField ListView {
-	margin-top: 8px;
-	margin-bottom: 8px;
 }
 
 #buttons {
@@ -63,12 +71,13 @@
 	border-top-color: var(--unity-colors-inspector_titlebar-border);
 	padding-left: 16px;
 	padding-top: 10px;
+	padding-bottom: 10px;
 }
 
 .add-button {
-	margin-left: 20%;
-	margin-right: 20%;
-	height: 24px;
+	margin-left: 10%;
+	margin-right: 10%;
+	height: 20px;
 }
 
 .options-button {
@@ -79,4 +88,14 @@
 	margin-right: 0px;
 	width: 16px;
 	height: 16px;
+}
+
+.unity-foldout--depth-0 > #unity-content
+{
+	margin:0px;
+}
+
+.unity-foldout--depth-1 > Toggle > .unity-toggle__input {
+	margin-left: 16px;
+	height: 18px !important;
 }

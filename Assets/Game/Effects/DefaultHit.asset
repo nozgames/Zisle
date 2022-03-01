@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SetMaterialColor
   m_EditorClassIdentifier: 
   _property: {fileID: 11400000, guid: 2056c5e6076221d40863c7e5b8929e92, type: 2}
-  _value: {r: 2, g: 2, b: 2, a: 1}
+  _value: {r: 1.4980392, g: 1.4980392, b: 1.4980392, a: 1}
   _blendTime: 0.01
 --- !u!114 &-1758649917231423471
 MonoBehaviour:
@@ -44,7 +44,7 @@ MonoBehaviour:
   _target: 2
   _targetFinder: {fileID: 0}
   _lifetime: 0
-  _duration: 0.1
+  _duration: 0.05
   _maximumStacks: 1
   _priority: 0
   _components:

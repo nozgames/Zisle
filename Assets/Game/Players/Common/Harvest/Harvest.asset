@@ -57,6 +57,7 @@ MonoBehaviour:
   _event: {fileID: 11400000, guid: 5da03270f53918f46a21ac33ff7f3e5b, type: 2}
   _effects:
   - {fileID: 11400000, guid: 28ad4bf36961e85499218f7102b746a7, type: 2}
+  - {fileID: 11400000, guid: 41fd659cce85abe4b84a0484c5587f83, type: 2}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0

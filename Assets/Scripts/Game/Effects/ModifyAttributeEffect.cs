@@ -2,8 +2,7 @@ using UnityEngine;
 
 namespace NoZ.Zisle
 {
-    [CreateAssetMenu(menuName = "Zisle/Effects/Modify Attribute")]
-    public class ModifyAttributeEffect : Effect
+    public class ModifyAttributeEffect : EffectComponent
     {
 #if false
         [Tooltip("Attribute to effect")]
@@ -52,11 +51,16 @@ namespace NoZ.Zisle
 #endif
         }
 #endif
-        public override void Apply(EffectContext context)
+
+        public override void Apply(EffectComponentContext context)
         {
         }
 
-        public override void Remove(EffectContext context)
+        public override void Release(EffectComponentContext context)
+        {
+        }
+
+        public override void Remove(EffectComponentContext context)
         {
         }
     }

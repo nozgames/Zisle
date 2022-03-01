@@ -8,6 +8,9 @@ namespace NoZ.Zisle
         [SerializeField] private PrefabPool _prefab = null;
         [SerializeField] private ActorSlot _slot = ActorSlot.None;
         [SerializeField] private bool _parentToSlot = true;
+        [SerializeField] private Tag _tag = null;
+
+        public override Tag Tag => _tag;
 
         public override void Apply(EffectComponentContext context)
         {

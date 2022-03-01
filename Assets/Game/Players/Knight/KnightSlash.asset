@@ -13,11 +13,8 @@ MonoBehaviour:
   m_Name: AbilityBegin
   m_EditorClassIdentifier: 
   _event: {fileID: 11400000, guid: 5da03270f53918f46a21ac33ff7f3e5b, type: 2}
-  _target: 2
-  _targetFinder: {fileID: 0}
   _effects:
-  - {fileID: 11400000, guid: 5ce11276384eef149b04eb1729f91e42, type: 2}
-  - {fileID: 11400000, guid: 20ddf0948b464e74ca1ce88f24babdf9, type: 2}
+  - {fileID: 11400000, guid: 28ad4bf36961e85499218f7102b746a7, type: 2}
 --- !u!114 &-5627736713632679098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31,12 +28,10 @@ MonoBehaviour:
   m_Name: AbilityAction
   m_EditorClassIdentifier: 
   _event: {fileID: 11400000, guid: 39fb1d30936dfc546a16744806ee8649, type: 2}
-  _target: 2
-  _targetFinder: {fileID: 0}
   _effects:
-  - {fileID: 11400000, guid: 931ab6ce4e67a274e8dddaf3daf86272, type: 2}
-  - {fileID: 11400000, guid: 8bcb814695326594ab054a4f065410d0, type: 2}
-  - {fileID: 11400000, guid: c2a5e128761e06e4c93d1b41448d4fbd, type: 2}
+  - {fileID: 11400000, guid: fe4af6be0a3faea40a3b812a36b7016a, type: 2}
+  - {fileID: 11400000, guid: dce7fef2bbf0d1b46b2fec427e3bf7d5, type: 2}
+  - {fileID: 11400000, guid: a6ca7c650c3e72e42873aa34dd6ac8a6, type: 2}
 --- !u!114 &-1959733156275363709
 MonoBehaviour:
   m_ObjectHideFlags: 0

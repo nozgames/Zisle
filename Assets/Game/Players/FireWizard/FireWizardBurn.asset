@@ -34,7 +34,7 @@ MonoBehaviour:
   m_Name: SetMaterialColor
   m_EditorClassIdentifier: 
   _property: {fileID: 11400000, guid: 2056c5e6076221d40863c7e5b8929e92, type: 2}
-  _value: {r: 4.181567, g: 0.39407438, b: 0, a: 0.2901961}
+  _value: {r: 4, g: 0.29803923, b: 0, a: 0.7019608}
   _blendTime: 0.1
 --- !u!114 &6929513747603206747
 MonoBehaviour:

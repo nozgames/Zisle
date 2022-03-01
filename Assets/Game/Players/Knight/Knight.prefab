@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5940039228376339464}
   m_Layer: 0
-  m_Name: LeftWeapon
+  m_Name: LeftHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72,7 +72,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3183878416325613717}
   m_Layer: 0
-  m_Name: RightWeapon
+  m_Name: RightHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -250,9 +250,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4347410703468825447, guid: 5772fed2575e7b04880554dbd73328e1,
         type: 3}
+      propertyPath: _slotLeftHand
+      value: 
+      objectReference: {fileID: 5940039228376339464}
+    - target: {fileID: 4347410703468825447, guid: 5772fed2575e7b04880554dbd73328e1,
+        type: 3}
       propertyPath: _baseHealthMax
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 4347410703468825447, guid: 5772fed2575e7b04880554dbd73328e1,
+        type: 3}
+      propertyPath: _slotRightHand
+      value: 
+      objectReference: {fileID: 3183878416325613717}
     - target: {fileID: 4347410703468825447, guid: 5772fed2575e7b04880554dbd73328e1,
         type: 3}
       propertyPath: _slotLeftWeapon

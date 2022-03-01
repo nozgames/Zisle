@@ -2,14 +2,17 @@ using UnityEngine;
 
 namespace NoZ.Zisle
 {
-    [CreateAssetMenu(menuName = "Zisle/Effects/Heal")]
-    public class Heal : Effect
+    public class Heal : EffectComponent
     {
-        public override void Apply(EffectContext context)
+        public override void Apply(EffectComponentContext context)
         {
         }
 
-        public override void Remove(EffectContext context)
+        public override void Remove(EffectComponentContext context)
+        {
+        }
+
+        public override void Release(EffectComponentContext context)
         {
         }
     }

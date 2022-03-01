@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 namespace NoZ.Zisle
 {
-    [CustomEditor(typeof(EffectComponent), true, isFallback = true)]
+    [CustomEditor(typeof(Effect), true, isFallback = true)]
     public class EffectComponentEditor : Editor
     {
         public override VisualElement CreateInspectorGUI()
