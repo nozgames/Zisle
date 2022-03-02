@@ -30,7 +30,8 @@ namespace NoZ.Zisle
 
         public Animations.AnimationShader Animation => _animation;
 
-        public TargetFinder FindTargets(Actor source) => TargetFinder.FindTargets(source, _target, _targetFinder, null);
+        public TargetFinder FindTargets(Actor source) => 
+            TargetFinder.FindTargets(source, _target, _targetFinder, null);
 
         public void OnEvent (Actor source, NoZ.Animations.AnimationEvent evt, TargetFinder targetFinder)
         {
@@ -60,9 +61,12 @@ namespace NoZ.Zisle
             }
         }
 
-        public float CalculateScore(Actor source, List<Actor> targetCache)
+        public float CalculateScore(Actor source)
         {
             var score = 1.0f;
+
+            if (source.Target == null)
+                return 0.0f;
 
             if (_conditions == null)
                 return 1.0f;

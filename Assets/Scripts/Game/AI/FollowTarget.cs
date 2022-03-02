@@ -17,9 +17,6 @@ namespace NoZ.Zisle
         [Header("Follow Target")]
         [SerializeField] private ActorTypeMask _followType = ActorTypeMask.Player;
         [SerializeField] private float _followRange = 2.0f;
-        [SerializeField] private float _stoppingDistance = 0.7f;
-
-        private static List<Actor> _actors = new List<Actor>();
 
         public override float CalculateScore(Actor actor, IThinkState istate)
         {
@@ -40,7 +37,7 @@ namespace NoZ.Zisle
         {
             var thinkState = state as ThinkState;
 
-            actor.SetDestination(thinkState.Follow.transform.position, stoppingDistance: _stoppingDistance);
+            actor.SetDestination(new Destination(thinkState.Follow));
             actor.LookAt(thinkState.Follow);
         }
     }

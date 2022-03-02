@@ -35,18 +35,18 @@ namespace NoZ.Zisle
             if (pathNode.IsPath && (!state.NextPathNode.IsPath || (state.NextPathNode.IsPath && withinRange && pathNode.To != state.NextPathNode.To)))
             {
                 state.NextPathNode = pathNode;
-                actor.SetDestination(TileGrid.CellToWorld(pathNode.To), stoppingDistance: _stoppingDistance);
+                actor.SetDestination(new Destination(TileGrid.CellToWorld(pathNode.To)));
             }
             // Continue path
             else if (state.NextPathNode.IsPath && !withinRange)
             {
-                actor.SetDestination(TileGrid.CellToWorld(state.NextPathNode.To), stoppingDistance: _stoppingDistance);
+                actor.SetDestination(new Destination(TileGrid.CellToWorld(state.NextPathNode.To)));
             }
             // Move towards base in hopes that we will find a path
             else
             {
                 state.NextPathNode = Game.PathNode.Invalid;
-                actor.SetDestination(Vector3.zero, stoppingDistance: _stoppingDistance);
+                actor.SetDestination(new Destination(Vector3.zero));
             }
 
             // Look at the path

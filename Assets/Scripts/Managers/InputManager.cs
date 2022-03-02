@@ -25,11 +25,11 @@ namespace NoZ.Zisle
         [SerializeField] private InputActionReference _playerMoveRight = null;
         [SerializeField] private InputActionReference _playerMoveUp = null;
         [SerializeField] private InputActionReference _playerMoveDown = null;
-        [SerializeField] private InputActionReference _playerAction = null;
+        [SerializeField] private InputActionReference _playerPrimary = null;
+        [SerializeField] private InputActionReference _playerSecondary = null;
         [SerializeField] private InputActionReference _playerBuild = null;
         [SerializeField] private InputActionReference _playerZoom = null;
         [SerializeField] private InputActionReference _playerLook = null;
-        [SerializeField] private InputActionReference _playerClickMove = null;
 
         [Header("Gamepad")]
         [SerializeField] private float _gamepadZoomSpeedMin = 0.1f;
@@ -49,13 +49,12 @@ namespace NoZ.Zisle
 
         public event Action<bool> OnGamepadChanged;
 
-        public event Action<bool> OnPlayerAction;
+        public event Action<PlayerButton> OnPlayerButton;
 
         public event Action<bool> OnPlayerBuild;
 
         public event Action<float> OnPlayerZoom;
 
-        public event Action<bool> OnPlayerClickMove;
 
         /// <summary>
         /// True if there is an active gamepad
@@ -90,10 +89,12 @@ namespace NoZ.Zisle
         {
             base.OnInitialize();
 
-            _playerAction.action.started += (ctx) => OnPlayerAction?.Invoke(ctx.action.activeControl.device is Gamepad);
+            _playerPrimary.action.started += (ctx) => OnPlayerButtonStart(PlayerButton.Primary);
+            _playerPrimary.action.canceled += (ctx) => OnPlayerButtonStop(PlayerButton.Primary);
             _playerBuild.action.started += (ctx) => OnPlayerBuild?.Invoke(ctx.action.activeControl.device is Gamepad);
             _playerMenu.action.started += (ctx) => onPlayerMenu?.Invoke();
-            _playerClickMove.action.started += (ctx) => OnPlayerClickMove?.Invoke(ctx.action.activeControl.device is Gamepad);
+            _playerSecondary.action.started += (ctx) => OnPlayerButtonStart(PlayerButton.Secondary);
+            _playerSecondary.action.canceled += (ctx) => OnPlayerButtonStop(PlayerButton.Secondary);
 
             //_debugMenu.action.started += (ctx) => onDebugMenu?.Invoke();
             _uiClose.action.started += (ctx) => OnUIClose?.Invoke();
@@ -108,6 +109,30 @@ namespace NoZ.Zisle
             InputSystem.onDeviceChange += (d, c) => UpdateGamepad();
 
             Options.LoadBindings(_inputActions);
+        }
+
+        private bool _playerButtonPressed = false;
+        private PlayerButton _playerButton;
+
+        private void OnPlayerButtonStart(PlayerButton button)
+        {
+            _playerButton = button;
+            _playerButtonPressed = true;
+            OnPlayerButton?.Invoke(button);
+        }
+
+        private void OnPlayerButtonStop(PlayerButton button)
+        {
+            if (_playerButton != button)
+                return;
+
+            _playerButtonPressed = false;
+        }
+
+        private void FixedUpdate()
+        {
+            if(_playerButtonPressed)
+                OnPlayerButton?.Invoke(_playerButton);
         }
 
         public void EnableMenuActions(bool enable = true)
@@ -156,10 +181,10 @@ namespace NoZ.Zisle
                 _playerMoveUp.action.Enable();
                 _playerMoveDown.action.Enable();
                 _playerMenu.action.Enable();
-                _playerAction.action.Enable();
+                _playerPrimary.action.Enable();
+                _playerSecondary.action.Enable();
                 _playerLook.action.Enable();
                 _playerBuild.action.Enable();
-                _playerClickMove.action.Enable();
             }
             else
             {
@@ -170,10 +195,10 @@ namespace NoZ.Zisle
                 _playerMoveUp.action.Disable();
                 _playerMoveDown.action.Disable();
                 _playerMenu.action.Disable();
-                _playerAction.action.Disable();
+                _playerPrimary.action.Disable();
+                _playerSecondary.action.Disable();
                 _playerLook.action.Disable();
                 _playerBuild.action.Disable();
-                _playerClickMove.action.Disable();
             }
         }
 

@@ -15,7 +15,13 @@ namespace NoZ.Zisle
             protected override void AddTargets(Actor source) { }
         }
 
+        private class DefaultTargetFinder : TargetFinder
+        {
+            protected override void AddTargets(Actor source) => Add(source.Target);
+        }
+
         private static SelfTargetFinder _selfTarget;
+        private static DefaultTargetFinder _defaultTarget;
         private static EmptyTargetFinder _emptyTarget;
 
         private Actor _source = null;
@@ -66,6 +72,17 @@ namespace NoZ.Zisle
             return _emptyTarget;
         }
 
+        private static TargetFinder GetDefaultTargetFinder (Actor source)
+        {
+            if(_defaultTarget == null)
+                _defaultTarget = CreateInstance<DefaultTargetFinder>();
+
+            _defaultTarget.Clear();
+            _defaultTarget.FindTargets(source);
+
+            return _defaultTarget;
+        }
+
         /// <summary>
         /// Find all targets for the given actor source
         /// </summary>
@@ -87,6 +104,9 @@ namespace NoZ.Zisle
         /// </summary>
         protected void Add(Actor target)
         {
+            if (target == null)
+                return;
+
             _targets.Add(target);
         }
 
@@ -98,7 +118,7 @@ namespace NoZ.Zisle
         /// <summary>
         /// Find targets for the given source handling self targetting and inheritance
         /// </summary>
-        public static TargetFinder FindTargets(Actor source, TargetType type, TargetFinder custom, TargetFinder inherit=null)
+        public static TargetFinder FindTargets(Actor source, TargetType type, TargetFinder custom=null, TargetFinder inherit=null)
         {
             switch (type)
             {
@@ -115,7 +135,7 @@ namespace NoZ.Zisle
 
                 default:
                 case TargetType.Inherit:
-                    return inherit != null ? inherit : GetEmptyTargetFinder();
+                    return inherit != null ? inherit : GetDefaultTargetFinder(source);
 
                 case TargetType.Self:
                     return GetSelfTargetFinder(source);

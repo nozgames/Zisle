@@ -13,6 +13,21 @@ MonoBehaviour:
   m_Name: ActorStateCondition
   m_EditorClassIdentifier: 
   _state: 3
+--- !u!114 &-8305868098836216094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bef52e568af7064ea633be9864d0297, type: 3}
+  m_Name: TargetTypeCondition
+  m_EditorClassIdentifier: 
+  _target: 2
+  _targetFinder: {fileID: 0}
+  _types: 16
 --- !u!114 &-8138911315622106902
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29,6 +44,21 @@ MonoBehaviour:
   _targetFinder: {fileID: 0}
   _minTargetCount: 1
   _maxTargetCount: 128
+--- !u!114 &-7738894001083661243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09f32da8e1df6624e85fc28aaac77ce0, type: 3}
+  m_Name: TargetDistanceCondition
+  m_EditorClassIdentifier: 
+  _target: 2
+  _targetFinder: {fileID: 0}
+  _distance: 0.1
 --- !u!114 &-5840664652735662319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,7 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animation: {fileID: 11400000, guid: 2103f1563fdbe364a9362221058bd79d, type: 2}
   _moveSpeed: 0.1
-  _target: 1
+  _target: 2
   _targetFinder: {fileID: 11400000, guid: 5ac5fbb62c6862548b663aabee6d79ab, type: 2}
   _events:
   - {fileID: -874000950723374751}
@@ -81,6 +111,8 @@ MonoBehaviour:
   - {fileID: -9217851000079348553}
   - {fileID: -5840664652735662319}
   - {fileID: -8138911315622106902}
+  - {fileID: -8305868098836216094}
+  - {fileID: -7738894001083661243}
 --- !u!114 &1870273447972391424
 MonoBehaviour:
   m_ObjectHideFlags: 0

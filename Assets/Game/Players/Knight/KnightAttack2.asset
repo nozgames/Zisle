@@ -51,6 +51,7 @@ MonoBehaviour:
   - {fileID: 2508529325800554910}
   - {fileID: -1109245945405564650}
   - {fileID: -1126867727831101039}
+  - {fileID: 3217695928563599545}
 --- !u!114 &2508529325800554910
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,6 +80,21 @@ MonoBehaviour:
   _event: {fileID: 11400000, guid: 5da03270f53918f46a21ac33ff7f3e5b, type: 2}
   _effects:
   - {fileID: 11400000, guid: 28ad4bf36961e85499218f7102b746a7, type: 2}
+--- !u!114 &3217695928563599545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09f32da8e1df6624e85fc28aaac77ce0, type: 3}
+  m_Name: DistanceCondition
+  m_EditorClassIdentifier: 
+  _target: 2
+  _targetFinder: {fileID: 0}
+  _distance: 0
 --- !u!114 &3719833372589990124
 MonoBehaviour:
   m_ObjectHideFlags: 0

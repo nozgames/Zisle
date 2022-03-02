@@ -9,7 +9,8 @@ namespace NoZ.Zisle
 {
     public enum PlayerButton
     {
-        Action
+        Primary,
+        Secondary
     }
 
     public class Player : Actor
@@ -19,24 +20,9 @@ namespace NoZ.Zisle
         [Header("Player")]
         [SerializeField] private float _rotationSpeed = 1.0f;
         [SerializeField] private float _buttonSlop = 0.4f;
+        [SerializeField] private float _buttonRepeat = 0.1f;
 
-        private struct PlayerButtonState
-        {
-            /// <summary>
-            /// Time the player pressed the button at
-            /// </summary>
-            public float LastPressedTime;
-
-            /// <summary>
-            /// True if the last time the action was pressed it was with a gamepad
-            /// </summary>
-            public bool LastPressedGamepad;
-        }
-
-        private Vector3 _clickMovePosition;
-        private bool _clickMove;
-        private PlayerButton _lastPressed = PlayerButton.Action;
-        private PlayerButtonState[] _buttonStates = new PlayerButtonState[PlayerButtonCount];
+        private PlayerButton _lastPressed = PlayerButton.Primary;
         
         public PlayerController Controller { get; private set; }
 
@@ -53,67 +39,10 @@ namespace NoZ.Zisle
             if (IsOwner)
             {
                 InputManager.Instance.OnPlayerZoom += OnPlayerZoom;
-                InputManager.Instance.OnPlayerAction += OnPlayerAction;
-                InputManager.Instance.OnPlayerClickMove += OnPlayerClickMove;
+                InputManager.Instance.OnPlayerButton += OnButtonPress;
             }
 
             GameEvent.Raise(this, new PlayerSpawned { Player = this });
-        }
-
-        private void OnPlayerClickMove(bool isGamepad)
-        {
-            _clickMove = true;
-            _clickMovePosition = InputManager.Instance.PlayerLook;
-        }
-
-        private void OnPlayerZoom (float f) => CameraManager.Instance.IsometricZoom -= 3.0f * f;
-        
-        private void OnPlayerAction (bool gamepad)
-        {
-            // Snap look
-            var look = Vector3.zero;
-            if (gamepad)
-            {
-                look = InputManager.Instance.PlayerMove;
-            }
-            else
-            {
-//                if (Physics.Raycast(InputManager.Instance.PlayerLookRay, out var hit, 100.0f) && hit.collider.GetComponentInParent<Actor>() != null)
-//                    look = (hit.collider.transform.position - transform.position);
-//                else
-                    look = (InputManager.Instance.PlayerLook - transform.position);
-            }
-
-            look = look.ZeroY();
-            if (look.magnitude >= 0.001f)
-                transform.rotation = Quaternion.LookRotation(look.normalized, Vector3.up);
-
-            SetLastPressed(PlayerButton.Action, gamepad);
-        }
-
-        private void SetLastPressed (PlayerButton button, bool gamepad)
-        {
-            _lastPressed = button;
-
-            ref var state = ref _buttonStates[(int)button];
-            state.LastPressedTime = Time.time;
-            state.LastPressedGamepad = gamepad;
-
-            if(!IsHost)
-                SetLastPressedServerRpc(button, gamepad);
-        }
-
-        [ServerRpc]
-        private void SetLastPressedServerRpc (PlayerButton button, bool gamepad)
-        {
-            SetLastPressed(button, gamepad);
-        }
-
-        private void ClearLastPressed ()
-        {
-            ref var state = ref _buttonStates[(int)_lastPressed];
-            state.LastPressedTime = 0.0f;
-            state.LastPressedGamepad = false;
         }
 
         public override void OnNetworkDespawn()
@@ -122,9 +51,44 @@ namespace NoZ.Zisle
 
             GameEvent.Raise(this, new PlayerDespawned { Player = this });
 
-            InputManager.Instance.OnPlayerZoom -= OnPlayerZoom;
-            InputManager.Instance.OnPlayerAction -= OnPlayerAction;
+            if (IsOwner)
+            {
+                InputManager.Instance.OnPlayerZoom -= OnPlayerZoom;
+                InputManager.Instance.OnPlayerButton -= OnButtonPress;
+            }
         }
+
+        private void OnPlayerZoom (float f) => CameraManager.Instance.IsometricZoom -= 3.0f * f;
+
+        private void OnButtonPress (PlayerButton button)
+        {
+            var look = InputManager.Instance.PlayerLook;
+            var destination = new Destination(look);
+
+            if(Physics.Raycast(InputManager.Instance.PlayerLookRay, out var hit, 100.0f, -1))
+            {
+                var actor = hit.collider.GetComponentInParent<Actor>();
+                if (actor != null)
+                    destination = new Destination(actor);
+            }
+
+            OnButtonPress(button, destination);
+        }
+
+        private void OnButtonPress (PlayerButton button, Destination destination)
+        {
+            if (IsHost)
+            {
+                _lastPressed = button;
+                SetDestination(destination);
+            }
+            else
+                SetDestinationServerRpc(button, destination);
+        }
+
+        [ServerRpc]
+        private void SetDestinationServerRpc(PlayerButton button, Destination destination) =>
+            OnButtonPress(button, destination);
 
         protected override void Update()
         {
@@ -134,35 +98,6 @@ namespace NoZ.Zisle
                 return;
 
             GameManager.Instance.ListenAt(transform);
-
-            var moveSpeed = 1.0f;
-            if (!NavAgent.isOnNavMesh)
-                moveSpeed = 0.0f;
-            else if (IsBusy && LastAbilityUsed != null && LastAbilityUsed.MoveSpeed > 0.0f)
-                moveSpeed = LastAbilityUsed.MoveSpeed;
-            else if (IsBusy)
-                moveSpeed = 0.0f;
-
-            var y = transform.position.y;
-            if(moveSpeed > 0.0f)
-            {
-                if (_clickMove)
-                {
-                    var delta = (_clickMovePosition - transform.position);
-                    if (delta.sqrMagnitude < 0.1f)
-                        _clickMove = false;
-                    else
-                        MoveTo(delta.normalized * Time.deltaTime * GetAttributeValue(ActorAttribute.Speed) * moveSpeed);
-                }
-
-
-                if(!_clickMove)
-                    MoveTo(InputManager.Instance.PlayerMove * Time.deltaTime * GetAttributeValue(ActorAttribute.Speed) * moveSpeed);
-            }
-                
-
-            //transform.position = new Vector3(transform.position.x, y, transform.position.z);
-            SnapToGround();
 
             CameraManager.Instance.IsometricTarget = transform.position;
         }
@@ -180,17 +115,10 @@ namespace NoZ.Zisle
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(offset, Vector3.up), Time.deltaTime * _rotationSpeed);
         }
 
-        public override bool ExecuteAbility(Ability ability, List<Actor> targets)
-        {
-            ClearLastPressed();
-            return base.ExecuteAbility(ability, targets);
-        }
-
         /// <summary>
         /// Returns true if the given player button was pressed
         /// </summary>
-        public bool WasButtonPressed (PlayerButton button) =>
-            !IsBusy && _lastPressed == button && (Time.time - _buttonStates[(int)button].LastPressedTime) < _buttonSlop;
+        public bool WasButtonPressed (PlayerButton button) => !IsBusy && _lastPressed == button;
 
         protected override void OnHealthChanged()
         {

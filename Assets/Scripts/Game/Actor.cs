@@ -55,11 +55,20 @@ namespace NoZ.Zisle
         private float _busyTime;
         private Vector3 _lastPosition;
         private float _speed = 0.0f;
+        private Destination _destination;
 
         public ActorDefinition Definition => _actorDefinition;
         public float Speed => _speed;
-        public bool IsMoving => Speed > 0.1f;
+        public bool IsMoving => NavAgent != null && NavAgent.desiredVelocity.sqrMagnitude > 0.1f;
         public bool IsDead => _health <= 0.0f;
+
+        /// <summary>
+        /// Current target of the actor
+        /// </summary>
+        public Actor Target => _destination.Target;
+
+        public float Radius => 
+            NavAgent != null ? NavAgent.radius : (NavObstacle != null ? NavObstacle.radius : 0.5f);
 
         public NavMeshAgent NavAgent { get; private set; }
         public NavMeshObstacle NavObstacle { get; private set; }
@@ -274,6 +283,7 @@ namespace NoZ.Zisle
             if(IsHost)
                 _effects.RemoveEffects(EffectLifetime.Ability);
 
+            _destination = Destination.None;
             _oneShotAnimation = null;
             _currentAnimation = null;
             _lastAbilityUsedEndTime = Time.time;
@@ -481,17 +491,34 @@ namespace NoZ.Zisle
             transform.rotation = Quaternion.LookRotation(delta.normalized, Vector3.up);
         }
 
-        public void SetDestination (Vector3 destination, bool force=false, float stoppingDistance=0.001f)
+        public void SetDestination (Destination destination)
         {
-            if (NavAgent == null || (!force && destination == NavAgent.destination))
+            if (NavAgent == null)
                 return;
 
-            NavAgent.stoppingDistance = stoppingDistance;
+            if (_destination == destination)
+                return;
+
+            _destination = destination;
+
+            // TODO: choose best surround position
+            NavAgent.stoppingDistance = destination.StopDistance;
+
+#if true
+            var pos = _destination.Position;
+            if(_destination.Target != null)
+            {
+                var delta = (Position - _destination.Target.Position).normalized;
+                pos = _destination.Target.Position + delta * (Target.Radius + Radius);
+                NavAgent.stoppingDistance -= (Target.Radius - Radius);
+            }
+#endif
+            
             NavAgent.enabled = true;
-            NavAgent.SetDestination(destination);
+            NavAgent.SetDestination(pos);
         }
 
-        public virtual bool ExecuteAbility(Ability ability, List<Actor> targets)
+        public virtual bool ExecuteAbility(Ability ability)
         {
             if (!IsHost)
                 throw new System.InvalidOperationException("Only host can execute abilities");
@@ -582,6 +609,9 @@ namespace NoZ.Zisle
 
             _speed = _speed * 0.9f + ((_lastPosition - transform.position).ZeroY().magnitude / Time.deltaTime) * 0.1f;
             _lastPosition = transform.position;
+
+            if (_destination.IsValid)
+                LookAt(_destination.Position);
 
             SnapToGround();
             UpdateAnimation();

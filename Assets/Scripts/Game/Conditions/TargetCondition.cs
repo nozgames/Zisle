@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace NoZ.Zisle
@@ -13,7 +11,7 @@ namespace NoZ.Zisle
         public TargetFinder TargetFinder => _targetFinder;
 
         public sealed override float CheckCondition(Actor source, Ability ability) =>
-            CheckCondition(source, ability, ability.FindTargets(source));
+            CheckCondition(source, ability, TargetFinder.FindTargets(source, _target, _targetFinder));
 
         protected abstract float CheckCondition(Actor source, Ability ability, TargetFinder targets);
     }

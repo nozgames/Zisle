@@ -13,6 +13,21 @@ MonoBehaviour:
   m_Name: ActorStateCondition
   m_EditorClassIdentifier: 
   _state: 3
+--- !u!114 &-7479109265866504454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09f32da8e1df6624e85fc28aaac77ce0, type: 3}
+  m_Name: DistanceCondition
+  m_EditorClassIdentifier: 
+  _target: 2
+  _targetFinder: {fileID: 0}
+  _distance: 0.01
 --- !u!114 &-5840664652735662319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63,6 +78,7 @@ MonoBehaviour:
   _conditions:
   - {fileID: -9217851000079348553}
   - {fileID: -5840664652735662319}
+  - {fileID: -7479109265866504454}
 --- !u!114 &1870273447972391424
 MonoBehaviour:
   m_ObjectHideFlags: 0

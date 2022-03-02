@@ -837,15 +837,15 @@ MonoBehaviour:
     type: 3}
   _playerMoveDown: {fileID: -4790304392232712304, guid: 92783038ce5d74148b556e04433c7c93,
     type: 3}
-  _playerAction: {fileID: 904065791343046597, guid: 92783038ce5d74148b556e04433c7c93,
+  _playerPrimary: {fileID: 904065791343046597, guid: 92783038ce5d74148b556e04433c7c93,
+    type: 3}
+  _playerSecondary: {fileID: 8483447222042219626, guid: 92783038ce5d74148b556e04433c7c93,
     type: 3}
   _playerBuild: {fileID: -1638354892945316584, guid: 92783038ce5d74148b556e04433c7c93,
     type: 3}
   _playerZoom: {fileID: 2078750413710439317, guid: 92783038ce5d74148b556e04433c7c93,
     type: 3}
   _playerLook: {fileID: -9164683820507989109, guid: 92783038ce5d74148b556e04433c7c93,
-    type: 3}
-  _playerClickMove: {fileID: 8483447222042219626, guid: 92783038ce5d74148b556e04433c7c93,
     type: 3}
   _gamepadZoomSpeedMin: 0.1
   _gamepadZoomSpeedMax: 1
@@ -2112,7 +2112,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.076225, y: 1}
+    m_SensorSize: {x: 1.367647, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0

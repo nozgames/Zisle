@@ -98,6 +98,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 8302252600199844687}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 2fe570a8a7c4d90489e9c6fc5eb55d15,
@@ -161,6 +162,19 @@ PrefabInstance:
       value: Knight
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -1566440873756082948, guid: 2fe570a8a7c4d90489e9c6fc5eb55d15,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4379599221651213044}
+    - targetCorrespondingSourceObject: {fileID: 1431979263059675320, guid: 2fe570a8a7c4d90489e9c6fc5eb55d15,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5940039228376339464}
+    - targetCorrespondingSourceObject: {fileID: -4365166153488802963, guid: 2fe570a8a7c4d90489e9c6fc5eb55d15,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3183878416325613717}
   m_SourcePrefab: {fileID: 100100000, guid: 2fe570a8a7c4d90489e9c6fc5eb55d15, type: 3}
 --- !u!4 &296100207359313365 stripped
 Transform:
@@ -200,6 +214,12 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!4 &7625630732604579522 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2fe570a8a7c4d90489e9c6fc5eb55d15,
+    type: 3}
+  m_PrefabInstance: {fileID: 7951412742371408169}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &9045055780594266513 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1431979263059675320, guid: 2fe570a8a7c4d90489e9c6fc5eb55d15,
@@ -211,6 +231,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 177772551704840563, guid: 5772fed2575e7b04880554dbd73328e1,
@@ -367,6 +388,11 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 177772551704840563, guid: 5772fed2575e7b04880554dbd73328e1,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7625630732604579522}
   m_SourcePrefab: {fileID: 100100000, guid: 5772fed2575e7b04880554dbd73328e1, type: 3}
 --- !u!4 &8302252600199844687 stripped
 Transform:

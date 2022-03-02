@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2675568438167149780}
-  - component: {fileID: 1977208671167925589}
+  - component: {fileID: 4144754213523751025}
   m_Layer: 0
   m_Name: Hit
   m_TagString: Untagged
@@ -24,16 +24,16 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3374747012677643239}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7457722228445880957}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1977208671167925589
-BoxCollider:
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!64 &4144754213523751025
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -42,9 +42,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 5403873900665001532, guid: 4b99bbba5f163a24e8c06ab856a03625, type: 3}
 --- !u!1 &7506981431210532055
 GameObject:
   m_ObjectHideFlags: 0
@@ -111,7 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _actorDefinition: {fileID: 11400000, guid: cd5645f568fe9994db47bdd28f69db06, type: 2}
-  _hitCollider: {fileID: 1977208671167925589}
+  _hitCollider: {fileID: 0}
   _scaleTransform: {fileID: 0}
   _pitchTransform: {fileID: 0}
   _offsetTransform: {fileID: 6570268311033404621}
@@ -169,6 +170,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 7457722228445880957}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 4b99bbba5f163a24e8c06ab856a03625,
@@ -237,6 +239,7 @@ PrefabInstance:
       value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b99bbba5f163a24e8c06ab856a03625, type: 3}
 --- !u!1 &5793204288454297207 stripped
 GameObject:
