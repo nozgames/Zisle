@@ -85,11 +85,12 @@ MonoBehaviour:
   _hitCollider: {fileID: 2916313137891568418}
   _scaleTransform: {fileID: 177772551704840563}
   _pitchTransform: {fileID: 177772551704840563}
+  _offsetTransform: {fileID: 177772551704840563}
   _spawnVFXPrefab: {fileID: 0}
   _runPitch: 20
   _height: 0.5
-  _slotRightWeapon: {fileID: 0}
-  _slotLeftWeapon: {fileID: 0}
+  _slotRightHand: {fileID: 0}
+  _slotLeftHand: {fileID: 0}
   _slotBody: {fileID: 0}
   _rotationSpeed: 90
   _buttonSlop: 0.4

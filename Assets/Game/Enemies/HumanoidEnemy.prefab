@@ -54,12 +54,13 @@ MonoBehaviour:
   _hitCollider: {fileID: 5285709882748307645}
   _scaleTransform: {fileID: 5907281522901925113}
   _pitchTransform: {fileID: 5907281522901925113}
+  _offsetTransform: {fileID: 5907281522901925113}
   _spawnVFXPrefab: {fileID: 3214235347064349228, guid: b4a28c8597f55e5408e3eb3f6292381f,
     type: 3}
   _runPitch: 20
   _height: 0.5
-  _slotRightWeapon: {fileID: 0}
-  _slotLeftWeapon: {fileID: 0}
+  _slotRightHand: {fileID: 0}
+  _slotLeftHand: {fileID: 0}
   _slotBody: {fileID: 0}
 --- !u!114 &435549470166300269
 MonoBehaviour:

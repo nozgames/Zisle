@@ -95,10 +95,15 @@ namespace NoZ.Zisle
 
         IEnumerator Fall (List<Actor> spawnedActors)
         {
+            var fallingActors = Game.Instance.Actors.Where(a => IslandGrid.WorldToCell(a.Position) == Cell);
+            foreach (var actor in fallingActors)
+                actor.VisualOffsetY = transform.position.y;
+
             CameraManager.Instance.StartCinematic(transform.position, 20.0f);
 
             yield return new WaitForSeconds(0.5f);
 
+            var bounce = false;
             _state = IslandState.Spawn;
             _fallVelocity = 0.0f;
 
@@ -112,6 +117,8 @@ namespace NoZ.Zisle
 
                 if (transform.position.y < 0.0f)
                 {
+                    bounce = true;
+
                     transform.position += (Vector3.up * -transform.position.y * 2);
                     _fallVelocity = -_fallVelocity * 0.25f;
 
@@ -125,23 +132,28 @@ namespace NoZ.Zisle
 
                         SpawnSplash();
 
-                        _fallShake.Shake(); //  Mathf.Abs(Mathf.Lerp(0.1f, 1.0f, _fallVelocity / 1.0f)));
+                        _fallShake.Shake();
                         shake = true;
                     }
                 }
+
+                var actorY = bounce ? transform.position.y * 1.5f : transform.position.y;
+                foreach (var actor in fallingActors)
+                    actor.VisualOffsetY = actorY;
 
                 yield return null;
             }
 
             transform.position = transform.position.ZeroY();
 
+            foreach (var actor in fallingActors)
+                actor.VisualOffsetY = 0.0f;
+
             // Now that the island has spawned in move all actors spawned by the island to the intro state
             foreach (var actor in spawnedActors)
                 actor.State = ActorState.Active;
 
             _state = IslandState.Active;
-
-            SpawnHarvestables();
 
             CameraManager.Instance.StopCinematic();
         }
@@ -159,6 +171,8 @@ namespace NoZ.Zisle
 
             gameObject.SetActive(true);
 
+            SpawnHarvestables();
+
             SpawnBridges();
 
             // Spawn child objects
@@ -170,7 +184,7 @@ namespace NoZ.Zisle
                 if(actor != null)
                 {
                     if(NetworkManager.Singleton.IsHost)
-                        spawnedActors.Add(actor.Definition.Spawn(transform.TransformPoint(child.localPosition), transform.rotation * child.localRotation, transform));
+                        spawnedActors.Add(actor.Definition.Spawn(transform.TransformPoint(child.localPosition), transform.rotation * child.localRotation, Game.Instance.transform));
                 }
                 else
                 {
@@ -418,7 +432,7 @@ namespace NoZ.Zisle
                 {
                     var def = _biome.ChooseRandomHarvestable();
                     if (null != def)
-                        def.Spawn(position, Quaternion.identity, transform);
+                        def.Spawn(position, Quaternion.identity, Game.Instance.transform);
                 }
             }
         }

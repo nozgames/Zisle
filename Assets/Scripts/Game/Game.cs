@@ -87,6 +87,8 @@ namespace NoZ.Zisle
 
         public static Game Instance => GameManager.Instance.Game;
 
+        public LinkedList<Actor> Actors => _actors;
+
         // TODO: if we have the island cells stored here then whenever a player connects and the GAme
         //       spawns on their client, they can request the cells be send
 
@@ -289,6 +291,13 @@ namespace NoZ.Zisle
         public void Play()
         {
             HomeIsland = CellToIsland(IslandGrid.CenterCell);
+            if (HomeIsland.TryFindFreeTileNearCenter(IslandTile.None, out var position))
+            {
+                var rotation = Quaternion.LookRotation((HomeIsland.FindClosestExitPosition(position) - position).ZeroY(), Vector3.up);
+                foreach (var player in GameManager.Instance.Players)
+                    player.SpawnPlayer(position, rotation, transform);
+            }
+
             HomeIsland.Spawn();
 
             // Focus on the home island until the player spawns
@@ -300,14 +309,6 @@ namespace NoZ.Zisle
             {
                 while (HomeIsland.State == IslandState.Spawn)
                     yield return null;
-
-                if (!HomeIsland.TryFindFreeTileNearCenter(IslandTile.None, out var position))
-                    // TODO: this bad
-                    yield break;
-
-                var rotation = Quaternion.LookRotation((HomeIsland.FindClosestExitPosition(position) - position).ZeroY(), Vector3.up);
-                foreach (var player in GameManager.Instance.Players)
-                    player.SpawnPlayer(position, rotation, transform);
 
                 CameraManager.Instance.StopCinematic();
             }

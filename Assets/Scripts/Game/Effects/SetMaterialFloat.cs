@@ -18,7 +18,6 @@ namespace NoZ.Zisle
 
         public override void Remove(EffectComponentContext context)
         {
-            context.Target.ResetMaterialProperty(_property.ShaderPropertyId);
         }
 
         public override void Release(EffectComponentContext context)

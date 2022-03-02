@@ -112,12 +112,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actorDefinition: {fileID: 11400000, guid: cd5645f568fe9994db47bdd28f69db06, type: 2}
   _hitCollider: {fileID: 1977208671167925589}
-  _visualTransform: {fileID: 0}
+  _scaleTransform: {fileID: 0}
+  _pitchTransform: {fileID: 0}
+  _offsetTransform: {fileID: 6570268311033404621}
   _spawnVFXPrefab: {fileID: 0}
   _runPitch: 20
   _height: 3
-  _slotRightWeapon: {fileID: 0}
-  _slotLeftWeapon: {fileID: 0}
+  _slotRightHand: {fileID: 0}
+  _slotLeftHand: {fileID: 0}
   _slotBody: {fileID: 0}
 --- !u!114 &828693400773729145
 MonoBehaviour:

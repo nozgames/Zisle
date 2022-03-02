@@ -22,6 +22,7 @@ namespace NoZ.Zisle
         [Header("Visuals")]
         [SerializeField] protected Transform _scaleTransform = null;
         [SerializeField] protected Transform _pitchTransform = null;
+        [SerializeField] protected Transform _offsetTransform = null;        
         [SerializeField] protected GameObject _spawnVFXPrefab = null;
         [SerializeField] protected float _runPitch = 20.0f;
         [SerializeField] protected float _height = 0.5f;
@@ -67,22 +68,30 @@ namespace NoZ.Zisle
         public float LastAbilityUsedEndTime => _lastAbilityUsedEndTime;
         public float LastAbilityUsedTime => _lastAbilityUsedTime;
 
+        /// <summary>
+        /// Get the array of available abilities for this actor
+        /// </summary>
         public Ability[] Abilities => _actorDefinition.Abilities;
 
+        /// <summary>
+        /// Get the current effect list for this actor
+        /// </summary>
         public EffectList Effects => _effects;
 
+        /// <summary>
+        /// Get the actor type
+        /// </summary>
         public ActorType Type => _actorDefinition.ActorType;
 
+        /// <summary>
+        /// Get the actor type as a mask
+        /// </summary>
         public ActorTypeMask TypeMask => (ActorTypeMask)(1 << (int)_actorDefinition.ActorType);
 
+        /// <summary>
+        /// Get the current position of the actor
+        /// </summary>
         public Vector3 Position => transform.position.ZeroY();
-
-        public Color GetMaterialColor (int nameId) => _materialProperties.GetColor(nameId);
-        public void SetMaterialColor (int nameId, Color value)
-        {
-            _materialProperties.SetColor(nameId, value);
-            _materialPropertiesDirty = true;
-        }
 
         public Vector3 VisualScale
         {
@@ -104,6 +113,22 @@ namespace NoZ.Zisle
             {
                 _visualPitch = value;
                 UpdateVisualPitch();
+            }
+        }
+
+        /// <summary>
+        /// Get/Set the visual y offset of the actor.
+        /// </summary>
+        public float VisualOffsetY
+        {
+            get => _offsetTransform == null ? _offsetTransform.localPosition.y : 0.0f;
+            set
+            {
+                if (_offsetTransform == null)
+                    return;
+                var position = _offsetTransform.localPosition;
+                position.y = value;
+                _offsetTransform.localPosition = position;
             }
         }
 
@@ -391,16 +416,19 @@ namespace NoZ.Zisle
 
             _state.OnValueChanged += OnStateChanged;
 
-            _materialProperties.SetColor("_Color", Color.blue);
-
             _lastPosition = transform.position;
 
             if (_spawnVFXPrefab != null)
                 Instantiate(_spawnVFXPrefab, transform.position, transform.rotation);
+           
+            // On host add the default effects to each actor
+            if(IsHost)
+            {
+                AddEffect(this, GameManager.Instance.DefaultActorEffect);
 
-            ResetMaterialProperties();
-
-            AddDefaultEffects();
+                foreach (var effect in _actorDefinition.Effects)
+                    AddEffect(this, effect);
+            }
 
             UpdateAttributes();
 
@@ -465,6 +493,9 @@ namespace NoZ.Zisle
 
         public virtual bool ExecuteAbility(Ability ability, List<Actor> targets)
         {
+            if (!IsHost)
+                throw new System.InvalidOperationException("Only host can execute abilities");
+
             // Remove any effects that should only last for the duration of an ability
             _effects.RemoveEffects(EffectLifetime.NextAbility);
 
@@ -480,8 +511,7 @@ namespace NoZ.Zisle
             ability.OnEvent(this, GameManager.Instance.AbilityBeginEvent, ability.FindTargets(this));
             PlayOneShotAnimation(ability.Animation);
 
-            if(IsHost)
-                ExecuteAbilityClientRpc(ability.NetworkId);
+            ExecuteAbilityClientRpc(ability.NetworkId);
 
             for (int i = 0, c = _actorDefinition.Abilities.Length; i < c; i++)
             {
@@ -573,17 +603,20 @@ namespace NoZ.Zisle
 
         public void SnapToGround()
         {
+#if false
+
             // Only actors that can move need to snap
             if (NavAgent == null)
                 return;
 
-            if (!Physics.Raycast(transform.position + Vector3.up * _height * 0.5f, Vector3.down, out var hit, 5.0f, GameManager.Instance.GroundLayer))
+            if (!Physics.Raycast(_offsetTransform.position + Vector3.up * _height * 0.5f, Vector3.down, out var hit, 5.0f, GameManager.Instance.GroundLayer))
                 return;
 
-            var ychangemax = Time.deltaTime * 0.01f;
-            var ychange = Mathf.Clamp(hit.point.y - transform.position.y, -ychangemax, ychangemax);
+            //var ychangemax = Time.deltaTime * 0.01f;
+            //var ychange = Mathf.Clamp(hit.point.y - _offsetTransform.position.y, -ychangemax, ychangemax);
             //transform.position += Vector3.up * ychange;
             transform.position = hit.point;
+#endif
         }
 
         private void UpdateAnimation ()
@@ -609,13 +642,26 @@ namespace NoZ.Zisle
             _pitchTransform.localRotation = Quaternion.Euler(_runPitch * normalizedSpeed + _visualPitch, 0, 0);
         }
 
+        /// <summary>
+        /// Helper function to return the distance between the actor and the given position
+        /// </summary>
         public float DistanceTo(Vector3 position) => (transform.position - position).magnitude;
 
+        /// <summary>
+        /// Helper function to return the distance between the actor and the given actor
+        /// </summary>
         public float DistanceTo(Actor actor) => (Position - actor.Position).magnitude;
 
+        /// <summary>
+        /// Helper function to return the distance squared between the actor and the given position
+        /// </summary>
         public float DistanceToSqr (Vector3 position) => (transform.position - position).sqrMagnitude;
 
+        /// <summary>
+        /// Helper function to return the distance squared between the actor and the given actor
+        /// </summary>
         public float DistanceToSqr (Actor actor) => (Position - actor.Position).sqrMagnitude;
+
 
         protected virtual void OnStateChanged(ActorState oldState, ActorState newState)
         {
@@ -646,27 +692,18 @@ namespace NoZ.Zisle
             _ => throw new System.NotImplementedException()
         };
 
-        public void ResetMaterialProperties ()
-        {
-            ResetMaterialProperty(ShaderPropertyID._Color);
-        }
+        /// <summary>
+        /// Get the current material color for the given property name
+        /// </summary>
+        public Color GetMaterialColor(int nameId) => _materialProperties.GetColor(nameId);
 
-        public void ResetMaterialProperty (int nameId)
+        /// <summary>
+        /// Set the current material color for the given property name
+        /// </summary>
+        public void SetMaterialColor(int nameId, Color value)
         {
-            if (nameId == ShaderPropertyID._Color)
-            {
-                // TODO: Quick fade from current to new
-                _materialProperties.SetColor(nameId, Color.clear);
-                return;
-            }
-        }
-
-        private void AddDefaultEffects()
-        {
-            AddEffect(this, GameManager.Instance.DefaultActorEffect);
-
-            foreach (var effect in _actorDefinition.Effects)
-                AddEffect(this, effect);
+            _materialProperties.SetColor(nameId, value);
+            _materialPropertiesDirty = true;
         }
     }
 }

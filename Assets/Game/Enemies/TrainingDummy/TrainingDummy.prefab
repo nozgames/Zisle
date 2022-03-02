@@ -193,11 +193,12 @@ MonoBehaviour:
   _hitCollider: {fileID: 3180489929557142433}
   _scaleTransform: {fileID: 4711918812125874173}
   _pitchTransform: {fileID: 4711918812125874173}
+  _offsetTransform: {fileID: 4711918812125874173}
   _spawnVFXPrefab: {fileID: 0}
   _runPitch: 20
   _height: 0.5
-  _slotRightWeapon: {fileID: 706367679719651346}
-  _slotLeftWeapon: {fileID: 706367679719651346}
+  _slotRightHand: {fileID: 0}
+  _slotLeftHand: {fileID: 0}
   _slotBody: {fileID: 706367679719651346}
 --- !u!208 &-245913136665533455
 NavMeshObstacle:
