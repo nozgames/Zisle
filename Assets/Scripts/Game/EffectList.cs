@@ -1,13 +1,11 @@
-using System;
 using System.Collections.Generic;
-using Unity.Collections;
 using Unity.Netcode;
 
 namespace NoZ.Zisle
 {
-    // TODO: handle enable / disabling of effects
-    // TODO: handle adding / removing of effects
-
+    /// <summary>
+    /// Maintains a network synchronized list of effects for a given actor
+    /// </summary>
     public class EffectList : NetworkVariableBase
     {
         private static List<EffectStack> _stackPool = new List<EffectStack>();
@@ -15,10 +13,7 @@ namespace NoZ.Zisle
         public enum ChangeEventType : byte
         {
             Add,
-            Remove,
-            Clear,
-            Enable,
-            Disable
+            Remove
         }
 
         private struct ChangeEvent
@@ -192,10 +187,7 @@ namespace NoZ.Zisle
             AddEvent(ChangeEventType.Add, effect, sourceId : source.NetworkObjectId);
 
             // Remove instant effects immediately
-            if(effect.Lifetime == EffectLifetime.Instant)
-                AddEvent(ChangeEventType.Remove, effect);
-
-            SetDirty(true);
+            RemoveEffects(EffectLifetime.Instant);
         }
 
         /// <summary>
@@ -218,41 +210,36 @@ namespace NoZ.Zisle
                     nextContextNode = contextNode.Next;
                     var context = contextNode.Value;
                     if (lifetime == context.Lifetime && (lifetime != EffectLifetime.Time || (tick - context.Tick) * tickRate >= context.Duration))
-                        context.Release(UpdateState);
+                        AddEvent(ChangeEventType.Remove, contextId: context.Id);
                 }
-
-                if (stack.Contexts.Count == 0)
-                    RemoveStack(stack);
             }
         }
 
-        private void AddEvent(ChangeEventType type, Effect effect, ulong sourceId = 0)
+        private void AddEvent(ChangeEventType type, Effect effect=null, ulong sourceId = 0, uint contextId=0)
         {
-            var evt = new ChangeEvent
+            _events.Add(HandleEvent(new ChangeEvent
             {
                 Type = type,
                 Tick = NetworkManager.Singleton.ServerTime.Tick,
-                EffectId = effect.NetworkId,
-                SourceId = sourceId
-            };
-            _events.Add(evt);
+                EffectId = effect == null ? (ushort)0 : effect.NetworkId,
+                SourceId = sourceId,
+                ContextId = contextId
+            }));
 
-            HandleEvent(evt);
+            SetDirty(true);
         }
 
-        private void HandleEvent(ChangeEvent evt)
+        private ChangeEvent HandleEvent(ChangeEvent evt)
         {
-            // Convert the sourceId into an Actor
-            Actor source = null;
-            if (evt.SourceId != 0 && NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(evt.SourceId, out var networkObject))
-                source = networkObject.GetComponent<Actor>();
-
-            var effect = NetworkScriptableObject<Effect>.Get(evt.EffectId);
-
             switch (evt.Type)
             {
                 case ChangeEventType.Add:
                     {
+                        var effect = NetworkScriptableObject<Effect>.Get(evt.EffectId);
+
+                        // Convert the sourceId into an Actor
+                        var source = Actor.FromNetworkId(evt.SourceId);
+
                         // Create the effect context
                         var context = EffectContext.Get(effect, source, _actor, evt.ContextId);
 
@@ -275,7 +262,9 @@ namespace NoZ.Zisle
                                 UpdateState(component.Tag);
                         }
 
-                        return;
+                        evt.ContextId = context.Id;
+
+                        return evt;
                     }
 
                 case ChangeEventType.Remove:
@@ -289,11 +278,13 @@ namespace NoZ.Zisle
                                     if (stack.Contexts.Count == 0)
                                         RemoveStack(stack);
 
-                                    return;
+                                    return evt;
                                 }
                     }
-                    return;
+                    return evt;
             }
+
+            return evt;
         }
 
         public override void Dispose()

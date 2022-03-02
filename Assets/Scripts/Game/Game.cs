@@ -291,11 +291,15 @@ namespace NoZ.Zisle
         public void Play()
         {
             HomeIsland = CellToIsland(IslandGrid.CenterCell);
-            if (HomeIsland.TryFindFreeTileNearCenter(IslandTile.None, out var position))
+
+            if(IsHost)
             {
-                var rotation = Quaternion.LookRotation((HomeIsland.FindClosestExitPosition(position) - position).ZeroY(), Vector3.up);
-                foreach (var player in GameManager.Instance.Players)
-                    player.SpawnPlayer(position, rotation, transform);
+                if (HomeIsland.TryFindFreeTileNearCenter(IslandTile.None, out var position))
+                {
+                    var rotation = Quaternion.LookRotation((HomeIsland.FindClosestExitPosition(position) - position).ZeroY(), Vector3.up);
+                    foreach (var player in GameManager.Instance.Players)
+                        player.SpawnPlayer(position, rotation, transform);
+                }
             }
 
             HomeIsland.Spawn();

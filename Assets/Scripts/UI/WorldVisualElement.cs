@@ -65,7 +65,7 @@ namespace NoZ.Zisle.UI
 
             // Calculate the fov corrected scale using the camera distance
             var scale = 1.0f / ((CameraManager.Instance.IsometricDistance * fov * camera.pixelHeight) * pixelsToScale);
-            var styleScale = new StyleScale(new Scale(Vector3.one * scale));
+            var styleScale = new StyleScale(new Scale(new Vector3(scale, scale, 1)));
 
             // Update all world elements
             for (var node = _elements.First; node != null; node = node.Next)
