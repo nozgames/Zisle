@@ -12,6 +12,8 @@ namespace NoZ.Zisle
         /// </summary>
         public virtual Tag Tag => null;
 
+        public virtual bool ApplyOnClient => true;
+
         public Effect Effect
         {
             get => _effect;

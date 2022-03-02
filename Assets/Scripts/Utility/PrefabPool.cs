@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
 
@@ -17,12 +18,18 @@ namespace NoZ.Zisle
 
         private Transform _poolTransform = null;
 
-#if UNITY_EDITOR
+        public bool IsNetworkObject { get; private set; }
+
         private void OnEnable()
         {
+#if UNITY_EDITOR
             UnityEditor.EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+#endif
+
+            IsNetworkObject = _prefab != null && _prefab.GetComponent<NetworkObject>() != null;
         }
 
+#if UNITY_EDITOR
         private void OnDisable()
         {
             UnityEditor.EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
@@ -51,21 +58,25 @@ namespace NoZ.Zisle
                 _poolTransform = poolGameObject.transform;
             }
 
+            GameObject go = null;
             if(_poolTransform.childCount > 0)
             {
-                var go = _poolTransform.GetChild(_poolTransform.childCount-1).gameObject;
+                go = _poolTransform.GetChild(_poolTransform.childCount-1).gameObject;
                 go.transform.SetParent(parent);
                 go.transform.localPosition = Vector3.zero;
                 go.transform.localRotation = Quaternion.identity;
-                return go;
             }
             else
             {
-                var go = Instantiate(_prefab, parent);
+                go = Instantiate(_prefab, parent);
                 go.AddComponent<PooledPrefab>().Pool = this;
                 go.name = _prefab.name;
-                return go;
             }
+
+            if (IsNetworkObject)
+                go.GetComponent<NetworkObject>().Spawn(true);
+
+            return go;
         }
 
         public static void Destroy (GameObject go)

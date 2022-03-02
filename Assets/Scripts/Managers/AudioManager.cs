@@ -23,6 +23,7 @@ namespace NoZ.Zisle
         [Header("3D Sounds")]
         [SerializeField] private AudioSource _spatialPrefab = null;
         [SerializeField] private Transform _spatialPoolTransform = null;
+        [SerializeField] private Transform _spatialPlayingTransform = null;
         [SerializeField] private int _maxSpatialPoolSize = 32;
 
         [Header("Music")]
@@ -181,9 +182,9 @@ namespace NoZ.Zisle
             source.maxDistance = spatialRange;
             source.pitch = pitch;
             source.volume = volume;
-            source.transform.SetParent(gameObject.transform, false);
-            source.transform.localPosition = Vector3.zero;
-            source.transform.localRotation = Quaternion.identity;
+            source.transform.SetParent(_spatialPlayingTransform, false);
+            source.transform.position = gameObject.transform.position;
+            source.transform.rotation = gameObject.transform.rotation;
             source.enabled = true;
             source.PlayOneShot(clip);
             _activeAudioSources.Add(source);

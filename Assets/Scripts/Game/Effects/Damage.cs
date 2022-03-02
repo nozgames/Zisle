@@ -6,6 +6,8 @@ namespace NoZ.Zisle.Commands
 
     public class Damage : EffectComponent
     {
+        public override bool ApplyOnClient => false;
+
         public override void Apply(EffectComponentContext context)
         {
             var source = context.Source;

@@ -4,6 +4,8 @@ namespace NoZ.Zisle
 {
     public class Heal : EffectComponent
     {
+        public override bool ApplyOnClient => false;
+
         public override void Apply(EffectComponentContext context)
         {
         }

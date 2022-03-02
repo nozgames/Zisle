@@ -4,6 +4,8 @@ namespace NoZ.Zisle.Commands
 {
     public class Build : EffectComponent
     {
+        public override bool ApplyOnClient => false;
+
         public override void Apply(EffectComponentContext context)
         {
             if (context.Target is Building building)

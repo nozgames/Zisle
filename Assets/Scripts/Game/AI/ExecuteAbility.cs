@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace NoZ.Zisle
@@ -27,7 +28,7 @@ namespace NoZ.Zisle
 
         public override float CalculateScore(Actor actor, IThinkState istate)
         {
-            if (actor.IsBusy)
+            if (actor.IsBusy || !NetworkManager.Singleton.IsHost)
                 return 0.0f;
 
             var state = (istate as ThinkState);

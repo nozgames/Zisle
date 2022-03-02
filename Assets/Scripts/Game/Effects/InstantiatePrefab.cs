@@ -12,6 +12,8 @@ namespace NoZ.Zisle
 
         public override Tag Tag => _tag;
 
+        public override bool ApplyOnClient => _prefab != null && !_prefab.IsNetworkObject;
+
         public override void Apply(EffectComponentContext context)
         {
             // If the prefab was already instantiated then just enable it

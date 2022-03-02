@@ -45,12 +45,6 @@ namespace NoZ.Zisle
             set => _priority = value;
         }
 
-        public virtual void Apply(EffectContext context) { }
-
-        public virtual void Remove(EffectContext context) { }
-
-        public virtual void Release(EffectContext context) { }
-
         public void OnBeforeSerialize()
         {
         }

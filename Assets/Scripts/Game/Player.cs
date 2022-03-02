@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NoZ.Events;
 using System.Linq;
 using NoZ.Zisle.UI;
+using Unity.Netcode;
 
 namespace NoZ.Zisle
 {
@@ -22,7 +23,7 @@ namespace NoZ.Zisle
         private struct PlayerButtonState
         {
             /// <summary>
-            /// Time the player button was last pressed
+            /// Time the player pressed the button at
             /// </summary>
             public float LastPressedTime;
 
@@ -97,6 +98,15 @@ namespace NoZ.Zisle
             ref var state = ref _buttonStates[(int)button];
             state.LastPressedTime = Time.time;
             state.LastPressedGamepad = gamepad;
+
+            if(!IsHost)
+                SetLastPressedServerRpc(button, gamepad);
+        }
+
+        [ServerRpc]
+        private void SetLastPressedServerRpc (PlayerButton button, bool gamepad)
+        {
+            SetLastPressed(button, gamepad);
         }
 
         private void ClearLastPressed ()

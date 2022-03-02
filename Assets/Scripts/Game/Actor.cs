@@ -8,96 +8,6 @@ using NoZ.Zisle.UI;
 
 namespace NoZ.Zisle
 {
-    /// <summary>
-    /// WARNING: DO NOT REORDER THESE!!!
-    /// 
-    /// List of actor types.  
-    /// 
-    /// Note that there must be matching entries in the LayerMask as well
-    /// </summary>
-    public enum ActorType
-    {
-        /// <summary>
-        /// Player
-        /// </summary>
-        Player,
-
-        /// <summary>
-        /// Player's base and ultimate goal of enemy attacks
-        /// </summary>
-        Base,
-
-        /// <summary>
-        /// Building built by players
-        /// </summary>
-        Building,
-
-        /// <summary>
-        /// Enemy that tries to attack player and the base
-        /// </summary>
-        Enemy,
-
-        /// <summary>
-        /// Harvestable actor such as a tree
-        /// </summary>
-        Harvestable
-    }
-
-    [System.Flags]
-    public enum ActorTypeMask
-    {
-        None = 0,
-        Player = 1 << ActorType.Player,
-        Base = 1 << ActorType.Base,
-        Building = 1 << ActorType.Building,
-        Enemy = 1 << ActorType.Enemy,
-        Harvestable = 1 << ActorType.Harvestable
-    }
-
-    /// <summary>
-    /// Current high level state of the actor
-    /// </summary>
-    public enum ActorState
-    {
-        /// <summary>
-        /// Actor has no current state
-        /// </summary>
-        None,
-
-        /// <summary>
-        /// Actor is spawning
-        /// </summary>
-        Spawn,
-
-        /// <summary>
-        /// Actor is playing an intro sequence
-        /// </summary>
-        Intro,
-
-        /// <summary>
-        /// Actor is active and thinking
-        /// </summary>
-        Active,
-
-        /// <summary>
-        /// Actor is dead
-        /// </summary>
-        Dead
-    }
-
-    public static class ActorTypeMaskExtensions
-    {
-        private static readonly int _shift = LayerMask.NameToLayer("Player");
-
-        public static LayerMask ToLayerMask (this ActorTypeMask mask) => (LayerMask)((int)mask << _shift);
-
-        public static ActorTypeMask ToMask(this ActorType type) => (ActorTypeMask)(1 << (int)type);
-
-        public static LayerMask ToLayerMask(this ActorType type) => ToLayerMask(ToMask(type));
-
-        public static int ToLayer(this ActorType type) => _shift + (int)type;
-    }
-
     public class Actor : NetworkBehaviour
     {
         public static readonly int ActorTypeCount = System.Enum.GetNames(typeof(ActorType)).Length;
@@ -122,6 +32,7 @@ namespace NoZ.Zisle
         [SerializeField] protected Transform _slotBody = null;
 
         private EffectList _effects;
+        private NetworkVariable<ActorState> _state;
 
         private float[] _abilityUsedTime;
         private float _lastAbilityUsedTime;
@@ -143,7 +54,6 @@ namespace NoZ.Zisle
         private float _busyTime;
         private Vector3 _lastPosition;
         private float _speed = 0.0f;
-        private ActorState _state = ActorState.None;
 
         public ActorDefinition Definition => _actorDefinition;
         public float Speed => _speed;
@@ -201,17 +111,21 @@ namespace NoZ.Zisle
 
         public event System.Action<MaterialPropertyBlock> OnMaterialPropertiesChanged;
 
+        /// <summary>
+        /// Current actor state 
+        /// </summary>
         public ActorState State
         {
-            get => _state;
+            get => _state.Value;
             set
             {
-                if (_state == value)
+                if (_state.Value == value)
                     return;
 
-                var old = _state;
-                _state = value;
-                OnStateChanged(old, _state);
+                if (!IsHost)
+                    throw new System.InvalidOperationException("State can only be set by the Host");
+
+                _state.Value = value;
             }
         }
 
@@ -267,20 +181,18 @@ namespace NoZ.Zisle
         /// </summary>
         public bool IsDamaged => Health < GetAttributeValue(ActorAttribute.HealthMax);
 
-
         public LinkedListNode<Actor> Node => _node;
 
         public Actor()
         {
             _effects = new EffectList(this);
+            _state = new NetworkVariable<ActorState>();
+            _node = new LinkedListNode<Actor>(this);
         }
 
         protected virtual void Awake()
         {
-            _materialProperties = new MaterialPropertyBlock();            
-
-            _node = new LinkedListNode<Actor>(this);
-
+            _materialProperties = new MaterialPropertyBlock();
             _animator = GetComponent<BlendedAnimationController>();
 
             NavAgent = GetComponent<NavMeshAgent>();
@@ -321,7 +233,11 @@ namespace NoZ.Zisle
 
             _oneShotAnimation = shader;
             _currentAnimation = shader;
-            _animator.Play(shader, onComplete: OnOneShotAnimationComplete, onEvent: OnOneShotAnimationEvent);
+
+            if(IsHost)
+                _animator.Play(shader, onComplete: OnOneShotAnimationComplete, onEvent: OnOneShotAnimationEvent);
+            else
+                _animator.Play(shader, onComplete: OnOneShotAnimationComplete);
         }
 
         private void OnOneShotAnimationEvent(Animations.AnimationEvent evt) =>
@@ -330,7 +246,8 @@ namespace NoZ.Zisle
         private void OnOneShotAnimationComplete ()
         {
             // Remove any effects that should only last for the duration of an ability
-            _effects.RemoveEffects(EffectLifetime.Ability);
+            if(IsHost)
+                _effects.RemoveEffects(EffectLifetime.Ability);
 
             _oneShotAnimation = null;
             _currentAnimation = null;
@@ -424,60 +341,8 @@ namespace NoZ.Zisle
         /// Add an effect to the actor
         /// </summary>
         /// <param name="effect"></param>
-        public EffectContext AddEffect (Actor source, Effect effect, EffectContext inherit=null)
-        {
+        public void AddEffect (Actor source, Effect effect, EffectContext inherit=null) => 
             _effects.Add(source, effect);
-
-#if false
-            if (effect == null || source == null)
-                return null;
-
-            foreach(var existingEffect in _effects)
-            {
-                // Handle overrides
-                if(effect.DoesOverride(existingEffect.Effect))
-                    existingEffect.Enabled = false;
-            }
-
-            var context = EffectContext.Get(effect, source, this, inherit);
-            _effects.AddLast(context.Node);
-            context.Enabled = true;
-
-            OnMaterialPropertiesChanged?.Invoke(_materialProperties);
-
-            if (effect.Lifetime == ActorEffectLifetime.Instant)
-            {
-                RemoveEffect(context);
-                return null;
-            }
-
-            return context;
-#else
-            return null;
-#endif
-        }
-
-        public void RemoveEffect (EffectContext effectContext)
-        {
-            //if (effectContext.Node.List == null)
-            //    return;
-
-            //effectContext.Enabled = false;
-
-            //// Search to see if this effect was overriding another effect and if so re-enable that effect
-            //for(var node = effectContext.Node.Previous; node != null; node = node.Previous)
-            //{
-            //    if(!node.Value.Enabled && effectContext.Effect.DoesOverride(node.Value.Effect))
-            //    {
-            //        node.Value.Enabled = true;
-            //        break;
-            //    }
-            //}
-
-            //effectContext.Release();
-
-            //OnMaterialPropertiesChanged?.Invoke(_materialProperties);
-        }
 
         /// <summary>
         /// Return the current modified value for the given attribute
@@ -524,6 +389,8 @@ namespace NoZ.Zisle
         {
             base.OnNetworkSpawn();
 
+            _state.OnValueChanged += OnStateChanged;
+
             _materialProperties.SetColor("_Color", Color.blue);
 
             _lastPosition = transform.position;
@@ -551,19 +418,11 @@ namespace NoZ.Zisle
             }
         }
 
-        private void RemoveHealthCircle ()
-        {
-            if (_healthCircle == null)
-                return;
-
-            _healthCircle.Element.RemoveFromClassList(Definition.HealthCircleClass);
-            _healthCircle.Release();
-            _healthCircle = null;
-        }
-
         public override void OnNetworkDespawn()
         {
             base.OnNetworkDespawn();
+
+            _state.OnValueChanged -= OnStateChanged;
 
             RemoveHealthCircle();
 
@@ -571,6 +430,16 @@ namespace NoZ.Zisle
                 _actorDefinition.Brain.ReleaseThinkState(_thinkState);
 
             GameEvent.Raise(this, new ActorDespawnEvent{ });
+        }
+
+        private void RemoveHealthCircle()
+        {
+            if (_healthCircle == null)
+                return;
+
+            _healthCircle.Element.RemoveFromClassList(Definition.HealthCircleClass);
+            _healthCircle.Release();
+            _healthCircle = null;
         }
 
         public void LookAt(Actor actor) => LookAt(actor.transform.position);
@@ -611,6 +480,8 @@ namespace NoZ.Zisle
             ability.OnEvent(this, GameManager.Instance.AbilityBeginEvent, ability.FindTargets(this));
             PlayOneShotAnimation(ability.Animation);
 
+            if(IsHost)
+                ExecuteAbilityClientRpc(ability.NetworkId);
 
             for (int i = 0, c = _actorDefinition.Abilities.Length; i < c; i++)
             {
@@ -624,57 +495,15 @@ namespace NoZ.Zisle
             return true;
         }
 
-#if false
-        public void ExecuteCommand(ActorCommand command, Actor source)
-        {
-            // Client command?
-            if(command is IExecuteOnClient clientCommand)
-            {
-                // If coming from us then we can execute the client commands immediately
-                if(source.OwnerClientId == NetworkManager.LocalClientId)
-                    clientCommand.ExecuteOnClient(source, this);
-            }
-
-            // Always execute on the server to make sure client commands are sent to other clients
-            ExecuteCommandServerRpc(command.NetworkId, source.NetworkObjectId);
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        public void ExecuteCommandServerRpc (ushort commandId, ulong sourceId)
-        {
-            var command = NetworkScriptableObject.Get<ActorCommand>(commandId);
-            if (command == null)
-                return;
-
-            if (command is IExecuteOnServer serverCommand)
-            {
-                var source = FromNetworkId(sourceId);
-                if (null == source)
-                    return;
-
-                serverCommand.ExecuteOnServer(source, this);
-            }
-
-            if (command is IExecuteOnClient)
-                ExecuteCommandClientRpc(commandId, sourceId);
-        }
-        
         [ClientRpc]
-        public void ExecuteCommandClientRpc (ushort commandId, ulong sourceId)
+        private void ExecuteAbilityClientRpc (ushort abilityId)
         {
-            // We already executed this command, dont execute again
-            var source = FromNetworkId(sourceId);
-            if (null == source || source.OwnerClientId == NetworkManager.LocalClientId)
+            var ability = NetworkScriptableObject.Get<Ability>(abilityId);
+            if (null == ability)
                 return;
 
-            var command = NetworkScriptableObject.Get<ActorCommand>(commandId);
-            if (command == null)
-                return;
-
-            if (command is IExecuteOnClient clientCommand)
-                clientCommand.ExecuteOnClient(source, this);
+            PlayOneShotAnimation(ability.Animation);
         }
-#endif
 
         /// <summary>
         /// Return the actor for the given network id
@@ -794,7 +623,8 @@ namespace NoZ.Zisle
             {
                 case ActorState.Intro:
                     // TODO: check for intro animation
-                    State = ActorState.Active;
+                    if(IsHost)
+                        State = ActorState.Active;
                     break;
 
                 case ActorState.Active:

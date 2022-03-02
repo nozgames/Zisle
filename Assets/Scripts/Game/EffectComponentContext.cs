@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace NoZ.Zisle
@@ -30,6 +31,10 @@ namespace NoZ.Zisle
                     return;
 
                 _enabled = value;
+
+                // Server side effects should not be applied on the client
+                if (!EffectComponent.ApplyOnClient && !NetworkManager.Singleton.IsHost)
+                    return;
 
                 if(_enabled)
                     EffectComponent.Apply(this);
