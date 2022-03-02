@@ -71,7 +71,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08050e425259c1841ab2d44f928145df, type: 3}
   m_Name: ButtonPressCondition
   m_EditorClassIdentifier: 
-  _button: 0
+  _button: 1
 --- !u!114 &-874000950723374751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,6 +108,7 @@ MonoBehaviour:
   - {fileID: -874000950723374751}
   - {fileID: 1870273447972391424}
   _conditions:
+  - {fileID: 3419076663846545166}
   - {fileID: -9217851000079348553}
   - {fileID: -5840664652735662319}
   - {fileID: -8138911315622106902}
@@ -129,3 +130,15 @@ MonoBehaviour:
   _effects:
   - {fileID: 11400000, guid: f4ff554540666574a8e0af2d80aa3af4, type: 2}
   - {fileID: 11400000, guid: 558a9e7d35edf25409b46f97a7368dd1, type: 2}
+--- !u!114 &3419076663846545166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b8f403d387de9e448b3add1f8cf089d, type: 3}
+  m_Name: GlobalCooldownCondition
+  m_EditorClassIdentifier: 

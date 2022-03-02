@@ -12,10 +12,13 @@ namespace NoZ.Zisle
         private bool _valid;
         private Vector3 _position;
         private Actor _target;
+        private bool _hasTarget;
 
         public Actor Target => _target;
 
-        public bool IsValid => _valid;
+        public bool HasTarget => _hasTarget;
+
+        public bool IsValid => _valid && (!_hasTarget || _target != null);
 
         public Vector3 Position => _target != null ? _target.Position : _position;
 
@@ -35,6 +38,7 @@ namespace NoZ.Zisle
             _valid = true;
             _target = actor;
             _position = Vector3.zero;
+            _hasTarget = true;
         }
 
         public Destination (Vector3 position)
@@ -42,6 +46,7 @@ namespace NoZ.Zisle
             _valid = true;
             _target = null;
             _position = position;
+            _hasTarget = false;
         }
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter

@@ -93,7 +93,8 @@ MonoBehaviour:
   _slotLeftHand: {fileID: 0}
   _slotBody: {fileID: 0}
   _rotationSpeed: 90
-  _buttonSlop: 0.4
+  _buttonSlop: 0.1
+  _buttonRepeat: 0.1
 --- !u!114 &1328862059496653531
 MonoBehaviour:
   m_ObjectHideFlags: 0

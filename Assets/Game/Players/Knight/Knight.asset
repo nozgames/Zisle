@@ -24,6 +24,7 @@ MonoBehaviour:
   _idleAnimation: {fileID: 11400000, guid: 4840a4493bde71f4cbde4223b2cdc20e, type: 2}
   _runAnimation: {fileID: 11400000, guid: 20ff9ca2604fabb4592b0936274b71cc, type: 2}
   _deathAnimation: {fileID: 11400000, guid: 3632060de9552e3498aef82567fdb40d, type: 2}
+  _globalCooldown: 0.5
   _baseHealthMax: 100
   _baseHealthRegen: 5
   _baseSpeed: 5

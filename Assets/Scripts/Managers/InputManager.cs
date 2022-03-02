@@ -49,7 +49,8 @@ namespace NoZ.Zisle
 
         public event Action<bool> OnGamepadChanged;
 
-        public event Action<PlayerButton> OnPlayerButton;
+        public event Action<PlayerButton> OnPlayerButtonDown;
+        public event Action<PlayerButton> OnPlayerButtonUp;
 
         public event Action<bool> OnPlayerBuild;
 
@@ -116,9 +117,14 @@ namespace NoZ.Zisle
 
         private void OnPlayerButtonStart(PlayerButton button)
         {
+            if (_playerButtonPressed && _playerButton != button)
+                OnPlayerButtonUp(_playerButton);
+            else if (_playerButtonPressed && _playerButton == button)
+                return;
+
             _playerButton = button;
             _playerButtonPressed = true;
-            OnPlayerButton?.Invoke(button);
+            OnPlayerButtonDown?.Invoke(button);
         }
 
         private void OnPlayerButtonStop(PlayerButton button)
@@ -127,12 +133,7 @@ namespace NoZ.Zisle
                 return;
 
             _playerButtonPressed = false;
-        }
-
-        private void FixedUpdate()
-        {
-            if(_playerButtonPressed)
-                OnPlayerButton?.Invoke(_playerButton);
+            OnPlayerButtonUp?.Invoke(button);
         }
 
         public void EnableMenuActions(bool enable = true)

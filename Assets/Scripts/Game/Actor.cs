@@ -61,6 +61,7 @@ namespace NoZ.Zisle
         public float Speed => _speed;
         public bool IsMoving => NavAgent != null && NavAgent.desiredVelocity.sqrMagnitude > 0.1f;
         public bool IsDead => _health <= 0.0f;
+        public Destination Destination => _destination;
 
         /// <summary>
         /// Current target of the actor
@@ -269,21 +270,20 @@ namespace NoZ.Zisle
             _currentAnimation = shader;
 
             if(IsHost)
-                _animator.Play(shader, onComplete: OnOneShotAnimationComplete, onEvent: OnOneShotAnimationEvent);
+                _animator.Play(shader, onComplete: OnAbilityEnd, onEvent: OnOneShotAnimationEvent);
             else
-                _animator.Play(shader, onComplete: OnOneShotAnimationComplete);
+                _animator.Play(shader, onComplete: OnAbilityEnd);
         }
 
         private void OnOneShotAnimationEvent(Animations.AnimationEvent evt) =>
             _lastAbilityUsed.OnEvent(this, evt, _lastAbilityUsed.FindTargets(this));
 
-        private void OnOneShotAnimationComplete ()
+        protected virtual void OnAbilityEnd ()
         {
             // Remove any effects that should only last for the duration of an ability
             if(IsHost)
                 _effects.RemoveEffects(EffectLifetime.Ability);
 
-            _destination = Destination.None;
             _oneShotAnimation = null;
             _currentAnimation = null;
             _lastAbilityUsedEndTime = Time.time;
@@ -501,6 +501,9 @@ namespace NoZ.Zisle
 
             _destination = destination;
 
+            if (!_destination.IsValid)
+                return;
+
             // TODO: choose best surround position
             NavAgent.stoppingDistance = destination.StopDistance;
 
@@ -518,7 +521,7 @@ namespace NoZ.Zisle
             NavAgent.SetDestination(pos);
         }
 
-        public virtual bool ExecuteAbility(Ability ability)
+        public virtual void ExecuteAbility(Ability ability)
         {
             if (!IsHost)
                 throw new System.InvalidOperationException("Only host can execute abilities");
@@ -527,10 +530,13 @@ namespace NoZ.Zisle
             _effects.RemoveEffects(EffectLifetime.NextAbility);
 
             if (ability == null)
-                return false;
+                return;
 
             if (ability.Animation == null)
-                return false;
+                return;
+
+            if(Target != null)
+                LookAt(Target);
 
             _lastAbilityUsedTime = Time.time;
             _lastAbilityUsed = ability;
@@ -548,8 +554,6 @@ namespace NoZ.Zisle
                     break;
                 }
             }
-
-            return true;
         }
 
         [ClientRpc]
@@ -610,8 +614,14 @@ namespace NoZ.Zisle
             _speed = _speed * 0.9f + ((_lastPosition - transform.position).ZeroY().magnitude / Time.deltaTime) * 0.1f;
             _lastPosition = transform.position;
 
-            if (_destination.IsValid)
-                LookAt(_destination.Position);
+            // Look towards the move direction
+            // TODO: we could look at our target when we are close enough maybe
+            if(NavAgent != null)
+            {
+                var velocity = NavAgent.desiredVelocity.ZeroY();
+                if (!IsBusy && _destination.IsValid && velocity.sqrMagnitude > 0.01f)
+                    transform.rotation = Quaternion.LookRotation(velocity.normalized, Vector3.up);
+            }
 
             SnapToGround();
             UpdateAnimation();

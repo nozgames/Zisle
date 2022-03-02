@@ -9,6 +9,7 @@ namespace NoZ.Zisle
 {
     public enum PlayerButton
     {
+        None,
         Primary,
         Secondary
     }
@@ -18,11 +19,13 @@ namespace NoZ.Zisle
         private static readonly int PlayerButtonCount = System.Enum.GetNames(typeof(PlayerButton)).Length;
 
         [Header("Player")]
-        [SerializeField] private float _rotationSpeed = 1.0f;
-        [SerializeField] private float _buttonSlop = 0.4f;
-        [SerializeField] private float _buttonRepeat = 0.1f;
+        [SerializeField] private float _buttonRepeat = 0.25f;
 
-        private PlayerButton _lastPressed = PlayerButton.Primary;
+        private PlayerButton _pendingButton;
+        private Destination _pendingDestination;
+        private PlayerButton _button = PlayerButton.Primary;
+        private bool _buttonPressed = false;
+        private double _buttonRepeatTime = 0;
         
         public PlayerController Controller { get; private set; }
 
@@ -39,7 +42,8 @@ namespace NoZ.Zisle
             if (IsOwner)
             {
                 InputManager.Instance.OnPlayerZoom += OnPlayerZoom;
-                InputManager.Instance.OnPlayerButton += OnButtonPress;
+                InputManager.Instance.OnPlayerButtonDown += OnButtonDown;
+                InputManager.Instance.OnPlayerButtonUp += OnButtonUp;
             }
 
             GameEvent.Raise(this, new PlayerSpawned { Player = this });
@@ -54,45 +58,101 @@ namespace NoZ.Zisle
             if (IsOwner)
             {
                 InputManager.Instance.OnPlayerZoom -= OnPlayerZoom;
-                InputManager.Instance.OnPlayerButton -= OnButtonPress;
+                InputManager.Instance.OnPlayerButtonDown -= OnButtonDown;
+                InputManager.Instance.OnPlayerButtonUp -= OnButtonUp;
             }
         }
 
         private void OnPlayerZoom (float f) => CameraManager.Instance.IsometricZoom -= 3.0f * f;
 
-        private void OnButtonPress (PlayerButton button)
+        private void OnButtonDown (PlayerButton button)
         {
             var look = InputManager.Instance.PlayerLook;
             var destination = new Destination(look);
 
-            if(Physics.Raycast(InputManager.Instance.PlayerLookRay, out var hit, 100.0f, -1))
+            if (Physics.Raycast(InputManager.Instance.PlayerLookRay, out var hit, 100.0f, -1))
             {
                 var actor = hit.collider.GetComponentInParent<Actor>();
                 if (actor != null)
                     destination = new Destination(actor);
             }
 
-            OnButtonPress(button, destination);
+            if(destination.Target == null)
+                button = PlayerButton.None;
+
+            OnButtonDown(button, destination);
         }
 
-        private void OnButtonPress (PlayerButton button, Destination destination)
+        private void OnButtonUp (PlayerButton button)
         {
-            if (IsHost)
+            _buttonPressed = false;
+
+            if (!IsHost)
+                OnButtonUpServerRpc(button);
+        }
+
+        private void OnButtonDown (PlayerButton button, Destination destination)
+        {
+            if(!IsHost)
             {
-                _lastPressed = button;
-                SetDestination(destination);
+                _buttonRepeatTime = Time.timeAsDouble + _buttonRepeat;
+                _buttonPressed = true;
+                _button = button;
+
+                OnButtonDownServerRpc(button, destination);
             }
             else
-                SetDestinationServerRpc(button, destination);
+            {
+                if (IsBusy)
+                {
+                    _pendingButton = _button;
+                    _pendingDestination = destination;
+                }
+                else
+                {
+                    _buttonRepeatTime = Time.timeAsDouble + _buttonRepeat;
+                    _buttonPressed = true;
+                    _button = button;
+                    SetDestination(destination);
+                }
+            }   
         }
 
         [ServerRpc]
-        private void SetDestinationServerRpc(PlayerButton button, Destination destination) =>
-            OnButtonPress(button, destination);
+        private void OnButtonDownServerRpc (PlayerButton button, Destination destination) =>
+            OnButtonDown(button, destination);
+
+        [ServerRpc]
+        private void OnButtonUpServerRpc (PlayerButton button) =>
+            OnButtonUp(button);
+
+        protected override void OnAbilityEnd()
+        {
+            base.OnAbilityEnd();
+
+            if (IsHost && _pendingDestination.IsValid)
+            {
+                OnButtonDown(_pendingButton, _pendingDestination);
+                _pendingDestination = Destination.None;
+                _pendingButton = PlayerButton.None;
+            }
+
+            if (IsHost && !_buttonPressed)
+            {
+                _button = PlayerButton.None;
+                SetDestination(Destination.None);
+            }
+        }
 
         protected override void Update()
         {
             base.Update();
+
+            // If move button is held down then update the destination every repeat
+            if (IsOwner && _buttonPressed && Destination.IsValid && !Destination.HasTarget && Time.timeAsDouble >= _buttonRepeatTime)
+                OnButtonDown(PlayerButton.None, new Destination(InputManager.Instance.PlayerLook));
+            else if (IsHost && !IsBusy && _buttonPressed && Time.timeAsDouble >= _buttonRepeatTime)
+                OnButtonDown(_button, Destination);
 
             if (!IsOwner || State != ActorState.Active)
                 return;
@@ -102,23 +162,10 @@ namespace NoZ.Zisle
             CameraManager.Instance.IsometricTarget = transform.position;
         }
 
-        private void MoveTo (Vector3 offset)
-        {
-            var moveTarget = (transform.position + offset).ZeroY();
-
-            // Set the new position
-            if(NavAgent.enabled)
-                NavAgent.Move(moveTarget - transform.position);
-
-            // If the player is moving then use the original look delta to rotate using the rotation speed
-            if(!IsBusy && IsMoving && offset.magnitude > 0.001f)
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(offset, Vector3.up), Time.deltaTime * _rotationSpeed);
-        }
-
         /// <summary>
         /// Returns true if the given player button was pressed
         /// </summary>
-        public bool WasButtonPressed (PlayerButton button) => !IsBusy && _lastPressed == button;
+        public bool WasButtonPressed (PlayerButton button) => !IsBusy && _button == button;
 
         protected override void OnHealthChanged()
         {

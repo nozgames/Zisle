@@ -65,6 +65,7 @@ namespace NoZ.Zisle
                 go.transform.SetParent(parent);
                 go.transform.localPosition = Vector3.zero;
                 go.transform.localRotation = Quaternion.identity;
+                go.transform.localScale = Vector3.one;
             }
             else
             {

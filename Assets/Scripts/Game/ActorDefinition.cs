@@ -28,6 +28,7 @@ namespace NoZ.Zisle
         [SerializeField] private AnimationShader _deathAnimation = null;
 
         [Header("Attributes")]
+        [SerializeField] private float _globalCooldown = 0.5f;
         [SerializeField] private float _baseHealthMax = 100.0f;
         [SerializeField] private float _baseHealthRegen = 5.0f;
         [SerializeField] private float _baseSpeed = 10.0f;
@@ -86,6 +87,8 @@ namespace NoZ.Zisle
         /// USS class to use for health circles, if empty no health circle will be displayed for this actor
         /// </summary>
         public string HealthCircleClass => _healthCircleClass;
+
+        public float GlobalCooldown => _globalCooldown;
 
         public AnimationShader IdleAnimation => _idleAnimation;
         public AnimationShader RunAnimation => _runAnimation;
