@@ -244,7 +244,7 @@ namespace NoZ.Zisle
         /// Convert a world position to a cell position
         /// </summary>
         public Vector2Int WorldToCell(Vector3 position) =>
-            IslandMesh.LocalToCell(transform.InverseTransformPoint(position));
+            IslandMesh.LocalToCell(transform.InverseTransformPoint(position.ZeroY()));
         
         /// <summary>
         /// Convert a IslandMesh tile to a world coordinate
@@ -273,7 +273,7 @@ namespace NoZ.Zisle
             if (Next == null)
                 return;
 
-            var nextIslandDir = (Next.transform.position - transform.position).normalized;
+            var nextIslandDir = (Next.transform.position - transform.position).ZeroY().normalized;
             var cell = WorldToCell(transform.position + nextIslandDir * IslandMesh.GridCenter);
             var queue = new Queue<PathMapNode>();
             var nodes = new PathMapNode[IslandMesh.GridIndexMax];

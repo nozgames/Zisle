@@ -49,7 +49,7 @@
     },
     "com.unity.burst": {
       "version": "1.6.4",
-      "depth": 1,
+      "depth": 2,
       "source": "registry",
       "dependencies": {
         "com.unity.mathematics": "1.2.1"
@@ -138,21 +138,21 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.mono-cecil": {
-      "version": "1.10.1",
+      "version": "1.10.2",
       "depth": 2,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.newtonsoft-json": {
-      "version": "2.0.0",
+      "version": "2.0.2",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.core": {
-      "version": "12.1.4",
+      "version": "13.1.5",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
@@ -162,14 +162,14 @@
       }
     },
     "com.unity.render-pipelines.universal": {
-      "version": "12.1.4",
+      "version": "13.1.5",
       "depth": 0,
       "source": "builtin",
       "dependencies": {
         "com.unity.mathematics": "1.2.1",
         "com.unity.burst": "1.5.0",
-        "com.unity.render-pipelines.core": "12.1.4",
-        "com.unity.shadergraph": "12.1.4"
+        "com.unity.render-pipelines.core": "13.1.5",
+        "com.unity.shadergraph": "13.1.5"
       }
     },
     "com.unity.scriptablebuildpipeline": {
@@ -224,11 +224,11 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.shadergraph": {
-      "version": "12.1.4",
+      "version": "13.1.5",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
-        "com.unity.render-pipelines.core": "12.1.4",
+        "com.unity.render-pipelines.core": "13.1.5",
         "com.unity.searcher": "4.9.1"
       }
     },
@@ -273,12 +273,12 @@
       }
     },
     "com.unity.visualeffectgraph": {
-      "version": "12.1.4",
+      "version": "13.1.5",
       "depth": 0,
       "source": "builtin",
       "dependencies": {
-        "com.unity.shadergraph": "12.1.4",
-        "com.unity.render-pipelines.core": "12.1.4"
+        "com.unity.shadergraph": "13.1.5",
+        "com.unity.render-pipelines.core": "13.1.5"
       }
     },
     "com.unity.modules.ai": {
