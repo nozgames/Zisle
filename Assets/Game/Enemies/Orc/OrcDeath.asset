@@ -46,7 +46,4 @@ MonoBehaviour:
   m_Name: AbilityBegin
   m_EditorClassIdentifier: 
   _event: {fileID: 11400000, guid: 5da03270f53918f46a21ac33ff7f3e5b, type: 2}
-  _target: 2
-  _targetFinder: {fileID: 0}
-  _effects:
-  - {fileID: 11400000, guid: 15f8a0ed7631a5145830ebbc51f313b1, type: 2}
+  _effects: []

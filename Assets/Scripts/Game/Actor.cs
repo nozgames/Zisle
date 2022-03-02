@@ -295,6 +295,8 @@ namespace NoZ.Zisle
             // Force layer of hit collider to match actor type
             if (_hitCollider != null)
                 _hitCollider.gameObject.layer = _actorDefinition.ActorType.ToLayer();
+
+            ResetAttributes();
         }
 
         public void PlayAnimation(AnimationShader shader, BlendedAnimationController.AnimationCompleteDelegate onComplete = null)
@@ -530,8 +532,6 @@ namespace NoZ.Zisle
                 Instantiate(_spawnVFXPrefab, transform.position, transform.rotation);
 
             ResetMaterialProperties();
-
-            ResetAttributes();
 
             AddDefaultEffects();
 

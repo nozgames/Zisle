@@ -14,6 +14,7 @@ namespace NoZ.Zisle
         /// Pool of effect contexts
         /// </summary>
         private static LinkedList<EffectContext> _pool = new LinkedList<EffectContext> ();
+        private static uint _nextId = 1;
 
         private LinkedList<EffectComponentContext> _components = new LinkedList<EffectComponentContext>();
 
@@ -22,6 +23,8 @@ namespace NoZ.Zisle
         public int Tick { get; private set; }
         public double Duration { get; set; }
         public EffectLifetime Lifetime { get; set; }
+
+        public uint Id { get; private set; }
 
         /// <summary>
         /// Effect the context represents
@@ -42,7 +45,7 @@ namespace NoZ.Zisle
         /// <summary>
         /// Get a new Effect Context from the pool
         /// </summary>
-        public static EffectContext Get (Effect effect, Actor source, Actor target)
+        public static EffectContext Get (Effect effect, Actor source, Actor target, uint contextId = 0)
         {
             // Get a context from the pool or allocate a new one
             EffectContext context;
@@ -61,6 +64,7 @@ namespace NoZ.Zisle
             context.Source = source;
             context.Lifetime = effect.Lifetime;
             context.Duration = effect.Duration;
+            context.Id = contextId == 0 ? _nextId++ : contextId;
             context.Tick = NetworkManager.Singleton.ServerTime.Tick;
 
             // Create a component context for each component in the effect

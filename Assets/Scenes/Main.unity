@@ -3206,10 +3206,8 @@ MonoBehaviour:
   _setPitch: {fileID: 11400000, guid: d507e04fce5e5514b802d68ab97ee76c, type: 2}
   _setScaleRoot: {fileID: 11400000, guid: 10baf67e758edc24e802e47adab342ee, type: 2}
   _setScaleBody: {fileID: 11400000, guid: a60b253f45bdb134bbb2372a5813ae22, type: 2}
-  _setScaleRightWeapon: {fileID: 11400000, guid: ffc67405d6d0a2d429a6a44b8d9df167,
-    type: 2}
-  _setScaleLeftWeapon: {fileID: 11400000, guid: b519e7b8844c3d2429580d0ae4404e23,
-    type: 2}
+  _setScaleRightHand: {fileID: 11400000, guid: ffc67405d6d0a2d429a6a44b8d9df167, type: 2}
+  _setScaleLeftHand: {fileID: 11400000, guid: b519e7b8844c3d2429580d0ae4404e23, type: 2}
 --- !u!4 &1509631133
 Transform:
   m_ObjectHideFlags: 0

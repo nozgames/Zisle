@@ -47,10 +47,14 @@ namespace NoZ.Zisle
             }
             else
             {
+                var slotTransform = context.Target.GetSlotTransform(_slot);
+                if (slotTransform == null)
+                    return;
+
                 if (_blendTime > 0.0f)
-                    context.Target.GetSlotTransform(_slot).TweenLocalScale(_value).Duration(_blendTime).EaseInCubic().Play();
+                    slotTransform.TweenLocalScale(_value).Duration(_blendTime).EaseInCubic().Play();
                 else
-                    context.Target.GetSlotTransform(_slot).localScale = _value;
+                    slotTransform.localScale = _value;
 
             }
         }

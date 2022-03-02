@@ -23,15 +23,30 @@ namespace NoZ.Zisle
 
         private struct ChangeEvent
         {
-            public int Tick;
-
+            /// <summary>
+            /// Type of event
+            /// </summary>
             public ChangeEventType Type;
 
-            public ulong SourceId;
+            /// <summary>
+            /// Tick the event started
+            /// </summary>
+            public int Tick;
 
+            /// <summary>
+            /// Identifier assigned to the context
+            /// </summary>
+            public uint ContextId;
+
+            /// <summary>
+            /// Network Id of the effect 
+            /// </summary>
             public ushort EffectId;
 
-            public ushort ContextIndex;
+            /// <summary>
+            /// Network Object Id of the source actor 
+            /// </summary>
+            public ulong SourceId;
         }
 
         private Actor _actor = null;
@@ -64,13 +79,20 @@ namespace NoZ.Zisle
 
         public override void WriteField(FastBufferWriter writer)
         {
-            //writer.WriteValueSafe((ushort)_contexts.Count);
-            //for (int i = 0; i < _contexts.Count; i++)
-            //{
-            //    var context = _contexts[i];
-            //    writer.WriteValueSafe(context.Tick);
-            //    writer.WriteValueSafe(context.Effect.NetworkId);
-            //}
+            var count = 0;
+            foreach (var stack in _stacks)
+                foreach (var context in stack.Contexts)
+                    count++;
+
+            writer.WriteValueSafe((ushort)count);
+            foreach (var stack in _stacks)
+                foreach (var context in stack.Contexts)
+                {
+                    writer.WriteValueSafe(context.Id);
+                    writer.WriteValueSafe(context.Tick);
+                    writer.WriteValueSafe(context.Effect.NetworkId);
+                    writer.WriteValueSafe(context.Source.NetworkObjectId);
+                }
         }
 
         public override void ReadField(FastBufferReader reader)
@@ -80,10 +102,18 @@ namespace NoZ.Zisle
             reader.ReadValueSafe(out ushort count);
             for (int i = 0; i < count; i++)
             {
+                reader.ReadValueSafe(out uint contextId);
                 reader.ReadValueSafe(out int tick);
                 reader.ReadValueSafe(out ushort effectId);
+                reader.ReadValueSafe(out ulong sourceId);
 
-                HandleEvent(new ChangeEvent { EffectId = effectId, Tick = tick, Type = ChangeEventType.Add });
+                HandleEvent(new ChangeEvent { 
+                    EffectId = effectId,
+                    ContextId = contextId,
+                    Tick = tick,
+                    Type = ChangeEventType.Add,
+                    SourceId = sourceId 
+                });
             }
         }
 
@@ -96,17 +126,17 @@ namespace NoZ.Zisle
             for (int i = 0; i < _events.Count; i++)
             {
                 writer.WriteValueSafe(_events[i].Type);
-                writer.WriteValueSafe(_events[i].Tick);
-                writer.WriteValueSafe(_events[i].EffectId);
+                writer.WriteValueSafe(_events[i].ContextId);                
 
                 switch(_events[i].Type)
                 {
                     case ChangeEventType.Add:
+                        writer.WriteValueSafe(_events[i].Tick);
+                        writer.WriteValueSafe(_events[i].EffectId);
                         writer.WriteValueSafe(_events[i].SourceId);
                         break;
 
                     case ChangeEventType.Remove:
-                        writer.WriteValueSafe(_events[i].ContextIndex);
                         break;
                 }
             }
@@ -118,29 +148,38 @@ namespace NoZ.Zisle
             for (var eventIndex = 0; eventIndex < eventCount; eventIndex++)
             {
                 reader.ReadValueSafe(out ChangeEventType type);
-                reader.ReadValueSafe(out int tick);
-                reader.ReadValueSafe(out ushort effectId);
+                reader.ReadValueSafe(out uint contextId);
 
-                ulong sourceId = 0;
-                ushort contextIndex = 0;
                 switch(type)
                 {
                     case ChangeEventType.Add:
-                        reader.ReadValueSafe(out sourceId);
+                        {
+                            reader.ReadValueSafe(out int tick);
+                            reader.ReadValueSafe(out ushort effectId);
+                            reader.ReadValueSafe(out ulong sourceId);
+
+                            HandleEvent(new ChangeEvent
+                            {
+                                EffectId = effectId,
+                                Tick = tick,
+                                Type = type,
+                                SourceId = sourceId,
+                                ContextId = contextId
+                            });
+                        }        
+
                         break;
 
                     case ChangeEventType.Remove:
-                        reader.ReadValueSafe(out contextIndex);
+                        {
+                            HandleEvent(new ChangeEvent
+                            {
+                                Type = type,
+                                ContextId = contextId
+                            });
+                        }
                         break;
                 }
-                
-                HandleEvent(new ChangeEvent { 
-                    EffectId = effectId, 
-                    Tick = tick, 
-                    Type = type, 
-                    SourceId = sourceId, 
-                    ContextIndex = contextIndex 
-                });
             }
         }
 
@@ -215,7 +254,7 @@ namespace NoZ.Zisle
                 case ChangeEventType.Add:
                     {
                         // Create the effect context
-                        var context = EffectContext.Get(effect, source, _actor);
+                        var context = EffectContext.Get(effect, source, _actor, evt.ContextId);
 
                         // Add the effect context to the end of the stack
                         var stack = GetStack(effect);
@@ -235,13 +274,25 @@ namespace NoZ.Zisle
                             else
                                 UpdateState(component.Tag);
                         }
-                        break;
+
+                        return;
                     }
 
                 case ChangeEventType.Remove:
                     {
+                        foreach(var stack in _stacks)
+                            foreach(var context in stack.Contexts)
+                                if(context.Id == evt.ContextId)
+                                {
+                                    context.Release(UpdateState);
+
+                                    if (stack.Contexts.Count == 0)
+                                        RemoveStack(stack);
+
+                                    return;
+                                }
                     }
-                    break;
+                    return;
             }
         }
 

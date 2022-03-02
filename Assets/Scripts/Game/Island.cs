@@ -137,7 +137,7 @@ namespace NoZ.Zisle
 
             // Now that the island has spawned in move all actors spawned by the island to the intro state
             foreach (var actor in spawnedActors)
-                actor.State = ActorState.Intro;
+                actor.State = ActorState.Active;
 
             _state = IslandState.Active;
 
@@ -409,6 +409,9 @@ namespace NoZ.Zisle
 
         public void SpawnHarvestables ()
         {
+            if (!NetworkManager.Singleton.IsHost)
+                return;
+
             for(int i=0; i<5; i++)
             {                
                 if(TryFindFreeTile(IslandTile.Grass, out var position))
