@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55bcebfb8856cdd478a388d30fb8b332, type: 3}
+  m_Name: FlameTowerAttack
+  m_EditorClassIdentifier: 
+  _animation: {fileID: 11400000, guid: 2103f1563fdbe364a9362221058bd79d, type: 2}
+  _moveSpeed: 0
+  _target: 2
+  _targetFinder: {fileID: 11400000, guid: 0ce8647e40aeb2b43a808eba29c905da, type: 2}
+  _events:
+  - {fileID: 8079167336214916972}
+  - {fileID: 3152163294373503142}
+  _conditions:
+  - {fileID: 5239368736549690194}
+--- !u!114 &3152163294373503142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7eadb1d63cb7e54fb678376ede3b2d1, type: 3}
+  m_Name: AbilityAction
+  m_EditorClassIdentifier: 
+  _event: {fileID: 11400000, guid: 39fb1d30936dfc546a16744806ee8649, type: 2}
+  _effects:
+  - {fileID: 11400000, guid: a6ca7c650c3e72e42873aa34dd6ac8a6, type: 2}
+  - {fileID: 11400000, guid: d2242862ff17c894a820a16c8b9fc737, type: 2}
+  - {fileID: 11400000, guid: fe4af6be0a3faea40a3b812a36b7016a, type: 2}
+  - {fileID: 11400000, guid: dce7fef2bbf0d1b46b2fec427e3bf7d5, type: 2}
+--- !u!114 &5239368736549690194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ac3cb697498c03489517cf150d133aa, type: 3}
+  m_Name: CooldownCondition
+  m_EditorClassIdentifier: 
+  _duration: 1
+--- !u!114 &8079167336214916972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7eadb1d63cb7e54fb678376ede3b2d1, type: 3}
+  m_Name: AbilityBegin
+  m_EditorClassIdentifier: 
+  _event: {fileID: 11400000, guid: 5da03270f53918f46a21ac33ff7f3e5b, type: 2}
+  _effects:
+  - {fileID: 11400000, guid: 28ad4bf36961e85499218f7102b746a7, type: 2}

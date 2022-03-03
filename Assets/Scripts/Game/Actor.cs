@@ -22,7 +22,8 @@ namespace NoZ.Zisle
         [Header("Visuals")]
         [SerializeField] protected Transform _scaleTransform = null;
         [SerializeField] protected Transform _pitchTransform = null;
-        [SerializeField] protected Transform _offsetTransform = null;        
+        [SerializeField] protected Transform _offsetTransform = null;
+        [SerializeField] protected Transform _rotationTransform = null;
         [SerializeField] protected GameObject _spawnVFXPrefab = null;
         [SerializeField] protected float _runPitch = 20.0f;
         [SerializeField] protected float _height = 0.5f;
@@ -227,6 +228,9 @@ namespace NoZ.Zisle
 
         protected virtual void Awake()
         {
+            if (_rotationTransform == null)
+                _rotationTransform = transform;
+
             _materialProperties = new MaterialPropertyBlock();
             _animator = GetComponent<BlendedAnimationController>();
 
@@ -488,18 +492,18 @@ namespace NoZ.Zisle
             if (delta.sqrMagnitude < (0.001f * 0.001f))
                 return;
 
-            transform.rotation = Quaternion.LookRotation(delta.normalized, Vector3.up);
+            _rotationTransform.rotation = Quaternion.LookRotation(delta.normalized, Vector3.up);
         }
 
         public void SetDestination (Destination destination)
         {
-            if (NavAgent == null)
-                return;
-
             if (_destination == destination)
                 return;
 
             _destination = destination;
+
+            if (NavAgent == null)
+                return;
 
             if (!_destination.IsValid)
                 return;
@@ -620,7 +624,7 @@ namespace NoZ.Zisle
             {
                 var velocity = NavAgent.desiredVelocity.ZeroY();
                 if (!IsBusy && _destination.IsValid && velocity.sqrMagnitude > 0.01f)
-                    transform.rotation = Quaternion.LookRotation(velocity.normalized, Vector3.up);
+                    _rotationTransform.rotation = Quaternion.LookRotation(velocity.normalized, Vector3.up);
             }
 
             SnapToGround();

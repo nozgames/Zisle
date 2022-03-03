@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1a8441a7fe5c024fb553e4089f38878, type: 3}
+  m_Name: FlameTower
+  m_EditorClassIdentifier: 
+  _type: 2
+  _displayName: Flame Tower
+  _brain: {fileID: 11400000, guid: dc53711c639536345b54eaed96d9ba52, type: 2}
+  _prefab: {fileID: 3668279504767977956, guid: 605771560ceec2c43b2cd3161de6cd8a, type: 3}
+  _preview: {fileID: 0}
+  _healthCircleClass: 
+  _deathSound: {fileID: 0}
+  _hitSound: {fileID: 0}
+  _idleAnimation: {fileID: 11400000, guid: f9cdcf35f4561b84082829acf74c2026, type: 2}
+  _runAnimation: {fileID: 11400000, guid: a0bdcc04eb8df0a43ba4a9367aab85c4, type: 2}
+  _deathAnimation: {fileID: 0}
+  _globalCooldown: 0.5
+  _baseHealthMax: 100
+  _baseHealthRegen: 5
+  _baseSpeed: 10
+  _baseAttack: 30
+  _baseAttackSpeed: 1
+  _baseDefense: 50
+  _baseHarvest: 1
+  _baseBuild: 1
+  _abilities:
+  - {fileID: 11400000, guid: 05a9def14ad5f7744ba5ff80b0d799a6, type: 2}
+  _spawnWeights: []
+  _effects:
+  - {fileID: 11400000, guid: ca0c703de60a7dd4ba2a7a6330d0fbbb, type: 2}

@@ -9,7 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b8f403d387de9e448b3add1f8cf089d, type: 3}
-  m_Name: DefaultGlobalCooldown
+  m_Script: {fileID: 11500000, guid: e414fa8c63dcdf84d968d780f80b0512, type: 3}
+  m_Name: FlameTowerFindTarget
   m_EditorClassIdentifier: 
-  _duration: 0.5
+  _baseScore: 1
+  _targetFinder: {fileID: 11400000, guid: 0ce8647e40aeb2b43a808eba29c905da, type: 2}

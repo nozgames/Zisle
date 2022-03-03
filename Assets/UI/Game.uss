@@ -23,10 +23,10 @@
 .zisle-health-circle
 {
 	position: absolute;
-	width: 150px;
-	height: 150px;
-	margin-top: -75px;
-	margin-left: -75px;
+	width: 80px;
+	height: 80px;
+	margin-top: -40px;
+	margin-left: -40px;
 }
 
 .zisle-health-circle-mask

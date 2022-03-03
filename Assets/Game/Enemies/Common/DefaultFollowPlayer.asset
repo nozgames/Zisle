@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: DefaultFollowPlayer
   m_EditorClassIdentifier: 
   _baseScore: 0.5
-  _followType: 3
-  _followRange: 2
+  _targetFinder: {fileID: 11400000, guid: 1e3feec7e71697645ba261c7f3628066, type: 2}

@@ -27,7 +27,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _target: 2
   _targetFinder: {fileID: 0}
-  _distance: 0.01
+  _distance: 3
 --- !u!114 &-5840664652735662319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40,7 +40,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08050e425259c1841ab2d44f928145df, type: 3}
   m_Name: ButtonPressCondition
   m_EditorClassIdentifier: 
-  _button: 0
+  _button: 1
 --- !u!114 &-874000950723374751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,7 +70,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animation: {fileID: 11400000, guid: 2103f1563fdbe364a9362221058bd79d, type: 2}
   _moveSpeed: 0.1
-  _target: 1
+  _target: 2
   _targetFinder: {fileID: 11400000, guid: 6cc71e8184019114f84446dc2f521cea, type: 2}
   _events:
   - {fileID: -874000950723374751}

@@ -2112,7 +2112,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.367647, y: 1}
+    m_SensorSize: {x: 2.076225, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -2306,6 +2306,12 @@ MonoBehaviour:
       OverridingTargetPrefab: {fileID: 0}
     - Override: 0
       Prefab: {fileID: 4875246069809181656, guid: 2abab2750a21b044a9ac6f1d8099eb21,
+        type: 3}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
+    - Override: 0
+      Prefab: {fileID: 3668279504767977956, guid: 605771560ceec2c43b2cd3161de6cd8a,
         type: 3}
       SourcePrefabToOverride: {fileID: 0}
       SourceHashToOverride: 0
