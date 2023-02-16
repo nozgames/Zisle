@@ -20,14 +20,17 @@ namespace NoZ.Zisle
         private static ShakeProvider _shakeProvider = new ShakeProvider();
         private Vector3 _shakeOffset;
 
+        public Vector3 PositionOffset { get; private set; }
+        public Vector3 RotationOffset { get; private set; }
+
         private Vector3 ShakeOffset
         {
             get => _shakeOffset;
             set
             {
                 _shakeOffset = value;
-                transform.localPosition = _shakeOffset;
-                transform.localRotation = Quaternion.Euler(_shakeOffset);
+                PositionOffset = _shakeOffset;
+                RotationOffset = _shakeOffset;
             }
         }
 

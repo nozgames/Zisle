@@ -2,8 +2,6 @@
     "name": "com.noz.zisle",
     "rootNamespace": "NoZ.Zisle",
     "references": [
-        "GUID:1491147abca9d7d4bb7105af628b223e",
-        "GUID:3bf5041814073ec4089849c425919d5a",
         "GUID:62df718ac03a170469ca41fa4505deb0",
         "GUID:4cb77e1bc58722e459f474a18c6622d6",
         "GUID:e3d4f851f580f4348b3d5f541a367d80",
@@ -15,9 +13,11 @@
         "GUID:4307f53044263cf4b835bd812fc161a4",
         "GUID:75469ad4d38634e559750d17036d5f7c",
         "GUID:eec0964c48f6f4e40bc3ec2257ccf8c5",
-        "GUID:3b8ed52f1b5c64994af4c4e0aa4b6c4b",
         "GUID:84651a3751eca9349aac36a66bba901b",
-        "GUID:f2d49d9fa7e7eb3418e39723a7d3b92f"
+        "GUID:1491147abca9d7d4bb7105af628b223e",
+        "GUID:3b8ed52f1b5c64994af4c4e0aa4b6c4b",
+        "GUID:f2d49d9fa7e7eb3418e39723a7d3b92f",
+        "GUID:4fc462806a32aa245a7b28367381bf24"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -69,8 +69,8 @@ namespace NoZ.Zisle
         /// </summary>
         public Actor Target => _destination.Target;
 
-        public float Radius => 
-            NavAgent != null ? NavAgent.radius : (NavObstacle != null ? NavObstacle.radius : 0.5f);
+        public float Radius => _actorDefinition.Radius;
+            //NavAgent != null ? NavAgent.radius : (NavObstacle != null ? NavObstacle.radius : 0.5f);
 
         public NavMeshAgent NavAgent { get; private set; }
         public NavMeshObstacle NavObstacle { get; private set; }
@@ -158,7 +158,7 @@ namespace NoZ.Zisle
                 if (_state.Value == value)
                     return;
 
-                if (!IsHost)
+                if (!NetworkManager.Singleton.IsHost)
                     throw new System.InvalidOperationException("State can only be set by the Host");
 
                 _state.Value = value;
@@ -495,7 +495,7 @@ namespace NoZ.Zisle
             _rotationTransform.rotation = Quaternion.LookRotation(delta.normalized, Vector3.up);
         }
 
-        public void SetDestination (Destination destination)
+        public void SetDestination(Destination destination)
         {
             if (_destination == destination)
                 return;
@@ -508,8 +508,16 @@ namespace NoZ.Zisle
             if (!_destination.IsValid)
                 return;
 
+            UpdateDestination();
+        }
+
+        private void UpdateDestination()
+        {
+            if (!_destination.IsValid)
+                return;
+
             // TODO: choose best surround position
-            NavAgent.stoppingDistance = destination.StopDistance;
+            NavAgent.stoppingDistance = _destination.StopDistance;
 
 #if true
             var pos = _destination.Position;
@@ -522,7 +530,9 @@ namespace NoZ.Zisle
 #endif
             
             NavAgent.enabled = true;
-            NavAgent.SetDestination(pos);
+
+            if(pos != NavAgent.destination)
+                NavAgent.SetDestination(pos);
         }
 
         public virtual void ExecuteAbility(Ability ability)
@@ -622,6 +632,10 @@ namespace NoZ.Zisle
             // TODO: we could look at our target when we are close enough maybe
             if(NavAgent != null)
             {
+                UpdateDestination();
+
+                Debug.DrawLine(transform.position + Vector3.up * 0.5f, _destination.Position + Vector3.up * 0.5f, Color.red);
+
                 var velocity = NavAgent.desiredVelocity.ZeroY();
                 if (!IsBusy && _destination.IsValid && velocity.sqrMagnitude > 0.01f)
                     _rotationTransform.rotation = Quaternion.LookRotation(velocity.normalized, Vector3.up);

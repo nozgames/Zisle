@@ -55,6 +55,7 @@ MonoBehaviour:
   _scaleTransform: {fileID: 5907281522901925113}
   _pitchTransform: {fileID: 5907281522901925113}
   _offsetTransform: {fileID: 5907281522901925113}
+  _rotationTransform: {fileID: 0}
   _spawnVFXPrefab: {fileID: 3214235347064349228, guid: b4a28c8597f55e5408e3eb3f6292381f,
     type: 3}
   _runPitch: 20
@@ -127,7 +128,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 1261973430235558940}
   m_Enabled: 0
   m_AgentTypeID: 0
-  m_Radius: 0.25
+  m_Radius: 0.1
   m_Speed: 3.5
   m_Acceleration: 10000
   avoidancePriority: 1

@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
 using NoZ.Zisle.UI;
-using static Unity.Netcode.NetworkManager;
+using Unity.Netcode.Transports.UTP;
 
 namespace NoZ.Zisle
 {
@@ -128,7 +128,7 @@ namespace NoZ.Zisle
             _transport = NetworkManager.Singleton.gameObject.GetComponent<UnityTransport>();
 
             NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
-            NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
+            NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
 
             GameEvent<PlayerConnected>.OnRaised += OnPlayerConnected;
             GameEvent<PlayerDisconnected>.OnRaised += OnPlayerDisconnected;
@@ -291,10 +291,9 @@ namespace NoZ.Zisle
             return StartCoroutine(CreateLobby(connection));
         }
 
-        private void ApprovalCheck(byte[] connectionData, ulong clientId, ConnectionApprovedDelegate callback)
+        private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
         {
-            if (_players.Count >= MaxPlayers)
-                callback(false, null, false, null, null);
+            response.Approved = _players.Count < MaxPlayers;
         }
 
         /// <summary>

@@ -86,14 +86,13 @@ MonoBehaviour:
   _scaleTransform: {fileID: 177772551704840563}
   _pitchTransform: {fileID: 177772551704840563}
   _offsetTransform: {fileID: 177772551704840563}
+  _rotationTransform: {fileID: 0}
   _spawnVFXPrefab: {fileID: 0}
   _runPitch: 20
   _height: 0.5
   _slotRightHand: {fileID: 0}
   _slotLeftHand: {fileID: 0}
   _slotBody: {fileID: 0}
-  _rotationSpeed: 90
-  _buttonSlop: 0.1
   _buttonRepeat: 0.1
 --- !u!114 &1328862059496653531
 MonoBehaviour:
@@ -133,7 +132,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 4008948028134112274}
   m_Enabled: 0
   m_AgentTypeID: 0
-  m_Radius: 0.25
+  m_Radius: 0.1
   m_Speed: 3.5
   m_Acceleration: 10000
   avoidancePriority: 99

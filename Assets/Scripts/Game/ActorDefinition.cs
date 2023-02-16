@@ -14,6 +14,7 @@ namespace NoZ.Zisle
         [SerializeField] private Brain _brain = null;
         [SerializeField] private GameObject _prefab = null;
         [SerializeField] private GameObject _preview = null;
+        [SerializeField] private float _radius = 0.35f;
 
         [Header("Visuals")]
         [SerializeField] private string _healthCircleClass = null;
@@ -72,6 +73,8 @@ namespace NoZ.Zisle
         /// Prefab to use for preview
         /// </summary>
         public GameObject Preview => _preview;
+
+        public float Radius => _radius;
 
         /// <summary>
         /// Name to use in UI
